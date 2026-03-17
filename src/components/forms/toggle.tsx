@@ -38,6 +38,7 @@ function Toggle({
         type="button"
         role="switch"
         aria-checked={isChecked}
+        aria-label={label ?? "Toggle"}
         disabled={disabled}
         onClick={() => !disabled && setIsChecked(!isChecked)}
         className={cn(

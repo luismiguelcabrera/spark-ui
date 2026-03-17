@@ -87,7 +87,7 @@ describe("Button", () => {
   it.each([
     ["primary", "solid", "bg-primary"],
     ["destructive", "solid", "bg-red-600"],
-    ["success", "solid", "bg-green-600"],
+    ["success", "solid", "bg-green-700"],
     ["warning", "solid", "bg-amber-500"],
     ["accent", "solid", "bg-accent"],
     ["secondary", "solid", "bg-secondary"],
@@ -108,7 +108,7 @@ describe("Button", () => {
   it("applies success + ghost", () => {
     render(<Button color="success" variant="ghost">OK</Button>);
     const cls = screen.getByRole("button").className;
-    expect(cls).toContain("text-green-600");
+    expect(cls).toContain("text-green-700");
     expect(cls).toContain("bg-transparent");
   });
 
@@ -116,7 +116,7 @@ describe("Button", () => {
     render(<Button color="warning" variant="soft">Warn</Button>);
     const cls = screen.getByRole("button").className;
     expect(cls).toContain("bg-amber-50");
-    expect(cls).toContain("text-amber-600");
+    expect(cls).toContain("text-amber-700");
   });
 
   it("applies primary + link", () => {
@@ -209,7 +209,7 @@ describe("Button", () => {
 
   // ── Spinner color ──
 
-  it("uses white spinner for solid variant", () => {
+  it("uses white spinner for solid variant with dark bg", () => {
     const { container } = render(<Button variant="solid" color="destructive" loading>Delete</Button>);
     const spinner = container.querySelector("[role='status']");
     expect(spinner?.className).toContain("text-white");
@@ -217,6 +217,12 @@ describe("Button", () => {
 
   it("uses primary spinner for non-solid variants", () => {
     const { container } = render(<Button variant="outline" loading>Go</Button>);
+    const spinner = container.querySelector("[role='status']");
+    expect(spinner?.className).toContain("text-primary");
+  });
+
+  it("uses primary spinner for warning solid (dark text on light bg)", () => {
+    const { container } = render(<Button variant="solid" color="warning" loading>Warn</Button>);
     const spinner = container.querySelector("[role='status']");
     expect(spinner?.className).toContain("text-primary");
   });

@@ -32,21 +32,21 @@ const colorMap: Record<ButtonColor, Record<string, string>> = {
     link:    "text-red-600 hover:text-red-700 focus-visible:ring-red-600",
   },
   success: {
-    solid:   "bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20 hover:shadow-xl hover:shadow-green-600/25 focus-visible:ring-green-600",
-    outline: "border border-green-300 text-green-600 hover:bg-green-50 focus-visible:ring-green-600",
-    ghost:   "text-green-600 hover:bg-green-50 focus-visible:ring-green-600",
-    soft:    "bg-green-50 hover:bg-green-100 text-green-600 focus-visible:ring-green-600",
-    link:    "text-green-600 hover:text-green-700 focus-visible:ring-green-600",
+    solid:   "bg-green-700 hover:bg-green-800 text-white shadow-lg shadow-green-700/20 hover:shadow-xl hover:shadow-green-700/25 focus-visible:ring-green-700",
+    outline: "border border-green-300 text-green-700 hover:bg-green-50 focus-visible:ring-green-700",
+    ghost:   "text-green-700 hover:bg-green-50 focus-visible:ring-green-700",
+    soft:    "bg-green-50 hover:bg-green-100 text-green-700 focus-visible:ring-green-700",
+    link:    "text-green-700 hover:text-green-800 focus-visible:ring-green-700",
   },
   warning: {
-    solid:   "bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/25 focus-visible:ring-amber-500",
-    outline: "border border-amber-300 text-amber-600 hover:bg-amber-50 focus-visible:ring-amber-500",
-    ghost:   "text-amber-600 hover:bg-amber-50 focus-visible:ring-amber-500",
-    soft:    "bg-amber-50 hover:bg-amber-100 text-amber-600 focus-visible:ring-amber-500",
-    link:    "text-amber-600 hover:text-amber-700 focus-visible:ring-amber-500",
+    solid:   "bg-amber-500 hover:bg-amber-600 text-amber-950 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/25 focus-visible:ring-amber-500",
+    outline: "border border-amber-300 text-amber-700 hover:bg-amber-50 focus-visible:ring-amber-500",
+    ghost:   "text-amber-700 hover:bg-amber-50 focus-visible:ring-amber-500",
+    soft:    "bg-amber-50 hover:bg-amber-100 text-amber-700 focus-visible:ring-amber-500",
+    link:    "text-amber-700 hover:text-amber-800 focus-visible:ring-amber-500",
   },
   accent: {
-    solid:   "bg-accent hover:bg-accent/90 text-white shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/25 focus-visible:ring-accent",
+    solid:   "bg-accent hover:bg-accent/90 text-amber-950 shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/25 focus-visible:ring-accent",
     outline: "border border-accent/30 text-accent hover:bg-accent/5 focus-visible:ring-accent",
     ghost:   "text-accent hover:bg-accent/10 focus-visible:ring-accent",
     soft:    "bg-accent/10 hover:bg-accent/20 text-accent focus-visible:ring-accent",
@@ -165,7 +165,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const resolvedLeftIcon = leftIcon ?? (icon && iconPosition === "left" ? <Icon name={icon} size={resolvedIconSize} /> : null);
     const resolvedRightIcon = rightIcon ?? (icon && iconPosition === "right" ? <Icon name={icon} size={resolvedIconSize} /> : null);
 
-    const useWhiteSpinner = variant === "solid";
+    const darkTextSolids = new Set<ButtonColor>(["warning", "accent"]);
+    const useWhiteSpinner = variant === "solid" && !darkTextSolids.has(color);
     const spinnerEl = <Spinner size="sm" color={useWhiteSpinner ? "white" : "primary"} />;
 
     // Dev-mode warning for icon-only buttons missing aria-label
