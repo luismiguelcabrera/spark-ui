@@ -10,6 +10,8 @@ import { cn } from "./utils";
 
 type SlotProps = HTMLAttributes<HTMLElement> & {
   children?: ReactNode;
+  disabled?: boolean;
+  type?: string;
 };
 
 const Slot = forwardRef<HTMLElement, SlotProps>(

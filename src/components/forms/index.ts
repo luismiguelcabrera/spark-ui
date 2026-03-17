@@ -1,6 +1,9 @@
 export { Button, buttonVariants } from "./button";
 export type { ButtonProps, ButtonColor } from "./button";
 
+export { ButtonGroup } from "./button-group";
+export type { ButtonGroupProps } from "./button-group";
+
 export { IconButton, iconButtonVariants } from "./icon-button";
 export type { IconButtonProps } from "./icon-button";
 
