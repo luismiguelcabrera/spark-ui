@@ -31,7 +31,7 @@ src/
 │   ├── icon-provider.tsx  # IconProvider context for custom icon sets
 │   ├── create-icon.tsx    # createIcon() factory for new icons
 │   └── index.ts       # Barrel export
-├── hooks/             # useControllable, useMediaQuery, useDebounce, useClickOutside, useClipboard, useDisclosure, useLocalStorage, useIntersectionObserver, useKeyboardShortcut, usePrefersReducedMotion, useToggle, useFocusTrap, useScrollLock, useBreakpoint, useIsomorphicId (15 hooks)
+├── hooks/             # 21 hooks: useControllable, useMediaQuery, useDebounce, useClickOutside, useClipboard, useDisclosure, useLocalStorage, useIntersectionObserver, useKeyboardShortcut, usePrefersReducedMotion, useToggle, useFocusTrap, useScrollLock, useBreakpoint, useIsomorphicId, useToast, usePrevious, useThrottle, useWindowSize, useHover
 ├── lib/               # cn(), Slot, theme-tokens, styles
 ├── test/              # Test setup, a11y tests
 └── theme.css          # Default CSS variables + keyframes

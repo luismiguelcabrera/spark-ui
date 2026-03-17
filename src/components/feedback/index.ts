@@ -63,3 +63,12 @@ export type { SnackbarProps } from "./snackbar";
 
 export { SpeedDial } from "./speed-dial";
 export type { SpeedDialProps, SpeedDialAction } from "./speed-dial";
+
+export { Popconfirm } from "./popconfirm";
+export type { PopconfirmProps } from "./popconfirm";
+
+export { LoadingOverlay } from "./loading-overlay";
+export type { LoadingOverlayProps } from "./loading-overlay";
+
+export { ErrorBoundary } from "./error-boundary";
+export type { ErrorBoundaryProps } from "./error-boundary";

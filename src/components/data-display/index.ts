@@ -99,3 +99,18 @@ export type { ChipProps, ChipColor } from "./chip";
 
 export { Show } from "./show";
 export type { ShowProps } from "./show";
+
+export { AnimatedNumber } from "./animated-number";
+export type { AnimatedNumberProps } from "./animated-number";
+
+export { Marquee } from "./marquee";
+export type { MarqueeProps } from "./marquee";
+
+export { Watermark } from "./watermark";
+export type { WatermarkProps } from "./watermark";
+
+export { Sparkline } from "./sparkline";
+export type { SparklineProps } from "./sparkline";
+
+export { DiffViewer } from "./diff-viewer";
+export type { DiffViewerProps, DiffLine } from "./diff-viewer";
