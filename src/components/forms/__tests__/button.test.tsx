@@ -211,20 +211,20 @@ describe("Button", () => {
 
   it("uses white spinner for solid variant with dark bg", () => {
     const { container } = render(<Button variant="solid" color="destructive" loading>Delete</Button>);
-    const spinner = container.querySelector("[role='status']");
-    expect(spinner?.className).toContain("text-white");
+    const spinnerInner = container.querySelector("[role='status'] > span");
+    expect(spinnerInner?.className).toContain("text-white");
   });
 
   it("uses primary spinner for non-solid variants", () => {
     const { container } = render(<Button variant="outline" loading>Go</Button>);
-    const spinner = container.querySelector("[role='status']");
-    expect(spinner?.className).toContain("text-primary");
+    const spinnerInner = container.querySelector("[role='status'] > span");
+    expect(spinnerInner?.className).toContain("text-primary");
   });
 
   it("uses primary spinner for warning solid (dark text on light bg)", () => {
     const { container } = render(<Button variant="solid" color="warning" loading>Warn</Button>);
-    const spinner = container.querySelector("[role='status']");
-    expect(spinner?.className).toContain("text-primary");
+    const spinnerInner = container.querySelector("[role='status'] > span");
+    expect(spinnerInner?.className).toContain("text-primary");
   });
 
   // ── A11y warning for icon-only ──

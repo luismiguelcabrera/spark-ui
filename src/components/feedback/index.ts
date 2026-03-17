@@ -10,8 +10,8 @@ export type { NotificationItemProps } from "./notification-item";
 export { ChatBubble, chatBubbleVariants } from "./chat-bubble";
 export type { ChatBubbleProps } from "./chat-bubble";
 
-export { Spinner, spinnerVariants } from "./spinner";
-export type { SpinnerProps } from "./spinner";
+export { Spinner } from "./spinner";
+export type { SpinnerProps, SpinnerType, SpinnerSize, SpinnerColor, SpinnerSpeed } from "./spinner";
 
 export { Divider } from "./divider";
 export type { DividerProps } from "./divider";
