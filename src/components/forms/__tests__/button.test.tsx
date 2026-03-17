@@ -52,25 +52,61 @@ describe("Button", () => {
     expect(screen.getByRole("button")).not.toHaveAttribute("aria-busy");
   });
 
-  // ── Variants ──
+  // ── Variants (style) ──
 
   it.each([
-    ["primary", "bg-primary"],
-    ["secondary", "bg-secondary"],
-    ["destructive", "bg-red-600"],
-    ["success", "bg-green-600"],
-    ["warning", "bg-amber-500"],
+    ["solid", "bg-primary"],
     ["outline", "border"],
     ["ghost", "bg-transparent"],
-  ] as const)("applies %s variant classes", (variant, expectedClass) => {
+    ["soft", "bg-primary/10"],
+    ["link", "underline-offset-4"],
+  ] as const)("applies %s variant", (variant, expectedClass) => {
     render(<Button variant={variant}>Test</Button>);
     expect(screen.getByRole("button").className).toContain(expectedClass);
   });
 
-  it("applies soft variant", () => {
-    render(<Button variant="soft">Soft</Button>);
+  // ── Colors ──
+
+  it.each([
+    ["primary", "solid", "bg-primary"],
+    ["destructive", "solid", "bg-red-600"],
+    ["success", "solid", "bg-green-600"],
+    ["warning", "solid", "bg-amber-500"],
+    ["accent", "solid", "bg-accent"],
+    ["secondary", "solid", "bg-secondary"],
+  ] as const)("applies %s color with solid variant", (color, variant, expectedClass) => {
+    render(<Button color={color} variant={variant}>Test</Button>);
+    expect(screen.getByRole("button").className).toContain(expectedClass);
+  });
+
+  // ── Color × Variant combinations ──
+
+  it("applies destructive + outline", () => {
+    render(<Button color="destructive" variant="outline">Delete</Button>);
+    const cls = screen.getByRole("button").className;
+    expect(cls).toContain("border");
+    expect(cls).toContain("text-red-600");
+  });
+
+  it("applies success + ghost", () => {
+    render(<Button color="success" variant="ghost">OK</Button>);
+    const cls = screen.getByRole("button").className;
+    expect(cls).toContain("text-green-600");
+    expect(cls).toContain("bg-transparent");
+  });
+
+  it("applies warning + soft", () => {
+    render(<Button color="warning" variant="soft">Warn</Button>);
+    const cls = screen.getByRole("button").className;
+    expect(cls).toContain("bg-amber-50");
+    expect(cls).toContain("text-amber-600");
+  });
+
+  it("applies primary + link", () => {
+    render(<Button color="primary" variant="link">More</Button>);
     const cls = screen.getByRole("button").className;
     expect(cls).toContain("text-primary");
+    expect(cls).toContain("hover:underline");
   });
 
   // ── Sizes ──
@@ -118,7 +154,7 @@ describe("Button", () => {
 
   it("renders as child element with asChild", () => {
     render(
-      <Button asChild variant="primary">
+      <Button asChild variant="solid" color="primary">
         <a href="/home">Home</a>
       </Button>,
     );
@@ -129,13 +165,13 @@ describe("Button", () => {
 
   // ── Spinner color ──
 
-  it("uses white spinner for filled variants", () => {
-    const { container } = render(<Button variant="destructive" loading>Delete</Button>);
+  it("uses white spinner for solid variant", () => {
+    const { container } = render(<Button variant="solid" color="destructive" loading>Delete</Button>);
     const spinner = container.querySelector("[role='status']");
     expect(spinner?.className).toContain("text-white");
   });
 
-  it("uses primary spinner for non-filled variants", () => {
+  it("uses primary spinner for non-solid variants", () => {
     const { container } = render(<Button variant="outline" loading>Go</Button>);
     const spinner = container.querySelector("[role='status']");
     expect(spinner?.className).toContain("text-primary");
