@@ -12,6 +12,7 @@ type SpinnerSize = "xs" | "sm" | "md" | "lg" | "xl";
 type SpinnerColor =
   | "primary" | "secondary" | "destructive" | "success"
   | "warning" | "accent" | "white" | "muted" | "current";
+type SpinnerSpeed = "slowest" | "slow" | "normal" | "fast" | "fastest";
 
 const colorClass: Record<SpinnerColor, string> = {
   primary: "text-primary",
@@ -41,14 +42,12 @@ const thicknessClass: Record<string, string> = {
   thin: "border", default: "border-2", thick: "border-3",
 };
 
-type SpinnerSpeed = "slowest" | "slow" | "normal" | "fast" | "fastest";
+const barWidthMap: Record<SpinnerSize, string> = {
+  xs: "w-0.5", sm: "w-0.5", md: "w-1", lg: "w-1", xl: "w-1.5",
+};
 
 const speedMultiplier: Record<SpinnerSpeed, number> = {
-  slowest: 2.5,
-  slow: 1.5,
-  normal: 1,
-  fast: 0.6,
-  fastest: 0.35,
+  slowest: 2.5, slow: 1.5, normal: 1, fast: 0.6, fastest: 0.35,
 };
 
 type VariantProps = {
@@ -59,7 +58,6 @@ type VariantProps = {
   className?: string;
 };
 
-/** Calculate duration string from a base (in seconds) and speed multiplier */
 function dur(speed: SpinnerSpeed | undefined, baseSec: number): string {
   const mult = speedMultiplier[speed ?? "normal"];
   return `${(baseSec * mult).toFixed(2)}s`;
@@ -84,12 +82,11 @@ function SpinVariant({ size, color, thickness = "default", speed, className }: V
 
 function RingVariant({ size, color, thickness = "default", speed, className }: VariantProps) {
   return (
-    <span className={cn("inline-block relative", className)} style={{ width: sizeMap[size], height: sizeMap[size] }}>
+    <span className={cn("inline-block relative", colorClass[color], className)} style={{ width: sizeMap[size], height: sizeMap[size] }}>
       <span className={cn("absolute inset-0 rounded-full border-current opacity-20", thicknessClass[thickness] ?? thicknessClass.default)} />
       <span className={cn(
         "absolute inset-0 rounded-full border-current border-t-transparent border-l-transparent border-r-transparent",
         thicknessClass[thickness] ?? thicknessClass.default,
-        colorClass[color],
       )} style={{ animation: `spin ${dur(speed, 1)} linear infinite` }} />
     </span>
   );
@@ -100,17 +97,15 @@ function RingVariant({ size, color, thickness = "default", speed, className }: V
 function DualRingVariant({ size, color, thickness = "default", speed, className }: VariantProps) {
   const d = dur(speed, 1);
   return (
-    <span className={cn("inline-block relative", className)} style={{ width: sizeMap[size], height: sizeMap[size] }}>
+    <span className={cn("inline-block relative", colorClass[color], className)} style={{ width: sizeMap[size], height: sizeMap[size] }}>
       <span className={cn(
         "absolute inset-0 rounded-full border-current border-t-transparent",
         thicknessClass[thickness] ?? thicknessClass.default,
-        colorClass[color],
       )} style={{ animation: `spin ${d} linear infinite` }} />
       <span
         className={cn(
           "absolute rounded-full border-current border-b-transparent opacity-60",
           thicknessClass[thickness] ?? thicknessClass.default,
-          colorClass[color],
         )}
         style={{ inset: "25%", animation: `spin ${d} linear infinite reverse` }}
       />
@@ -171,13 +166,15 @@ function PulseVariant({ size, color, speed, className }: VariantProps) {
 
 // ── 8. Ping (expanding ring) ────────────────────────────────────────────
 
-function PingVariant({ size, color, className }: VariantProps) {
+function PingVariant({ size, color, speed, className }: VariantProps) {
   const s = sizeMap[size];
+  const d = dur(speed, 1);
   return (
-    <span className={cn("inline-block relative", className)} style={{ width: s, height: s }}>
-      <span className={cn("absolute inset-0 rounded-full bg-current animate-ping opacity-75", colorClass[color])} />
-      <span className={cn("absolute rounded-full bg-current", colorClass[color])}
-        style={{ inset: "25%"}} />
+    <span className={cn("inline-block relative", colorClass[color], className)} style={{ width: s, height: s }}>
+      <span className="absolute inset-0 rounded-full bg-current opacity-75"
+        style={{ animation: `spark-ping ${d} cubic-bezier(0, 0, 0.2, 1) infinite` }} />
+      <span className="absolute rounded-full bg-current"
+        style={{ inset: "25%" }} />
     </span>
   );
 }
@@ -188,9 +185,9 @@ function RippleVariant({ size, color, thickness = "default", speed, className }:
   const d = dur(speed, 1.5);
   const s = sizeMap[size];
   return (
-    <span className={cn("inline-block relative", className)} style={{ width: s, height: s }}>
+    <span className={cn("inline-block relative", colorClass[color], className)} style={{ width: s, height: s }}>
       {[0, 1].map((i) => (
-        <span key={i} className={cn("absolute inset-0 rounded-full border-current", thicknessClass[thickness] ?? thicknessClass.default, colorClass[color])}
+        <span key={i} className={cn("absolute inset-0 rounded-full border-current", thicknessClass[thickness] ?? thicknessClass.default)}
           style={{ animation: `spark-ripple ${d} cubic-bezier(0, 0.2, 0.8, 1) infinite`, animationDelay: `${i * 0.5}s` }} />
       ))}
     </span>
@@ -198,10 +195,6 @@ function RippleVariant({ size, color, thickness = "default", speed, className }:
 }
 
 // ── 10. Bars (4 scaling bars) ───────────────────────────────────────────
-
-const barWidthMap: Record<SpinnerSize, string> = {
-  xs: "w-0.5", sm: "w-0.5", md: "w-1", lg: "w-1", xl: "w-1.5",
-};
 
 function BarsVariant({ size, color, speed, className }: VariantProps) {
   const d = dur(speed, 1.2);
@@ -309,10 +302,11 @@ function OrbitVariant({ size, color, speed, className }: VariantProps) {
   const s = sizeMap[size];
   const dotR = Math.max(2, s / 8);
   return (
-    <span className={cn("inline-block relative", className)} style={{ width: s, height: s, animation: `spin ${d} linear infinite` }}>
-      <span className={cn("absolute rounded-full bg-current", colorClass[color])}
+    <span className={cn("inline-block relative", colorClass[color], className)}
+      style={{ width: s, height: s, animation: `spin ${d} linear infinite` }}>
+      <span className="absolute rounded-full bg-current"
         style={{ width: dotR * 2, height: dotR * 2, top: 0, left: s / 2 - dotR }} />
-      <span className={cn("absolute rounded-full bg-current", colorClass[color])}
+      <span className="absolute rounded-full bg-current"
         style={{ width: dotR * 2, height: dotR * 2, bottom: 0, left: s / 2 - dotR }} />
     </span>
   );
@@ -326,66 +320,6 @@ function SquareVariant({ size, color, speed, className }: VariantProps) {
     <span className={cn("inline-block bg-current rounded-sm", colorClass[color], className)}
       style={{ width: s, height: s, animation: `spark-square ${dur(speed, 1.2)} ease-in-out infinite` }} />
   );
-}
-
-// ── Keyframes (injected once) ───────────────────────────────────────────
-
-let keyframesInjected = false;
-
-function injectKeyframes() {
-  if (keyframesInjected || typeof document === "undefined") return;
-  keyframesInjected = true;
-  const style = document.createElement("style");
-  style.textContent = `
-    @keyframes spark-dots {
-      0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
-      40% { opacity: 1; transform: scale(1); }
-    }
-    @keyframes spark-bounce {
-      0%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-100%); }
-    }
-    @keyframes spark-typing {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-      30% { transform: translateY(-30%); opacity: 1; }
-    }
-    @keyframes spark-pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.75); }
-    }
-    @keyframes spark-bars {
-      0%, 80%, 100% { transform: scaleY(0.4); }
-      40% { transform: scaleY(1); }
-    }
-    @keyframes spark-wave {
-      0%, 100% { transform: scaleY(0.3); }
-      50% { transform: scaleY(1); }
-    }
-    @keyframes spark-grid {
-      0%, 70%, 100% { opacity: 0.3; transform: scale(0.7); }
-      35% { opacity: 1; transform: scale(1); }
-    }
-    @keyframes spark-ripple {
-      0% { transform: scale(0.1); opacity: 1; }
-      100% { transform: scale(1); opacity: 0; }
-    }
-    @keyframes spark-circle-fade {
-      0%, 100% { opacity: 0.2; }
-      50% { opacity: 1; }
-    }
-    @keyframes spark-chase-dot {
-      0%, 100% { transform: scale(0.5); }
-      50% { transform: scale(1); }
-    }
-    @keyframes spark-square {
-      0% { transform: rotate(0deg); }
-      25% { transform: rotate(90deg) scale(0.7); }
-      50% { transform: rotate(180deg) scale(1); }
-      75% { transform: rotate(270deg) scale(0.7); }
-      100% { transform: rotate(360deg); }
-    }
-  `;
-  document.head.appendChild(style);
 }
 
 // ── Main component ──────────────────────────────────────────────────────
@@ -427,8 +361,6 @@ const VARIANTS: Record<SpinnerType, (props: VariantProps) => React.ReactNode> = 
   square: SquareVariant,
 };
 
-const CSS_ONLY_TYPES = new Set<SpinnerType>(["spin", "ring"]);
-
 function Spinner({
   type = "spin",
   size = "md",
@@ -439,10 +371,6 @@ function Spinner({
   overlay = false,
   className,
 }: SpinnerProps) {
-  if (!CSS_ONLY_TYPES.has(type)) {
-    injectKeyframes();
-  }
-
   const Variant = VARIANTS[type] ?? VARIANTS.spin;
   const content = <Variant size={size} color={color} thickness={thickness} speed={speed} className={className} />;
 
@@ -454,7 +382,7 @@ function Spinner({
 
   if (overlay) {
     return (
-      <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 backdrop-blur-[1px] rounded-[inherit]">
+      <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 dark:bg-slate-900/60 backdrop-blur-[1px] rounded-[inherit]">
         {spinner}
       </div>
     );

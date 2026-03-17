@@ -56,12 +56,13 @@ const allTypes: SpinnerType[] = [
 ];
 
 export const AllTypes: Story = {
-  render: () => (
+  args: { size: "lg" },
+  render: (args) => (
     <div className="grid grid-cols-4 gap-8">
       {allTypes.map((t) => (
         <div key={t} className="flex flex-col items-center gap-3">
           <div className="h-12 flex items-center justify-center">
-            <Spinner type={t} size="lg" />
+            <Spinner {...args} type={t} />
           </div>
           <span className="text-xs text-slate-500 font-mono">{t}</span>
         </div>
@@ -71,12 +72,13 @@ export const AllTypes: Story = {
 };
 
 export const AllTypesXL: Story = {
-  render: () => (
+  args: { size: "xl" },
+  render: (args) => (
     <div className="grid grid-cols-4 gap-10">
       {allTypes.map((t) => (
         <div key={t} className="flex flex-col items-center gap-3">
           <div className="h-16 flex items-center justify-center">
-            <Spinner type={t} size="xl" />
+            <Spinner {...args} type={t} />
           </div>
           <span className="text-xs text-slate-500 font-mono">{t}</span>
         </div>

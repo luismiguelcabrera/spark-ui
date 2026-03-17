@@ -62,3 +62,81 @@
   --shadow-float: 0 10px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
   --shadow-glass: 0 4px 30px rgb(0 0 0 / 0.3);
 }
+
+/* ── Spinner keyframes ── */
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spark-dots {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes spark-bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-100%); }
+}
+
+@keyframes spark-typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-30%); opacity: 1; }
+}
+
+@keyframes spark-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.75); }
+}
+
+@keyframes spark-ping {
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes spark-bars {
+  0%, 80%, 100% { transform: scaleY(0.4); }
+  40% { transform: scaleY(1); }
+}
+
+@keyframes spark-wave {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+@keyframes spark-grid {
+  0%, 70%, 100% { opacity: 0.3; transform: scale(0.7); }
+  35% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes spark-ripple {
+  0% { transform: scale(0.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+@keyframes spark-circle-fade {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+@keyframes spark-chase-dot {
+  0%, 100% { transform: scale(0.5); }
+  50% { transform: scale(1); }
+}
+
+@keyframes spark-square {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(90deg) scale(0.7); }
+  50% { transform: rotate(180deg) scale(1); }
+  75% { transform: rotate(270deg) scale(0.7); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ── Reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
