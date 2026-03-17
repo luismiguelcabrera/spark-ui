@@ -22,9 +22,15 @@ src/
 ├── components/
 │   ├── forms/         # Button, Input, Select, Checkbox, Toggle, etc.
 │   ├── feedback/      # Spinner, Modal, Toast, Drawer, etc.
-│   ├── data-display/  # Badge, Card, Avatar, etc.
+│   ├── data-display/  # Badge, Card, Avatar, Icon, etc.
 │   ├── navigation/    # Tabs, Accordion, Pagination, etc.
 │   └── layout/        # ThemeProvider, AppShell, Sidebar, etc.
+├── icons/
+│   ├── icons.tsx      # 160+ SVG icon components (createIcon factory)
+│   ├── registry.ts    # String name → component map (kebab + snake_case)
+│   ├── icon-provider.tsx  # IconProvider context for custom icon sets
+│   ├── create-icon.tsx    # createIcon() factory for new icons
+│   └── index.ts       # Barrel export
 ├── hooks/             # useControllable, etc.
 ├── lib/               # cn(), Slot, theme-tokens, styles
 ├── test/              # Test setup, a11y tests
@@ -159,9 +165,30 @@ Test coverage expectations:
 - Gallery stories should pass `args` through: `render: (args) => ...` so controls work
 - Include combination stories showing real-world usage
 
-### 14. File Organization
+### 14. Icon System
+
+The library ships its own SVG icon set (160+ icons) with a 3-tier resolution system:
+
+1. **Consumer's `IconProvider` resolver** — global override for any icon set (Lucide, Heroicons, etc.)
+2. **Built-in SVG icons** — tree-shakeable, zero dependencies
+3. **Material Symbols font fallback** — for unknown icon names (legacy)
+
+Rules for icons:
+- All SVG icons use `createIcon()` factory from `src/icons/create-icon.tsx`
+- Icons use `currentColor` for stroke/fill — inheriting color from parent
+- Icons are `aria-hidden="true"` by default (decorative). When used standalone, the parent must provide `aria-label`
+- The registry (`src/icons/registry.ts`) maps both kebab-case (`chevron-left`) and Material Symbols snake_case (`chevron_left`) to the same component
+- New icons go in `src/icons/icons.tsx`, then register in `src/icons/registry.ts`
+- Consumers create custom icons with `createIcon("MyIcon", <path d="..." />)`
+
+When a component uses `<Icon name="...">` internally (Button, Pagination, Modal close, etc.), it resolves through the same 3-tier system. This means consumers can swap the entire icon set globally via `<IconProvider resolver={...}>`.
+
+### 15. File Organization
 
 - Component: `src/components/{category}/{name}.tsx`
 - Tests: `src/components/{category}/__tests__/{name}.test.tsx`
 - Stories: `src/components/{category}/{name}.stories.tsx`
 - Compound components (e.g., ButtonGroup): separate file, same directory
+- Icons: `src/icons/icons.tsx` (all SVGs), `src/icons/registry.ts` (name mappings)
+- Icon stories: `src/icons/icons.stories.tsx`
+- Icon tests: `src/icons/__tests__/icons.test.tsx`
