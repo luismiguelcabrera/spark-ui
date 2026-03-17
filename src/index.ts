@@ -5,6 +5,9 @@ export * from "./components/data-display";
 export * from "./components/navigation";
 export * from "./components/feedback";
 
+// ── Icons ──
+export * from "./icons";
+
 // ── Utilities ──
 export { cn } from "./lib/utils";
 export { s } from "./lib/styles";
