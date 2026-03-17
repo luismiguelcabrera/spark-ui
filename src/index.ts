@@ -8,6 +8,8 @@ export * from "./components/feedback";
 // ── Utilities ──
 export { cn } from "./lib/utils";
 export { s } from "./lib/styles";
+export { tokensToCssVars } from "./lib/theme-tokens";
+export type { ThemeColors, ThemeTokens } from "./lib/theme-tokens";
 
 // ── Hooks ──
 export { useControllable } from "./hooks/use-controllable";

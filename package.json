@@ -31,7 +31,8 @@
       }
     },
     "./styles": "./dist/styles.js",
-    "./styles.css": "./dist/styles.css"
+    "./styles.css": "./dist/styles.css",
+    "./theme.css": "./dist/theme.css"
   },
   "files": [
     "dist"
