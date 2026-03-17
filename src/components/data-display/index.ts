@@ -42,3 +42,60 @@ export type { CalendarProps, CalendarDay } from "./calendar";
 
 export { QrCode } from "./qr-code";
 export type { QrCodeProps } from "./qr-code";
+
+export { Collapsible, CollapsibleTrigger, CollapsibleContent } from "./collapsible";
+export type { CollapsibleProps, CollapsibleTriggerProps, CollapsibleContentProps } from "./collapsible";
+
+export { Heading, headingVariants } from "./heading";
+export type { HeadingProps, HeadingLevel } from "./heading";
+
+export { Text, textVariants } from "./text";
+export type { TextProps, TextElement } from "./text";
+
+export { InlineCode, CodeBlock } from "./code";
+export type { InlineCodeProps, CodeBlockProps } from "./code";
+
+export { Kbd, KbdKey } from "./kbd";
+export type { KbdProps } from "./kbd";
+
+export { Highlight } from "./highlight";
+export type { HighlightProps, HighlightColor } from "./highlight";
+
+export { Prose } from "./prose";
+export type { ProseProps } from "./prose";
+
+export { Blockquote } from "./blockquote";
+export type { BlockquoteProps, BlockquoteColor } from "./blockquote";
+
+export { Timeline } from "./timeline";
+export type { TimelineProps, TimelineItemData } from "./timeline";
+
+export { TreeView } from "./tree-view";
+export type { TreeViewProps, TreeNode } from "./tree-view";
+
+export { Carousel } from "./carousel";
+export type { CarouselProps } from "./carousel";
+
+export { Countdown } from "./countdown";
+export type { CountdownProps } from "./countdown";
+
+export { ImageGrid } from "./image-grid";
+export type { ImageGridProps, ImageGridItem } from "./image-grid";
+
+export { Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption } from "./table";
+export type { TableProps, TableHeaderProps, TableBodyProps, TableFooterProps, TableRowProps, TableHeadProps, TableCellProps, TableCaptionProps } from "./table";
+
+export { InfiniteScroll } from "./infinite-scroll";
+export type { InfiniteScrollProps } from "./infinite-scroll";
+
+export { DataList, DataListItem } from "./data-list";
+export type { DataListProps, DataListItemProps } from "./data-list";
+
+export { AvatarGroup } from "./avatar-group";
+export type { AvatarGroupProps } from "./avatar-group";
+
+export { Chip, chipVariants } from "./chip";
+export type { ChipProps, ChipColor } from "./chip";
+
+export { Show } from "./show";
+export type { ShowProps } from "./show";

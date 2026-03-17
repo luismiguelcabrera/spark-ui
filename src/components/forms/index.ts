@@ -66,3 +66,36 @@ export type { ComboboxProps, ComboboxOption } from "./combobox";
 
 export { DatePicker } from "./date-picker";
 export type { DatePickerProps } from "./date-picker";
+
+export { Slider } from "./slider";
+export type { SliderProps } from "./slider";
+
+export { NumberInput } from "./number-input";
+export type { NumberInputProps } from "./number-input";
+
+export { TagInput } from "./tag-input";
+export type { TagInputProps } from "./tag-input";
+
+export { Switch } from "./switch";
+export type { SwitchProps } from "./switch";
+
+export { ToggleGroup, ToggleGroupItem } from "./toggle-group";
+export type { ToggleGroupProps, ToggleGroupItemProps } from "./toggle-group";
+
+export { ColorPicker } from "./color-picker";
+export type { ColorPickerProps } from "./color-picker";
+
+export { Toolbar, ToolbarButton, ToolbarSeparator, ToolbarGroup } from "./toolbar";
+export type { ToolbarProps, ToolbarButtonProps, ToolbarSeparatorProps, ToolbarGroupProps } from "./toolbar";
+
+export { DateRangePicker } from "./date-range-picker";
+export type { DateRangePickerProps, DateRange } from "./date-range-picker";
+
+export { TimePicker } from "./time-picker";
+export type { TimePickerProps } from "./time-picker";
+
+export { CopyButton } from "./copy-button";
+export type { CopyButtonProps } from "./copy-button";
+
+export { PinInput } from "./pin-input";
+export type { PinInputProps } from "./pin-input";

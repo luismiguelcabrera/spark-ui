@@ -16,3 +16,17 @@ export type { ThemeColors, ThemeTokens } from "./lib/theme-tokens";
 
 // ── Hooks ──
 export { useControllable } from "./hooks/use-controllable";
+export { useMediaQuery } from "./hooks/use-media-query";
+export { useDebounce } from "./hooks/use-debounce";
+export { useClickOutside } from "./hooks/use-click-outside";
+export { useClipboard } from "./hooks/use-clipboard";
+export { useDisclosure } from "./hooks/use-disclosure";
+export { useLocalStorage } from "./hooks/use-local-storage";
+export { useIntersectionObserver } from "./hooks/use-intersection-observer";
+export { useKeyboardShortcut } from "./hooks/use-keyboard-shortcut";
+export { usePrefersReducedMotion } from "./hooks/use-prefers-reduced-motion";
+export { useToggle } from "./hooks/use-toggle";
+export { useFocusTrap } from "./hooks/use-focus-trap";
+export { useScrollLock } from "./hooks/use-scroll-lock";
+export { useBreakpoint } from "./hooks/use-breakpoint";
+export { useIsomorphicId } from "./hooks/use-isomorphic-id";

@@ -42,3 +42,24 @@ export type { DrawerProps } from "./drawer";
 
 export { Popover } from "./popover";
 export type { PopoverProps } from "./popover";
+
+export { AlertDialog } from "./alert-dialog";
+export type { AlertDialogProps } from "./alert-dialog";
+
+export { ContextMenu } from "./context-menu";
+export type { ContextMenuProps, ContextMenuItem } from "./context-menu";
+
+export { HoverCard } from "./hover-card";
+export type { HoverCardProps } from "./hover-card";
+
+export { Sheet } from "./sheet";
+export type { SheetProps, SheetSide } from "./sheet";
+
+export { CircularProgress } from "./circular-progress";
+export type { CircularProgressProps } from "./circular-progress";
+
+export { Snackbar } from "./snackbar";
+export type { SnackbarProps } from "./snackbar";
+
+export { SpeedDial } from "./speed-dial";
+export type { SpeedDialProps, SpeedDialAction } from "./speed-dial";

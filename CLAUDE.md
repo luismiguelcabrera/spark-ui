@@ -20,18 +20,18 @@ pnpm build-storybook # Static build
 ```
 src/
 ├── components/
-│   ├── forms/         # Button, Input, Select, Checkbox, Toggle, etc.
-│   ├── feedback/      # Spinner, Modal, Toast, Drawer, etc.
-│   ├── data-display/  # Badge, Card, Avatar, Icon, etc.
-│   ├── navigation/    # Tabs, Accordion, Pagination, etc.
-│   └── layout/        # ThemeProvider, AppShell, Sidebar, etc.
+│   ├── forms/         # Button, Input, Select, Checkbox, Toggle, Slider, NumberInput, TagInput, Switch, ToggleGroup, ColorPicker, DateRangePicker, TimePicker, PinInput, CopyButton, Toolbar, etc. (33 components)
+│   ├── feedback/      # Spinner, Modal, Toast, Drawer, AlertDialog, Sheet, ContextMenu, HoverCard, Snackbar, CircularProgress, SpeedDial, etc. (22 components)
+│   ├── data-display/  # Badge, Card, Avatar, Icon, Heading, Text, Code, Kbd, Timeline, TreeView, Carousel, Countdown, Table, Chip, etc. (34 components)
+│   ├── navigation/    # Tabs, Accordion, Pagination, Navbar, BottomNav, Menubar, NavigationMenu, Link, SkipNav, etc. (11 components)
+│   └── layout/        # ThemeProvider, AppShell, Sidebar, Container, Stack, Grid, Center, AspectRatio, Wrap, Separator, ScrollArea, Resizable, Portal, VisuallyHidden, etc. (17 components)
 ├── icons/
 │   ├── icons.tsx      # 160+ SVG icon components (createIcon factory)
 │   ├── registry.ts    # String name → component map (kebab + snake_case)
 │   ├── icon-provider.tsx  # IconProvider context for custom icon sets
 │   ├── create-icon.tsx    # createIcon() factory for new icons
 │   └── index.ts       # Barrel export
-├── hooks/             # useControllable, etc.
+├── hooks/             # useControllable, useMediaQuery, useDebounce, useClickOutside, useClipboard, useDisclosure, useLocalStorage, useIntersectionObserver, useKeyboardShortcut, usePrefersReducedMotion, useToggle, useFocusTrap, useScrollLock, useBreakpoint, useIsomorphicId (15 hooks)
 ├── lib/               # cn(), Slot, theme-tokens, styles
 ├── test/              # Test setup, a11y tests
 └── theme.css          # Default CSS variables + keyframes
