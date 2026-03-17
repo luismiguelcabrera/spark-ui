@@ -36,3 +36,9 @@ export type { AudioPlayerProps } from "./audio-player";
 
 export { MobileFilterSheet } from "./mobile-filter-sheet";
 export type { MobileFilterSheetProps } from "./mobile-filter-sheet";
+
+export { Drawer } from "./drawer";
+export type { DrawerProps } from "./drawer";
+
+export { Popover } from "./popover";
+export type { PopoverProps } from "./popover";

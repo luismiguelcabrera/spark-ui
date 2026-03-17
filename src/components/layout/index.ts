@@ -16,3 +16,6 @@ export { AuthLayout } from "./auth-layout";
 export type { AuthLayoutProps } from "./auth-layout";
 
 export { AdminPage } from "./admin-page";
+
+export { ThemeProvider, useTheme } from "./theme-provider";
+export type { Theme, ThemeProviderProps } from "./theme-provider";

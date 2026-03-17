@@ -40,6 +40,8 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     const resolvedIconSize = iconSize ?? (size === "sm" ? "sm" : "md");
     return (
       <button
+        type="button"
+        aria-label={props["aria-label"] ?? icon}
         className={cn(iconButtonVariants({ variant, size, className }))}
         ref={ref}
         {...props}

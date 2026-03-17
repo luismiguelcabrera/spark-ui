@@ -44,25 +44,30 @@ function Avatar({
   ring,
   className,
 }: AvatarProps) {
-  const [imgLoaded, setImgLoaded] = useState(false);
-  const [imgError, setImgError] = useState(false);
+  const [imgState, setImgState] = useState<{
+    src: string | undefined;
+    status: "loading" | "loaded" | "error";
+  }>({ src, status: "loading" });
   const imgRef = useRef<HTMLImageElement>(null);
 
+  // React-recommended pattern: reset state when prop changes
+  if (imgState.src !== src) {
+    setImgState({ src, status: "loading" });
+  }
+
   useEffect(() => {
-    setImgLoaded(false);
-    setImgError(false);
     if (!src) return;
-    // If the browser already has the image cached, onLoad fires synchronously
-    // before React attaches the handler. Check img.complete after the next frame.
     const raf = requestAnimationFrame(() => {
       const img = imgRef.current;
       if (img?.complete) {
-        if (img.naturalWidth > 0) setImgLoaded(true);
-        else setImgError(true);
+        setImgState({ src, status: img.naturalWidth > 0 ? "loaded" : "error" });
       }
     });
     return () => cancelAnimationFrame(raf);
   }, [src]);
+
+  const imgLoaded = imgState.status === "loaded";
+  const imgError = imgState.status === "error";
 
   const fallbackText = initials ?? (alt ? alt.charAt(0).toUpperCase() : "?");
 
@@ -90,8 +95,8 @@ function Avatar({
             "absolute inset-0 w-full h-full object-cover transition-opacity duration-300",
             imgLoaded ? "opacity-100" : "opacity-0",
           )}
-          onLoad={() => setImgLoaded(true)}
-          onError={() => setImgError(true)}
+          onLoad={() => setImgState({ src, status: "loaded" })}
+          onError={() => setImgState({ src, status: "error" })}
         />
       )}
     </div>

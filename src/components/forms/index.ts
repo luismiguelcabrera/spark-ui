@@ -57,3 +57,9 @@ export type { FormProps } from "./form";
 
 export { OtpInput } from "./otp-input";
 export type { OtpInputProps } from "./otp-input";
+
+export { Combobox } from "./combobox";
+export type { ComboboxProps, ComboboxOption } from "./combobox";
+
+export { DatePicker } from "./date-picker";
+export type { DatePickerProps } from "./date-picker";

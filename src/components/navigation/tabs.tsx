@@ -113,6 +113,7 @@ function TabsList({
 }) {
   return (
     <div
+      role="tablist"
       className={cn(
         "flex items-center gap-1 border-b border-gray-200",
         className
@@ -138,6 +139,8 @@ function Tab({
   return (
     <button
       type="button"
+      role="tab"
+      aria-selected={isActive}
       onClick={() => ctx.setValue(value)}
       className={cn(
         s.tabBase,
@@ -161,7 +164,7 @@ function TabsPanel({
 }) {
   const ctx = useTabsContext();
   if (ctx.value !== value) return null;
-  return <div className={className}>{children}</div>;
+  return <div role="tabpanel" className={className}>{children}</div>;
 }
 
 // ── Attach compound sub-components ──────────────────────

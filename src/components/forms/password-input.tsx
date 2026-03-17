@@ -28,7 +28,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
           <button
             className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
             type="button"
-            tabIndex={-1}
+            aria-label="Toggle password visibility"
           >
             <Icon name="visibility" size="md" />
           </button>

@@ -154,6 +154,7 @@ function Accordion({
             >
               <button
                 type="button"
+                aria-expanded={isOpen}
                 onClick={() => toggle(item.title)}
                 className={cn(
                   s.accordionTrigger,
@@ -215,6 +216,7 @@ function AccordionItem({
     <div className={cn(s.accordionItem, className)}>
       <button
         type="button"
+        aria-expanded={isOpen}
         onClick={() => ctx.toggle(value)}
         className={cn(
           s.accordionTrigger,

@@ -87,7 +87,7 @@ function Modal({
   // Inline (legacy) mode: render without overlay when not managed
   if (!isManaged) {
     return (
-      <div className={cn(modalVariants({ size, className }))}>
+      <div role="dialog" aria-label={title} className={cn(modalVariants({ size, className }))}>
         {title && (
           <div className={s.modalHeader}>
             <div>
@@ -96,7 +96,7 @@ function Modal({
                 <p className="text-sm text-slate-500 mt-0.5">{description}</p>
               )}
             </div>
-            <button className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-400">
+            <button type="button" aria-label="Close dialog" className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-400">
               <Icon name="close" size="md" />
             </button>
           </div>
@@ -112,7 +112,7 @@ function Modal({
 
   return (
     <ModalOverlay onClick={close}>
-      <div className={cn(modalVariants({ size, className }))}>
+      <div role="dialog" aria-modal="true" aria-label={title} className={cn(modalVariants({ size, className }))}>
         {title && (
           <div className={s.modalHeader}>
             <div>
@@ -122,6 +122,8 @@ function Modal({
               )}
             </div>
             <button
+              type="button"
+              aria-label="Close dialog"
               onClick={close}
               className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-400"
             >

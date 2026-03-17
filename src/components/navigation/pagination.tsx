@@ -44,6 +44,8 @@ function Pagination({
         </p>
         <div className="flex gap-2">
           <button
+            type="button"
+            aria-label="Previous page"
             className="p-2 border border-slate-200 rounded-xl hover:bg-slate-50 disabled:opacity-50 transition-colors"
             disabled={isFirst}
             onClick={() => !isFirst && setPage(page - 1)}
@@ -51,6 +53,8 @@ function Pagination({
             <Icon name="chevron_left" size="sm" />
           </button>
           <button
+            type="button"
+            aria-label="Next page"
             className="p-2 border border-slate-200 rounded-xl hover:bg-slate-50 disabled:opacity-50 transition-colors"
             disabled={isLast}
             onClick={() => !isLast && setPage(page + 1)}
