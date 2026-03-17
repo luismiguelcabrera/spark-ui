@@ -4,6 +4,7 @@ import { describe, it, expect } from "vitest";
 
 import { Button } from "../components/forms/button";
 import { Input } from "../components/forms/input";
+import { InputGroup, InputLeftAddon, InputRightAddon } from "../components/forms/input-group";
 import { Select } from "../components/forms/select";
 import { Checkbox } from "../components/forms/checkbox";
 import { Toggle } from "../components/forms/toggle";
@@ -58,6 +59,27 @@ describe("Accessibility (axe)", () => {
 
   it("Input (with error)", async () => {
     const { container } = render(<Input label="Email" error="Required" />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("InputGroup (with addons)", async () => {
+    const { container } = render(
+      <InputGroup>
+        <InputLeftAddon>https://</InputLeftAddon>
+        <Input placeholder="example.com" aria-label="Website URL" />
+        <InputRightAddon>.com</InputRightAddon>
+      </InputGroup>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("InputGroup (with left addon)", async () => {
+    const { container } = render(
+      <InputGroup>
+        <InputLeftAddon>$</InputLeftAddon>
+        <Input placeholder="0.00" aria-label="Amount" type="number" />
+      </InputGroup>,
+    );
     expect(await axe(container)).toHaveNoViolations();
   });
 

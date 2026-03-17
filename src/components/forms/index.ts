@@ -10,6 +10,20 @@ export type { IconButtonProps } from "./icon-button";
 export { Input } from "./input";
 export type { InputProps } from "./input";
 
+export {
+  InputGroup,
+  InputLeftAddon,
+  InputRightAddon,
+  InputLeftElement,
+  InputRightElement,
+} from "./input-group";
+export type {
+  InputGroupProps,
+  InputGroupSize,
+  InputAddonProps,
+  InputElementProps,
+} from "./input-group";
+
 export { Label } from "./label";
 export type { LabelProps } from "./label";
 
