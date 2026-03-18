@@ -102,8 +102,8 @@ describe("CheckboxCard", () => {
   });
 
   it("renders string icon", () => {
-    render(<CheckboxCard title="Option" icon="star" />);
-    expect(screen.getByText("star")).toBeInTheDocument();
+    const { container } = render(<CheckboxCard title="Option" icon="star" />);
+    expect(container.querySelector("svg")).toBeInTheDocument();
   });
 
   it("renders ReactNode icon", () => {

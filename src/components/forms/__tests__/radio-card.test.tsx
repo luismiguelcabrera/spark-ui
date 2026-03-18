@@ -159,8 +159,8 @@ describe("RadioCardGroup", () => {
 
   it("renders icon when provided as string", () => {
     const opts = [{ value: "a", title: "A", icon: "star" }];
-    render(<RadioCardGroup options={opts} />);
-    expect(screen.getByText("star")).toBeInTheDocument();
+    const { container } = render(<RadioCardGroup options={opts} />);
+    expect(container.querySelector("svg")).toBeInTheDocument();
   });
 
   it("renders icon when provided as ReactNode", () => {
