@@ -1,5 +1,6 @@
 import { renderHook, act } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
+import { useAsync } from "../use-async";
 import { useDebounce } from "../use-debounce";
 import { useClipboard } from "../use-clipboard";
 import { useDisclosure } from "../use-disclosure";
@@ -431,5 +432,186 @@ describe("useIsomorphicId", () => {
     const { result: result2 } = renderHook(() => useIsomorphicId("b"));
 
     expect(result1.current).not.toBe(result2.current);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useAsync
+// ---------------------------------------------------------------------------
+describe("useAsync", () => {
+  it("starts in idle state", () => {
+    const fn = vi.fn().mockResolvedValue("data");
+    const { result } = renderHook(() => useAsync(fn));
+
+    expect(result.current.status).toBe("idle");
+    expect(result.current.isIdle).toBe(true);
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.data).toBeNull();
+    expect(result.current.error).toBeNull();
+  });
+
+  it("transitions to loading then success", async () => {
+    const fn = vi.fn().mockResolvedValue("hello");
+    const { result } = renderHook(() => useAsync(fn));
+
+    let promise: Promise<unknown>;
+    act(() => {
+      promise = result.current.execute();
+    });
+
+    // Should be loading
+    expect(result.current.status).toBe("loading");
+    expect(result.current.isLoading).toBe(true);
+
+    await act(async () => {
+      await promise!;
+    });
+
+    expect(result.current.status).toBe("success");
+    expect(result.current.isSuccess).toBe(true);
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.data).toBe("hello");
+    expect(result.current.error).toBeNull();
+  });
+
+  it("transitions to loading then error", async () => {
+    const fn = vi.fn().mockRejectedValue(new Error("fail"));
+    const { result } = renderHook(() => useAsync(fn));
+
+    await act(async () => {
+      await result.current.execute();
+    });
+
+    expect(result.current.status).toBe("error");
+    expect(result.current.isError).toBe(true);
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.data).toBeNull();
+    expect(result.current.error?.message).toBe("fail");
+  });
+
+  it("wraps non-Error thrown values in Error", async () => {
+    const fn = vi.fn().mockRejectedValue("string error");
+    const { result } = renderHook(() => useAsync(fn));
+
+    await act(async () => {
+      await result.current.execute();
+    });
+
+    expect(result.current.error).toBeInstanceOf(Error);
+    expect(result.current.error?.message).toBe("string error");
+  });
+
+  it("passes arguments to the async function", async () => {
+    const fn = vi.fn().mockImplementation((x: number, y: number) =>
+      Promise.resolve(x + y),
+    );
+    const { result } = renderHook(() => useAsync(fn));
+
+    await act(async () => {
+      await result.current.execute(3, 4);
+    });
+
+    expect(fn).toHaveBeenCalledWith(3, 4);
+    expect(result.current.data).toBe(7);
+  });
+
+  it("returns the resolved value from execute", async () => {
+    const fn = vi.fn().mockResolvedValue(42);
+    const { result } = renderHook(() => useAsync(fn));
+
+    let returnValue: unknown;
+    await act(async () => {
+      returnValue = await result.current.execute();
+    });
+
+    expect(returnValue).toBe(42);
+  });
+
+  it("returns null from execute on error", async () => {
+    const fn = vi.fn().mockRejectedValue(new Error("nope"));
+    const { result } = renderHook(() => useAsync(fn));
+
+    let returnValue: unknown;
+    await act(async () => {
+      returnValue = await result.current.execute();
+    });
+
+    expect(returnValue).toBeNull();
+  });
+
+  it("resets state back to idle", async () => {
+    const fn = vi.fn().mockResolvedValue("data");
+    const { result } = renderHook(() => useAsync(fn));
+
+    await act(async () => {
+      await result.current.execute();
+    });
+    expect(result.current.isSuccess).toBe(true);
+
+    act(() => {
+      result.current.reset();
+    });
+
+    expect(result.current.status).toBe("idle");
+    expect(result.current.isIdle).toBe(true);
+    expect(result.current.data).toBeNull();
+    expect(result.current.error).toBeNull();
+  });
+
+  it("ignores stale responses when execute is called multiple times", async () => {
+    let resolvers: Array<(v: string) => void> = [];
+    const fn = vi.fn().mockImplementation(
+      () =>
+        new Promise<string>((resolve) => {
+          resolvers.push(resolve);
+        }),
+    );
+    const { result } = renderHook(() => useAsync(fn));
+
+    // Fire two calls
+    act(() => {
+      result.current.execute();
+    });
+    act(() => {
+      result.current.execute();
+    });
+
+    // Resolve the first (stale) call
+    await act(async () => {
+      resolvers[0]("stale");
+    });
+
+    // Should still be loading (waiting for second call)
+    expect(result.current.isLoading).toBe(true);
+
+    // Resolve the second (latest) call
+    await act(async () => {
+      resolvers[1]("latest");
+    });
+
+    expect(result.current.data).toBe("latest");
+    expect(result.current.isSuccess).toBe(true);
+  });
+
+  it("can be re-executed after an error", async () => {
+    let callCount = 0;
+    const fn = vi.fn().mockImplementation(() => {
+      callCount++;
+      if (callCount === 1) return Promise.reject(new Error("first fails"));
+      return Promise.resolve("second succeeds");
+    });
+
+    const { result } = renderHook(() => useAsync(fn));
+
+    await act(async () => {
+      await result.current.execute();
+    });
+    expect(result.current.isError).toBe(true);
+
+    await act(async () => {
+      await result.current.execute();
+    });
+    expect(result.current.isSuccess).toBe(true);
+    expect(result.current.data).toBe("second succeeds");
   });
 });

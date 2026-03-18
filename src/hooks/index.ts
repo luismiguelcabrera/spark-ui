@@ -18,3 +18,4 @@ export { usePrevious } from "./use-previous";
 export { useThrottle } from "./use-throttle";
 export { useWindowSize } from "./use-window-size";
 export { useHover } from "./use-hover";
+export { useAsync } from "./use-async";
