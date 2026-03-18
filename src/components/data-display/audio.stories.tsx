@@ -8,7 +8,7 @@ const meta = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["minimal", "standard", "card"],
+      options: ["minimal", "standard", "card", "waveform"],
     },
     size: {
       control: "select",
@@ -139,6 +139,89 @@ export const CardLarge: Story = {
     artist: "T. Schürger",
     artwork: sampleArtwork,
     size: "lg",
+  },
+  decorators: [
+    (Story) => (
+      <div className="max-w-lg">
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+/* -------------------------------------------------------------------------- */
+/*  Waveform variant                                                           */
+/* -------------------------------------------------------------------------- */
+
+export const Waveform: Story = {
+  args: {
+    src: nativeSrc,
+    variant: "waveform",
+    title: "SoundHelix Song 1",
+    artist: "T. Schürger",
+  },
+  decorators: [
+    (Story) => (
+      <div className="max-w-lg">
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export const WaveformLarge: Story = {
+  name: "Waveform (large)",
+  args: {
+    src: nativeSrc,
+    variant: "waveform",
+    title: "SoundHelix Song 1",
+    artist: "T. Schürger",
+    size: "lg",
+    rounded: "xl",
+  },
+  decorators: [
+    (Story) => (
+      <div className="max-w-xl">
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export const WaveformColors: Story = {
+  name: "Waveform (all colors)",
+  render: (args) => (
+    <div className="flex flex-col gap-4 max-w-lg">
+      {(
+        [
+          "primary",
+          "secondary",
+          "accent",
+          "success",
+          "warning",
+          "destructive",
+        ] as const
+      ).map((c) => (
+        <Audio
+          key={c}
+          {...args}
+          src={`/audio-${c}.mp3`}
+          variant="waveform"
+          color={c}
+          title={`${c.charAt(0).toUpperCase() + c.slice(1)} Theme`}
+          artist="Color Demo"
+        />
+      ))}
+    </div>
+  ),
+};
+
+export const WaveformMinimal: Story = {
+  name: "Waveform (no title)",
+  args: {
+    src: nativeSrc,
+    variant: "waveform",
+    color: "accent",
   },
   decorators: [
     (Story) => (
@@ -338,6 +421,20 @@ export const Gallery: Story = {
           title="SoundHelix Song 1"
           artist="T. Schürger"
           artwork={sampleArtwork}
+        />
+      </div>
+
+      <div>
+        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+          Waveform
+        </p>
+        <Audio
+          {...args}
+          src={nativeSrc}
+          variant="waveform"
+          title="SoundHelix Song 1"
+          artist="T. Schürger"
+          color="accent"
         />
       </div>
 

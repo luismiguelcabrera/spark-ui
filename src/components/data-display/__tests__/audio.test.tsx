@@ -7,6 +7,7 @@ import {
   getSoundCloudEmbedUrl,
   getSpotifyEmbedUrl,
   formatTime,
+  generateWaveformBars,
 } from "../audio";
 
 /* -------------------------------------------------------------------------- */
@@ -674,5 +675,151 @@ describe("Audio (Spotify)", () => {
       expect.stringContaining("Could not extract Spotify path"),
     );
     warnSpy.mockRestore();
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  generateWaveformBars                                                       */
+/* -------------------------------------------------------------------------- */
+
+describe("generateWaveformBars", () => {
+  it("generates the requested number of bars", () => {
+    const bars = generateWaveformBars("test.mp3", 60);
+    expect(bars).toHaveLength(60);
+  });
+
+  it("generates bars in the 0.15–1.0 range", () => {
+    const bars = generateWaveformBars("test.mp3", 100);
+    bars.forEach((h) => {
+      expect(h).toBeGreaterThanOrEqual(0.15);
+      expect(h).toBeLessThanOrEqual(1);
+    });
+  });
+
+  it("is deterministic (same seed → same bars)", () => {
+    const a = generateWaveformBars("seed", 40);
+    const b = generateWaveformBars("seed", 40);
+    expect(a).toEqual(b);
+  });
+
+  it("different seeds produce different bars", () => {
+    const a = generateWaveformBars("song-a.mp3", 40);
+    const b = generateWaveformBars("song-b.mp3", 40);
+    expect(a).not.toEqual(b);
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Waveform variant                                                           */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio (waveform variant)", () => {
+  it("renders with gradient background", () => {
+    const { container } = render(
+      <Audio src="/test.mp3" variant="waveform" />,
+    );
+    expect(container.firstChild).toHaveClass("bg-gradient-to-br");
+  });
+
+  it("renders waveform bars as the seek slider", () => {
+    render(<Audio src="/test.mp3" variant="waveform" />);
+    const seekBar = screen.getByRole("slider", { name: "Seek" });
+    expect(seekBar).toBeInTheDocument();
+    // Bars are children of the seek bar
+    expect(seekBar.children.length).toBeGreaterThan(0);
+  });
+
+  it("shows play/pause, volume, mute, and seek controls", () => {
+    render(<Audio src="/test.mp3" variant="waveform" />);
+    expect(screen.getByRole("button", { name: "Play" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Mute" })).toBeInTheDocument();
+    expect(screen.getByRole("slider", { name: "Seek" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("slider", { name: "Volume" }),
+    ).toBeInTheDocument();
+  });
+
+  it("displays title and artist when provided", () => {
+    render(
+      <Audio
+        src="/test.mp3"
+        variant="waveform"
+        title="Dreaming"
+        artist="Synth Wave"
+      />,
+    );
+    expect(screen.getByText("Dreaming")).toBeInTheDocument();
+    expect(screen.getByText("Synth Wave")).toBeInTheDocument();
+  });
+
+  it("includes title in region aria-label", () => {
+    render(
+      <Audio src="/test.mp3" variant="waveform" title="Dreaming" />,
+    );
+    expect(
+      screen.getByRole("region", { name: "Audio player: Dreaming" }),
+    ).toBeInTheDocument();
+  });
+
+  it("applies rounded and className", () => {
+    const { container } = render(
+      <Audio
+        src="/test.mp3"
+        variant="waveform"
+        rounded="xl"
+        className="my-wave"
+      />,
+    );
+    expect(container.firstChild).toHaveClass("rounded-2xl", "my-wave");
+  });
+
+  it.each(["primary", "accent", "destructive"] as const)(
+    "applies gradient for color=%s",
+    (c) => {
+      const { container } = render(
+        <Audio src="/test.mp3" variant="waveform" color={c} />,
+      );
+      expect(container.firstChild).toHaveClass("bg-gradient-to-br");
+    },
+  );
+
+  it.each(["sm", "md", "lg"] as const)(
+    "renders at size=%s with different bar counts",
+    (s) => {
+      render(<Audio src="/test.mp3" variant="waveform" size={s} />);
+      const seekBar = screen.getByRole("slider", { name: "Seek" });
+      const counts = { sm: 40, md: 60, lg: 80 };
+      expect(seekBar.children.length).toBe(counts[s]);
+    },
+  );
+
+  it("seeks on waveform click", () => {
+    const { container } = render(
+      <Audio src="/test.mp3" variant="waveform" />,
+    );
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    Object.defineProperty(audio, "duration", { value: 100, writable: true });
+    Object.defineProperty(audio, "currentTime", {
+      value: 0,
+      writable: true,
+      configurable: true,
+    });
+    fireEvent.loadedMetadata(audio);
+
+    const seekBar = screen.getByRole("slider", { name: "Seek" });
+    vi.spyOn(seekBar, "getBoundingClientRect").mockReturnValue({
+      left: 0,
+      right: 200,
+      width: 200,
+      top: 0,
+      bottom: 48,
+      height: 48,
+      x: 0,
+      y: 0,
+      toJSON: () => {},
+    });
+
+    fireEvent.click(seekBar, { clientX: 100 });
+    expect(audio.currentTime).toBe(50);
   });
 });

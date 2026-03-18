@@ -34,7 +34,7 @@ const audioVariants = cva("overflow-hidden", {
 /* -------------------------------------------------------------------------- */
 
 type AudioProvider = "native" | "soundcloud" | "spotify";
-type AudioVariant = "minimal" | "standard" | "card";
+type AudioVariant = "minimal" | "standard" | "card" | "waveform";
 type AudioSize = "sm" | "md" | "lg";
 type AudioColor =
   | "primary"
@@ -63,9 +63,9 @@ type AudioProps = VariantProps<typeof audioVariants> & {
    * @default "primary"
    */
   color?: AudioColor;
-  /** Track title (shown in card variant, used in aria-label). */
+  /** Track title (shown in card/waveform variants, used in aria-label). */
   title?: string;
-  /** Artist name (shown in card variant). */
+  /** Artist name (shown in card/waveform variants). */
   artist?: string;
   /** Album artwork URL (shown in card variant). */
   artwork?: string;
@@ -227,6 +227,35 @@ const embedHeightMap = {
 };
 
 /* -------------------------------------------------------------------------- */
+/*  Waveform variant utilities                                                 */
+/* -------------------------------------------------------------------------- */
+
+const gradientMap: Record<AudioColor, string> = {
+  primary: "from-indigo-600 via-violet-600 to-purple-700",
+  secondary: "from-slate-700 via-slate-600 to-slate-800",
+  accent: "from-amber-500 via-orange-500 to-red-500",
+  success: "from-emerald-600 via-teal-500 to-cyan-600",
+  warning: "from-amber-500 via-yellow-500 to-orange-500",
+  destructive: "from-red-600 via-rose-500 to-pink-600",
+};
+
+const waveformHeightMap = { sm: "h-8", md: "h-12", lg: "h-16" };
+const barCountMap = { sm: 40, md: 60, lg: 80 };
+
+function generateWaveformBars(seed: string, count: number): number[] {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) {
+    h = ((h << 5) - h + seed.charCodeAt(i)) | 0;
+  }
+  const bars: number[] = [];
+  for (let i = 0; i < count; i++) {
+    h = ((h * 1103515245 + 12345) & 0x7fffffff);
+    bars.push(0.15 + ((h % 1000) / 1000) * 0.85);
+  }
+  return bars;
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Inline SVG icons                                                           */
 /* -------------------------------------------------------------------------- */
 
@@ -381,6 +410,94 @@ function SeekBar({
 }
 
 /* -------------------------------------------------------------------------- */
+/*  Waveform seek bar                                                          */
+/* -------------------------------------------------------------------------- */
+
+function WaveformSeekBar({
+  bars,
+  current,
+  total,
+  height,
+  activeColor,
+  inactiveColor,
+  onSeek,
+}: {
+  bars: number[];
+  current: number;
+  total: number;
+  height: string;
+  activeColor: string;
+  inactiveColor: string;
+  onSeek: (fraction: number) => void;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const progress = total > 0 ? current / total : 0;
+  const activeIndex = Math.floor(progress * bars.length);
+
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const el = containerRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const fraction = Math.max(
+        0,
+        Math.min(1, (e.clientX - rect.left) / rect.width),
+      );
+      onSeek(fraction);
+    },
+    [onSeek],
+  );
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (total <= 0) return;
+      const step = 5;
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        onSeek(Math.min(1, (current + step) / total));
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        onSeek(Math.max(0, (current - step) / total));
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        onSeek(0);
+      } else if (e.key === "End") {
+        e.preventDefault();
+        onSeek(1);
+      }
+    },
+    [current, total, onSeek],
+  );
+
+  return (
+    <div
+      ref={containerRef}
+      role="slider"
+      aria-label="Seek"
+      aria-valuemin={0}
+      aria-valuemax={Math.floor(total)}
+      aria-valuenow={Math.floor(current)}
+      aria-valuetext={`${formatTime(current)} of ${formatTime(total)}`}
+      tabIndex={0}
+      className={cn("flex items-end gap-[2px] cursor-pointer", height)}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+    >
+      {bars.map((h, i) => (
+        <div
+          key={i}
+          className={cn(
+            "flex-1 rounded-full min-w-[2px]",
+            i <= activeIndex ? activeColor : inactiveColor,
+          )}
+          style={{ height: `${h * 100}%` }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Volume slider                                                              */
 /* -------------------------------------------------------------------------- */
 
@@ -389,12 +506,14 @@ function VolumeSlider({
   width,
   height,
   color,
+  trackColor,
   onChange,
 }: {
   volume: number;
   width: string;
   height: string;
   color: string;
+  trackColor?: string;
   onChange: (value: number) => void;
 }) {
   const barRef = useRef<HTMLDivElement>(null);
@@ -443,7 +562,8 @@ function VolumeSlider({
       aria-valuenow={Math.round(volume * 100)}
       tabIndex={0}
       className={cn(
-        "relative cursor-pointer rounded-full bg-slate-200 dark:bg-slate-700",
+        "relative cursor-pointer rounded-full",
+        trackColor || "bg-slate-200 dark:bg-slate-700",
         width,
         height,
       )}
@@ -829,6 +949,129 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
       );
     }
 
+    /* -- Waveform variant ------------------------------------------------- */
+    if (variant === "waveform") {
+      const bars = generateWaveformBars(src, barCountMap[size]);
+
+      return (
+        <div
+          className={cn(
+            audioVariants({ rounded }),
+            "bg-gradient-to-br",
+            gradientMap[color],
+            s.padding,
+            className,
+          )}
+          role="region"
+          aria-label={regionLabel}
+        >
+          {audioElement}
+
+          {/* Title / Artist */}
+          {(trackTitle || artist) && (
+            <div className="mb-3">
+              {trackTitle && (
+                <p
+                  className={cn(
+                    "font-medium text-white truncate",
+                    s.text,
+                  )}
+                >
+                  {trackTitle}
+                </p>
+              )}
+              {artist && (
+                <p
+                  className={cn(
+                    "text-white/70 truncate",
+                    s.timeText,
+                  )}
+                >
+                  {artist}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Waveform seek bar */}
+          <WaveformSeekBar
+            bars={bars}
+            current={currentTime}
+            total={duration}
+            height={waveformHeightMap[size]}
+            activeColor="bg-white/90"
+            inactiveColor="bg-white/25"
+            onSeek={handleSeek}
+          />
+
+          {/* Controls row */}
+          <div
+            className={cn(
+              "flex items-center justify-between mt-3",
+              s.gap,
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                aria-label={isPlaying ? "Pause" : "Play"}
+                onClick={togglePlay}
+                className={cn(
+                  "inline-flex items-center justify-center rounded-full shrink-0",
+                  "motion-safe:transition-colors",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white",
+                  "text-white bg-white/20 hover:bg-white/30",
+                  s.iconButton,
+                )}
+              >
+                {isPlaying ? (
+                  <PauseIcon className={s.playIcon} />
+                ) : (
+                  <PlayIcon className={cn(s.playIcon, "ml-0.5")} />
+                )}
+              </button>
+              <span
+                className={cn(
+                  "tabular-nums text-white/80 shrink-0 select-none",
+                  s.timeText,
+                )}
+              >
+                {formatTime(currentTime)} / {formatTime(duration)}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                aria-label={isMuted ? "Unmute" : "Mute"}
+                onClick={toggleMute}
+                className={cn(
+                  "inline-flex items-center justify-center rounded-full p-1",
+                  "motion-safe:transition-colors",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white",
+                  "text-white/70 hover:text-white",
+                )}
+              >
+                {isMuted ? (
+                  <VolumeMuteIcon className={s.controlIcon} />
+                ) : (
+                  <VolumeIcon className={s.controlIcon} />
+                )}
+              </button>
+              <VolumeSlider
+                volume={isMuted ? 0 : volume}
+                width={s.volumeWidth}
+                height={s.progressHeight}
+                color="bg-white/80"
+                trackColor="bg-white/20"
+                onChange={handleVolumeChange}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     /* -- Standard variant (default) --------------------------------------- */
     return (
       <div
@@ -857,6 +1100,7 @@ export {
   getSoundCloudEmbedUrl,
   getSpotifyEmbedUrl,
   formatTime,
+  generateWaveformBars,
 };
 export type {
   AudioProps,
