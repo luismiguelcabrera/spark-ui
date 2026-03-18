@@ -16,6 +16,9 @@ export type { AvatarProps } from "./avatar";
 export { ProgressBar } from "./progress-bar";
 export type { ProgressBarProps } from "./progress-bar";
 
+export { ProgressSteps, progressStepsVariants } from "./progress-steps";
+export type { ProgressStepsProps, ProgressStep, ProgressStepsColor } from "./progress-steps";
+
 export { StatCard } from "./stat-card";
 export type { StatCardProps } from "./stat-card";
 

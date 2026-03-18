@@ -16,6 +16,7 @@ import { VirtualList } from "../components/data-display/virtual-list";
 import { Card } from "../components/data-display/card";
 import { Avatar } from "../components/data-display/avatar";
 import { ProgressBar } from "../components/data-display/progress-bar";
+import { ProgressSteps } from "../components/data-display/progress-steps";
 import { DataTable, type Column } from "../components/data-display/data-table";
 import { Spinner } from "../components/feedback/spinner";
 import { Toast } from "../components/feedback/toast";
@@ -201,6 +202,18 @@ describe("Accessibility (axe)", () => {
 
   it("ProgressBar", async () => {
     const { container } = render(<ProgressBar value={50} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("ProgressSteps", async () => {
+    const steps = [
+      { label: "Step 1" },
+      { label: "Step 2" },
+      { label: "Step 3" },
+    ];
+    const { container } = render(
+      <ProgressSteps steps={steps} value={50} />,
+    );
     expect(await axe(container)).toHaveNoViolations();
   });
 
