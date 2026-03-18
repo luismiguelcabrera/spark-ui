@@ -1,6 +1,9 @@
 import { render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, it, expect } from "vitest";
+import { Result } from "../components/feedback/result";
+import { NavigationProgress } from "../components/feedback/navigation-progress";
+import { Tour } from "../components/feedback/tour";
 import { Parallax } from "../components/data-display/parallax";
 import { Window } from "../components/data-display/window";
 import { Pie } from "../components/data-display/pie";
@@ -678,4 +681,48 @@ describe("Accessibility (axe)", () => {
 
   // Video a11y tests skipped — axe + <video> in jsdom causes timeouts.
   // The Video component wraps a native <video> element with no custom ARIA needed.
+
+  it("Result - success", async () => {
+    const { container } = render(
+      <Result status="success" title="Success" subtitle="It worked." />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Result - error", async () => {
+    const { container } = render(
+      <Result status="error" title="Error" subtitle="Something failed." />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Result - 404", async () => {
+    const { container } = render(
+      <Result status="404" title="Not Found" />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("NavigationProgress - loading", async () => {
+    const { container } = render(<NavigationProgress loading />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("NavigationProgress - determinate", async () => {
+    const { container } = render(<NavigationProgress progress={50} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Tour - open", async () => {
+    const { container } = render(
+      <Tour
+        steps={[
+          { title: "Step 1", description: "Description 1" },
+          { title: "Step 2", description: "Description 2" },
+        ]}
+        open
+      />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
 });
