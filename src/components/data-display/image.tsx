@@ -52,6 +52,8 @@ type ImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "placeholder"> &
     width?: number | string;
     /** Height of the container (CSS value) */
     height?: number | string;
+    /** Show a darkening overlay on hover */
+    hoverOverlay?: boolean;
   };
 
 /* -------------------------------------------------------------------------- */
@@ -70,6 +72,7 @@ const Image = forwardRef<HTMLImageElement, ImageProps>(
       fallbackIcon = "image",
       width,
       height,
+      hoverOverlay = false,
       className,
       style,
       onLoad: onLoadProp,
@@ -135,7 +138,7 @@ const Image = forwardRef<HTMLImageElement, ImageProps>(
 
     return (
       <div
-        className={cn(imageVariants({ radius }), className)}
+        className={cn(imageVariants({ radius }), hoverOverlay && "group", className)}
         style={containerStyle}
       >
         {/* Skeleton placeholder */}
@@ -150,6 +153,11 @@ const Image = forwardRef<HTMLImageElement, ImageProps>(
               <Icon name={fallbackIcon} size="lg" className="text-slate-300" />
             )}
           </div>
+        )}
+
+        {/* Hover overlay */}
+        {hoverOverlay && (
+          <div className="absolute inset-0 z-10 bg-black/0 group-hover:bg-black/20 transition-colors" />
         )}
 
         {/* Actual image */}

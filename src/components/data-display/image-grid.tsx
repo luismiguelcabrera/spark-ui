@@ -79,7 +79,6 @@ const ImageGrid = forwardRef<HTMLDivElement, ImageGridProps>(
       <div
         key={`${image.src}-${index}`}
         className={cn(
-          "relative overflow-hidden group",
           layout === "grid" && image.span === 2 && "col-span-2",
           onImageClick && "cursor-pointer"
         )}
@@ -90,17 +89,10 @@ const ImageGrid = forwardRef<HTMLDivElement, ImageGridProps>(
           alt={image.alt}
           radius={imageRadius}
           objectFit="cover"
+          hoverOverlay={showOverlay}
           aspectRatio={layout === "grid" ? (image.aspectRatio ?? 1) : image.aspectRatio}
           className="w-full"
         />
-        {showOverlay && (
-          <div
-            className={cn(
-              "absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors",
-              rounded !== "none" && "rounded-xl"
-            )}
-          />
-        )}
       </div>
     );
 
