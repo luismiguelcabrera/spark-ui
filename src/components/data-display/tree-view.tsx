@@ -5,6 +5,8 @@ import {
   useState,
   useMemo,
   useCallback,
+  useRef,
+  useEffect,
   type HTMLAttributes,
   type ReactNode,
 } from "react";
@@ -99,6 +101,64 @@ function collectAllIds(nodes: TreeNode[]): string[] {
   return ids;
 }
 
+/** Collect all descendant IDs of a node */
+function collectDescendantIds(node: TreeNode): string[] {
+  const ids: string[] = [];
+  function walk(children: TreeNode[]) {
+    for (const child of children) {
+      ids.push(child.id);
+      if (child.children) walk(child.children);
+    }
+  }
+  if (node.children) walk(node.children);
+  return ids;
+}
+
+/** Build a map of nodeId → parentId for bubble-up logic */
+function buildParentMap(nodes: TreeNode[]): Map<string, string> {
+  const map = new Map<string, string>();
+  function walk(list: TreeNode[], parentId?: string) {
+    for (const node of list) {
+      if (parentId) map.set(node.id, parentId);
+      if (node.children) walk(node.children, node.id);
+    }
+  }
+  walk(nodes);
+  return map;
+}
+
+/** Find a node by ID in the tree */
+function findNode(nodes: TreeNode[], id: string): TreeNode | undefined {
+  for (const node of nodes) {
+    if (node.id === id) return node;
+    if (node.children) {
+      const found = findNode(node.children, id);
+      if (found) return found;
+    }
+  }
+  return undefined;
+}
+
+/** Check if all children of a node are in the set */
+function allChildrenSelected(node: TreeNode, selected: Set<string>): boolean {
+  if (!node.children || node.children.length === 0) return false;
+  return node.children.every(
+    (child) =>
+      selected.has(child.id) &&
+      (!child.children || allChildrenSelected(child, selected)),
+  );
+}
+
+/** Check if any descendant of a node is in the set */
+function someDescendantsSelected(node: TreeNode, selected: Set<string>): boolean {
+  if (!node.children) return false;
+  return node.children.some(
+    (child) =>
+      selected.has(child.id) ||
+      someDescendantsSelected(child, selected),
+  );
+}
+
 /** Check if a node or any descendant matches the search query */
 function nodeMatchesSearch(node: TreeNode, query: string): boolean {
   const lower = query.toLowerCase();
@@ -161,12 +221,26 @@ function TreeNodeComponent({
   const isExpanded = expandedIds.has(node.id);
   const isSelected = selectedId === node.id;
   const isChecked = selectedIds.has(node.id);
+  const isIndeterminate =
+    selectable &&
+    !isChecked &&
+    hasChildren &&
+    someDescendantsSelected(node, selectedIds);
+
+  const checkboxRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (checkboxRef.current) {
+      checkboxRef.current.indeterminate = !!isIndeterminate;
+    }
+  }, [isIndeterminate]);
 
   return (
     <div>
       <div className="flex items-center">
         {selectable && (
           <input
+            ref={checkboxRef}
             type="checkbox"
             checked={isChecked}
             onChange={() => onCheckToggle(node.id)}
@@ -300,14 +374,43 @@ const TreeView = forwardRef<HTMLDivElement, TreeViewProps>(
 
     const checkedSet = useMemo(() => new Set(checkedIds), [checkedIds]);
 
+    const parentMap = useMemo(() => buildParentMap(nodes), [nodes]);
+
     const handleCheckToggle = useCallback(
       (nodeId: string) => {
-        const next = checkedIds.includes(nodeId)
-          ? checkedIds.filter((id) => id !== nodeId)
-          : [...checkedIds, nodeId];
-        setCheckedIds(next);
+        const currentSet = new Set(checkedIds);
+        const node = findNode(nodes, nodeId);
+        if (!node) return;
+
+        if (currentSet.has(nodeId)) {
+          // Uncheck: remove self + all descendants
+          currentSet.delete(nodeId);
+          for (const id of collectDescendantIds(node)) {
+            currentSet.delete(id);
+          }
+        } else {
+          // Check: add self + all descendants
+          currentSet.add(nodeId);
+          for (const id of collectDescendantIds(node)) {
+            currentSet.add(id);
+          }
+        }
+
+        // Bubble up: check/uncheck ancestors
+        let parentId = parentMap.get(nodeId);
+        while (parentId) {
+          const parent = findNode(nodes, parentId);
+          if (parent && allChildrenSelected(parent, currentSet)) {
+            currentSet.add(parentId);
+          } else {
+            currentSet.delete(parentId);
+          }
+          parentId = parentMap.get(parentId);
+        }
+
+        setCheckedIds(Array.from(currentSet));
       },
-      [checkedIds, setCheckedIds]
+      [checkedIds, nodes, parentMap, setCheckedIds]
     );
 
     const handleToggle = (nodeId: string) => {

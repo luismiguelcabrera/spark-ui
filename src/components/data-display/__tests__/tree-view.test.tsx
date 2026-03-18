@@ -135,6 +135,132 @@ describe("TreeView", () => {
     });
   });
 
+  describe("cascading selection", () => {
+    const deepNodes = [
+      {
+        id: "root",
+        label: "Root",
+        children: [
+          {
+            id: "folder",
+            label: "Folder",
+            children: [
+              { id: "file-a", label: "File A" },
+              { id: "file-b", label: "File B" },
+            ],
+          },
+          { id: "leaf", label: "Leaf" },
+        ],
+      },
+    ];
+
+    it("checking a parent selects all descendants", () => {
+      const onSelectionChange = vi.fn();
+      render(
+        <TreeView
+          nodes={deepNodes}
+          selectable
+          expandAll
+          onSelectionChange={onSelectionChange}
+        />
+      );
+      // Click "Folder" checkbox
+      fireEvent.click(screen.getByLabelText("Select Folder"));
+      const selected = onSelectionChange.mock.calls[0][0] as string[];
+      expect(selected).toContain("folder");
+      expect(selected).toContain("file-a");
+      expect(selected).toContain("file-b");
+    });
+
+    it("unchecking a parent deselects all descendants", () => {
+      const onSelectionChange = vi.fn();
+      render(
+        <TreeView
+          nodes={deepNodes}
+          selectable
+          expandAll
+          selectedIds={["folder", "file-a", "file-b"]}
+          onSelectionChange={onSelectionChange}
+        />
+      );
+      fireEvent.click(screen.getByLabelText("Select Folder"));
+      const selected = onSelectionChange.mock.calls[0][0] as string[];
+      expect(selected).not.toContain("folder");
+      expect(selected).not.toContain("file-a");
+      expect(selected).not.toContain("file-b");
+    });
+
+    it("checking all children auto-checks the parent", () => {
+      const onSelectionChange = vi.fn();
+      render(
+        <TreeView
+          nodes={deepNodes}
+          selectable
+          expandAll
+          selectedIds={["file-a"]}
+          onSelectionChange={onSelectionChange}
+        />
+      );
+      // Check the last sibling → parent should auto-check
+      fireEvent.click(screen.getByLabelText("Select File B"));
+      const selected = onSelectionChange.mock.calls[0][0] as string[];
+      expect(selected).toContain("folder");
+      expect(selected).toContain("file-a");
+      expect(selected).toContain("file-b");
+    });
+
+    it("unchecking one child unchecks the parent", () => {
+      const onSelectionChange = vi.fn();
+      render(
+        <TreeView
+          nodes={deepNodes}
+          selectable
+          expandAll
+          selectedIds={["folder", "file-a", "file-b"]}
+          onSelectionChange={onSelectionChange}
+        />
+      );
+      fireEvent.click(screen.getByLabelText("Select File A"));
+      const selected = onSelectionChange.mock.calls[0][0] as string[];
+      expect(selected).not.toContain("folder");
+      expect(selected).not.toContain("file-a");
+      expect(selected).toContain("file-b");
+    });
+
+    it("shows indeterminate state when some children are selected", () => {
+      render(
+        <TreeView
+          nodes={deepNodes}
+          selectable
+          expandAll
+          selectedIds={["file-a"]}
+        />
+      );
+      const folderCheckbox = screen.getByLabelText("Select Folder") as HTMLInputElement;
+      expect(folderCheckbox.indeterminate).toBe(true);
+      expect(folderCheckbox.checked).toBe(false);
+    });
+
+    it("checking root cascades through all levels", () => {
+      const onSelectionChange = vi.fn();
+      render(
+        <TreeView
+          nodes={deepNodes}
+          selectable
+          expandAll
+          onSelectionChange={onSelectionChange}
+        />
+      );
+      fireEvent.click(screen.getByLabelText("Select Root"));
+      const selected = onSelectionChange.mock.calls[0][0] as string[];
+      expect(selected).toContain("root");
+      expect(selected).toContain("folder");
+      expect(selected).toContain("file-a");
+      expect(selected).toContain("file-b");
+      expect(selected).toContain("leaf");
+    });
+  });
+
   it("forwards ref", () => {
     const ref = { current: null };
     render(<TreeView ref={ref} nodes={nodes} />);
