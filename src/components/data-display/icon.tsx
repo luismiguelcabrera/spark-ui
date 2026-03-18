@@ -1,74 +1,37 @@
-import { forwardRef, useMemo } from "react";
+import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
-import { useIconResolver } from "../../icons/icon-provider";
-import { builtInIcons } from "../../icons/registry";
-import type { ComponentType } from "react";
-import type { IconComponentProps } from "../../icons/icon-provider";
 
-const sizePixels = {
-  xs: 12,
-  sm: 16,
-  md: 20,
-  lg: 24,
-  xl: 32,
+const sizeMap = {
+  sm: "text-[16px]",
+  md: "text-[20px]",
+  lg: "text-[24px]",
+  xl: "text-[32px]",
 } as const;
 
-type IconProps = {
+type IconProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & {
   name: string;
-  size?: keyof typeof sizePixels;
   filled?: boolean;
-  className?: string;
+  size?: keyof typeof sizeMap;
 };
 
-/**
- * Renders a resolved icon component.
- * Extracted as a standalone component so the lint rule doesn't flag it
- * as "created during render".
- */
-const ResolvedIconRenderer = forwardRef<
-  SVGSVGElement,
-  { component: ComponentType<IconComponentProps>; size: number; className?: string }
->(({ component: Comp, size, className }, ref) => {
-  return <Comp ref={ref} size={size} className={cn("shrink-0", className)} />;
-});
-ResolvedIconRenderer.displayName = "ResolvedIconRenderer";
-
-const Icon = forwardRef<SVGSVGElement | HTMLSpanElement, IconProps>(
-  ({ name, size = "md", filled = false, className }, ref) => {
-    const resolver = useIconResolver();
-    const px = sizePixels[size];
-
-    const IconComponent = useMemo(
-      () => resolver?.(name) ?? builtInIcons[name] ?? null,
-      [resolver, name],
-    );
-
-    if (IconComponent) {
-      return (
-        <ResolvedIconRenderer
-          ref={ref as React.Ref<SVGSVGElement>}
-          component={IconComponent}
-          size={px}
-          className={className}
-        />
-      );
-    }
-
-    // Fallback to Material Symbols font (legacy)
+const Icon = forwardRef<HTMLSpanElement, IconProps>(
+  ({ name, filled = false, size = "md", className, "aria-hidden": ariaHidden, ...props }, ref) => {
     return (
       <span
-        ref={ref as React.Ref<HTMLSpanElement>}
+        ref={ref}
+        aria-hidden={ariaHidden ?? true}
         className={cn(
           "material-symbols-outlined select-none leading-none",
           filled && "icon-filled",
-          className,
+          sizeMap[size],
+          className
         )}
-        style={{ fontSize: px }}
+        {...props}
       >
         {name}
       </span>
     );
-  },
+  }
 );
 Icon.displayName = "Icon";
 

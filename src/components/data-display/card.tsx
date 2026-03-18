@@ -1,4 +1,4 @@
-import { forwardRef, type HTMLAttributes, type ReactNode, type MouseEventHandler } from "react";
+import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
@@ -32,14 +32,6 @@ type CardProps = HTMLAttributes<HTMLDivElement> &
     icon?: string;
     footer?: ReactNode;
     actions?: ReactNode;
-    /** Shows a skeleton pulse overlay */
-    loading?: boolean;
-    /** Elevates shadow on hover with transition */
-    hoverable?: boolean;
-    /** Adds cursor-pointer and interactive styles */
-    clickable?: boolean;
-    /** Click handler */
-    onClick?: MouseEventHandler<HTMLDivElement>;
   };
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
@@ -53,48 +45,20 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
       icon,
       footer,
       actions,
-      loading,
-      hoverable,
-      clickable,
-      onClick,
       children,
       ...props
     },
     ref
   ) => {
-    const interactiveClasses = cn(
-      hoverable && "hover:shadow-lg hover:-translate-y-0.5",
-      clickable && "cursor-pointer active:scale-[0.99]",
-      (hoverable || clickable) &&
-        "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
-    );
-
-    const loadingOverlay = loading ? (
-      <div
-        className="absolute inset-0 z-10 rounded-2xl bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 animate-pulse"
-        aria-hidden="true"
-        data-testid="card-loading-overlay"
-      />
-    ) : null;
-
     // Shorthand mode: auto-render header when title is provided
     if (title) {
       return (
         <div
-          className={cn(
-            cardVariants({ variant, padding, className }),
-            interactiveClasses,
-            loading && "relative overflow-hidden",
-          )}
+          className={cn(cardVariants({ variant, padding }), className)}
           ref={ref}
-          role={clickable ? "button" : undefined}
-          tabIndex={clickable ? 0 : undefined}
-          aria-busy={loading || undefined}
-          onClick={onClick}
           {...props}
         >
-          {loadingOverlay}
-          <div className={cn("flex items-center justify-between mb-4", loading && "invisible")}>
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               {icon && (
                 <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -110,11 +74,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
             </div>
             {actions && <div className="flex items-center gap-2">{actions}</div>}
           </div>
-          <div className={cn(loading && "invisible")}>{children}</div>
+          {children}
           {footer && (
-            <div className={cn("mt-4 pt-4 border-t border-slate-100", loading && "invisible")}>
-              {footer}
-            </div>
+            <div className="mt-4 pt-4 border-t border-slate-100">{footer}</div>
           )}
         </div>
       );
@@ -123,24 +85,13 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     // Default mode: raw card container
     return (
       <div
-        className={cn(
-          cardVariants({ variant, padding, className }),
-          interactiveClasses,
-          loading && "relative overflow-hidden",
-        )}
+        className={cn(cardVariants({ variant, padding }), className)}
         ref={ref}
-        role={clickable ? "button" : undefined}
-        tabIndex={clickable ? 0 : undefined}
-        aria-busy={loading || undefined}
-        onClick={onClick}
         {...props}
       >
-        {loadingOverlay}
-        <div className={cn(loading && "invisible")}>{children}</div>
+        {children}
         {footer && (
-          <div className={cn("mt-4 pt-4 border-t border-slate-100", loading && "invisible")}>
-            {footer}
-          </div>
+          <div className="mt-4 pt-4 border-t border-slate-100">{footer}</div>
         )}
       </div>
     );
@@ -178,5 +129,16 @@ const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 );
 CardContent.displayName = "CardContent";
 
-export { Card, CardHeader, CardTitle, CardContent, cardVariants };
+const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      className={cn("mt-4 pt-4 border-t border-slate-100", className)}
+      ref={ref}
+      {...props}
+    />
+  )
+);
+CardFooter.displayName = "CardFooter";
+
+export { Card, CardHeader, CardTitle, CardContent, CardFooter, cardVariants };
 export type { CardProps };

@@ -1,8 +1,9 @@
+import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { Icon } from "./icon";
 
-type StatCardProps = {
+type StatCardProps = HTMLAttributes<HTMLDivElement> & {
   icon: string;
   iconBg?: string;
   iconColor?: string;
@@ -10,43 +11,50 @@ type StatCardProps = {
   value: string | number;
   change?: string;
   changeColor?: string;
-  className?: string;
 };
 
-function StatCard({
-  icon,
-  iconBg = "bg-slate-100",
-  iconColor = "text-slate-600",
-  label,
-  value,
-  change,
-  changeColor = "text-green-600",
-  className,
-}: StatCardProps) {
-  return (
-    <div className={cn(s.cardSection, "p-5", className)}>
-      <div className="mb-4 flex items-center justify-between relative">
-        <span
-          className={cn(s.iconBox, "h-10 w-10", iconBg, iconColor)}
-        >
-          <Icon name={icon} size="md" />
-        </span>
-        {change && (
+const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
+  (
+    {
+      icon,
+      iconBg = "bg-slate-100",
+      iconColor = "text-slate-600",
+      label,
+      value,
+      change,
+      changeColor = "text-green-600",
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <div ref={ref} className={cn(s.cardSection, "p-5", className)} {...props}>
+        <div className="mb-4 flex items-center justify-between relative">
           <span
-            className={cn(
-              "flex items-center text-xs font-semibold px-2 py-1 rounded-lg",
-              changeColor
-            )}
+            aria-hidden="true"
+            className={cn(s.iconBox, "h-10 w-10", iconBg, iconColor)}
           >
-            {change}
+            <Icon name={icon} size="md" />
           </span>
-        )}
+          {change && (
+            <span
+              className={cn(
+                "flex items-center text-xs font-semibold px-2 py-1 rounded-lg",
+                changeColor
+              )}
+            >
+              {change}
+            </span>
+          )}
+        </div>
+        <p className={s.statLabel}>{label}</p>
+        <p className={cn(s.statValue, "mt-1")}>{value}</p>
       </div>
-      <p className={s.statLabel}>{label}</p>
-      <p className={cn(s.statValue, "mt-1")}>{value}</p>
-    </div>
-  );
-}
+    );
+  }
+);
+StatCard.displayName = "StatCard";
 
 export { StatCard };
 export type { StatCardProps };
