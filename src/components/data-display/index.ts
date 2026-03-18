@@ -42,3 +42,5 @@ export type { CalendarProps, CalendarDay } from "./calendar";
 
 export { QrCode } from "./qr-code";
 export type { QrCodeProps } from "./qr-code";
+
+export * from "./charts";
