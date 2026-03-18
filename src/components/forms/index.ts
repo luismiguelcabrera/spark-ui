@@ -57,3 +57,18 @@ export type { FormProps } from "./form";
 
 export { OtpInput } from "./otp-input";
 export type { OtpInputProps } from "./otp-input";
+
+export { Cascader } from "./cascader";
+export type { CascaderProps, CascaderOption, CascaderSize } from "./cascader";
+
+export { TreeSelect } from "./tree-select";
+export type { TreeSelectProps, TreeSelectNode, TreeSelectSize } from "./tree-select";
+
+export { SplitButton } from "./split-button";
+export type {
+  SplitButtonProps,
+  SplitButtonAction,
+  SplitButtonVariant,
+  SplitButtonColor,
+  SplitButtonSize,
+} from "./split-button";
