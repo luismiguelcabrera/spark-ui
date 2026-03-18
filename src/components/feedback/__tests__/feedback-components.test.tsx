@@ -72,12 +72,13 @@ describe("Tooltip", () => {
     expect(screen.getByText("Hover me")).toBeInTheDocument();
   });
 
-  it("renders tooltip content with role='tooltip' when open", () => {
+  it("renders tooltip content with role='tooltip'", () => {
     render(
-      <Tooltip content="Help text" open={true}>
+      <Tooltip content="Help text">
         <button>Hover me</button>
       </Tooltip>
     );
+    // Tooltip content is always in DOM (shown on hover via CSS)
     expect(screen.getByRole("tooltip")).toBeInTheDocument();
     expect(screen.getByRole("tooltip")).toHaveTextContent("Help text");
   });

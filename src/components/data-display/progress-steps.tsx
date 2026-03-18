@@ -67,12 +67,12 @@ const dotSizeMap = {
   xl: "w-6 h-6",
 };
 
-const checkIconSize: Record<string, "xs" | "sm"> = {
-  xs: "xs",
-  sm: "xs",
-  md: "xs",
-  lg: "sm",
-  xl: "sm",
+const checkIconSize: Record<string, "sm" | "md"> = {
+  xs: "sm",
+  sm: "sm",
+  md: "sm",
+  lg: "md",
+  xl: "md",
 };
 
 const labelSizeMap = {
