@@ -1,22 +1,28 @@
 "use client";
 
-import { forwardRef, useState, type HTMLAttributes } from "react";
+import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
+import { Image } from "./image";
+import { Masonry } from "../layout/masonry";
 
 type ImageGridItem = {
   /** Image source URL */
   src: string;
   /** Alt text */
   alt: string;
-  /** Aspect ratio (default: 1) */
+  /** Aspect ratio (default: 1 for grid, natural for masonry) */
   aspectRatio?: number;
-  /** Column span (for masonry-like layouts) */
+  /** Column span (grid layout only) */
   span?: 1 | 2;
 };
+
+type ImageGridLayout = "grid" | "masonry";
 
 type ImageGridProps = HTMLAttributes<HTMLDivElement> & {
   /** Images to display */
   images: ImageGridItem[];
+  /** Layout mode */
+  layout?: ImageGridLayout;
   /** Number of columns */
   cols?: 2 | 3 | 4 | 5 | 6;
   /** Gap between images */
@@ -37,12 +43,19 @@ const colsMap: Record<number, string> = {
   6: "grid-cols-6",
 };
 
-const roundedMap = {
-  none: "rounded-none",
-  md: "rounded-md",
-  lg: "rounded-lg",
-  xl: "rounded-xl",
-  "2xl": "rounded-2xl",
+const radiusMap: Record<string, "none" | "sm" | "md" | "lg" | "xl" | "full"> = {
+  none: "none",
+  md: "md",
+  lg: "lg",
+  xl: "xl",
+  "2xl": "xl",
+};
+
+const gapPxMap: Record<string, number> = {
+  "1": 4,
+  "2": 8,
+  "3": 12,
+  "4": 16,
 };
 
 const ImageGrid = forwardRef<HTMLDivElement, ImageGridProps>(
@@ -50,6 +63,7 @@ const ImageGrid = forwardRef<HTMLDivElement, ImageGridProps>(
     {
       className,
       images,
+      layout = "grid",
       cols = 3,
       gap = "2",
       rounded = "xl",
@@ -59,7 +73,50 @@ const ImageGrid = forwardRef<HTMLDivElement, ImageGridProps>(
     },
     ref
   ) => {
-    const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
+    const imageRadius = radiusMap[rounded];
+
+    const renderItem = (image: ImageGridItem, index: number) => (
+      <div
+        key={`${image.src}-${index}`}
+        className={cn(
+          "relative overflow-hidden group",
+          layout === "grid" && image.span === 2 && "col-span-2",
+          onImageClick && "cursor-pointer"
+        )}
+        onClick={() => onImageClick?.(image, index)}
+      >
+        <Image
+          src={image.src}
+          alt={image.alt}
+          radius={imageRadius}
+          objectFit="cover"
+          aspectRatio={layout === "grid" ? (image.aspectRatio ?? 1) : image.aspectRatio}
+          className="w-full"
+        />
+        {showOverlay && (
+          <div
+            className={cn(
+              "absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors",
+              rounded !== "none" && "rounded-xl"
+            )}
+          />
+        )}
+      </div>
+    );
+
+    if (layout === "masonry") {
+      return (
+        <Masonry
+          ref={ref}
+          columns={cols}
+          gap={gapPxMap[gap]}
+          className={className}
+          {...props}
+        >
+          {images.map(renderItem)}
+        </Masonry>
+      );
+    }
 
     return (
       <div
@@ -67,34 +124,7 @@ const ImageGrid = forwardRef<HTMLDivElement, ImageGridProps>(
         className={cn("grid", colsMap[cols], `gap-${gap}`, className)}
         {...props}
       >
-        {images.map((image, index) => {
-          if (failedImages.has(index)) return null;
-
-          return (
-            <div
-              key={`${image.src}-${index}`}
-              className={cn(
-                "relative overflow-hidden group",
-                roundedMap[rounded],
-                image.span === 2 && "col-span-2",
-                onImageClick && "cursor-pointer"
-              )}
-              style={{ aspectRatio: image.aspectRatio ?? 1 }}
-              onClick={() => onImageClick?.(image, index)}
-            >
-              <img
-                src={image.src}
-                alt={image.alt}
-                loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                onError={() => setFailedImages((prev) => new Set(prev).add(index))}
-              />
-              {showOverlay && (
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
-              )}
-            </div>
-          );
-        })}
+        {images.map(renderItem)}
       </div>
     );
   }
@@ -102,4 +132,4 @@ const ImageGrid = forwardRef<HTMLDivElement, ImageGridProps>(
 ImageGrid.displayName = "ImageGrid";
 
 export { ImageGrid };
-export type { ImageGridProps, ImageGridItem };
+export type { ImageGridProps, ImageGridItem, ImageGridLayout };

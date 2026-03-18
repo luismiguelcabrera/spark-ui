@@ -92,7 +92,7 @@ export { Countdown } from "./countdown";
 export type { CountdownProps } from "./countdown";
 
 export { ImageGrid } from "./image-grid";
-export type { ImageGridProps, ImageGridItem } from "./image-grid";
+export type { ImageGridProps, ImageGridItem, ImageGridLayout } from "./image-grid";
 
 export { Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption } from "./table";
 export type { TableProps, TableHeaderProps, TableBodyProps, TableFooterProps, TableRowProps, TableHeadProps, TableCellProps, TableCaptionProps } from "./table";
