@@ -1,5 +1,5 @@
 export { Tabs } from "./tabs";
-export type { TabsProps, TabItem } from "./tabs";
+export type { TabsProps, TabItem, TabsOrientation } from "./tabs";
 
 export { Breadcrumb } from "./breadcrumb";
 export type { BreadcrumbProps, BreadcrumbItem } from "./breadcrumb";

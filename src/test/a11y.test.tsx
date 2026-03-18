@@ -201,6 +201,32 @@ describe("Accessibility (axe)", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
+  it("Tabs (vertical compound)", async () => {
+    const { container } = render(
+      <Tabs defaultValue="a" orientation="vertical">
+        <Tabs.List>
+          <Tabs.Tab value="a">General</Tabs.Tab>
+          <Tabs.Tab value="b">Security</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="a">General content</Tabs.Panel>
+      </Tabs>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Tabs (vertical legacy)", async () => {
+    const { container } = render(
+      <Tabs
+        orientation="vertical"
+        tabs={[
+          { label: "Tab 1", value: "t1", active: true },
+          { label: "Tab 2", value: "t2" },
+        ]}
+      />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
   it("Accordion (legacy)", async () => {
     const { container } = render(
       <Accordion items={[
