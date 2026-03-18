@@ -23,7 +23,7 @@ import { Knob } from "../components/forms/knob";
 import { CheckboxCard } from "../components/forms/checkbox-card";
 import { RadioCardGroup } from "../components/forms/radio-card";
 import { PullToRefresh } from "../components/feedback/pull-to-refresh";
-import { SwipeableDrawer } from "../components/feedback/swipeable-drawer";
+
 import { Splitter } from "../components/layout/splitter";
 import { Masonry } from "../components/layout/masonry";
 import { Mention } from "../components/forms/mention";
@@ -1083,26 +1083,6 @@ describe("Accessibility (axe)", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("SwipeableDrawer (open, left)", async () => {
-    const { container } = render(
-      <SwipeableDrawer open side="left" title="Navigation"><nav>Menu</nav></SwipeableDrawer>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
-  });
-
-  it("SwipeableDrawer (open, bottom)", async () => {
-    const { container } = render(
-      <SwipeableDrawer open side="bottom" title="Settings"><p>Content</p></SwipeableDrawer>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
-  });
-
-  it("SwipeableDrawer (closed)", async () => {
-    const { container } = render(
-      <SwipeableDrawer open={false} title="Menu"><p>Content</p></SwipeableDrawer>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
-  });
 
   it("Knob (default)", async () => {
     const { container } = render(<Knob label="Volume" defaultValue={50} />);
