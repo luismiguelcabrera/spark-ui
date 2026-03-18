@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useState, useRef, useCallback, type HTMLAttributes } from "react";
+import { forwardRef, useState, useRef, useCallback, useMemo, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { useControllable } from "../../hooks/use-controllable";
 
@@ -108,7 +108,10 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
     // Extract single or range values
     const isRange = range && Array.isArray(value);
     const singleValue = isRange ? 0 : (value as number);
-    const rangeValue = isRange ? (value as [number, number]) : [min, value as number] as [number, number];
+    const rangeValue = useMemo(
+      () => isRange ? (value as [number, number]) : [min, value as number] as [number, number],
+      [isRange, value, min]
+    );
 
     const percentOf = (val: number) => ((val - min) / (max - min)) * 100;
     const percent = isRange ? 0 : percentOf(singleValue);
@@ -121,6 +124,7 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
         const ratio = (clientX - rect.left) / rect.width;
         return snap(clamp(min + ratio * (max - min)));
       },
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- clamp/snap are stable within min/max/step
       [min, max, step]
     );
 
@@ -245,6 +249,7 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
           setValue(newVal);
         }
       },
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- clamp is stable within min/max
       [disabled, isRange, rangeValue, singleValue, step, min, max, setValue]
     );
 

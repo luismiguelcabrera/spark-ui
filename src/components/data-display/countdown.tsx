@@ -90,6 +90,7 @@ const Countdown = forwardRef<HTMLDivElement, CountdownProps>(
         }
       }, 1000);
       return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- target identity tracked via getTime()
     }, [target.getTime(), completedRef]);
 
     const sizes = sizeMap[size];
