@@ -61,15 +61,43 @@ describe("CodeBlock", () => {
 });
 
 describe("Kbd", () => {
-  it("renders kbd element", () => {
+  it("renders kbd element for single key", () => {
     render(<Kbd>Enter</Kbd>);
     expect(screen.getByText("Enter").tagName).toBe("KBD");
   });
 
-  it("renders multiple keys", () => {
-    render(<Kbd keys={["Ctrl", "C"]} />);
+  it("renders multiple keys from keys array", () => {
+    render(<Kbd keys={["Ctrl", "C"]} platformAware={false} />);
     expect(screen.getByText("Ctrl")).toBeInTheDocument();
     expect(screen.getByText("C")).toBeInTheDocument();
+  });
+
+  it("renders combo string as separate keys", () => {
+    render(<Kbd combo="Ctrl+Shift+P" platformAware={false} />);
+    expect(screen.getByText("Ctrl")).toBeInTheDocument();
+    expect(screen.getByText("Shift")).toBeInTheDocument();
+    expect(screen.getByText("P")).toBeInTheDocument();
+  });
+
+  it("renders + separator between keys when platformAware is false", () => {
+    render(<Kbd combo="Ctrl+K" platformAware={false} />);
+    expect(screen.getByText("+")).toBeInTheDocument();
+  });
+
+  it("accepts custom separator", () => {
+    render(<Kbd combo="A+B" separator=" then " platformAware={false} />);
+    expect(screen.getByText("then")).toBeInTheDocument();
+  });
+
+  it("prefers keys prop over combo prop", () => {
+    render(<Kbd keys={["A"]} combo="B+C" platformAware={false} />);
+    expect(screen.getByText("A")).toBeInTheDocument();
+    expect(screen.queryByText("B")).not.toBeInTheDocument();
+  });
+
+  it("capitalizes single letters when platformAware", () => {
+    render(<Kbd keys={["k"]} />);
+    expect(screen.getByText("K")).toBeInTheDocument();
   });
 });
 

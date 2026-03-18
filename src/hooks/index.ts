@@ -21,3 +21,4 @@ export { useHover } from "./use-hover";
 export { useAsync } from "./use-async";
 export { useWindowScroll } from "./use-window-scroll";
 export { useUpdateEffect } from "./use-update-effect";
+export { useOnClickOutside } from "./use-on-click-outside";

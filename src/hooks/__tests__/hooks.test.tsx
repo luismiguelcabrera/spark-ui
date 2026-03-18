@@ -4,6 +4,7 @@ import { useAsync } from "../use-async";
 import { useDebounce } from "../use-debounce";
 import { useWindowScroll } from "../use-window-scroll";
 import { useUpdateEffect } from "../use-update-effect";
+import { useOnClickOutside } from "../use-on-click-outside";
 import { useClipboard } from "../use-clipboard";
 import { useDisclosure } from "../use-disclosure";
 import { useToggle } from "../use-toggle";
@@ -808,5 +809,114 @@ describe("useUpdateEffect", () => {
     unmount();
 
     expect(cleanup).toHaveBeenCalledTimes(1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useOnClickOutside
+// ---------------------------------------------------------------------------
+describe("useOnClickOutside", () => {
+  it("calls handler when clicking outside the ref", () => {
+    const handler = vi.fn();
+    const ref = { current: document.createElement("div") };
+    document.body.appendChild(ref.current);
+
+    renderHook(() => useOnClickOutside(ref, handler));
+
+    act(() => {
+      document.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    });
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    document.body.removeChild(ref.current);
+  });
+
+  it("does not call handler when clicking inside the ref", () => {
+    const handler = vi.fn();
+    const el = document.createElement("div");
+    document.body.appendChild(el);
+    const ref = { current: el };
+
+    renderHook(() => useOnClickOutside(ref, handler));
+
+    act(() => {
+      el.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    });
+
+    expect(handler).not.toHaveBeenCalled();
+    document.body.removeChild(el);
+  });
+
+  it("supports multiple refs", () => {
+    const handler = vi.fn();
+    const el1 = document.createElement("div");
+    const el2 = document.createElement("div");
+    document.body.appendChild(el1);
+    document.body.appendChild(el2);
+    const ref1 = { current: el1 };
+    const ref2 = { current: el2 };
+
+    renderHook(() => useOnClickOutside([ref1, ref2], handler));
+
+    // Click inside ref2 — should NOT trigger
+    act(() => {
+      el2.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    });
+    expect(handler).not.toHaveBeenCalled();
+
+    // Click outside both — should trigger
+    act(() => {
+      document.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    });
+    expect(handler).toHaveBeenCalledTimes(1);
+
+    document.body.removeChild(el1);
+    document.body.removeChild(el2);
+  });
+
+  it("does not call handler when enabled is false", () => {
+    const handler = vi.fn();
+    const ref = { current: document.createElement("div") };
+    document.body.appendChild(ref.current);
+
+    renderHook(() => useOnClickOutside(ref, handler, false));
+
+    act(() => {
+      document.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    });
+
+    expect(handler).not.toHaveBeenCalled();
+    document.body.removeChild(ref.current);
+  });
+
+  it("cleans up listeners on unmount", () => {
+    const handler = vi.fn();
+    const ref = { current: document.createElement("div") };
+    document.body.appendChild(ref.current);
+
+    const { unmount } = renderHook(() => useOnClickOutside(ref, handler));
+    unmount();
+
+    act(() => {
+      document.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    });
+
+    expect(handler).not.toHaveBeenCalled();
+    document.body.removeChild(ref.current);
+  });
+
+  it("responds to touchstart events", () => {
+    const handler = vi.fn();
+    const ref = { current: document.createElement("div") };
+    document.body.appendChild(ref.current);
+
+    renderHook(() => useOnClickOutside(ref, handler));
+
+    act(() => {
+      document.dispatchEvent(new Event("touchstart", { bubbles: true }));
+    });
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    document.body.removeChild(ref.current);
   });
 });
