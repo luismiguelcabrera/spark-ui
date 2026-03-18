@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import { SortableList, DragHandle } from "../sortable-list";
@@ -200,6 +200,35 @@ describe("SortableList (keyboard reorder)", () => {
     await user.keyboard("{ArrowDown}");
 
     expect(onReorder).not.toHaveBeenCalled();
+  });
+});
+
+describe("SortableList (pointer drag cancel)", () => {
+  it("cancels pointer drag on Escape without reordering", () => {
+    const onReorder = vi.fn();
+    render(
+      <SortableList items={tasks} onReorder={onReorder} renderItem={defaultRender} />,
+    );
+
+    const handles = screen.getAllByLabelText("Drag to reorder");
+
+    // Start drag
+    fireEvent.pointerDown(handles[0], { clientX: 100, clientY: 50 });
+
+    // Move pointer (simulates dragging)
+    fireEvent(document, new PointerEvent("pointermove", { clientX: 100, clientY: 150, bubbles: true }));
+
+    // Cancel with Escape
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    // Should NOT have reordered
+    expect(onReorder).not.toHaveBeenCalled();
+
+    // Ghost should be gone — list items should all be visible
+    const items = screen.getAllByRole("listitem");
+    items.forEach((item) => {
+      expect(item).not.toHaveClass("opacity-0");
+    });
   });
 });
 
