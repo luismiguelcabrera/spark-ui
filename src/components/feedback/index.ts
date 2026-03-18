@@ -23,7 +23,7 @@ export { Rating } from "./rating";
 export type { RatingProps } from "./rating";
 
 export { Tooltip } from "./tooltip";
-export type { TooltipProps } from "./tooltip";
+export type { TooltipProps, TooltipPosition, TooltipVariant } from "./tooltip";
 
 export { Modal, ModalOverlay, modalVariants } from "./modal";
 export type { ModalProps } from "./modal";

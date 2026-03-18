@@ -23,6 +23,7 @@ import { Alert } from "../components/feedback/alert";
 import { AlertBanner } from "../components/feedback/alert-banner";
 import { Modal } from "../components/feedback/modal";
 import { Dialog } from "../components/feedback/dialog";
+import { Tooltip } from "../components/feedback/tooltip";
 import { Breadcrumb } from "../components/navigation/breadcrumb";
 import { Pagination } from "../components/navigation/pagination";
 import { Tabs } from "../components/navigation/tabs";
@@ -288,6 +289,24 @@ describe("Accessibility (axe)", () => {
         showCancel={false}
         confirmText="Delete"
       />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Tooltip (open)", async () => {
+    const { container } = render(
+      <Tooltip content="Help text" open={true}>
+        <button type="button">Trigger</button>
+      </Tooltip>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Tooltip (light variant)", async () => {
+    const { container } = render(
+      <Tooltip content="Light tip" open={true} variant="light">
+        <span>Info</span>
+      </Tooltip>,
     );
     expect(await axe(container)).toHaveNoViolations();
   });

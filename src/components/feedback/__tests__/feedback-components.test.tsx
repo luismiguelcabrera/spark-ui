@@ -72,9 +72,9 @@ describe("Tooltip", () => {
     expect(screen.getByText("Hover me")).toBeInTheDocument();
   });
 
-  it("renders tooltip content with role='tooltip'", () => {
+  it("renders tooltip content with role='tooltip' when open", () => {
     render(
-      <Tooltip content="Help text">
+      <Tooltip content="Help text" open={true}>
         <button>Hover me</button>
       </Tooltip>
     );
