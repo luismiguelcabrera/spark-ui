@@ -102,10 +102,9 @@ describe("CheckboxCard", () => {
 
   it("renders string icon", () => {
     const { container } = render(<CheckboxCard title="Option" icon="star" />);
-    // Icon component renders as a <span> with material-symbols-outlined class
-    const iconSpan = container.querySelector(".material-symbols-outlined");
-    expect(iconSpan).toBeInTheDocument();
-    expect(iconSpan?.textContent).toBe("star");
+    // Icon resolves "star" to built-in SVG via registry
+    const svg = container.querySelector("svg[aria-hidden='true']");
+    expect(svg).toBeInTheDocument();
   });
 
   it("renders ReactNode icon", () => {
