@@ -80,7 +80,7 @@ describe("ThemeScript", () => {
     function executeScript(props: Parameters<typeof ThemeScript>[0] = {}) {
       const { container } = render(<ThemeScript {...props} />);
       const code = getScriptContent(container);
-      // eslint-disable-next-line no-eval
+       
       eval(code);
     }
 

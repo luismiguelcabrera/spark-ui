@@ -570,7 +570,7 @@ describe("useAsync", () => {
   });
 
   it("ignores stale responses when execute is called multiple times", async () => {
-    let resolvers: Array<(v: string) => void> = [];
+    const resolvers: Array<(v: string) => void> = [];
     const fn = vi.fn().mockImplementation(
       () =>
         new Promise<string>((resolve) => {

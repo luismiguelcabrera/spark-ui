@@ -31,7 +31,7 @@ function assignRef<T>(ref: RefInput<T>, value: T | null) {
 export function useMergedRef<T>(
   ...refs: RefInput<T>[]
 ): (el: T | null) => void {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   return useCallback(
     (el: T | null) => {
       for (const ref of refs) {
