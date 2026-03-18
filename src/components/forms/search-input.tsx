@@ -23,7 +23,6 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         </div>
         <input
           type="search"
-          role="searchbox"
           className={cn(s.searchInputField, showClear && "pr-9")}
           ref={ref}
           value={value}
@@ -32,9 +31,9 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         {showClear && (
           <button
             type="button"
-            onClick={onClear}
             aria-label="Clear search"
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:outline-none rounded"
+            onClick={onClear}
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
           >
             <Icon name="close" size="sm" />
           </button>

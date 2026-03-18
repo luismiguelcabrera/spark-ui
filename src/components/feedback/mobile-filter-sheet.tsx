@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { cn } from "../../lib/utils";
 import { Icon } from "../data-display/icon";
 
@@ -47,14 +47,17 @@ function Section({ label, children }: SectionProps) {
     </div>
   );
 }
+Section.displayName = "MobileFilterSheet.Section";
 
 function Pill({ active, onClick, children }: PillProps) {
   return (
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={active}
       className={cn(
         "px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
         active
           ? "bg-primary/10 text-primary border-primary/20"
           : "bg-white text-slate-700 border-slate-200 hover:border-slate-300"
@@ -64,6 +67,7 @@ function Pill({ active, onClick, children }: PillProps) {
     </button>
   );
 }
+Pill.displayName = "MobileFilterSheet.Pill";
 
 // --- Main component ---
 
@@ -76,6 +80,28 @@ function MobileFilterSheet({
   const [isOpen, setIsOpen] = useState(false);
   const hideClass = COLLAPSE_CLASS[collapseAt];
 
+  const close = useCallback(() => setIsOpen(false), []);
+
+  // Escape key to close
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [isOpen, close]);
+
+  // Lock body scroll when open
+  useEffect(() => {
+    if (!isOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isOpen]);
+
   return (
     <>
       <button
@@ -83,6 +109,7 @@ function MobileFilterSheet({
         onClick={() => setIsOpen(true)}
         className={cn(
           "relative flex items-center gap-1 bg-slate-50 text-slate-700 rounded-lg border border-slate-200 hover:border-slate-300 transition-colors shrink-0 p-2",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
           hideClass
         )}
       >
@@ -99,10 +126,15 @@ function MobileFilterSheet({
         <div
           className={cn("fixed inset-0 z-50 flex items-end bg-black/40 backdrop-blur-sm", hideClass)}
           onClick={(e) => {
-            if (e.target === e.currentTarget) setIsOpen(false);
+            if (e.target === e.currentTarget) close();
           }}
         >
-          <div className="w-full bg-white rounded-t-2xl shadow-float max-h-[80vh] flex flex-col">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={label || "Filters"}
+            className="w-full bg-white rounded-t-2xl shadow-float max-h-[80vh] flex flex-col"
+          >
             <div className="flex justify-center pt-3 pb-1 shrink-0">
               <div className="w-10 h-1 bg-slate-200 rounded-full" />
             </div>
@@ -117,8 +149,9 @@ function MobileFilterSheet({
               </h3>
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
-                className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 transition-colors"
+                aria-label="Close filters"
+                onClick={close}
+                className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 <Icon name="close" size="md" />
               </button>
@@ -132,9 +165,10 @@ function MobileFilterSheet({
     </>
   );
 }
+MobileFilterSheet.displayName = "MobileFilterSheet";
 
 MobileFilterSheet.Section = Section;
 MobileFilterSheet.Pill = Pill;
 
-export { MobileFilterSheet };
-export type { MobileFilterSheetProps };
+export { MobileFilterSheet, Section as MobileFilterSheetSection, Pill as MobileFilterSheetPill };
+export type { MobileFilterSheetProps, SectionProps, PillProps };

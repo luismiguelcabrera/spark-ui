@@ -1,4 +1,4 @@
-import { forwardRef, useId, type SelectHTMLAttributes } from "react";
+import { forwardRef, type SelectHTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { Icon } from "../data-display/icon";
@@ -8,16 +8,11 @@ type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
 };
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, children, error, id: idProp, ...props }, ref) => {
-    const autoId = useId();
-    const id = idProp ?? autoId;
-    const errorId = error ? `${id}-error` : undefined;
-
+  ({ className, children, error, ...props }, ref) => {
     return (
       <div className="flex flex-col gap-1.5">
         <div className="relative">
           <select
-            id={id}
             className={cn(
               s.inputBase,
               "appearance-none pl-4 pr-10 text-gray-900",
@@ -28,7 +23,6 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             )}
             ref={ref}
             aria-invalid={error ? true : undefined}
-            aria-describedby={errorId}
             {...props}
           >
             {children}
@@ -38,7 +32,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           </span>
         </div>
         {error && (
-          <p id={errorId} className="text-xs text-red-500 font-medium" role="alert">{error}</p>
+          <p className="text-xs text-red-500 font-medium" role="alert">{error}</p>
         )}
       </div>
     );

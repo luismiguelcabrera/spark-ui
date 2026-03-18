@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useCallback, type HTMLAttributes } from "react";
+import { forwardRef, useCallback, type KeyboardEvent } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
@@ -31,12 +31,13 @@ type RadioOption = {
   icon?: string;
 };
 
-type RadioGroupProps = HTMLAttributes<HTMLDivElement> & {
+type RadioGroupProps = {
   options: RadioOption[];
   value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   name?: string;
+  className?: string;
 } & VariantProps<typeof radioGroupVariants>;
 
 const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
@@ -50,7 +51,6 @@ const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
       variant = "basic",
       orientation,
       className,
-      ...props
     },
     ref
   ) => {
@@ -60,11 +60,32 @@ const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
       onChange: onValueChange,
     });
 
-    const handleSelect = useCallback(
-      (optValue: string) => {
-        setCurrent(optValue);
+    const handleKeyDown = useCallback(
+      (e: KeyboardEvent<HTMLDivElement>) => {
+        const isVertical = orientation !== "horizontal";
+        const nextKey = isVertical ? "ArrowDown" : "ArrowRight";
+        const prevKey = isVertical ? "ArrowUp" : "ArrowLeft";
+
+        if (e.key !== nextKey && e.key !== prevKey) return;
+
+        e.preventDefault();
+        const currentIndex = options.findIndex((o) => o.value === current);
+        let nextIndex: number;
+        if (e.key === nextKey) {
+          nextIndex = (currentIndex + 1) % options.length;
+        } else {
+          nextIndex = (currentIndex - 1 + options.length) % options.length;
+        }
+        setCurrent(options[nextIndex].value);
+
+        // Focus the newly selected radio
+        const container = e.currentTarget;
+        const radios = container.querySelectorAll<HTMLInputElement>(
+          'input[type="radio"]'
+        );
+        radios[nextIndex]?.focus();
       },
-      [setCurrent]
+      [options, current, setCurrent, orientation]
     );
 
     if (variant === "card") {
@@ -72,8 +93,11 @@ const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
         <div
           ref={ref}
           role="radiogroup"
-          className={cn(radioGroupVariants({ variant, orientation }), className)}
-          {...props}
+          className={cn(
+            radioGroupVariants({ variant, orientation }),
+            className
+          )}
+          onKeyDown={handleKeyDown}
         >
           {options.map((opt) => {
             const selected = opt.value === current;
@@ -82,16 +106,18 @@ const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
                 key={opt.value}
                 className={cn(
                   s.radioCard,
-                  "focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary",
-                  selected ? s.radioCardSelected : s.radioCardUnselected
+                  selected ? s.radioCardSelected : s.radioCardUnselected,
+                  "cursor-pointer"
                 )}
               >
                 <div className="flex items-start gap-3">
                   <div
                     className={cn(
                       s.radioOuter,
-                      "mt-0.5 transition-colors duration-150",
-                      selected ? s.radioOuterSelected : s.radioOuterUnselected
+                      "mt-0.5",
+                      selected
+                        ? s.radioOuterSelected
+                        : s.radioOuterUnselected
                     )}
                   >
                     {selected && <div className={s.radioInner} />}
@@ -99,14 +125,20 @@ const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       {opt.icon && (
-                        <Icon name={opt.icon} size="sm" className="text-slate-500" />
+                        <Icon
+                          name={opt.icon}
+                          size="sm"
+                          className="text-slate-500"
+                        />
                       )}
                       <span className="text-sm font-semibold text-secondary">
                         {opt.label}
                       </span>
                     </div>
                     {opt.description && (
-                      <p className="text-xs text-slate-500 mt-1">{opt.description}</p>
+                      <p className="text-xs text-slate-500 mt-1">
+                        {opt.description}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -115,8 +147,10 @@ const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
                   name={name}
                   value={opt.value}
                   checked={selected}
-                  onChange={() => handleSelect(opt.value)}
+                  onChange={() => setCurrent(opt.value)}
                   className="sr-only"
+                  tabIndex={selected || (!current && opt === options[0]) ? 0 : -1}
+                  aria-checked={selected}
                 />
               </label>
             );
@@ -129,23 +163,19 @@ const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
       <div
         ref={ref}
         role="radiogroup"
-        className={cn(radioGroupVariants({ variant, orientation }), className)}
-        {...props}
+        className={cn(
+          radioGroupVariants({ variant, orientation }),
+          className
+        )}
+        onKeyDown={handleKeyDown}
       >
         {options.map((opt) => {
           const selected = opt.value === current;
           return (
-            <label
-              key={opt.value}
-              className={cn(
-                s.radioBase,
-                "focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary rounded"
-              )}
-            >
+            <label key={opt.value} className={cn(s.radioBase, "cursor-pointer")}>
               <div
                 className={cn(
                   s.radioOuter,
-                  "transition-colors duration-150",
                   selected ? s.radioOuterSelected : s.radioOuterUnselected
                 )}
               >
@@ -159,8 +189,10 @@ const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
                 name={name}
                 value={opt.value}
                 checked={selected}
-                onChange={() => handleSelect(opt.value)}
+                onChange={() => setCurrent(opt.value)}
                 className="sr-only"
+                tabIndex={selected || (!current && opt === options[0]) ? 0 : -1}
+                aria-checked={selected}
               />
             </label>
           );

@@ -1,15 +1,17 @@
 "use client";
 
-import { forwardRef, useCallback, type ButtonHTMLAttributes } from "react";
+import { forwardRef } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { useControllable } from "../../hooks/use-controllable";
 
-type ToggleProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "defaultChecked" | "onChange"> & {
+type ToggleProps = {
   checked?: boolean;
   defaultChecked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
+  disabled?: boolean;
   label?: string;
+  className?: string;
 };
 
 const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
@@ -21,7 +23,6 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
       disabled = false,
       label,
       className,
-      ...props
     },
     ref
   ) => {
@@ -30,12 +31,6 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
       defaultValue: defaultChecked,
       onChange: onCheckedChange,
     });
-
-    const handleClick = useCallback(() => {
-      if (!disabled) {
-        setIsChecked(!isChecked);
-      }
-    }, [disabled, isChecked, setIsChecked]);
 
     return (
       <div className={cn("flex items-center gap-2", className)}>
@@ -49,18 +44,19 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
           type="button"
           role="switch"
           aria-checked={isChecked}
+          aria-label={label || undefined}
           disabled={disabled}
-          onClick={handleClick}
+          onClick={() => setIsChecked(!isChecked)}
           className={cn(
-            "w-9 h-5 rounded-full relative transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary",
+            "w-9 h-5 rounded-full relative transition-colors duration-150",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary",
             isChecked ? "bg-primary" : "bg-slate-300",
             disabled && "opacity-50 cursor-not-allowed pointer-events-none"
           )}
-          {...props}
         >
           <span
             className={cn(
-              "absolute top-0.5 bg-white w-4 h-4 rounded-full shadow-sm transition-transform",
+              "absolute top-0.5 bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-200",
               isChecked ? "left-4" : "left-0.5"
             )}
           />
