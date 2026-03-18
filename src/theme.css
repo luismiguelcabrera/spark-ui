@@ -239,6 +239,13 @@
   animation: spark-ripple-effect 600ms ease-out forwards;
 }
 
+/* ── Skeleton shimmer ── */
+
+@keyframes spark-skeleton-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 /* ── Image hover: shine sweep ── */
 
 @keyframes spark-shine {

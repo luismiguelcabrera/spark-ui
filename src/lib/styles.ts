@@ -138,6 +138,10 @@ export const s = {
   // ---- Skeleton ----
   skeletonBase: "bg-slate-200 animate-pulse rounded-lg",
   skeletonCircle: "bg-slate-200 animate-pulse rounded-full",
+  skeletonWave: "bg-slate-200 rounded-lg relative overflow-hidden [&::after]:absolute [&::after]:inset-0 [&::after]:bg-gradient-to-r [&::after]:from-transparent [&::after]:via-white/40 [&::after]:to-transparent [&::after]:animate-[spark-skeleton-shimmer_1.5s_infinite]",
+  skeletonWaveCircle: "bg-slate-200 rounded-full relative overflow-hidden [&::after]:absolute [&::after]:inset-0 [&::after]:bg-gradient-to-r [&::after]:from-transparent [&::after]:via-white/40 [&::after]:to-transparent [&::after]:animate-[spark-skeleton-shimmer_1.5s_infinite]",
+  skeletonStatic: "bg-slate-200 rounded-lg",
+  skeletonStaticCircle: "bg-slate-200 rounded-full",
 
   // ---- Empty State ----
   emptyStateContainer: "flex flex-col items-center justify-center text-center",

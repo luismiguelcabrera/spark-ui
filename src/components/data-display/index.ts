@@ -29,7 +29,7 @@ export { UserCell } from "./user-cell";
 export type { UserCellProps } from "./user-cell";
 
 export { Skeleton, SkeletonText, SkeletonCircle } from "./skeleton";
-export type { SkeletonProps, SkeletonType } from "./skeleton";
+export type { SkeletonProps, SkeletonType, SkeletonAnimation, SkeletonBorderRadius } from "./skeleton";
 
 export { EmptyState } from "./empty-state";
 export type { EmptyStateProps } from "./empty-state";
