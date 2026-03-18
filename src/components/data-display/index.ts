@@ -42,3 +42,15 @@ export type { CalendarProps, CalendarDay } from "./calendar";
 
 export { QrCode } from "./qr-code";
 export type { QrCodeProps } from "./qr-code";
+
+export { RadarChart } from "./charts/radar-chart";
+export type { RadarChartProps, RadarChartDataPoint, RadarChartSeries } from "./charts/radar-chart";
+
+export { ScatterChart } from "./charts/scatter-chart";
+export type { ScatterChartProps, ScatterPoint, ScatterChartSeries } from "./charts/scatter-chart";
+
+export { FunnelChart } from "./charts/funnel-chart";
+export type { FunnelChartProps, FunnelChartDataPoint } from "./charts/funnel-chart";
+
+export { HeatmapChart } from "./charts/heatmap-chart";
+export type { HeatmapChartProps, HeatmapDataPoint } from "./charts/heatmap-chart";
