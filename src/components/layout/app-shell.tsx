@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { SidebarProvider } from "./sidebar-context";
@@ -12,42 +12,51 @@ type AppShellProps = {
   defaultCollapsed?: boolean;
 };
 
-function AppShell({ sidebar, children, className, defaultCollapsed }: AppShellProps) {
-  return (
-    <SidebarProvider defaultCollapsed={defaultCollapsed}>
-      <div className={cn(s.shell, className)}>
-        {sidebar}
-        <div className={s.shellPanel}>{children}</div>
-      </div>
-    </SidebarProvider>
-  );
-}
+const AppShell = forwardRef<HTMLDivElement, AppShellProps>(
+  ({ sidebar, children, className, defaultCollapsed }, ref) => {
+    return (
+      <SidebarProvider defaultCollapsed={defaultCollapsed}>
+        <div ref={ref} className={cn(s.shell, className)}>
+          {sidebar}
+          <div className={s.shellPanel}>{children}</div>
+        </div>
+      </SidebarProvider>
+    );
+  }
+);
+AppShell.displayName = "AppShell";
 
 type AppShellHeaderProps = {
   children: ReactNode;
   className?: string;
 };
 
-function AppShellHeader({ children, className }: AppShellHeaderProps) {
-  return (
-    <header className={cn(s.shellHeader, className)}>
-      {children}
-    </header>
-  );
-}
+const AppShellHeader = forwardRef<HTMLElement, AppShellHeaderProps>(
+  ({ children, className }, ref) => {
+    return (
+      <header ref={ref} className={cn(s.shellHeader, className)}>
+        {children}
+      </header>
+    );
+  }
+);
+AppShellHeader.displayName = "AppShellHeader";
 
 type AppShellContentProps = {
   children: ReactNode;
   className?: string;
 };
 
-function AppShellContent({ children, className }: AppShellContentProps) {
-  return (
-    <main className={cn(s.shellContent, "@container", className)}>
-      {children}
-    </main>
-  );
-}
+const AppShellContent = forwardRef<HTMLElement, AppShellContentProps>(
+  ({ children, className }, ref) => {
+    return (
+      <main ref={ref} className={cn(s.shellContent, "@container", className)}>
+        {children}
+      </main>
+    );
+  }
+);
+AppShellContent.displayName = "AppShellContent";
 
 export { AppShell, AppShellHeader, AppShellContent };
 export type { AppShellProps, AppShellHeaderProps, AppShellContentProps };

@@ -1,4 +1,4 @@
-import { forwardRef, type HTMLAttributes } from "react";
+import { forwardRef } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 
@@ -22,10 +22,10 @@ const statusDotVariants = cva("inline-block rounded-full", {
   },
 });
 
-type StatusDotProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> &
-  VariantProps<typeof statusDotVariants> & {
-    pulse?: boolean;
-  };
+type StatusDotProps = {
+  pulse?: boolean;
+  className?: string;
+} & VariantProps<typeof statusDotVariants>;
 
 const StatusDot = forwardRef<HTMLSpanElement, StatusDotProps>(
   ({ color, size, pulse, className, ...props }, ref) => {
@@ -33,13 +33,13 @@ const StatusDot = forwardRef<HTMLSpanElement, StatusDotProps>(
       return (
         <span
           ref={ref}
-          role="status"
           className={cn("relative flex", size === "md" ? "h-2.5 w-2.5" : "h-1.5 w-1.5")}
+          role="status"
           {...props}
         >
           <span
             className={cn(
-              "animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full opacity-75",
+              "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 motion-reduce:animate-none",
               color === "green" && "bg-emerald-400",
               color === "amber" && "bg-amber-400",
               color === "red" && "bg-red-400",
@@ -56,6 +56,7 @@ const StatusDot = forwardRef<HTMLSpanElement, StatusDotProps>(
       <span
         ref={ref}
         className={cn(statusDotVariants({ color, size }), className)}
+        role="status"
         {...props}
       />
     );

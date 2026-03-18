@@ -3,7 +3,7 @@ import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { Icon } from "./icon";
 
-type StatCardProps = HTMLAttributes<HTMLDivElement> & {
+type StatCardProps = {
   icon: string;
   iconBg?: string;
   iconColor?: string;
@@ -11,7 +11,8 @@ type StatCardProps = HTMLAttributes<HTMLDivElement> & {
   value: string | number;
   change?: string;
   changeColor?: string;
-};
+  className?: string;
+} & Omit<HTMLAttributes<HTMLDivElement>, "children">;
 
 const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
   (
@@ -32,7 +33,6 @@ const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
       <div ref={ref} className={cn(s.cardSection, "p-5", className)} {...props}>
         <div className="mb-4 flex items-center justify-between relative">
           <span
-            aria-hidden="true"
             className={cn(s.iconBox, "h-10 w-10", iconBg, iconColor)}
           >
             <Icon name={icon} size="md" />

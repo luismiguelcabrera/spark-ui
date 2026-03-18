@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useState, useMemo, useId } from "react";
+import { useState, useMemo } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { Icon } from "./icon";
@@ -25,8 +25,6 @@ type CalendarProps = {
   onNextMonth?: () => void;
   eventDays?: number[];
   className?: string;
-  /** Accessible label for the calendar region */
-  "aria-label"?: string;
 };
 
 const MONTH_NAMES = [
@@ -79,188 +77,144 @@ function generateCalendarDays(
   return result;
 }
 
-const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
-  (
-    {
-      month,
-      year,
-      days,
-      selected,
-      defaultSelected,
-      onSelect,
-      onPrevMonth,
-      onNextMonth,
-      eventDays = [],
-      className,
-      "aria-label": ariaLabel,
-    },
-    ref
-  ) => {
-    const gridId = useId();
-    const isAutoMode = !days;
+function Calendar({
+  month,
+  year,
+  days,
+  selected,
+  defaultSelected,
+  onSelect,
+  onPrevMonth,
+  onNextMonth,
+  eventDays = [],
+  className,
+}: CalendarProps) {
+  const isAutoMode = !days;
 
-    // Month navigation state (only used in auto mode)
-    const now = new Date();
-    const initialMonthIndex = month
-      ? MONTH_NAMES.indexOf(month as typeof MONTH_NAMES[number])
-      : now.getMonth();
-    const initialYear = year ?? now.getFullYear();
+  // Month navigation state (only used in auto mode)
+  const now = new Date();
+  const initialMonthIndex = month
+    ? MONTH_NAMES.indexOf(month as typeof MONTH_NAMES[number])
+    : now.getMonth();
+  const initialYear = year ?? now.getFullYear();
 
-    const [navMonth, setNavMonth] = useState(
-      initialMonthIndex >= 0 ? initialMonthIndex : now.getMonth()
-    );
-    const [navYear, setNavYear] = useState(initialYear);
+  const [navMonth, setNavMonth] = useState(
+    initialMonthIndex >= 0 ? initialMonthIndex : now.getMonth()
+  );
+  const [navYear, setNavYear] = useState(initialYear);
 
-    const [selectedDay, setSelectedDay] = useControllable<number>({
-      value: selected,
-      defaultValue: defaultSelected ?? -1,
-      onChange: onSelect,
-    });
+  const [selectedDay, setSelectedDay] = useControllable<number>({
+    value: selected,
+    defaultValue: defaultSelected ?? -1,
+    onChange: onSelect,
+  });
 
-    const autoDays = useMemo(
-      () =>
-        isAutoMode
-          ? generateCalendarDays(navMonth, navYear, selectedDay > 0 ? selectedDay : undefined, eventDays)
-          : [],
-      [isAutoMode, navMonth, navYear, selectedDay, eventDays]
-    );
+  const autoDays = useMemo(
+    () =>
+      isAutoMode
+        ? generateCalendarDays(navMonth, navYear, selectedDay > 0 ? selectedDay : undefined, eventDays)
+        : [],
+    [isAutoMode, navMonth, navYear, selectedDay, eventDays]
+  );
 
-    const hasExternalNav = !!(onPrevMonth || onNextMonth);
-    const activeMonth = hasExternalNav
-      ? (MONTH_NAMES.indexOf(month as typeof MONTH_NAMES[number]) >= 0
-          ? MONTH_NAMES.indexOf(month as typeof MONTH_NAMES[number])
-          : navMonth)
-      : navMonth;
-    const activeYear = hasExternalNav ? (year ?? navYear) : navYear;
+  const hasExternalNav = !!(onPrevMonth || onNextMonth);
+  const activeMonth = hasExternalNav
+    ? (MONTH_NAMES.indexOf(month as typeof MONTH_NAMES[number]) >= 0
+        ? MONTH_NAMES.indexOf(month as typeof MONTH_NAMES[number])
+        : navMonth)
+    : navMonth;
+  const activeYear = hasExternalNav ? (year ?? navYear) : navYear;
 
-    const externalDays = useMemo(
-      () =>
-        hasExternalNav
-          ? generateCalendarDays(activeMonth, activeYear, selectedDay > 0 ? selectedDay : undefined, eventDays)
-          : [],
-      [hasExternalNav, activeMonth, activeYear, selectedDay, eventDays]
-    );
+  const externalDays = useMemo(
+    () =>
+      hasExternalNav
+        ? generateCalendarDays(activeMonth, activeYear, selectedDay > 0 ? selectedDay : undefined, eventDays)
+        : [],
+    [hasExternalNav, activeMonth, activeYear, selectedDay, eventDays]
+  );
 
-    const displayDays = !isAutoMode ? days : hasExternalNav ? externalDays : autoDays;
-    const displayMonth = hasExternalNav ? MONTH_NAMES[activeMonth] : (isAutoMode ? MONTH_NAMES[navMonth] : month);
-    const displayYear = hasExternalNav ? activeYear : (isAutoMode ? navYear : year);
+  const displayDays = !isAutoMode ? days : hasExternalNav ? externalDays : autoDays;
+  const displayMonth = hasExternalNav ? MONTH_NAMES[activeMonth] : (isAutoMode ? MONTH_NAMES[navMonth] : month);
+  const displayYear = hasExternalNav ? activeYear : (isAutoMode ? navYear : year);
 
-    const goToPrevMonth = () => {
-      if (navMonth === 0) {
-        setNavMonth(11);
-        setNavYear(navYear - 1);
-      } else {
-        setNavMonth(navMonth - 1);
-      }
-    };
-
-    const goToNextMonth = () => {
-      if (navMonth === 11) {
-        setNavMonth(0);
-        setNavYear(navYear + 1);
-      } else {
-        setNavMonth(navMonth + 1);
-      }
-    };
-
-    // Break days into weeks for proper grid row semantics
-    const weeks: CalendarDay[][] = [];
-    if (displayDays) {
-      for (let i = 0; i < displayDays.length; i += 7) {
-        weeks.push(displayDays.slice(i, i + 7));
-      }
+  const goToPrevMonth = () => {
+    if (navMonth === 0) {
+      setNavMonth(11);
+      setNavYear(navYear - 1);
+    } else {
+      setNavMonth(navMonth - 1);
     }
+  };
 
-    return (
-      <div
-        ref={ref}
-        role="group"
-        aria-label={ariaLabel ?? `Calendar, ${displayMonth} ${displayYear}`}
-        className={cn(s.calendarContainer, className)}
-      >
-        {/* Header */}
-        <div className={s.calendarHeader}>
-          <button
-            type="button"
-            aria-label="Previous month"
-            onClick={onPrevMonth ?? (isAutoMode ? goToPrevMonth : undefined)}
-            className="p-1 rounded-lg hover:bg-slate-100 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
-          >
-            <Icon name="chevron_left" size="sm" className="text-slate-500" />
-          </button>
-          <h3 className="text-sm font-bold text-secondary" aria-live="polite">
-            {displayMonth} {displayYear}
-          </h3>
-          <button
-            type="button"
-            aria-label="Next month"
-            onClick={onNextMonth ?? (isAutoMode ? goToNextMonth : undefined)}
-            className="p-1 rounded-lg hover:bg-slate-100 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
-          >
-            <Icon name="chevron_right" size="sm" className="text-slate-500" />
-          </button>
-        </div>
+  const goToNextMonth = () => {
+    if (navMonth === 11) {
+      setNavMonth(0);
+      setNavYear(navYear + 1);
+    } else {
+      setNavMonth(navMonth + 1);
+    }
+  };
 
-        {/* Day grid with role="grid" for accessibility */}
-        <table id={gridId} role="grid" aria-label={`${displayMonth} ${displayYear}`} className="w-full border-collapse text-center">
-          <thead>
-            <tr>
-              {dayLabels.map((label) => (
-                <th key={label} scope="col" abbr={label} className={cn(s.calendarDayLabel, "font-semibold")}>
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {weeks.map((week, wi) => (
-              <tr key={wi}>
-                {week.map((day, di) => {
-                  const isInteractive = !day.muted && isAutoMode;
-                  return (
-                    <td
-                      key={di}
-                      role="gridcell"
-                      aria-selected={day.selected || day.today ? true : undefined}
-                      aria-disabled={day.muted ? true : undefined}
-                      className="p-0.5"
-                    >
-                      <button
-                        type="button"
-                        tabIndex={day.muted ? -1 : 0}
-                        disabled={day.muted}
-                        aria-label={day.muted ? undefined : `${day.day} ${displayMonth}`}
-                        aria-current={day.today ? "date" : undefined}
-                        onClick={
-                          isInteractive
-                            ? () => setSelectedDay(day.day)
-                            : undefined
-                        }
-                        className={cn(
-                          s.calendarDay,
-                          "w-full border-0 bg-transparent",
-                          day.muted && cn(s.calendarDayMuted, "cursor-default"),
-                          day.today && s.calendarDayToday,
-                          day.selected && !day.today && s.calendarDaySelected,
-                          day.hasEvent && !day.today && !day.selected && s.calendarDayEvent,
-                          !day.muted && isAutoMode && "cursor-pointer",
-                          !day.muted && "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:outline-none",
-                        )}
-                      >
-                        {day.day}
-                      </button>
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+  return (
+    <div className={cn(s.calendarContainer, className)}>
+      {/* Header */}
+      <div className={s.calendarHeader}>
+        <button
+          type="button"
+          onClick={onPrevMonth ?? (isAutoMode ? goToPrevMonth : undefined)}
+          aria-label="Previous month"
+          className="p-1 rounded-lg hover:bg-slate-100 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        >
+          <Icon name="chevron_left" size="sm" className="text-slate-500" />
+        </button>
+        <h3 className="text-sm font-bold text-secondary" aria-live="polite">
+          {displayMonth} {displayYear}
+        </h3>
+        <button
+          type="button"
+          onClick={onNextMonth ?? (isAutoMode ? goToNextMonth : undefined)}
+          aria-label="Next month"
+          className="p-1 rounded-lg hover:bg-slate-100 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        >
+          <Icon name="chevron_right" size="sm" className="text-slate-500" />
+        </button>
       </div>
-    );
-  }
-);
-Calendar.displayName = "Calendar";
+
+      {/* Day labels */}
+      <div className={s.calendarGrid}>
+        {dayLabels.map((label) => (
+          <div key={label} className={s.calendarDayLabel}>
+            {label}
+          </div>
+        ))}
+      </div>
+
+      {/* Day grid */}
+      <div className={cn(s.calendarGrid, "px-1 pb-2")}>
+        {displayDays!.map((day, i) => (
+          <div
+            key={i}
+            onClick={
+              !day.muted && isAutoMode
+                ? () => setSelectedDay(day.day)
+                : undefined
+            }
+            className={cn(
+              s.calendarDay,
+              day.muted && s.calendarDayMuted,
+              day.today && s.calendarDayToday,
+              day.selected && !day.today && s.calendarDaySelected,
+              day.hasEvent && !day.today && !day.selected && s.calendarDayEvent,
+              !day.muted && isAutoMode && "cursor-pointer"
+            )}
+          >
+            {day.day}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export { Calendar };
 export type { CalendarProps, CalendarDay };

@@ -3,23 +3,35 @@ import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { Avatar } from "./avatar";
 
-type UserCellProps = HTMLAttributes<HTMLDivElement> & {
+type UserCellProps = {
   avatarSrc?: string;
   avatarInitials?: string;
   name: string;
   subtitle?: string;
   size?: "sm" | "md" | "lg";
-};
+  className?: string;
+} & Omit<HTMLAttributes<HTMLDivElement>, "children">;
 
-const cellSizeMap = {
+const sizeMap = {
   sm: { avatar: "sm" as const, name: "text-sm", subtitle: "text-xs" },
   md: { avatar: "md" as const, name: "text-sm font-semibold", subtitle: "text-xs" },
   lg: { avatar: "lg" as const, name: "text-base font-semibold", subtitle: "text-sm" },
 };
 
 const UserCell = forwardRef<HTMLDivElement, UserCellProps>(
-  ({ avatarSrc, avatarInitials, name, subtitle, size = "md", className, ...props }, ref) => {
-    const sz = cellSizeMap[size];
+  (
+    {
+      avatarSrc,
+      avatarInitials,
+      name,
+      subtitle,
+      size = "md",
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    const sz = sizeMap[size];
 
     return (
       <div ref={ref} className={cn("flex items-center gap-3", className)} {...props}>

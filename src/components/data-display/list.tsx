@@ -3,30 +3,35 @@ import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { Icon } from "./icon";
 
-type ListProps = HTMLAttributes<HTMLUListElement> & {
+type ListProps = {
   variant?: "plain" | "card" | "divided";
-};
+  ordered?: boolean;
+  children: ReactNode;
+  className?: string;
+} & Omit<HTMLAttributes<HTMLUListElement | HTMLOListElement>, "children">;
 
-const List = forwardRef<HTMLUListElement, ListProps>(
-  ({ variant = "plain", className, ...props }, ref) => {
+const List = forwardRef<HTMLUListElement | HTMLOListElement, ListProps>(
+  ({ variant = "plain", ordered = false, children, className, ...props }, ref) => {
+    const Tag = ordered ? "ol" : "ul";
     return (
-      <ul
-        ref={ref}
+      <Tag
+        ref={ref as React.Ref<HTMLUListElement> & React.Ref<HTMLOListElement>}
         role="list"
         className={cn(
-          "list-none p-0 m-0",
           variant === "card" && s.cardBase,
           variant === "divided" && "divide-y divide-slate-100",
           className
         )}
         {...props}
-      />
+      >
+        {children}
+      </Tag>
     );
   }
 );
 List.displayName = "List";
 
-type ListItemProps = HTMLAttributes<HTMLLIElement> & {
+type ListItemProps = {
   icon?: string;
   iconBg?: string;
   iconColor?: string;
@@ -34,7 +39,8 @@ type ListItemProps = HTMLAttributes<HTMLLIElement> & {
   description?: string;
   timestamp?: string;
   actions?: ReactNode;
-};
+  className?: string;
+} & Omit<HTMLAttributes<HTMLLIElement>, "title">;
 
 const ListItem = forwardRef<HTMLLIElement, ListItemProps>(
   (
@@ -55,7 +61,6 @@ const ListItem = forwardRef<HTMLLIElement, ListItemProps>(
       <li ref={ref} className={cn("flex items-start gap-3 py-3 px-4", className)} {...props}>
         {icon && (
           <div
-            aria-hidden="true"
             className={cn(
               "w-9 h-9 rounded-lg flex items-center justify-center shrink-0",
               iconBg
