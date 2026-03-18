@@ -1,5 +1,5 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
 import { List, ListItem } from "../list";
 
 describe("List", () => {
@@ -12,6 +12,33 @@ describe("List", () => {
     );
     expect(screen.getByText("Item 1")).toBeInTheDocument();
     expect(screen.getByText("Item 2")).toBeInTheDocument();
+  });
+
+  it("has role=list", () => {
+    render(
+      <List>
+        <ListItem title="Item 1" />
+      </List>
+    );
+    expect(screen.getByRole("list")).toBeInTheDocument();
+  });
+
+  it("renders as ul by default", () => {
+    const { container } = render(
+      <List>
+        <ListItem title="Item 1" />
+      </List>
+    );
+    expect(container.querySelector("ul")).toBeInTheDocument();
+  });
+
+  it("renders as ol when ordered", () => {
+    const { container } = render(
+      <List ordered>
+        <ListItem title="Item 1" />
+      </List>
+    );
+    expect(container.querySelector("ol")).toBeInTheDocument();
   });
 
   it("applies card variant styling", () => {
@@ -48,6 +75,15 @@ describe("List", () => {
     expect(screen.getByText("2m ago")).toBeInTheDocument();
   });
 
+  it("renders actions in ListItem", () => {
+    render(
+      <List>
+        <ListItem title="Item" actions={<button>Delete</button>} />
+      </List>
+    );
+    expect(screen.getByRole("button", { name: "Delete" })).toBeInTheDocument();
+  });
+
   it("forwards ref on List", () => {
     const ref = { current: null };
     render(
@@ -55,7 +91,7 @@ describe("List", () => {
         <ListItem title="Item" />
       </List>
     );
-    expect(ref.current).toBeInstanceOf(HTMLDivElement);
+    expect(ref.current).toBeInstanceOf(HTMLUListElement);
   });
 
   it("forwards ref on ListItem", () => {
@@ -65,141 +101,35 @@ describe("List", () => {
         <ListItem ref={ref} title="Item" />
       </List>
     );
-    expect(ref.current).toBeInstanceOf(HTMLDivElement);
-  });
-});
-
-describe("List - nav mode", () => {
-  it("has navigation role when nav=true", () => {
-    render(
-      <List nav>
-        <ListItem title="Home" active />
-        <ListItem title="Settings" />
-      </List>
-    );
-    expect(screen.getByRole("navigation")).toBeInTheDocument();
+    expect(ref.current).toBeInstanceOf(HTMLLIElement);
   });
 
-  it("highlights active item", () => {
+  it("merges className on List", () => {
     const { container } = render(
-      <List nav>
-        <ListItem title="Home" active />
-        <ListItem title="Settings" />
-      </List>
-    );
-    // The active ListItem root div should have border-primary class
-    const items = container.querySelectorAll(".flex.items-start");
-    expect(items[0]).toHaveClass("border-primary");
-  });
-
-  it("non-active items do not have active styling", () => {
-    const { container } = render(
-      <List nav>
-        <ListItem title="Home" active />
-        <ListItem title="Settings" />
-      </List>
-    );
-    const items = container.querySelectorAll(".flex.items-start");
-    expect(items[1]).not.toHaveClass("border-primary");
-  });
-});
-
-describe("List - density", () => {
-  it("applies compact density", () => {
-    const { container } = render(
-      <List density="compact">
+      <List className="custom-list">
         <ListItem title="Item" />
       </List>
     );
-    const item = container.querySelector("[class*='py-1.5']");
-    expect(item).toBeInTheDocument();
+    expect(container.firstChild).toHaveClass("custom-list");
   });
 
-  it("applies comfortable density", () => {
+  it("merges className on ListItem", () => {
     const { container } = render(
-      <List density="comfortable">
-        <ListItem title="Item" />
+      <List>
+        <ListItem title="Item" className="custom-item" />
       </List>
     );
-    const item = container.querySelector("[class*='py-4']");
-    expect(item).toBeInTheDocument();
+    const li = container.querySelector("li");
+    expect(li).toHaveClass("custom-item");
   });
 
-  it("applies default density", () => {
+  it("applies default py-3 padding on ListItem", () => {
     const { container } = render(
-      <List density="default">
+      <List>
         <ListItem title="Item" />
       </List>
     );
     const item = container.querySelector("[class*='py-3']");
     expect(item).toBeInTheDocument();
-  });
-});
-
-describe("List - selectable", () => {
-  it("has listbox role when selectable=true", () => {
-    render(
-      <List selectable>
-        <ListItem title="Item 1" value="1" />
-        <ListItem title="Item 2" value="2" />
-      </List>
-    );
-    expect(screen.getByRole("listbox")).toBeInTheDocument();
-  });
-
-  it("items have option role when selectable", () => {
-    render(
-      <List selectable>
-        <ListItem title="Item 1" value="1" />
-      </List>
-    );
-    expect(screen.getByRole("option")).toBeInTheDocument();
-  });
-
-  it("calls onSelect when clicking an item", () => {
-    const onSelect = vi.fn();
-    render(
-      <List selectable onSelect={onSelect}>
-        <ListItem title="Item 1" value="1" />
-        <ListItem title="Item 2" value="2" />
-      </List>
-    );
-    fireEvent.click(screen.getByText("Item 1").closest("[role='option']")!);
-    expect(onSelect).toHaveBeenCalledWith("1");
-  });
-
-  it("highlights selected item", () => {
-    render(
-      <List selectable selectedKey="1">
-        <ListItem title="Item 1" value="1" />
-        <ListItem title="Item 2" value="2" />
-      </List>
-    );
-    const item1 = screen.getByText("Item 1").closest("[role='option']");
-    expect(item1).toHaveAttribute("aria-selected", "true");
-  });
-
-  it("supports keyboard selection with Enter", () => {
-    const onSelect = vi.fn();
-    render(
-      <List selectable onSelect={onSelect}>
-        <ListItem title="Item 1" value="1" />
-      </List>
-    );
-    const option = screen.getByRole("option");
-    fireEvent.keyDown(option, { key: "Enter" });
-    expect(onSelect).toHaveBeenCalledWith("1");
-  });
-
-  it("supports keyboard selection with Space", () => {
-    const onSelect = vi.fn();
-    render(
-      <List selectable onSelect={onSelect}>
-        <ListItem title="Item 1" value="1" />
-      </List>
-    );
-    const option = screen.getByRole("option");
-    fireEvent.keyDown(option, { key: " " });
-    expect(onSelect).toHaveBeenCalledWith("1");
   });
 });

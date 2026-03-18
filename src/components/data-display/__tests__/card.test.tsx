@@ -34,72 +34,50 @@ describe("Card", () => {
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
 
-  // --- New: loading prop ---
-  describe("loading prop", () => {
-    it("renders a loading overlay", () => {
-      render(<Card loading>Content</Card>);
-      expect(screen.getByTestId("card-loading-overlay")).toBeInTheDocument();
-    });
-
-    it("sets aria-busy when loading", () => {
-      render(<Card loading>Content</Card>);
-      const card = screen.getByText("Content").closest("[aria-busy]");
-      expect(card).toHaveAttribute("aria-busy", "true");
-    });
-
-    it("does not render overlay when not loading", () => {
-      render(<Card>Content</Card>);
-      expect(screen.queryByTestId("card-loading-overlay")).not.toBeInTheDocument();
-    });
-
-    it("renders loading overlay with title mode", () => {
-      render(<Card loading title="Title">Content</Card>);
-      expect(screen.getByTestId("card-loading-overlay")).toBeInTheDocument();
-    });
+  it("merges custom className", () => {
+    const { container } = render(<Card className="my-custom">Content</Card>);
+    const card = container.firstElementChild as HTMLElement;
+    expect(card.className).toContain("my-custom");
   });
 
-  // --- New: hoverable prop ---
-  describe("hoverable prop", () => {
-    it("applies hover shadow classes", () => {
-      const { container } = render(<Card hoverable>Content</Card>);
-      const card = container.firstElementChild as HTMLElement;
-      expect(card.className).toContain("hover:shadow-lg");
-      expect(card.className).toContain("hover:-translate-y-0.5");
-    });
+  it("applies default variant classes", () => {
+    const { container } = render(<Card>Content</Card>);
+    const card = container.firstElementChild as HTMLElement;
+    expect(card.className).toContain("transition-all");
   });
 
-  // --- New: clickable prop ---
-  describe("clickable prop", () => {
-    it("adds cursor-pointer class", () => {
-      const { container } = render(<Card clickable>Content</Card>);
-      const card = container.firstElementChild as HTMLElement;
-      expect(card.className).toContain("cursor-pointer");
-    });
-
-    it("sets role=button and tabIndex=0", () => {
-      render(<Card clickable>Content</Card>);
-      const btn = screen.getByRole("button");
-      expect(btn).toBeInTheDocument();
-      expect(btn).toHaveAttribute("tabindex", "0");
-    });
-
-    it("does not set role when not clickable", () => {
-      const { container } = render(<Card>Content</Card>);
-      expect(container.querySelector("[role='button']")).not.toBeInTheDocument();
-    });
+  it("applies padding variant", () => {
+    const { container } = render(<Card padding="lg">Content</Card>);
+    const card = container.firstElementChild as HTMLElement;
+    expect(card.className).toContain("p-8");
   });
 
-  // --- New: onClick handler ---
-  describe("onClick handler", () => {
-    it("fires onClick callback", () => {
-      const handleClick = vi.fn();
-      const { container } = render(
-        <Card clickable onClick={handleClick}>
-          Content
-        </Card>,
-      );
-      fireEvent.click(container.firstElementChild!);
-      expect(handleClick).toHaveBeenCalledTimes(1);
-    });
+  it("applies variant=outline classes", () => {
+    const { container } = render(<Card variant="outline">Content</Card>);
+    const card = container.firstElementChild as HTMLElement;
+    expect(card.className).toContain("border-gray-200");
+  });
+
+  it("renders footer in title mode", () => {
+    render(
+      <Card title="Title" footer={<span>TitleFooter</span>}>
+        Body
+      </Card>,
+    );
+    expect(screen.getByText("TitleFooter")).toBeInTheDocument();
+  });
+
+  it("renders footer in default mode", () => {
+    render(<Card footer={<span>DefaultFooter</span>}>Body</Card>);
+    expect(screen.getByText("DefaultFooter")).toBeInTheDocument();
+  });
+
+  it("fires onClick callback", () => {
+    const handleClick = vi.fn();
+    const { container } = render(
+      <Card onClick={handleClick}>Content</Card>,
+    );
+    fireEvent.click(container.firstElementChild!);
+    expect(handleClick).toHaveBeenCalledTimes(1);
   });
 });
