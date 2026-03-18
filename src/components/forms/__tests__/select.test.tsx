@@ -105,9 +105,9 @@ describe("Select", () => {
           <option value="a">Alpha</option>
         </Select>,
       );
-      const iconSpan = container.querySelector("[aria-hidden='true']");
-      expect(iconSpan).toBeInTheDocument();
-      expect(iconSpan?.textContent).toBe("expand_more");
+      // Icon resolves "expand_more" to built-in SVG via registry
+      const icon = container.querySelector("svg[aria-hidden='true']");
+      expect(icon).toBeInTheDocument();
     });
 
     it("merges custom className", () => {
