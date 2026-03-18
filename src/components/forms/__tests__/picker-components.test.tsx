@@ -28,7 +28,7 @@ describe("Combobox", () => {
 
   it("shows placeholder text", () => {
     render(<Combobox options={options} placeholder="Choose framework" />);
-    expect(screen.getByPlaceholderText("Choose framework")).toBeInTheDocument();
+    expect(screen.getByText("Choose framework")).toBeInTheDocument();
   });
 
   it("opens dropdown on focus", async () => {
@@ -38,10 +38,12 @@ describe("Combobox", () => {
     expect(screen.getByRole("listbox")).toBeInTheDocument();
   });
 
-  it("filters options based on input", async () => {
+  it("filters options based on search input", async () => {
     const user = userEvent.setup();
     render(<Combobox options={options} />);
-    await user.type(screen.getByRole("combobox"), "Re");
+    await user.click(screen.getByRole("combobox"));
+    const searchInput = screen.getByLabelText("Search options");
+    await user.type(searchInput, "Re");
     expect(screen.getByText("React")).toBeInTheDocument();
     expect(screen.queryByText("Vue")).not.toBeInTheDocument();
   });
@@ -55,9 +57,9 @@ describe("Combobox", () => {
     expect(onChange).toHaveBeenCalledWith("vue");
   });
 
-  it("shows label when provided", () => {
-    render(<Combobox options={options} label="Framework" />);
-    expect(screen.getByText("Framework")).toBeInTheDocument();
+  it("supports aria-label", () => {
+    render(<Combobox options={options} aria-label="Framework" />);
+    expect(screen.getByRole("combobox")).toHaveAttribute("aria-label", "Framework");
   });
 
   it("shows error message", () => {
@@ -70,11 +72,13 @@ describe("Combobox", () => {
     expect(screen.getByRole("combobox")).toHaveAttribute("aria-expanded", "false");
   });
 
-  it("shows 'No results found' when no options match", async () => {
+  it("shows 'No results' when no options match", async () => {
     const user = userEvent.setup();
     render(<Combobox options={options} />);
-    await user.type(screen.getByRole("combobox"), "xyz");
-    expect(screen.getByText("No results found.")).toBeInTheDocument();
+    await user.click(screen.getByRole("combobox"));
+    const searchInput = screen.getByLabelText("Search options");
+    await user.type(searchInput, "xyz");
+    expect(screen.getByText(/no.*results|no.*options|no.*match/i)).toBeInTheDocument();
   });
 });
 

@@ -72,3 +72,7 @@ export { useOs } from "./use-os";
 export { useOrientation } from "./use-orientation";
 export { useHeadroom } from "./use-headroom";
 export { useScrollTrigger } from "./use-scroll-trigger";
+
+// Wave 7B — Imperative feedback APIs
+export { toast, Modal, notification } from "./use-imperative-feedback";
+export type { ToastOptions, ToastVariant, ModalConfirmOptions, ModalInfoOptions, NotificationOptions } from "./use-imperative-feedback";

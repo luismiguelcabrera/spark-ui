@@ -5,11 +5,45 @@ export type {
   AppShellContentProps,
 } from "./app-shell";
 
-export { Sidebar, SidebarNavGroup, SidebarNavItem } from "./sidebar";
+export {
+  Sidebar,
+  SidebarProvider,
+  useSidebar,
+  SidebarHeader,
+  SidebarFooter,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+  SidebarSeparator,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
+  SidebarNavGroup,
+  SidebarNavItem,
+} from "./sidebar";
 export type {
   SidebarProps,
+  SidebarProviderProps,
+  SidebarHeaderProps,
+  SidebarFooterProps,
+  SidebarContentProps,
+  SidebarGroupProps,
+  SidebarGroupLabelProps,
+  SidebarGroupContentProps,
+  SidebarSeparatorProps,
+  SidebarMenuProps,
+  SidebarMenuItemProps,
+  SidebarMenuButtonProps,
+  SidebarMenuSubProps,
+  SidebarMenuSubItemProps,
+  SidebarMenuSubButtonProps,
   SidebarNavGroupProps,
   SidebarNavItemProps,
+  SidebarContextValue,
 } from "./sidebar";
 
 export { AuthLayout } from "./auth-layout";
@@ -73,3 +107,6 @@ export type { SplitterProps } from "./splitter";
 
 export { Masonry } from "./masonry";
 export type { MasonryProps } from "./masonry";
+
+export { ThemeScript } from "./theme-script";
+export type { ThemeScriptProps } from "./theme-script";

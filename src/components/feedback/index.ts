@@ -105,3 +105,6 @@ export type { PullToRefreshProps } from "./pull-to-refresh";
 
 export { SwipeableDrawer } from "./swipeable-drawer";
 export type { SwipeableDrawerProps } from "./swipeable-drawer";
+
+export { ImperativeFeedbackProvider } from "./imperative-provider";
+export type { ImperativeFeedbackProviderProps } from "./imperative-provider";
