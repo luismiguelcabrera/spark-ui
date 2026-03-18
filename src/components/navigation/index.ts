@@ -12,3 +12,18 @@ export type { AccordionProps, AccordionItem } from "./accordion";
 
 export { Stepper, stepperVariants } from "./stepper";
 export type { StepperProps, StepItem } from "./stepper";
+
+export { MegaMenu } from "./mega-menu";
+export type {
+  MegaMenuProps,
+  MegaMenuSection,
+  MegaMenuColumn,
+  MegaMenuItem,
+} from "./mega-menu";
+
+export { TableOfContents } from "./table-of-contents";
+export type {
+  TableOfContentsProps,
+  TableOfContentsVariant,
+  TocItem,
+} from "./table-of-contents";
