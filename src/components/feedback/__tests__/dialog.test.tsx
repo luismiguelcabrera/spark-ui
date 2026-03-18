@@ -143,14 +143,20 @@ describe("Dialog", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
-  it("shows loading state on confirm button", () => {
+  it("shows loading state on confirm button with spinner", () => {
     render(<DialogWrapper loading />);
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    // Confirm text is still shown alongside spinner
+    expect(screen.getByText("Confirm")).toBeInTheDocument();
+    expect(screen.getByText("Confirm").closest("button")).toBeDisabled();
+  });
+
+  it("shows custom loading text", () => {
+    render(<DialogWrapper loading loadingText="Saving..." />);
+    expect(screen.getByText("Saving...")).toBeInTheDocument();
   });
 
   it("disables buttons when loading", () => {
     render(<DialogWrapper loading showCancel />);
-    expect(screen.getByText("Loading...")).toBeDisabled();
     expect(screen.getByText("Cancel")).toBeDisabled();
   });
 
@@ -158,13 +164,13 @@ describe("Dialog", () => {
     render(<DialogWrapper />);
     const dialog = screen.getByRole("dialog");
     expect(dialog).toHaveAttribute("aria-modal", "true");
-    expect(dialog).toHaveAttribute("aria-labelledby", "dialog-title");
+    expect(dialog.getAttribute("aria-labelledby")).toBeTruthy();
   });
 
   it("has aria-describedby when description is provided", () => {
     render(<DialogWrapper description="Some info" />);
     const dialog = screen.getByRole("dialog");
-    expect(dialog).toHaveAttribute("aria-describedby", "dialog-description");
+    expect(dialog.getAttribute("aria-describedby")).toBeTruthy();
   });
 
   it("does not have aria-describedby without description", () => {
@@ -198,6 +204,15 @@ describe("Dialog", () => {
   it("applies danger variant styling to confirm button", () => {
     render(<DialogWrapper variant="danger" />);
     expect(screen.getByText("Confirm")).toHaveClass("bg-red-600");
+  });
+
+  it("focuses cancel button for danger variant", async () => {
+    render(<DialogWrapper variant="danger" showCancel />);
+    // Wait for rAF focus
+    await act(async () => {
+      await new Promise((r) => requestAnimationFrame(r));
+    });
+    expect(document.activeElement).toBe(screen.getByText("Cancel"));
   });
 });
 

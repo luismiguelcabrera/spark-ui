@@ -10,6 +10,10 @@ import {
 } from "react";
 import { cn } from "../../lib/utils";
 import { Icon } from "../data-display/icon";
+import { Spinner } from "./spinner";
+import { useIsomorphicId } from "../../hooks/use-isomorphic-id";
+import { useScrollLock } from "../../hooks/use-scroll-lock";
+import { useFocusTrap } from "../../hooks/use-focus-trap";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                      */
@@ -42,6 +46,8 @@ type DialogProps = {
   showCancel?: boolean;
   /** Whether confirm action is loading */
   loading?: boolean;
+  /** Custom loading text (defaults to confirm text with spinner) */
+  loadingText?: string;
   /** Whether clicking the backdrop closes the dialog */
   closeOnBackdrop?: boolean;
   /** Additional class names for the dialog panel */
@@ -78,23 +84,39 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
       onCancel,
       showCancel = true,
       loading = false,
+      loadingText,
       closeOnBackdrop = true,
       className,
     },
     ref,
   ) => {
+    const titleId = useIsomorphicId("dialog-title");
+    const descId = useIsomorphicId("dialog-desc");
+    const panelRef = useRef<HTMLDivElement>(null);
+    const cancelRef = useRef<HTMLButtonElement>(null);
     const confirmRef = useRef<HTMLButtonElement>(null);
 
-    // Focus the confirm button when dialog opens
+    // Lock body scroll when open
+    useScrollLock(open);
+
+    // Trap focus within the dialog panel
+    useFocusTrap(panelRef, open);
+
+    // Focus the appropriate button when dialog opens:
+    // - danger variant → focus cancel button (prevent accidental destructive action)
+    // - default variant → focus confirm button
     useEffect(() => {
       if (open) {
-        // Delay to allow DOM to render
         const raf = requestAnimationFrame(() => {
-          confirmRef.current?.focus();
+          if (variant === "danger" && showCancel) {
+            cancelRef.current?.focus();
+          } else {
+            confirmRef.current?.focus();
+          }
         });
         return () => cancelAnimationFrame(raf);
       }
-    }, [open]);
+    }, [open, variant, showCancel]);
 
     // Escape key
     useEffect(() => {
@@ -127,13 +149,20 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
       onConfirm?.();
     };
 
+    // Merge forwarded ref with internal panel ref
+    const setRefs = (el: HTMLDivElement | null) => {
+      (panelRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+      if (typeof ref === "function") ref(el);
+      else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = el;
+    };
+
     return (
       <div
         className="fixed inset-0 z-50 flex items-center justify-center"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="dialog-title"
-        aria-describedby={description ? "dialog-description" : undefined}
+        aria-labelledby={titleId}
+        aria-describedby={description ? descId : undefined}
       >
         {/* Backdrop */}
         <div
@@ -144,7 +173,7 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
 
         {/* Panel */}
         <div
-          ref={ref}
+          ref={setRefs}
           className={cn(
             "relative bg-white rounded-2xl shadow-float max-w-sm w-full mx-4 p-6",
             className,
@@ -162,7 +191,7 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
 
           {/* Title */}
           <h2
-            id="dialog-title"
+            id={titleId}
             className="text-lg font-bold text-slate-900 pr-8"
           >
             {title}
@@ -171,7 +200,7 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
           {/* Description */}
           {description && (
             <p
-              id="dialog-description"
+              id={descId}
               className="text-sm text-slate-500 mt-2"
             >
               {description}
@@ -185,6 +214,7 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
           <div className="flex justify-end gap-3 mt-6">
             {showCancel && (
               <button
+                ref={cancelRef}
                 type="button"
                 onClick={handleCancel}
                 disabled={loading}
@@ -203,7 +233,14 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
                 confirmStyles[variant],
               )}
             >
-              {loading ? "Loading..." : confirmText}
+              {loading ? (
+                <span className="inline-flex items-center gap-2">
+                  <Spinner size="xs" color="white" />
+                  {loadingText ?? confirmText}
+                </span>
+              ) : (
+                confirmText
+              )}
             </button>
           </div>
         </div>
