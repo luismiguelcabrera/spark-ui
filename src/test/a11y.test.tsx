@@ -10,6 +10,7 @@ import { Checkbox } from "../components/forms/checkbox";
 import { Toggle } from "../components/forms/toggle";
 import { MultiSelect } from "../components/forms/multi-select";
 import { Badge } from "../components/data-display/badge";
+import { Image } from "../components/data-display/image";
 import { Card } from "../components/data-display/card";
 import { Avatar } from "../components/data-display/avatar";
 import { ProgressBar } from "../components/data-display/progress-bar";
@@ -138,6 +139,20 @@ describe("Accessibility (axe)", () => {
 
   it("Card", async () => {
     const { container } = render(<Card title="Title">Content</Card>);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Image (with src)", async () => {
+    const { container } = render(
+      <Image src="/test.jpg" alt="Test image" width={200} height={150} />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Image (no src — fallback)", async () => {
+    const { container } = render(
+      <Image alt="Missing image" width={200} height={150} />,
+    );
     expect(await axe(container)).toHaveNoViolations();
   });
 

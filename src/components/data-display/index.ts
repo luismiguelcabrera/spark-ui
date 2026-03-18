@@ -1,6 +1,9 @@
 export { Icon } from "./icon";
 export type { IconProps } from "./icon";
 
+export { Image, imageVariants } from "./image";
+export type { ImageProps, ImageObjectFit } from "./image";
+
 export { Card, CardHeader, CardTitle, CardContent, cardVariants } from "./card";
 export type { CardProps } from "./card";
 
