@@ -243,9 +243,11 @@ function InlineEditInput({
       onKeyDown={handleKeyDown}
       onBlur={() => onCancel()}
       className={cn(
-        "w-full h-7 px-2 text-sm border border-primary rounded-md bg-white",
-        "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1",
+        "w-full text-sm bg-transparent -mx-1.5 px-1.5 py-0 rounded",
+        "border border-primary/50",
+        "focus:outline-none focus:ring-2 focus:ring-primary/30",
       )}
+      style={{ height: "inherit" }}
       aria-label="Edit cell value"
     />
   );
