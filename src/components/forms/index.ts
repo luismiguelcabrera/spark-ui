@@ -57,3 +57,12 @@ export type { FormProps } from "./form";
 
 export { OtpInput } from "./otp-input";
 export type { OtpInputProps } from "./otp-input";
+
+export { FieldLabel } from "./field-label";
+export type { FieldLabelProps } from "./field-label";
+
+export { FieldDescription } from "./field-description";
+export type { FieldDescriptionProps } from "./field-description";
+
+export { FieldError } from "./field-error";
+export type { FieldErrorProps } from "./field-error";
