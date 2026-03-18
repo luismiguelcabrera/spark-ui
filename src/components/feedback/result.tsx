@@ -32,7 +32,7 @@ const statusConfig: Record<
     bgClass: "bg-green-50",
   },
   error: {
-    icon: "cancel",
+    icon: "x-circle",
     colorClass: "text-red-600",
     bgClass: "bg-red-50",
   },
@@ -57,7 +57,7 @@ const statusConfig: Record<
     bgClass: "bg-slate-50",
   },
   "500": {
-    icon: "dns",
+    icon: "server",
     colorClass: "text-red-600",
     bgClass: "bg-red-50",
   },
