@@ -143,8 +143,8 @@ export { Window, WindowItem } from "./window";
 export type { WindowProps, WindowItemProps } from "./window";
 
 
-export { Video, videoVariants } from "./video";
-export type { VideoProps, VideoRounded } from "./video";
+export { Video, videoVariants, detectProvider, extractYouTubeId, extractVimeoId } from "./video";
+export type { VideoProps, VideoRounded, VideoProvider } from "./video";
 
 export * from "./charts";
 
