@@ -27,7 +27,9 @@ type SortableListProps<T extends SortableItem> = {
   /** Called with the reordered array after a move completes. */
   onReorder: (items: T[]) => void;
   /** Render function for each item. Receives the item and drag handle. */
-  renderItem: (item: T, dragHandle: ReactNode, index: number) => ReactNode;
+  renderItem?: (item: T, dragHandle: ReactNode, index: number) => ReactNode;
+  /** Key to use as the label when `renderItem` is not provided. Defaults to `"id"`. */
+  labelKey?: keyof T & string;
   /** Show the built-in drag handle. Set to false if you render your own. */
   showHandle?: boolean;
   /** Additional class names for the list container */
@@ -86,11 +88,21 @@ function SortableListInner<T extends SortableItem>(
     items,
     onReorder,
     renderItem,
+    labelKey,
     showHandle = true,
     className,
   }: SortableListProps<T>,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
+  const resolvedRenderItem = renderItem ?? ((item: T, dragHandle: ReactNode) => (
+    <div className="flex items-center gap-3 p-3 flex-1">
+      {dragHandle}
+      <span className="text-sm font-medium text-slate-700">
+        {String(item[labelKey ?? "id"])}
+      </span>
+    </div>
+  ));
+
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [overIndex, setOverIndex] = useState<number | null>(null);
   const [grabbed, setGrabbed] = useState(false);
@@ -387,7 +399,7 @@ function SortableListInner<T extends SortableItem>(
               shiftClass,
             )}
           >
-            {renderItem(item, handle, index)}
+            {resolvedRenderItem(item, handle, index)}
           </li>
         );
       })}
@@ -404,7 +416,7 @@ function SortableListInner<T extends SortableItem>(
           className="flex items-center gap-2 rounded-xl bg-white ring-2 ring-primary/40 list-none"
           style={ghostStyle}
         >
-          {renderItem(items[activeIndex], showHandle ? <DragHandle isDragging /> : null, activeIndex)}
+          {resolvedRenderItem(items[activeIndex], showHandle ? <DragHandle isDragging /> : null, activeIndex)}
         </li>
       )}
     </ul>

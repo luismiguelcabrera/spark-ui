@@ -232,6 +232,55 @@ describe("SortableList (pointer drag cancel)", () => {
   });
 });
 
+describe("SortableList (labelKey)", () => {
+  it("renders item labels using labelKey when renderItem is omitted", () => {
+    const onReorder = vi.fn();
+    render(
+      <SortableList items={tasks} onReorder={onReorder} labelKey="title" />,
+    );
+    expect(screen.getByText("First")).toBeInTheDocument();
+    expect(screen.getByText("Second")).toBeInTheDocument();
+    expect(screen.getByText("Third")).toBeInTheDocument();
+  });
+
+  it("falls back to id when neither renderItem nor labelKey is provided", () => {
+    const onReorder = vi.fn();
+    const items = [{ id: "alpha" }, { id: "bravo" }];
+    render(
+      <SortableList items={items} onReorder={onReorder} />,
+    );
+    expect(screen.getByText("alpha")).toBeInTheDocument();
+    expect(screen.getByText("bravo")).toBeInTheDocument();
+  });
+
+  it("still shows drag handles with labelKey", () => {
+    const onReorder = vi.fn();
+    render(
+      <SortableList items={tasks} onReorder={onReorder} labelKey="title" />,
+    );
+    expect(screen.getAllByLabelText("Drag to reorder")).toHaveLength(3);
+  });
+
+  it("supports keyboard reorder with labelKey", async () => {
+    const user = userEvent.setup();
+    const onReorder = vi.fn();
+    render(
+      <SortableList items={tasks} onReorder={onReorder} labelKey="title" />,
+    );
+
+    const handles = screen.getAllByLabelText("Drag to reorder");
+    handles[0].focus();
+    await user.keyboard(" ");
+    await user.keyboard("{ArrowDown}");
+
+    expect(onReorder).toHaveBeenCalledWith([
+      { id: "2", title: "Second" },
+      { id: "1", title: "First" },
+      { id: "3", title: "Third" },
+    ]);
+  });
+});
+
 describe("DragHandle", () => {
   it("renders with aria-label", () => {
     render(<DragHandle />);

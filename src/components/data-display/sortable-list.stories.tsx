@@ -127,6 +127,34 @@ export const CardStyle: Story = {
   },
 };
 
+export const WithLabelKey: Story = {
+  name: "Label Key (no renderItem)",
+  render: () => {
+    const [items, setItems] = useState(initialTasks);
+    return (
+      <div className="max-w-md">
+        <SortableList items={items} onReorder={setItems} labelKey="title" />
+      </div>
+    );
+  },
+};
+
+export const LabelKeyFallback: Story = {
+  name: "Label Key Fallback (uses id)",
+  render: () => {
+    const [items, setItems] = useState([
+      { id: "alpha" },
+      { id: "bravo" },
+      { id: "charlie" },
+    ]);
+    return (
+      <div className="max-w-sm">
+        <SortableList items={items} onReorder={setItems} />
+      </div>
+    );
+  },
+};
+
 export const NoHandle: Story = {
   name: "Custom Handle (no built-in)",
   render: () => {
