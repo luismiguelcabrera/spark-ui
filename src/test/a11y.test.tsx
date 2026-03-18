@@ -1,6 +1,9 @@
 import { render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, it, expect } from "vitest";
+import { Cascader } from "../components/forms/cascader";
+import { TreeSelect } from "../components/forms/tree-select";
+import { SplitButton } from "../components/forms/split-button";
 import { BarChart } from "../components/data-display/charts/bar-chart";
 import { LineChart } from "../components/data-display/charts/line-chart";
 import { AreaChart } from "../components/data-display/charts/area-chart";
@@ -823,6 +826,52 @@ describe("Accessibility (axe)", () => {
 
   it("DonutChart (empty)", async () => {
     const { container } = render(<DonutChart data={[]} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Cascader (default)", async () => {
+    const cascaderOptions = [
+      { label: "US", value: "us", children: [{ label: "CA", value: "ca", children: [{ label: "LA", value: "la" }] }] },
+      { label: "Canada", value: "canada" },
+    ];
+    const { container } = render(<Cascader options={cascaderOptions} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Cascader (disabled)", async () => {
+    const { container } = render(<Cascader options={[]} disabled />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("TreeSelect (default)", async () => {
+    const treeData = [
+      { label: "Docs", value: "docs", children: [{ label: "README", value: "readme" }] },
+      { label: "photo.png", value: "photo" },
+    ];
+    const { container } = render(<TreeSelect data={treeData} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("TreeSelect (disabled)", async () => {
+    const { container } = render(<TreeSelect data={[]} disabled />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("SplitButton (default)", async () => {
+    const actions = [{ label: "Draft", value: "draft" }, { label: "Publish", value: "publish" }];
+    const { container } = render(<SplitButton actions={actions}>Save</SplitButton>);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("SplitButton (disabled)", async () => {
+    const actions = [{ label: "Draft", value: "draft" }];
+    const { container } = render(<SplitButton actions={actions} disabled>Save</SplitButton>);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("SplitButton (loading)", async () => {
+    const actions = [{ label: "Draft", value: "draft" }];
+    const { container } = render(<SplitButton actions={actions} loading>Save</SplitButton>);
     expect(await axe(container)).toHaveNoViolations();
   });
 });

@@ -128,3 +128,12 @@ export type { MaskInputProps } from "./mask-input";
 
 export { Fab, fabVariants } from "./fab";
 export type { FabProps, FabColor, FabSize, FabPosition } from "./fab";
+
+export { Cascader } from "./cascader";
+export type { CascaderProps, CascaderOption } from "./cascader";
+
+export { TreeSelect } from "./tree-select";
+export type { TreeSelectProps, TreeSelectNode } from "./tree-select";
+
+export { SplitButton } from "./split-button";
+export type { SplitButtonProps, SplitButtonAction } from "./split-button";
