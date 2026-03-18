@@ -870,6 +870,9 @@ const EventCalendar = forwardRef<HTMLDivElement, EventCalendarProps>(
       onChange: onDateChange,
     });
 
+    // Track the view we came from when drilling down (e.g. clicking "+N more")
+    const [previousView, setPreviousView] = useState<CalendarView | null>(null);
+
     const goToToday = useCallback(() => {
       setDate(new Date());
     }, [setDate]);
@@ -904,10 +907,27 @@ const EventCalendar = forwardRef<HTMLDivElement, EventCalendarProps>(
 
     const handleDayClick = useCallback(
       (day: Date) => {
+        setPreviousView(view);
         setDate(day);
         setView("day");
       },
-      [setDate, setView]
+      [view, setDate, setView]
+    );
+
+    const handleBack = useCallback(() => {
+      if (previousView) {
+        setView(previousView);
+        setPreviousView(null);
+      }
+    }, [previousView, setView]);
+
+    // Clear previousView when user manually switches views via the switcher
+    const handleViewChange = useCallback(
+      (v: CalendarView) => {
+        setPreviousView(null);
+        setView(v);
+      },
+      [setView]
     );
 
     const headerLabel = useMemo(() => {
@@ -954,6 +974,17 @@ const EventCalendar = forwardRef<HTMLDivElement, EventCalendarProps>(
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
           <div className="flex items-center gap-2">
+            {previousView && view === "day" && (
+              <button
+                type="button"
+                onClick={handleBack}
+                className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors"
+                aria-label={`Back to ${previousView} view`}
+              >
+                <Icon name="chevron_left" size="xs" className="text-slate-500" />
+                <span className="capitalize">{previousView}</span>
+              </button>
+            )}
             <button
               type="button"
               onClick={goToToday}
@@ -986,7 +1017,7 @@ const EventCalendar = forwardRef<HTMLDivElement, EventCalendarProps>(
             </h2>
           </div>
 
-          <ViewSwitcher view={view} onViewChange={setView} />
+          <ViewSwitcher view={view} onViewChange={handleViewChange} />
         </div>
 
         {/* Body */}
