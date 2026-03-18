@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, type ReactNode } from "react";
+import { useEffect, useCallback, useId, type ReactNode } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
@@ -52,6 +52,7 @@ function ModalOverlay({
     </div>
   );
 }
+ModalOverlay.displayName = "ModalOverlay";
 
 function Modal({
   open,
@@ -65,6 +66,9 @@ function Modal({
   className,
 }: ModalProps) {
   const isManaged = open !== undefined || defaultOpen !== undefined;
+  const instanceId = useId();
+  const titleId = `modal-title-${instanceId}`;
+  const descId = `modal-desc-${instanceId}`;
 
   const [isOpen, setIsOpen] = useControllable({
     value: open,
@@ -84,19 +88,39 @@ function Modal({
     return () => document.removeEventListener("keydown", handler);
   }, [isManaged, isOpen, close]);
 
+  // Lock body scroll when managed modal is open
+  useEffect(() => {
+    if (!isManaged || !isOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isManaged, isOpen]);
+
   // Inline (legacy) mode: render without overlay when not managed
   if (!isManaged) {
     return (
-      <div className={cn(modalVariants({ size, className }))}>
+      <div
+        role="dialog"
+        aria-modal="false"
+        aria-labelledby={title ? titleId : undefined}
+        aria-describedby={description ? descId : undefined}
+        className={cn(modalVariants({ size }), className)}
+      >
         {title && (
           <div className={s.modalHeader}>
             <div>
-              <h2 className="text-lg font-bold text-secondary">{title}</h2>
+              <h2 id={titleId} className="text-lg font-bold text-secondary">{title}</h2>
               {description && (
-                <p className="text-sm text-slate-500 mt-0.5">{description}</p>
+                <p id={descId} className="text-sm text-slate-500 mt-0.5">{description}</p>
               )}
             </div>
-            <button className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-400">
+            <button
+              type="button"
+              aria-label="Close"
+              className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
               <Icon name="close" size="md" />
             </button>
           </div>
@@ -112,18 +136,26 @@ function Modal({
 
   return (
     <ModalOverlay onClick={close}>
-      <div className={cn(modalVariants({ size, className }))}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? titleId : undefined}
+        aria-describedby={description ? descId : undefined}
+        className={cn(modalVariants({ size }), className)}
+      >
         {title && (
           <div className={s.modalHeader}>
             <div>
-              <h2 className="text-lg font-bold text-secondary">{title}</h2>
+              <h2 id={titleId} className="text-lg font-bold text-secondary">{title}</h2>
               {description && (
-                <p className="text-sm text-slate-500 mt-0.5">{description}</p>
+                <p id={descId} className="text-sm text-slate-500 mt-0.5">{description}</p>
               )}
             </div>
             <button
+              type="button"
+              aria-label="Close"
               onClick={close}
-              className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-400"
+              className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <Icon name="close" size="md" />
             </button>
@@ -135,6 +167,7 @@ function Modal({
     </ModalOverlay>
   );
 }
+Modal.displayName = "Modal";
 
 export { Modal, ModalOverlay, modalVariants };
 export type { ModalProps };

@@ -8,6 +8,7 @@ import {
   useState,
   useCallback,
   type ReactNode,
+  type KeyboardEvent,
 } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../../lib/utils";
@@ -88,6 +89,8 @@ function DropdownMenu({
     });
   }, [align]);
 
+  const close = useCallback(() => setIsOpen(false), [setIsOpen]);
+
   // Position the portal when open
   useEffect(() => {
     if (!isManaged || !isOpen) return;
@@ -116,17 +119,51 @@ function DropdownMenu({
     return () => document.removeEventListener("mousedown", handler);
   }, [isManaged, isOpen, setIsOpen]);
 
-  const close = () => setIsOpen(false);
+  // Escape key to close
+  useEffect(() => {
+    if (!isManaged || !isOpen) return;
+    const handler = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [isManaged, isOpen, close]);
+
+  const handleMenuKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      const menu = e.currentTarget;
+      const items = Array.from(
+        menu.querySelectorAll<HTMLElement>('[role="menuitem"]')
+      );
+      if (items.length === 0) return;
+
+      const current = document.activeElement as HTMLElement;
+      const currentIndex = items.indexOf(current);
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const next = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+        items[next]?.focus();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        const prev = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+        items[prev]?.focus();
+      }
+    },
+    []
+  );
 
   // Legacy inline mode: no trigger, render menu directly
   if (!isManaged) {
     return (
       <div
+        role="menu"
         className={cn(
           s.dropdownOverlay,
           align === "right" ? "right-0" : "left-0",
           className
         )}
+        onKeyDown={handleMenuKeyDown}
       >
         {renderLegacyItems(items, onItemClick)}
       </div>
@@ -139,7 +176,15 @@ function DropdownMenu({
         <div
           ref={triggerRef}
           onClick={() => setIsOpen(!isOpen)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setIsOpen(!isOpen);
+            }
+          }}
           className="cursor-pointer"
+          aria-haspopup="menu"
+          aria-expanded={isOpen}
         >
           {trigger}
         </div>
@@ -150,6 +195,7 @@ function DropdownMenu({
           <DropdownContext.Provider value={{ close }}>
             <div
               ref={portalRef}
+              role="menu"
               style={{
                 position: "absolute",
                 top: portalPos.top,
@@ -162,6 +208,7 @@ function DropdownMenu({
                 "!absolute",
                 className
               )}
+              onKeyDown={handleMenuKeyDown}
             >
               {children || renderLegacyItems(items, onItemClick, close)}
             </div>
@@ -171,6 +218,7 @@ function DropdownMenu({
     </div>
   );
 }
+DropdownMenu.displayName = "DropdownMenu";
 
 function renderLegacyItems(
   items?: DropdownItem[],
@@ -180,16 +228,23 @@ function renderLegacyItems(
   if (!items) return null;
   return items.map((item, i) => {
     if (item.divider) {
-      return <div key={i} className={s.dropdownDivider} />;
+      return <div key={i} role="separator" className={s.dropdownDivider} />;
     }
     return (
       <button
         key={item.label}
+        type="button"
+        role="menuitem"
+        tabIndex={-1}
         onClick={() => {
           onItemClick?.(item);
           close?.();
         }}
-        className={cn(s.dropdownItem, item.danger && s.dropdownItemDanger)}
+        className={cn(
+          s.dropdownItem,
+          item.danger && s.dropdownItemDanger,
+          "focus-visible:outline-none focus-visible:bg-slate-100"
+        )}
       >
         {item.icon && <Icon name={item.icon} size="sm" />}
         <span>{item.label}</span>
@@ -217,6 +272,9 @@ function DropdownMenuItem({
 
   return (
     <button
+      type="button"
+      role="menuitem"
+      tabIndex={-1}
       onClick={() => {
         onClick?.();
         ctx?.close();
@@ -224,6 +282,7 @@ function DropdownMenuItem({
       className={cn(
         s.dropdownItem,
         danger && s.dropdownItemDanger,
+        "focus-visible:outline-none focus-visible:bg-slate-100",
         className
       )}
     >
@@ -232,10 +291,12 @@ function DropdownMenuItem({
     </button>
   );
 }
+DropdownMenuItem.displayName = "DropdownMenuItem";
 
 function DropdownMenuDivider() {
-  return <div className={s.dropdownDivider} />;
+  return <div role="separator" className={s.dropdownDivider} />;
 }
+DropdownMenuDivider.displayName = "DropdownMenuDivider";
 
 DropdownMenu.Item = DropdownMenuItem;
 DropdownMenu.Divider = DropdownMenuDivider;

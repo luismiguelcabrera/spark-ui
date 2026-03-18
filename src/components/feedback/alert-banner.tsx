@@ -1,6 +1,7 @@
-import { type ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
+import { Icon } from "../data-display/icon";
 
 const alertBannerVariants = cva(
   "flex items-start gap-3 rounded-xl p-4 border",
@@ -35,31 +36,29 @@ type AlertBannerProps = {
   className?: string;
 } & VariantProps<typeof alertBannerVariants>;
 
-function AlertBanner({
-  title,
-  description,
-  actions,
-  variant = "info",
-  className,
-}: AlertBannerProps) {
-  return (
-    <div
-      className={cn(alertBannerVariants({ variant, className }))}
-      role="alert"
-    >
-      <span className="material-symbols-outlined text-[20px] mt-0.5 shrink-0">
-        {alertIconMap[variant ?? "info"]}
-      </span>
-      <div className="flex-1 min-w-0">
-        <p className="font-semibold text-sm">{title}</p>
-        {description && (
-          <p className="text-sm mt-1 opacity-80">{description}</p>
-        )}
+const AlertBanner = forwardRef<HTMLDivElement, AlertBannerProps>(
+  ({ title, description, actions, variant = "info", className }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(alertBannerVariants({ variant }), className)}
+        role="alert"
+      >
+        <span className="shrink-0 mt-0.5" aria-hidden="true">
+          <Icon name={alertIconMap[variant ?? "info"]} size="sm" />
+        </span>
+        <div className="flex-1 min-w-0">
+          <p className="font-semibold text-sm">{title}</p>
+          {description && (
+            <p className="text-sm mt-1 opacity-80">{description}</p>
+          )}
+        </div>
+        {actions && <div className="shrink-0 flex items-center gap-2">{actions}</div>}
       </div>
-      {actions && <div className="shrink-0 flex items-center gap-2">{actions}</div>}
-    </div>
-  );
-}
+    );
+  }
+);
+AlertBanner.displayName = "AlertBanner";
 
 export { AlertBanner, alertBannerVariants };
 export type { AlertBannerProps };

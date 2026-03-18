@@ -13,7 +13,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     const showClear = onClear && typeof value === "string" && value.length > 0;
 
     return (
-      <div className={cn("relative group", className)}>
+      <div role="search" className={cn("relative group", className)}>
         <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
           <Icon
             name={icon}
@@ -22,7 +22,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           />
         </div>
         <input
-          type="text"
+          type="search"
           className={cn(s.searchInputField, showClear && "pr-9")}
           ref={ref}
           value={value}
@@ -31,6 +31,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         {showClear && (
           <button
             type="button"
+            aria-label="Clear search"
             onClick={onClear}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
           >

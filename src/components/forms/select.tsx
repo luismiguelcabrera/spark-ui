@@ -1,6 +1,7 @@
 import { forwardRef, type SelectHTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
+import { Icon } from "../data-display/icon";
 
 type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
   error?: string;
@@ -21,16 +22,17 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
               className
             )}
             ref={ref}
+            aria-invalid={error ? true : undefined}
             {...props}
           >
             {children}
           </select>
-          <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-[20px] pointer-events-none">
-            expand_more
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+            <Icon name="expand_more" size="sm" />
           </span>
         </div>
         {error && (
-          <p className="text-xs text-red-500 font-medium">{error}</p>
+          <p className="text-xs text-red-500 font-medium" role="alert">{error}</p>
         )}
       </div>
     );
