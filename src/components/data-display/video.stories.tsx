@@ -23,8 +23,9 @@ const nativeSrc = "https://www.w3schools.com/html/mov_bbb.mp4";
 const youtubeSrc = "https://www.youtube.com/watch?v=aqz-KE-bpKQ";
 const youtubeShortSrc = "https://youtu.be/aqz-KE-bpKQ";
 const vimeoSrc = "https://vimeo.com/76979871";
+// Inline SVG data URI — always works, no network dependency
 const samplePoster =
-  "https://images.unsplash.com/photo-1536240478700-b869070f9279?w=640&h=360&fit=crop";
+  `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360"><rect width="640" height="360" fill="#1e293b"/><text x="320" y="180" text-anchor="middle" dominant-baseline="central" font-family="system-ui,sans-serif" font-size="18" fill="#94a3b8">Custom Poster</text></svg>')}`;
 
 /* -------------------------------------------------------------------------- */
 /*  Native video stories                                                       */
