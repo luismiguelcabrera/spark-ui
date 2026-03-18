@@ -4,7 +4,7 @@ import { cn } from "../../lib/utils";
 import { Icon } from "../data-display/icon";
 
 const iconButtonVariants = cva(
-  "inline-flex items-center justify-center rounded-full transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
+  "inline-flex items-center justify-center rounded-full transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
   {
     variants: {
       variant: {
@@ -36,16 +36,11 @@ type IconButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
   };
 
 const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ className, variant, size, icon, iconSize, filled, type = "button", ...props }, ref) => {
+  ({ className, variant, size, icon, iconSize, filled, ...props }, ref) => {
     const resolvedIconSize = iconSize ?? (size === "sm" ? "sm" : "md");
-
-    if (typeof globalThis !== "undefined" && (globalThis as Record<string, unknown>).__DEV__ !== false && !props["aria-label"] && !props["aria-labelledby"]) {
-      console.warn("IconButton: icon-only buttons require an `aria-label` or `aria-labelledby` for accessibility.");
-    }
-
     return (
       <button
-        type={type}
+        type="button"
         className={cn(iconButtonVariants({ variant, size }), className)}
         ref={ref}
         {...props}
