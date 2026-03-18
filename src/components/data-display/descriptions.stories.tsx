@@ -298,3 +298,67 @@ export const AllSizes: Story = {
     </div>
   ),
 };
+
+export const WithExtra: Story = {
+  args: {
+    items: userItems,
+    title: "User Profile",
+    bordered: true,
+    extra: (
+      <div className="flex gap-2">
+        <button className="text-sm text-indigo-600 hover:underline">Edit</button>
+        <button className="text-sm text-indigo-600 hover:underline">Export</button>
+      </div>
+    ),
+  },
+  render: (args) => (
+    <div className="max-w-3xl mx-auto p-4">
+      <Descriptions {...args} />
+    </div>
+  ),
+};
+
+export const WithLabelWidth: Story = {
+  args: {
+    items: userItems,
+    title: "Fixed Label Width",
+    labelWidth: 140,
+  },
+  render: (args) => (
+    <div className="max-w-3xl mx-auto p-4">
+      <Descriptions {...args} />
+    </div>
+  ),
+};
+
+export const WithLabelWidthBordered: Story = {
+  args: {
+    items: userItems,
+    title: "Fixed Label Width (Bordered)",
+    bordered: true,
+    labelWidth: "10rem",
+  },
+  render: (args) => (
+    <div className="max-w-3xl mx-auto p-4">
+      <Descriptions {...args} />
+    </div>
+  ),
+};
+
+export const CustomClassNames: Story = {
+  args: {
+    items: [
+      { label: "Name", children: "John Doe" },
+      { label: "Status", children: "Active", contentClassName: "text-green-600 font-semibold" },
+      { label: "Email", children: "john@example.com", labelClassName: "text-indigo-600" },
+    ],
+    title: "Per-Item Class Overrides",
+    bordered: true,
+    labelClassName: "uppercase tracking-wide",
+  },
+  render: (args) => (
+    <div className="max-w-3xl mx-auto p-4">
+      <Descriptions {...args} />
+    </div>
+  ),
+};

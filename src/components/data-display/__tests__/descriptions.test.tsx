@@ -365,4 +365,133 @@ describe("Descriptions", () => {
     expect(ref.current?.className).toContain("bg-surface");
     expect(ref.current?.className).not.toContain("bg-white");
   });
+
+  describe("extra header slot", () => {
+    it("renders extra content next to title", () => {
+      render(
+        <Descriptions
+          items={basicItems}
+          title="Profile"
+          extra={<button data-testid="edit-btn">Edit</button>}
+        />
+      );
+      expect(screen.getByText("Profile")).toBeInTheDocument();
+      expect(screen.getByTestId("edit-btn")).toBeInTheDocument();
+    });
+
+    it("renders extra without title", () => {
+      render(
+        <Descriptions
+          items={basicItems}
+          extra={<span data-testid="extra-only">Actions</span>}
+        />
+      );
+      expect(screen.getByTestId("extra-only")).toBeInTheDocument();
+    });
+
+    it("renders extra in bordered mode", () => {
+      render(
+        <Descriptions
+          items={basicItems}
+          title="Profile"
+          bordered
+          extra={<button data-testid="bordered-edit">Edit</button>}
+        />
+      );
+      expect(screen.getByTestId("bordered-edit")).toBeInTheDocument();
+    });
+  });
+
+  describe("labelWidth", () => {
+    it("applies labelWidth as number in borderless horizontal mode", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} labelWidth={120} />
+      );
+      const gridItem = container.querySelector("dl > div") as HTMLElement;
+      expect(gridItem?.style.gridTemplateColumns).toBe("120px 1fr");
+    });
+
+    it("applies labelWidth as string in borderless horizontal mode", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} labelWidth="10rem" />
+      );
+      const gridItem = container.querySelector("dl > div") as HTMLElement;
+      expect(gridItem?.style.gridTemplateColumns).toBe("10rem 1fr");
+    });
+
+    it("applies labelWidth in bordered horizontal mode", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} bordered labelWidth={150} />
+      );
+      const th = container.querySelector("th") as HTMLElement;
+      expect(th?.style.width).toBe("150px");
+    });
+
+    it("does not apply labelWidth in vertical layout", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} layout="vertical" labelWidth={120} />
+      );
+      const gridItem = container.querySelector("dl > div") as HTMLElement;
+      expect(gridItem?.style.gridTemplateColumns).toBeFalsy();
+    });
+  });
+
+  describe("labelClassName and contentClassName", () => {
+    it("applies global labelClassName to all labels", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} labelClassName="uppercase" />
+      );
+      const dts = container.querySelectorAll("dt");
+      dts.forEach((dt) => {
+        expect(dt.className).toContain("uppercase");
+      });
+    });
+
+    it("applies global contentClassName to all values", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} contentClassName="italic" />
+      );
+      const dds = container.querySelectorAll("dd");
+      dds.forEach((dd) => {
+        expect(dd.className).toContain("italic");
+      });
+    });
+
+    it("applies per-item labelClassName", () => {
+      const items: typeof basicItems = [
+        { label: "A", children: "1", labelClassName: "text-red-500" },
+        { label: "B", children: "2" },
+      ];
+      const { container } = render(<Descriptions items={items} />);
+      const dts = container.querySelectorAll("dt");
+      expect(dts[0].className).toContain("text-red-500");
+      expect(dts[1].className).not.toContain("text-red-500");
+    });
+
+    it("applies per-item contentClassName", () => {
+      const items: typeof basicItems = [
+        { label: "A", children: "1", contentClassName: "font-bold" },
+        { label: "B", children: "2" },
+      ];
+      const { container } = render(<Descriptions items={items} />);
+      const dds = container.querySelectorAll("dd");
+      expect(dds[0].className).toContain("font-bold");
+      expect(dds[1].className).not.toContain("font-bold");
+    });
+
+    it("applies global and per-item classNames in bordered mode", () => {
+      const items: typeof basicItems = [
+        { label: "A", children: "1", labelClassName: "text-red-500", contentClassName: "font-bold" },
+      ];
+      const { container } = render(
+        <Descriptions items={items} bordered labelClassName="uppercase" contentClassName="italic" />
+      );
+      const th = container.querySelector("th");
+      const td = container.querySelector("td");
+      expect(th?.className).toContain("uppercase");
+      expect(th?.className).toContain("text-red-500");
+      expect(td?.className).toContain("italic");
+      expect(td?.className).toContain("font-bold");
+    });
+  });
 });

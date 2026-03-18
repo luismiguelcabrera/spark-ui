@@ -7,6 +7,10 @@ type DescriptionsItem = {
   label: string;
   children: ReactNode;
   span?: number;
+  /** Custom className for this item's label */
+  labelClassName?: string;
+  /** Custom className for this item's value */
+  contentClassName?: string;
 };
 
 type DescriptionsSize = "xs" | "sm" | "md" | "lg" | "xl";
@@ -15,6 +19,8 @@ type DescriptionsVariant = "plain" | "striped";
 type DescriptionsProps = HTMLAttributes<HTMLDivElement> & {
   /** Optional title displayed above the descriptions */
   title?: string;
+  /** Extra content rendered next to the title (e.g. action buttons, links) */
+  extra?: ReactNode;
   /** Array of items to display */
   items: DescriptionsItem[];
   /** Number of columns */
@@ -33,6 +39,12 @@ type DescriptionsProps = HTMLAttributes<HTMLDivElement> & {
   responsive?: boolean;
   /** Heading level for the title (2-6, default 3) */
   headingLevel?: 2 | 3 | 4 | 5 | 6;
+  /** Fixed width for labels in horizontal layout (e.g. "120px", "8rem") */
+  labelWidth?: string | number;
+  /** Global className applied to all labels */
+  labelClassName?: string;
+  /** Global className applied to all values */
+  contentClassName?: string;
 };
 
 const sizeStyles = {
@@ -133,6 +145,7 @@ const Descriptions = forwardRef<HTMLDivElement, DescriptionsProps>(
     {
       className,
       title,
+      extra,
       items,
       columns = 3,
       bordered = false,
@@ -142,6 +155,9 @@ const Descriptions = forwardRef<HTMLDivElement, DescriptionsProps>(
       variant = "plain",
       responsive = true,
       headingLevel = 3,
+      labelWidth,
+      labelClassName: globalLabelClassName,
+      contentClassName: globalContentClassName,
       ...props
     },
     ref
@@ -153,18 +169,31 @@ const Descriptions = forwardRef<HTMLDivElement, DescriptionsProps>(
 
     const isStriped = variant === "striped";
 
-    const titleElement = title ? (
-      <div
-        role="heading"
-        aria-level={headingLevel}
-        className={cn(
-          "font-semibold text-secondary",
-          styles.titleSize
-        )}
-      >
-        {title}
-      </div>
-    ) : null;
+    const labelWidthStyle =
+      labelWidth != null
+        ? typeof labelWidth === "number"
+          ? `${labelWidth}px`
+          : labelWidth
+        : undefined;
+
+    const titleElement =
+      title || extra ? (
+        <div className="flex items-center justify-between gap-4">
+          {title && (
+            <div
+              role="heading"
+              aria-level={headingLevel}
+              className={cn(
+                "font-semibold text-secondary",
+                styles.titleSize
+              )}
+            >
+              {title}
+            </div>
+          )}
+          {extra && <div className="ml-auto shrink-0">{extra}</div>}
+        </div>
+      ) : null;
 
     if (bordered) {
       return (
@@ -208,7 +237,9 @@ const Descriptions = forwardRef<HTMLDivElement, DescriptionsProps>(
                             className={cn(
                               "text-left font-medium text-text-secondary bg-light/50 border-r border-slate-100 last:border-r-0",
                               styles.padding,
-                              styles.labelSize
+                              styles.labelSize,
+                              globalLabelClassName,
+                              item.labelClassName
                             )}
                           >
                             {item.label}
@@ -229,7 +260,9 @@ const Descriptions = forwardRef<HTMLDivElement, DescriptionsProps>(
                             className={cn(
                               "text-secondary border-r border-slate-100 last:border-r-0",
                               styles.padding,
-                              styles.valueSize
+                              styles.valueSize,
+                              globalContentClassName,
+                              item.contentClassName
                             )}
                           >
                             {renderValue(item.children)}
@@ -253,8 +286,11 @@ const Descriptions = forwardRef<HTMLDivElement, DescriptionsProps>(
                           className={cn(
                             "text-left font-medium text-text-secondary bg-light/50 border-r border-slate-100 whitespace-nowrap",
                             styles.padding,
-                            styles.labelSize
+                            styles.labelSize,
+                            globalLabelClassName,
+                            item.labelClassName
                           )}
+                          style={labelWidthStyle ? { width: labelWidthStyle } : undefined}
                         >
                           {item.label}
                           {labelSuffix}
@@ -268,7 +304,9 @@ const Descriptions = forwardRef<HTMLDivElement, DescriptionsProps>(
                           className={cn(
                             "text-secondary border-r border-slate-100 last:border-r-0",
                             styles.padding,
-                            styles.valueSize
+                            styles.valueSize,
+                            globalContentClassName,
+                            item.contentClassName
                           )}
                         >
                           {renderValue(item.children)}
@@ -308,22 +346,29 @@ const Descriptions = forwardRef<HTMLDivElement, DescriptionsProps>(
                 key={idx}
                 className={cn(
                   layout === "horizontal"
-                    ? "grid grid-cols-[auto_1fr] gap-2"
+                    ? `grid gap-2`
                     : "",
                   stripedItemClass,
                   span > 1 && `col-span-${span}`
                 )}
-                style={
-                  span > 1
-                    ? { gridColumn: `span ${span}` }
-                    : undefined
-                }
+                style={{
+                  ...(span > 1 ? { gridColumn: `span ${span}` } : {}),
+                  ...(layout === "horizontal"
+                    ? {
+                        gridTemplateColumns: labelWidthStyle
+                          ? `${labelWidthStyle} 1fr`
+                          : "auto 1fr",
+                      }
+                    : {}),
+                }}
               >
                 <dt
                   className={cn(
                     "font-medium text-text-secondary",
                     styles.labelSize,
-                    layout === "horizontal" && "shrink-0 whitespace-nowrap"
+                    layout === "horizontal" && "shrink-0 whitespace-nowrap",
+                    globalLabelClassName,
+                    item.labelClassName
                   )}
                 >
                   {item.label}
@@ -333,7 +378,9 @@ const Descriptions = forwardRef<HTMLDivElement, DescriptionsProps>(
                   className={cn(
                     "text-secondary",
                     styles.valueSize,
-                    layout === "vertical" && "mt-1"
+                    layout === "vertical" && "mt-1",
+                    globalContentClassName,
+                    item.contentClassName
                   )}
                 >
                   {renderValue(item.children)}
