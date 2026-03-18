@@ -1,6 +1,8 @@
 import { render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, it, expect } from "vitest";
+import { MegaMenu } from "../components/navigation/mega-menu";
+import { TableOfContents } from "../components/navigation/table-of-contents";
 import { Knob } from "../components/forms/knob";
 import { CheckboxCard } from "../components/forms/checkbox-card";
 import { RadioCardGroup } from "../components/forms/radio-card";
@@ -1201,6 +1203,43 @@ describe("Accessibility (axe)", () => {
   it("RadioCardGroup (vertical)", async () => {
     const options = [{ value: "a", title: "A" }, { value: "b", title: "B" }];
     const { container } = render(<RadioCardGroup options={options} orientation="vertical" />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("MegaMenu (default)", async () => {
+    const sections = [
+      {
+        label: "Products",
+        columns: [
+          {
+            title: "Featured",
+            items: [
+              { label: "Item A", href: "/a" },
+              { label: "Item B", href: "/b" },
+            ],
+          },
+        ],
+      },
+    ];
+    const { container } = render(<MegaMenu sections={sections} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("TableOfContents (default)", async () => {
+    const items = [
+      { id: "section-1", label: "Introduction" },
+      { id: "section-2", label: "Getting Started" },
+      { id: "section-3", label: "API Reference" },
+    ];
+    const { container } = render(<TableOfContents items={items} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("TableOfContents (bordered)", async () => {
+    const items = [
+      { id: "s1", label: "Overview", children: [{ id: "s1-1", label: "Details" }] },
+    ];
+    const { container } = render(<TableOfContents items={items} variant="bordered" />);
     expect(await axe(container)).toHaveNoViolations();
   });
 });

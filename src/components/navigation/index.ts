@@ -42,3 +42,9 @@ export type { SlideGroupProps } from "./slide-group";
 
 export { ItemGroup, ItemGroupItem } from "./item-group";
 export type { ItemGroupProps, ItemGroupItemProps, ItemGroupContextValue } from "./item-group";
+
+export { MegaMenu } from "./mega-menu";
+export type { MegaMenuProps, MegaMenuSection, MegaMenuColumn, MegaMenuItem } from "./mega-menu";
+
+export { TableOfContents } from "./table-of-contents";
+export type { TableOfContentsProps, TocItem } from "./table-of-contents";
