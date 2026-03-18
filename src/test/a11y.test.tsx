@@ -12,6 +12,7 @@ import { MultiSelect } from "../components/forms/multi-select";
 import { Badge } from "../components/data-display/badge";
 import { Image } from "../components/data-display/image";
 import { SortableList } from "../components/data-display/sortable-list";
+import { VirtualList } from "../components/data-display/virtual-list";
 import { Card } from "../components/data-display/card";
 import { Avatar } from "../components/data-display/avatar";
 import { ProgressBar } from "../components/data-display/progress-bar";
@@ -172,6 +173,20 @@ describe("Accessibility (axe)", () => {
             <span>{item.title}</span>
           </div>
         )}
+      />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("VirtualList", async () => {
+    const items = Array.from({ length: 50 }, (_, i) => ({ id: `${i}`, label: `Item ${i}` }));
+    const { container } = render(
+      <VirtualList
+        items={items}
+        itemHeight={40}
+        height={200}
+        renderItem={(item) => <div className="px-4 py-2">{item.label}</div>}
+        getKey={(item) => item.id}
       />,
     );
     expect(await axe(container)).toHaveNoViolations();

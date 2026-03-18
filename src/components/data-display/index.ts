@@ -37,6 +37,9 @@ export type { DataTableProps, Column, SortState, SortDirection } from "./data-ta
 export { SortableList, DragHandle } from "./sortable-list";
 export type { SortableListProps, SortableItem, DragHandleProps } from "./sortable-list";
 
+export { VirtualList } from "./virtual-list";
+export type { VirtualListProps } from "./virtual-list";
+
 export { List, ListItem } from "./list";
 export type { ListProps, ListItemProps } from "./list";
 
