@@ -1,6 +1,8 @@
 import { render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, it, expect } from "vitest";
+import { Mention } from "../components/forms/mention";
+import { RichTextEditor } from "../components/forms/rich-text-editor";
 import { RadarChart } from "../components/data-display/charts/radar-chart";
 import { ScatterChart } from "../components/data-display/charts/scatter-chart";
 import { FunnelChart } from "../components/data-display/charts/funnel-chart";
@@ -1065,6 +1067,42 @@ describe("Accessibility (axe)", () => {
 
   it("HeatmapChart (empty)", async () => {
     const { container } = render(<HeatmapChart data={[]} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Mention (default)", async () => {
+    const options = [{ value: "alice", label: "Alice" }, { value: "bob", label: "Bob" }];
+    const { container } = render(<Mention options={options} placeholder="Type @ to mention" />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Mention (disabled)", async () => {
+    const { container } = render(<Mention options={[]} disabled placeholder="Disabled" />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Mention (multiline)", async () => {
+    const { container } = render(<Mention options={[]} multiline placeholder="Multiline" />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("RichTextEditor (default)", async () => {
+    const { container } = render(<RichTextEditor placeholder="Write something" />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("RichTextEditor (disabled)", async () => {
+    const { container } = render(<RichTextEditor disabled placeholder="Disabled" />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("RichTextEditor (readOnly)", async () => {
+    const { container } = render(<RichTextEditor readOnly defaultValue="<p>Read only</p>" />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("RichTextEditor (custom toolbar)", async () => {
+    const { container } = render(<RichTextEditor toolbar={["bold", "italic", "separator", "undo", "redo"]} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 });

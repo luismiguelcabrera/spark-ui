@@ -146,3 +146,9 @@ export type { FieldDescriptionProps } from "./field-description";
 
 export { FieldError } from "./field-error";
 export type { FieldErrorProps } from "./field-error";
+
+export { Mention } from "./mention";
+export type { MentionProps, MentionOption } from "./mention";
+
+export { RichTextEditor } from "./rich-text-editor";
+export type { RichTextEditorProps, ToolbarAction } from "./rich-text-editor";
