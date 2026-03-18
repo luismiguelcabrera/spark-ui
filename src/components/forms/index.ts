@@ -78,6 +78,9 @@ export type { OtpInputProps } from "./otp-input";
 export { Combobox } from "./combobox";
 export type { ComboboxProps, ComboboxOption } from "./combobox";
 
+export { MultiSelect } from "./multi-select";
+export type { MultiSelectProps, MultiSelectOption, MultiSelectSize } from "./multi-select";
+
 export { DatePicker } from "./date-picker";
 export type { DatePickerProps } from "./date-picker";
 

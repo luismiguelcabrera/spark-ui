@@ -8,6 +8,7 @@ import { InputGroup, InputLeftAddon, InputRightAddon } from "../components/forms
 import { Select } from "../components/forms/select";
 import { Checkbox } from "../components/forms/checkbox";
 import { Toggle } from "../components/forms/toggle";
+import { MultiSelect } from "../components/forms/multi-select";
 import { Badge } from "../components/data-display/badge";
 import { Card } from "../components/data-display/card";
 import { Avatar } from "../components/data-display/avatar";
@@ -79,6 +80,28 @@ describe("Accessibility (axe)", () => {
         <InputLeftAddon>$</InputLeftAddon>
         <Input placeholder="0.00" aria-label="Amount" type="number" />
       </InputGroup>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("MultiSelect (default)", async () => {
+    const options = [
+      { value: "a", label: "Alpha" },
+      { value: "b", label: "Beta" },
+    ];
+    const { container } = render(
+      <MultiSelect options={options} label="Choose" />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("MultiSelect (with selections)", async () => {
+    const options = [
+      { value: "a", label: "Alpha" },
+      { value: "b", label: "Beta" },
+    ];
+    const { container } = render(
+      <MultiSelect options={options} value={["a"]} label="Choose" />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });
