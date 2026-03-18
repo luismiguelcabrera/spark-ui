@@ -147,3 +147,5 @@ export type { PieProps, PieSegment } from "./pie";
 
 export { Video, videoVariants } from "./video";
 export type { VideoProps, VideoRounded } from "./video";
+
+export * from "./charts";
