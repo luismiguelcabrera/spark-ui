@@ -14,6 +14,11 @@ const meta = {
       control: "select",
       options: ["cover", "contain", "fill", "none", "scale-down"],
     },
+    hoverEffect: {
+      control: "select",
+      options: [undefined, "zoom", "shine", "grayscale", "blur", "kenburns"],
+    },
+    hoverOverlay: { control: "boolean" },
   },
 } satisfies Meta<typeof Image>;
 
@@ -113,6 +118,94 @@ export const NoRadius: Story = {
     width: 300,
     height: 200,
     radius: "none",
+  },
+};
+
+export const HoverZoom: Story = {
+  args: {
+    src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&h=400&fit=crop",
+    alt: "Mountain landscape",
+    width: 400,
+    aspectRatio: 16 / 9,
+    radius: "xl",
+    hoverEffect: "zoom",
+  },
+};
+
+export const HoverShine: Story = {
+  args: {
+    src: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&h=400&fit=crop",
+    alt: "Nature",
+    width: 400,
+    aspectRatio: 16 / 9,
+    radius: "xl",
+    hoverEffect: "shine",
+  },
+};
+
+export const HoverGrayscale: Story = {
+  args: {
+    src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+    alt: "Portrait",
+    width: 300,
+    aspectRatio: 1,
+    radius: "xl",
+    hoverEffect: "grayscale",
+  },
+};
+
+export const HoverBlur: Story = {
+  args: {
+    src: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop",
+    alt: "Laptop",
+    width: 400,
+    aspectRatio: 16 / 9,
+    radius: "xl",
+    hoverEffect: "blur",
+  },
+};
+
+export const HoverKenBurns: Story = {
+  args: {
+    src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&h=400&fit=crop",
+    alt: "Mountain landscape",
+    width: 400,
+    aspectRatio: 16 / 9,
+    radius: "xl",
+    hoverEffect: "kenburns",
+  },
+};
+
+export const HoverEffectsGallery: Story = {
+  render: (args) => (
+    <div className="grid grid-cols-3 gap-6">
+      {(["zoom", "shine", "grayscale", "blur", "kenburns"] as const).map((effect) => (
+        <div key={effect}>
+          <p className="text-xs font-semibold text-slate-400 uppercase mb-2">{effect}</p>
+          <Image
+            {...args}
+            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&h=300&fit=crop"
+            alt={`${effect} effect`}
+            width="100%"
+            aspectRatio={4 / 3}
+            radius="xl"
+            hoverEffect={effect}
+          />
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const ZoomWithOverlay: Story = {
+  args: {
+    src: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&h=400&fit=crop",
+    alt: "Nature",
+    width: 400,
+    aspectRatio: 16 / 9,
+    radius: "xl",
+    hoverEffect: "zoom",
+    hoverOverlay: true,
   },
 };
 

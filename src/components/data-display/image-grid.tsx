@@ -2,7 +2,7 @@
 
 import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
-import { Image } from "./image";
+import { Image, type ImageHoverEffect } from "./image";
 import { Masonry } from "../layout/masonry";
 
 type ImageGridItem = {
@@ -33,6 +33,8 @@ type ImageGridProps = HTMLAttributes<HTMLDivElement> & {
   onImageClick?: (image: ImageGridItem, index: number) => void;
   /** Show overlay on hover */
   showOverlay?: boolean;
+  /** Hover effect applied to each image */
+  hoverEffect?: ImageHoverEffect;
 };
 
 const colsMap: Record<number, string> = {
@@ -69,6 +71,7 @@ const ImageGrid = forwardRef<HTMLDivElement, ImageGridProps>(
       rounded = "xl",
       onImageClick,
       showOverlay = false,
+      hoverEffect,
       ...props
     },
     ref
@@ -90,6 +93,7 @@ const ImageGrid = forwardRef<HTMLDivElement, ImageGridProps>(
           radius={imageRadius}
           objectFit="cover"
           hoverOverlay={showOverlay}
+          hoverEffect={hoverEffect}
           aspectRatio={layout === "grid" ? (image.aspectRatio ?? 1) : image.aspectRatio}
           className="w-full"
         />

@@ -239,6 +239,13 @@
   animation: spark-ripple-effect 600ms ease-out forwards;
 }
 
+/* ── Image hover: shine sweep ── */
+
+@keyframes spark-shine {
+  from { transform: translateX(-100%) skewX(-20deg); }
+  to { transform: translateX(200%) skewX(-20deg); }
+}
+
 /* ── Reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {

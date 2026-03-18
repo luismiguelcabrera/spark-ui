@@ -12,6 +12,10 @@ const meta = {
     gap: { control: "select", options: ["1", "2", "3", "4"] },
     rounded: { control: "select", options: ["none", "md", "lg", "xl", "2xl"] },
     showOverlay: { control: "boolean" },
+    hoverEffect: {
+      control: "select",
+      options: [undefined, "zoom", "shine", "grayscale", "blur", "kenburns"],
+    },
   },
 } satisfies Meta<typeof ImageGrid>;
 
@@ -122,5 +126,36 @@ export const MasonryWithOverlay: Story = {
     layout: "masonry",
     cols: 3,
     showOverlay: true,
+  },
+};
+
+export const GridWithZoom: Story = {
+  args: {
+    images: images.slice(0, 6),
+    hoverEffect: "zoom",
+    showOverlay: true,
+  },
+};
+
+export const GridWithShine: Story = {
+  args: {
+    images: images.slice(0, 6),
+    hoverEffect: "shine",
+  },
+};
+
+export const GrayscaleGallery: Story = {
+  args: {
+    images: images.slice(0, 6),
+    hoverEffect: "grayscale",
+  },
+};
+
+export const MasonryWithKenBurns: Story = {
+  args: {
+    images: masonryImages,
+    layout: "masonry",
+    cols: 3,
+    hoverEffect: "kenburns",
   },
 };

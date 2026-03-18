@@ -38,6 +38,8 @@ const imageVariants = cva("relative overflow-hidden bg-slate-100", {
 
 type ImageObjectFit = "cover" | "contain" | "fill" | "none" | "scale-down";
 
+type ImageHoverEffect = "zoom" | "shine" | "grayscale" | "blur" | "kenburns";
+
 type ImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "placeholder"> &
   VariantProps<typeof imageVariants> & {
     /** Aspect ratio (width/height). When set, the container maintains this ratio. */
@@ -54,7 +56,22 @@ type ImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "placeholder"> &
     height?: number | string;
     /** Show a darkening overlay on hover */
     hoverOverlay?: boolean;
+    /** Hover effect to apply */
+    hoverEffect?: ImageHoverEffect;
   };
+
+/* -------------------------------------------------------------------------- */
+/*  Hover effect classes                                                       */
+/* -------------------------------------------------------------------------- */
+
+/** Classes applied to the <img> element per hover effect */
+const imgEffectClasses: Record<ImageHoverEffect, string> = {
+  zoom: "transition-transform duration-300 group-hover:scale-110",
+  shine: "",
+  grayscale: "grayscale transition-all duration-500 group-hover:grayscale-0",
+  blur: "transition-all duration-300 group-hover:blur-sm",
+  kenburns: "transition-transform duration-[3s] ease-out group-hover:scale-[1.15] group-hover:translate-x-[2%] group-hover:-translate-y-[1%]",
+};
 
 /* -------------------------------------------------------------------------- */
 /*  Component                                                                  */
@@ -73,6 +90,7 @@ const Image = forwardRef<HTMLImageElement, ImageProps>(
       width,
       height,
       hoverOverlay = false,
+      hoverEffect,
       className,
       style,
       onLoad: onLoadProp,
@@ -132,13 +150,14 @@ const Image = forwardRef<HTMLImageElement, ImageProps>(
       ...(aspectRatio !== undefined ? { aspectRatio: String(aspectRatio) } : {}),
     };
 
+    const needsGroup = hoverOverlay || !!hoverEffect;
     const showSkeleton = status === "loading";
     const showError = status === "error" || status === "idle";
     const showImage = src && status !== "error" && status !== "idle";
 
     return (
       <div
-        className={cn(imageVariants({ radius }), hoverOverlay && "group", className)}
+        className={cn(imageVariants({ radius }), needsGroup && "group", className)}
         style={containerStyle}
       >
         {/* Skeleton placeholder */}
@@ -160,6 +179,20 @@ const Image = forwardRef<HTMLImageElement, ImageProps>(
           <div className="absolute inset-0 z-10 bg-black/0 group-hover:bg-black/20 transition-colors" />
         )}
 
+        {/* Shine sweep overlay */}
+        {hoverEffect === "shine" && (
+          <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
+            <div
+              className={cn(
+                "absolute inset-y-0 w-1/2",
+                "bg-gradient-to-r from-transparent via-white/40 to-transparent",
+                "-translate-x-full skew-x-[-20deg]",
+                "group-hover:animate-[spark-shine_0.8s_ease-in-out]",
+              )}
+            />
+          </div>
+        )}
+
         {/* Actual image */}
         {showImage && (
           <img
@@ -177,6 +210,7 @@ const Image = forwardRef<HTMLImageElement, ImageProps>(
               "w-full h-full transition-opacity duration-300",
               objectFitClass,
               status === "loaded" ? "opacity-100" : "opacity-0",
+              hoverEffect && imgEffectClasses[hoverEffect],
             )}
             {...props}
           />
@@ -188,4 +222,4 @@ const Image = forwardRef<HTMLImageElement, ImageProps>(
 Image.displayName = "Image";
 
 export { Image, imageVariants };
-export type { ImageProps, ImageObjectFit };
+export type { ImageProps, ImageObjectFit, ImageHoverEffect };
