@@ -184,8 +184,25 @@ function SortableListInner<T extends SortableItem>(
         transition: "box-shadow 0.2s, transform 0.2s",
       });
 
+      const CANCEL_MARGIN = 50;
+
+      // Declare cleanup ahead so handlePointerMove can reference it
+      let cleanupFn: (() => void) | null = null;
+
       const handlePointerMove = (moveEvent: PointerEvent) => {
         if (dragItemIndex.current === null || !containerRef.current) return;
+
+        // Cancel if pointer moves far outside the list bounds
+        const currentContainerRect = containerRef.current.getBoundingClientRect();
+        if (
+          moveEvent.clientX < currentContainerRect.left - CANCEL_MARGIN ||
+          moveEvent.clientX > currentContainerRect.right + CANCEL_MARGIN ||
+          moveEvent.clientY < currentContainerRect.top - CANCEL_MARGIN ||
+          moveEvent.clientY > currentContainerRect.bottom + CANCEL_MARGIN
+        ) {
+          cleanupFn?.();
+          return;
+        }
 
         const newTop = moveEvent.clientY - containerRect.top - offsetY;
         setGhostStyle((prev) => ({
@@ -210,18 +227,6 @@ function SortableListInner<T extends SortableItem>(
         setOverIndex(targetIndex);
       };
 
-      const cleanup = () => {
-        dragItemIndex.current = null;
-        overIndexRef.current = null;
-        setActiveIndex(null);
-        setOverIndex(null);
-        setGhostStyle({});
-        document.removeEventListener("pointermove", handlePointerMove);
-        document.removeEventListener("pointerup", handlePointerUp);
-        document.removeEventListener("keydown", handleKeyCancel);
-        document.removeEventListener("touchmove", preventScroll);
-      };
-
       const handlePointerUp = () => {
         const from = dragItemIndex.current;
         const to = overIndexRef.current;
@@ -231,14 +236,26 @@ function SortableListInner<T extends SortableItem>(
           onReorder(newItems);
         }
 
-        cleanup();
+        cleanupFn?.();
       };
 
       const handleKeyCancel = (ke: globalThis.KeyboardEvent) => {
         if (ke.key === "Escape") {
           ke.preventDefault();
-          cleanup();
+          cleanupFn?.();
         }
+      };
+
+      cleanupFn = () => {
+        dragItemIndex.current = null;
+        overIndexRef.current = null;
+        setActiveIndex(null);
+        setOverIndex(null);
+        setGhostStyle({});
+        document.removeEventListener("pointermove", handlePointerMove);
+        document.removeEventListener("pointerup", handlePointerUp);
+        document.removeEventListener("keydown", handleKeyCancel);
+        document.removeEventListener("touchmove", preventScroll);
       };
 
       document.addEventListener("pointermove", handlePointerMove);
