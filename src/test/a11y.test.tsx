@@ -22,6 +22,7 @@ import { Toast } from "../components/feedback/toast";
 import { Alert } from "../components/feedback/alert";
 import { AlertBanner } from "../components/feedback/alert-banner";
 import { Modal } from "../components/feedback/modal";
+import { Dialog } from "../components/feedback/dialog";
 import { Breadcrumb } from "../components/navigation/breadcrumb";
 import { Pagination } from "../components/navigation/pagination";
 import { Tabs } from "../components/navigation/tabs";
@@ -262,6 +263,32 @@ describe("Accessibility (axe)", () => {
 
   it("Modal (inline)", async () => {
     const { container } = render(<Modal title="Confirm">Are you sure?</Modal>);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Dialog (default)", async () => {
+    const { container } = render(
+      <Dialog
+        open={true}
+        onOpenChange={() => {}}
+        title="Confirm action"
+        description="Are you sure?"
+      />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Dialog (danger, no cancel)", async () => {
+    const { container } = render(
+      <Dialog
+        open={true}
+        onOpenChange={() => {}}
+        title="Delete?"
+        variant="danger"
+        showCancel={false}
+        confirmText="Delete"
+      />,
+    );
     expect(await axe(container)).toHaveNoViolations();
   });
 

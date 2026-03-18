@@ -75,3 +75,6 @@ export type { LoadingOverlayProps } from "./loading-overlay";
 
 export { ErrorBoundary } from "./error-boundary";
 export type { ErrorBoundaryProps } from "./error-boundary";
+
+export { Dialog, useDialog } from "./dialog";
+export type { DialogProps, DialogVariant, UseDialogOptions, UseDialogReturn } from "./dialog";
