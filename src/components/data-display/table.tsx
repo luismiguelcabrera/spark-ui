@@ -3,11 +3,20 @@ import { cn } from "../../lib/utils";
 
 /* ── Table Root ─────────────────────────────────────────────────── */
 
-type TableProps = HTMLAttributes<HTMLTableElement>;
+type TableProps = HTMLAttributes<HTMLTableElement> & {
+  /** When true, rows stack into label:value cards below the container breakpoint (480px).
+   *  Requires TableCell `data-label` attributes for labels. */
+  responsive?: boolean;
+};
 
 const Table = forwardRef<HTMLTableElement, TableProps>(
-  ({ className, ...props }, ref) => (
-    <div className="relative w-full overflow-auto">
+  ({ className, responsive, ...props }, ref) => (
+    <div
+      className={cn(
+        "relative w-full overflow-auto",
+        responsive && "@container spark-table-responsive",
+      )}
+    >
       <table
         ref={ref}
         className={cn("w-full caption-bottom text-sm", className)}

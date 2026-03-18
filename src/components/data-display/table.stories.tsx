@@ -15,6 +15,9 @@ const meta = {
   title: "Data Display/Table",
   component: Table,
   tags: ["autodocs"],
+  argTypes: {
+    responsive: { control: "boolean" },
+  },
 } satisfies Meta<typeof Table>;
 
 export default meta;
@@ -164,5 +167,46 @@ export const SelectedRows: Story = {
         </TableRow>
       </TableBody>
     </Table>
+  ),
+};
+
+export const Responsive: Story = {
+  render: (args) => (
+    <div style={{ maxWidth: 460 }}>
+      <Table {...args} responsive>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Invoice</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Customer</TableHead>
+            <TableHead>Amount</TableHead>
+            <TableHead>Status</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {invoices.map((invoice) => (
+            <TableRow key={invoice.id}>
+              <TableCell data-label="Invoice" className="font-medium">{invoice.id}</TableCell>
+              <TableCell data-label="Date">{invoice.date}</TableCell>
+              <TableCell data-label="Customer">{invoice.customer}</TableCell>
+              <TableCell data-label="Amount">{invoice.amount}</TableCell>
+              <TableCell data-label="Status">
+                <Badge
+                  variant={
+                    invoice.status === "Paid"
+                      ? "success"
+                      : invoice.status === "Pending"
+                      ? "warning"
+                      : "danger"
+                  }
+                >
+                  {invoice.status}
+                </Badge>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   ),
 };
