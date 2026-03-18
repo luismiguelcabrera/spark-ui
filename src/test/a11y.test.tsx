@@ -1,6 +1,9 @@
 import { render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, it, expect } from "vitest";
+import { FieldLabel } from "../components/forms/field-label";
+import { FieldDescription } from "../components/forms/field-description";
+import { FieldError } from "../components/forms/field-error";
 import { Transfer } from "../components/data-display/transfer";
 import { Descriptions } from "../components/data-display/descriptions";
 import { Galleria } from "../components/data-display/galleria";
@@ -957,6 +960,52 @@ describe("Accessibility (axe)", () => {
 
   it("Galleria (empty)", async () => {
     const { container } = render(<Galleria images={[]} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("FieldLabel (default)", async () => {
+    const { container } = render(<FieldLabel>Email</FieldLabel>);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("FieldLabel (required with htmlFor)", async () => {
+    const { container } = render(
+      <div>
+        <FieldLabel required htmlFor="email-input">Email</FieldLabel>
+        <input id="email-input" type="email" />
+      </div>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("FieldDescription", async () => {
+    const { container } = render(
+      <FieldDescription>Helper text for the field</FieldDescription>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("FieldError (with message)", async () => {
+    const { container } = render(
+      <FieldError>This field is required</FieldError>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("FieldError (empty — renders nothing)", async () => {
+    const { container } = render(<FieldError>{null}</FieldError>);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Full field group", async () => {
+    const { container } = render(
+      <div>
+        <FieldLabel htmlFor="email-field" required>Email</FieldLabel>
+        <input id="email-field" type="email" aria-describedby="email-desc email-err" />
+        <FieldDescription id="email-desc">Enter your email</FieldDescription>
+        <FieldError id="email-err">Invalid email address</FieldError>
+      </div>,
+    );
     expect(await axe(container)).toHaveNoViolations();
   });
 });

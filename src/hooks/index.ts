@@ -31,3 +31,5 @@ export { useRtl } from "./use-rtl";
 export { useDate } from "./use-date";
 export { useHotkey } from "./use-hotkey";
 export { useElevation } from "./use-elevation";
+export { useForm } from "./use-form";
+export type { UseFormConfig, UseFormReturn, ValidationRule, FieldState } from "./use-form";

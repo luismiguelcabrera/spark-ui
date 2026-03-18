@@ -137,3 +137,12 @@ export type { TreeSelectProps, TreeSelectNode } from "./tree-select";
 
 export { SplitButton } from "./split-button";
 export type { SplitButtonProps, SplitButtonAction } from "./split-button";
+
+export { FieldLabel } from "./field-label";
+export type { FieldLabelProps } from "./field-label";
+
+export { FieldDescription } from "./field-description";
+export type { FieldDescriptionProps } from "./field-description";
+
+export { FieldError } from "./field-error";
+export type { FieldErrorProps } from "./field-error";
