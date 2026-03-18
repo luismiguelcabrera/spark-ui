@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { useControllable } from "../../hooks/use-controllable";
@@ -24,6 +25,13 @@ function TabFilter({ items, value, defaultValue, onValueChange, className }: Tab
     onChange: onValueChange,
   });
 
+  const handleSelect = useCallback(
+    (itemValue: string) => {
+      setCurrent(itemValue);
+    },
+    [setCurrent]
+  );
+
   return (
     <>
       {/* Mobile: compact styled select */}
@@ -31,6 +39,7 @@ function TabFilter({ items, value, defaultValue, onValueChange, className }: Tab
         <select
           value={current}
           onChange={(e) => setCurrent(e.target.value)}
+          aria-label="Filter selection"
           className={cn(
             "appearance-none cursor-pointer",
             "bg-slate-200/60 rounded-xl px-4 py-1.5 pr-7",
@@ -65,14 +74,16 @@ function TabFilter({ items, value, defaultValue, onValueChange, className }: Tab
 
       {/* Desktop: segmented pills — responds to nearest @container ancestor */}
       <div className={cn("hidden md:block shrink-0", className)}>
-        <div className="flex bg-slate-200/60 @[600px]:p-1 p-0.5 rounded-xl">
+        <div role="tablist" className="flex bg-slate-200/60 @[600px]:p-1 p-0.5 rounded-xl">
           {items.map((item) => (
             <button
               key={item.value}
               type="button"
-              onClick={() => setCurrent(item.value)}
+              role="tab"
+              aria-selected={item.value === current}
+              onClick={() => handleSelect(item.value)}
               className={cn(
-                "rounded-lg transition-all whitespace-nowrap",
+                "rounded-lg transition-all whitespace-nowrap focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:outline-none",
                 "@[600px]:px-4 @[600px]:py-1.5 @[600px]:text-[13px] px-2 py-1 text-[11px]",
                 item.value === current ? s.segmentActive : s.segmentInactive
               )}
@@ -85,6 +96,7 @@ function TabFilter({ items, value, defaultValue, onValueChange, className }: Tab
     </>
   );
 }
+TabFilter.displayName = "TabFilter";
 
 export { TabFilter };
 export type { TabFilterProps, TabFilterItem };

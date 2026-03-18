@@ -5,7 +5,7 @@ import { Icon } from "../data-display/icon";
 import { Spinner } from "../feedback/spinner";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-pointer disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:hover:shadow-none",
+  "inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:hover:translate-y-0 disabled:hover:shadow-none",
   {
     variants: {
       variant: {
@@ -52,6 +52,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       loading = false,
       disabled,
       children,
+      type = "button",
       ...props
     },
     ref
@@ -60,9 +61,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <button
-        className={cn(buttonVariants({ variant, size, className }))}
+        type={type}
+        className={cn(buttonVariants({ variant, size }), className)}
         ref={ref}
         disabled={isDisabled}
+        aria-busy={loading || undefined}
         {...props}
       >
         {loading && <Spinner size="sm" color={variant === "primary" || variant === "secondary" ? "white" : "primary"} />}

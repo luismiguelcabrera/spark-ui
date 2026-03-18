@@ -1,5 +1,6 @@
 "use client";
 
+import { forwardRef, useCallback, type HTMLAttributes } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
@@ -30,75 +31,135 @@ type RadioOption = {
   icon?: string;
 };
 
-type RadioGroupProps = {
+type RadioGroupProps = HTMLAttributes<HTMLDivElement> & {
   options: RadioOption[];
   value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   name?: string;
-  className?: string;
 } & VariantProps<typeof radioGroupVariants>;
 
-function RadioGroup({
-  options,
-  value,
-  defaultValue,
-  onValueChange,
-  name,
-  variant = "basic",
-  orientation,
-  className,
-}: RadioGroupProps) {
-  const [current, setCurrent] = useControllable({
-    value,
-    defaultValue: defaultValue ?? "",
-    onChange: onValueChange,
-  });
+const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
+  (
+    {
+      options,
+      value,
+      defaultValue,
+      onValueChange,
+      name,
+      variant = "basic",
+      orientation,
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    const [current, setCurrent] = useControllable({
+      value,
+      defaultValue: defaultValue ?? "",
+      onChange: onValueChange,
+    });
 
-  if (variant === "card") {
+    const handleSelect = useCallback(
+      (optValue: string) => {
+        setCurrent(optValue);
+      },
+      [setCurrent]
+    );
+
+    if (variant === "card") {
+      return (
+        <div
+          ref={ref}
+          role="radiogroup"
+          className={cn(radioGroupVariants({ variant, orientation }), className)}
+          {...props}
+        >
+          {options.map((opt) => {
+            const selected = opt.value === current;
+            return (
+              <label
+                key={opt.value}
+                className={cn(
+                  s.radioCard,
+                  "focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary",
+                  selected ? s.radioCardSelected : s.radioCardUnselected
+                )}
+              >
+                <div className="flex items-start gap-3">
+                  <div
+                    className={cn(
+                      s.radioOuter,
+                      "mt-0.5 transition-colors duration-150",
+                      selected ? s.radioOuterSelected : s.radioOuterUnselected
+                    )}
+                  >
+                    {selected && <div className={s.radioInner} />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      {opt.icon && (
+                        <Icon name={opt.icon} size="sm" className="text-slate-500" />
+                      )}
+                      <span className="text-sm font-semibold text-secondary">
+                        {opt.label}
+                      </span>
+                    </div>
+                    {opt.description && (
+                      <p className="text-xs text-slate-500 mt-1">{opt.description}</p>
+                    )}
+                  </div>
+                </div>
+                <input
+                  type="radio"
+                  name={name}
+                  value={opt.value}
+                  checked={selected}
+                  onChange={() => handleSelect(opt.value)}
+                  className="sr-only"
+                />
+              </label>
+            );
+          })}
+        </div>
+      );
+    }
+
     return (
-      <div className={cn(radioGroupVariants({ variant, orientation, className }))}>
+      <div
+        ref={ref}
+        role="radiogroup"
+        className={cn(radioGroupVariants({ variant, orientation }), className)}
+        {...props}
+      >
         {options.map((opt) => {
           const selected = opt.value === current;
           return (
             <label
               key={opt.value}
               className={cn(
-                s.radioCard,
-                selected ? s.radioCardSelected : s.radioCardUnselected
+                s.radioBase,
+                "focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary rounded"
               )}
-              onClick={() => setCurrent(opt.value)}
             >
-              <div className="flex items-start gap-3">
-                <div
-                  className={cn(
-                    s.radioOuter,
-                    "mt-0.5",
-                    selected ? s.radioOuterSelected : s.radioOuterUnselected
-                  )}
-                >
-                  {selected && <div className={s.radioInner} />}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    {opt.icon && (
-                      <Icon name={opt.icon} size="sm" className="text-slate-500" />
-                    )}
-                    <span className="text-sm font-semibold text-secondary">
-                      {opt.label}
-                    </span>
-                  </div>
-                  {opt.description && (
-                    <p className="text-xs text-slate-500 mt-1">{opt.description}</p>
-                  )}
-                </div>
+              <div
+                className={cn(
+                  s.radioOuter,
+                  "transition-colors duration-150",
+                  selected ? s.radioOuterSelected : s.radioOuterUnselected
+                )}
+              >
+                {selected && <div className={s.radioInner} />}
               </div>
+              <span className="text-sm font-medium text-slate-700">
+                {opt.label}
+              </span>
               <input
                 type="radio"
                 name={name}
                 value={opt.value}
                 checked={selected}
-                onChange={() => setCurrent(opt.value)}
+                onChange={() => handleSelect(opt.value)}
                 className="sr-only"
               />
             </label>
@@ -107,42 +168,8 @@ function RadioGroup({
       </div>
     );
   }
-
-  return (
-    <div className={cn(radioGroupVariants({ variant, orientation, className }))}>
-      {options.map((opt) => {
-        const selected = opt.value === current;
-        return (
-          <label
-            key={opt.value}
-            className={s.radioBase}
-            onClick={() => setCurrent(opt.value)}
-          >
-            <div
-              className={cn(
-                s.radioOuter,
-                selected ? s.radioOuterSelected : s.radioOuterUnselected
-              )}
-            >
-              {selected && <div className={s.radioInner} />}
-            </div>
-            <span className="text-sm font-medium text-slate-700">
-              {opt.label}
-            </span>
-            <input
-              type="radio"
-              name={name}
-              value={opt.value}
-              checked={selected}
-              onChange={() => setCurrent(opt.value)}
-              className="sr-only"
-            />
-          </label>
-        );
-      })}
-    </div>
-  );
-}
+);
+RadioGroup.displayName = "RadioGroup";
 
 export { RadioGroup, radioGroupVariants };
 export type { RadioGroupProps, RadioOption };

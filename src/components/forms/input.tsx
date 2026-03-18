@@ -29,6 +29,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const autoId = useId();
     const id = idProp ?? (label ? autoId : undefined);
+    const errorId = error ? `${id ?? autoId}-error` : undefined;
+    const hintId = hint && !error ? `${id ?? autoId}-hint` : undefined;
+    const describedBy = errorId ?? hintId;
 
     // Simple mode: no wrapper props — render raw input
     if (!label && !icon && !error && !hint) {
@@ -72,6 +75,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               className
             )}
             ref={ref}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={describedBy}
             {...props}
           />
           {icon && iconPosition === "right" && (
@@ -88,10 +93,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
         {error && (
-          <p className="text-xs text-red-500 font-medium">{error}</p>
+          <p id={errorId} className="text-xs text-red-500 font-medium" role="alert">{error}</p>
         )}
         {hint && !error && (
-          <p className="text-xs text-slate-400">{hint}</p>
+          <p id={hintId} className="text-xs text-slate-400">{hint}</p>
         )}
       </div>
     );

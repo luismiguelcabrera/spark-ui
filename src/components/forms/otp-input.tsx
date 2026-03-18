@@ -1,23 +1,23 @@
 "use client";
 
-import { useRef, useCallback, KeyboardEvent, ClipboardEvent } from "react";
+import { useRef, useCallback, type KeyboardEvent, type ClipboardEvent, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 
-export interface OtpInputProps {
+interface OtpInputProps extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
   length?: number;
   value: string;
   onChange: (value: string) => void;
   disabled?: boolean;
-  className?: string;
 }
 
-export function OtpInput({
+function OtpInput({
   length = 6,
   value,
   onChange,
   disabled = false,
   className,
+  ...props
 }: OtpInputProps) {
   const inputs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -65,7 +65,12 @@ export function OtpInput({
   );
 
   return (
-    <div className={cn("flex gap-2 justify-center", className)}>
+    <div
+      role="group"
+      aria-label={props["aria-label"] ?? "One-time password"}
+      className={cn("flex gap-2 justify-center", className)}
+      {...props}
+    >
       {Array.from({ length }, (_, i) => (
         <input
           key={i}
@@ -74,6 +79,7 @@ export function OtpInput({
           inputMode="numeric"
           autoComplete="one-time-code"
           maxLength={1}
+          aria-label={`Digit ${i + 1} of ${length}`}
           value={value[i] || ""}
           disabled={disabled}
           onChange={(e) => handleChange(i, e.target.value)}
@@ -83,11 +89,15 @@ export function OtpInput({
           className={cn(
             s.inputBase,
             "w-12 h-14 text-center text-xl font-bold rounded-xl",
-            "focus:ring-2 focus:ring-primary/20 focus:border-primary",
-            disabled && "opacity-50 cursor-not-allowed",
+            "focus:ring-2 focus:ring-primary/20 focus:border-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:outline-none",
+            disabled && "opacity-50 cursor-not-allowed pointer-events-none",
           )}
         />
       ))}
     </div>
   );
 }
+OtpInput.displayName = "OtpInput";
+
+export { OtpInput };
+export type { OtpInputProps };

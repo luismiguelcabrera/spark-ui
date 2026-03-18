@@ -31,5 +31,7 @@ function Form<T extends FieldValues>({
   );
 }
 
+Form.displayName = "Form";
+
 export { Form };
 export type { FormProps };

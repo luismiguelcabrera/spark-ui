@@ -1,4 +1,4 @@
-import { forwardRef, type InputHTMLAttributes } from "react";
+import { forwardRef, useId, type InputHTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 
@@ -8,7 +8,11 @@ type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
 };
 
 const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
-  ({ className, label, error, id, ...props }, ref) => {
+  ({ className, label, error, id: idProp, ...props }, ref) => {
+    const autoId = useId();
+    const id = idProp ?? autoId;
+    const errorId = error ? `${id}-error` : undefined;
+
     if (label) {
       return (
         <div className="flex flex-col gap-1.5">
@@ -17,17 +21,19 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               id={id}
               type="checkbox"
               className={cn(
-                "rounded border-slate-300 text-primary focus:ring-primary size-4 cursor-pointer",
+                "rounded border-slate-300 text-primary focus:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary size-4 cursor-pointer transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed",
                 error && "border-red-300",
                 className
               )}
               ref={ref}
+              aria-invalid={error ? true : undefined}
+              aria-describedby={errorId}
               {...props}
             />
             <span className={s.textBody}>{label}</span>
           </label>
           {error && (
-            <p className="text-xs text-red-500 font-medium">{error}</p>
+            <p id={errorId} className="text-xs text-red-500 font-medium" role="alert">{error}</p>
           )}
         </div>
       );
@@ -39,15 +45,17 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           id={id}
           type="checkbox"
           className={cn(
-            "rounded border-slate-300 text-primary focus:ring-primary size-3.5 cursor-pointer",
+            "rounded border-slate-300 text-primary focus:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary size-4 cursor-pointer transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed",
             error && "border-red-300",
             className
           )}
           ref={ref}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={errorId}
           {...props}
         />
         {error && (
-          <p className="text-xs text-red-500 font-medium">{error}</p>
+          <p id={errorId} className="text-xs text-red-500 font-medium" role="alert">{error}</p>
         )}
       </div>
     );
