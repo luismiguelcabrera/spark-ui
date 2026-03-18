@@ -10,7 +10,7 @@ import { useState, useEffect, useRef } from "react";
  */
 export function useThrottle<T>(value: T, interval = 300): T {
   const [throttled, setThrottled] = useState(value);
-  const lastUpdated = useRef(Date.now());
+  const lastUpdated = useRef(Date.now()); // eslint-disable-line react-hooks/purity -- Date.now() is intentional for throttle timing
 
   useEffect(() => {
     const now = Date.now();

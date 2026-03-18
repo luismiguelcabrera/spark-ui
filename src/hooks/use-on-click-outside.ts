@@ -23,13 +23,13 @@ export function useOnClickOutside<T extends HTMLElement>(
 ): void {
   // Stabilize the handler reference
   const handlerRef = useRef(handler);
-  handlerRef.current = handler;
+  handlerRef.current = handler; // eslint-disable-line react-hooks/refs -- keep handler fresh
 
   const refsArray = Array.isArray(refs) ? refs : [refs];
 
   // Store refs in a stable ref to avoid re-subscribing on every render
   const refsRef = useRef(refsArray);
-  refsRef.current = refsArray;
+  refsRef.current = refsArray; // eslint-disable-line react-hooks/refs -- keep refs fresh
 
   const stableListener = useCallback((event: MouseEvent | TouchEvent) => {
     const target = event.target as Node;

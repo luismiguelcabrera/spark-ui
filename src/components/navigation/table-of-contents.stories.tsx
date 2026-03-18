@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TableOfContents, type TocItem } from "./table-of-contents";
 
 const meta = {

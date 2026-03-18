@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 import { Icon } from "../data-display/icon";
 

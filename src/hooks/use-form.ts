@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any -- generic form hook requires any for arbitrary field values */
 
 import { useState, useCallback, useRef } from "react";
 

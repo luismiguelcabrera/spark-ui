@@ -14,6 +14,7 @@ import { useRef, useCallback, useEffect } from "react";
  * });
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useEventCallback<T extends (...args: any[]) => any>(
   callback: T,
 ): T {
@@ -27,6 +28,7 @@ export function useEventCallback<T extends (...args: any[]) => any>(
   // Return a stable function that delegates to the ref
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const stableCallback = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ((...args: any[]) => callbackRef.current(...args)) as unknown as T,
     [],
   );

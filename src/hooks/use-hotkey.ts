@@ -82,7 +82,7 @@ export function useHotkey(
   options?: HotkeyOptions
 ): void {
   const callbackRef = useRef(callback);
-  callbackRef.current = callback;
+  callbackRef.current = callback; // eslint-disable-line react-hooks/refs -- keep callback ref fresh
 
   const enabled = options?.enabled ?? true;
 

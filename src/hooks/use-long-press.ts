@@ -39,7 +39,7 @@ export function useLongPress(
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const callbackRef = useRef(callback);
-  callbackRef.current = callback;
+  callbackRef.current = callback; // eslint-disable-line react-hooks/refs -- keep callback ref fresh
 
   const savedEventRef = useRef<MouseEvent | TouchEvent | null>(null);
 

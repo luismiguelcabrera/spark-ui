@@ -43,7 +43,7 @@ const SemiCircleProgress = forwardRef<HTMLDivElement, SemiCircleProgressProps>(
 
     // Animation: start from 0, animate to real values
     const [animated, setAnimated] = useState(false);
-    const frameRef = useRef<number>();
+    const frameRef = useRef<number | undefined>(undefined);
 
     useEffect(() => {
       frameRef.current = requestAnimationFrame(() => {

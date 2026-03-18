@@ -37,7 +37,7 @@ export function useIdle(timeout = 60000): boolean {
     if (typeof document === "undefined") return;
 
     // Start the initial timer
-    resetTimer();
+    resetTimer(); // eslint-disable-line react-hooks/set-state-in-effect -- intentional: sync idle state on mount
 
     for (const event of ACTIVITY_EVENTS) {
       document.addEventListener(event, resetTimer, { passive: true });

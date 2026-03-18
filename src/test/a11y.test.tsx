@@ -1260,7 +1260,7 @@ describe("Accessibility (axe)", () => {
 
   it("Statistic", async () => {
     const { container } = render(
-      <Statistic label="Revenue" value="$12,345" />
+      <Statistic title="Revenue" value="$12,345" />
     );
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -1297,7 +1297,7 @@ describe("Accessibility (axe)", () => {
 
   it("Affix", async () => {
     const { container } = render(
-      <Affix position="bottom-right">
+      <Affix position={{ bottom: 16, right: 16 }}>
         <button type="button">Scroll to top</button>
       </Affix>
     );

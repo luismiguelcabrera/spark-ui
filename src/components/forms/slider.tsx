@@ -85,9 +85,9 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
       ? (Array.isArray(defaultValue) ? defaultValue : [min, defaultValue as number])
       : (Array.isArray(defaultValue) ? defaultValue[0] : defaultValue);
 
-    const normalizedValueProp = valueProp !== undefined
+    const normalizedValueProp: SliderValue | undefined = valueProp !== undefined
       ? (range
-          ? (Array.isArray(valueProp) ? valueProp : [min, valueProp as number])
+          ? (Array.isArray(valueProp) ? valueProp as [number, number] : [min, valueProp as number] as [number, number])
           : (Array.isArray(valueProp) ? valueProp[0] : valueProp))
       : undefined;
 

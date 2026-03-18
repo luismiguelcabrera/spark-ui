@@ -104,8 +104,8 @@ const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(
     const [internalOpen, setInternalOpen] = useState(false);
     const isOpen = controlled ? openProp : internalOpen;
 
-    const openTimerRef = useRef<ReturnType<typeof setTimeout>>();
-    const closeTimerRef = useRef<ReturnType<typeof setTimeout>>();
+    const openTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+    const closeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
     const clearTimers = useCallback(() => {
       if (openTimerRef.current) clearTimeout(openTimerRef.current);

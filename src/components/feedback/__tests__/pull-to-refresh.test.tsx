@@ -7,10 +7,10 @@ function createTouchEvent(clientY: number) {
 }
 
 describe("PullToRefresh", () => {
-  let onRefresh: ReturnType<typeof vi.fn>;
+  let onRefresh: ReturnType<typeof vi.fn<() => Promise<void>>>;
 
   beforeEach(() => {
-    onRefresh = vi.fn(() => Promise.resolve());
+    onRefresh = vi.fn<() => Promise<void>>(() => Promise.resolve());
   });
 
   it("renders children", () => {

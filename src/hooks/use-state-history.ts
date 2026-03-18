@@ -14,6 +14,7 @@ export type UseStateHistoryReturn<T> = {
   reset: (value?: T) => void;
 };
 
+// eslint-disable react-hooks/refs -- intentional: ref-based state for O(1) undo/redo without re-render on every push
 export function useStateHistory<T>(initial: T): UseStateHistoryReturn<T> {
   const [, forceRender] = useState(0);
   const historyRef = useRef<T[]>([initial]);

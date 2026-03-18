@@ -22,7 +22,7 @@ const colorStyles: Record<CheckboxColor, string> = {
 };
 
 const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
-  ({ className, label, error, id, indeterminate = false, color = "primary", ref: _ref, ...props }, ref) => {
+  ({ className, label, error, id, indeterminate = false, color = "primary", ...props }, ref) => {
     const internalRef = useRef<HTMLInputElement>(null);
 
     // Sync indeterminate state to the DOM element

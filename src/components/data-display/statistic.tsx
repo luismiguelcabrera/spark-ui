@@ -9,7 +9,7 @@ type StatisticTrend = {
   isUpGood?: boolean;
 };
 
-type StatisticProps = Omit<HTMLAttributes<HTMLDivElement>, "title"> & {
+type StatisticProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "prefix"> & {
   /** Label above the value */
   title: string;
   /** The statistic value */

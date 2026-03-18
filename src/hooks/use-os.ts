@@ -58,7 +58,7 @@ export function useOs(): Os {
   const [os, setOs] = useState<Os>("undetermined");
 
   useEffect(() => {
-    setOs(detectOs());
+    setOs(detectOs()); // eslint-disable-line react-hooks/set-state-in-effect -- sync with browser OS on mount
   }, []);
 
   return os;

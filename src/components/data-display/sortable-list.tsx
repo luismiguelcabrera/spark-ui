@@ -40,7 +40,7 @@ type SortableListProps<T extends SortableItem> = {
 /*  DragHandle                                                                 */
 /* -------------------------------------------------------------------------- */
 
-type DragHandleProps = {
+type DragHandleProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   /** Whether this item is currently being dragged */
   isDragging?: boolean;
   className?: string;

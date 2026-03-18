@@ -22,7 +22,7 @@ export function useRtl(): RtlState {
 
   useEffect(() => {
     const dir = document.documentElement.dir;
-    setIsRtl(dir === "rtl");
+    setIsRtl(dir === "rtl"); // eslint-disable-line react-hooks/set-state-in-effect -- sync with DOM dir on mount
   }, []);
 
   const toggle = useCallback(() => {

@@ -594,8 +594,11 @@ describe("SpeedDial", () => {
 
   it("does not show actions initially", () => {
     render(<SpeedDial actions={actions} />);
-    expect(screen.queryByLabelText("Edit")).not.toBeInTheDocument();
-    expect(screen.queryByLabelText("Delete")).not.toBeInTheDocument();
+    // Actions are rendered in DOM but visually hidden (opacity-0 + pointer-events-none)
+    const edit = screen.getByLabelText("Edit");
+    const del = screen.getByLabelText("Delete");
+    expect(edit.parentElement?.className).toMatch(/opacity-0/);
+    expect(del.parentElement?.className).toMatch(/opacity-0/);
   });
 
   it("shows actions on main button click", async () => {
@@ -625,8 +628,9 @@ describe("SpeedDial", () => {
     await user.click(screen.getByRole("button", { name: "Open menu" }));
     await user.click(screen.getByLabelText("Edit"));
     expect(editClick).toHaveBeenCalledOnce();
-    // Menu should close after action
-    expect(screen.queryByLabelText("Edit")).not.toBeInTheDocument();
+    // Menu should close after action (actions stay in DOM but become visually hidden)
+    const editBtn = screen.getByLabelText("Edit");
+    expect(editBtn.parentElement?.className).toMatch(/opacity-0/);
   });
 
   it("forwards ref", () => {

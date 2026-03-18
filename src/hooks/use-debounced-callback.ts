@@ -2,7 +2,7 @@
 
 import { useRef, useCallback, useEffect } from "react";
 
-type DebouncedFunction<T extends (...args: any[]) => any> = {
+type DebouncedFunction<T extends (...args: never[]) => unknown> = {
   (...args: Parameters<T>): void;
   cancel: () => void;
   flush: () => void;
@@ -18,7 +18,7 @@ type DebouncedFunction<T extends (...args: any[]) => any> = {
  * @param callback - The function to debounce
  * @param delay - Delay in milliseconds
  */
-export function useDebouncedCallback<T extends (...args: any[]) => any>(
+export function useDebouncedCallback<T extends (...args: never[]) => unknown>(
   callback: T,
   delay: number
 ): DebouncedFunction<T> {
@@ -83,6 +83,6 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
   ) as DebouncedFunction<T>;
 
   // Attach methods to the function
-  // We use Object.assign to return a callable with methods
+  // eslint-disable-next-line react-hooks/refs -- Object.assign on memoized function
   return Object.assign(result, { cancel, flush, isPending });
 }

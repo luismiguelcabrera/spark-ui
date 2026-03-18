@@ -60,7 +60,7 @@ const RingProgress = forwardRef<HTMLDivElement, RingProgressProps>(
 
     // Animation: start from 0, animate to real values
     const [animated, setAnimated] = useState(false);
-    const frameRef = useRef<number>();
+    const frameRef = useRef<number | undefined>(undefined);
 
     useEffect(() => {
       // Use rAF so the initial render paints with 0 values, then the transition kicks in

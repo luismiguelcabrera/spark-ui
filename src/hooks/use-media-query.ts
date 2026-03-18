@@ -15,7 +15,7 @@ export function useMediaQuery(query: string, defaultValue = false): boolean {
   useEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
     const mql = window.matchMedia(query);
-    setMatches(mql.matches);
+    setMatches(mql.matches); // eslint-disable-line react-hooks/set-state-in-effect -- sync with browser media query on mount
 
     const handler = (e: MediaQueryListEvent) => setMatches(e.matches);
     mql.addEventListener("change", handler);

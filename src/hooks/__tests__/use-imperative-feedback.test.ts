@@ -234,7 +234,8 @@ describe("Modal.info()", () => {
     const promise = Modal.info({ title: "Info" });
 
     const entry = (store.addModal as ReturnType<typeof vi.fn>).mock.calls[0][0];
-    (entry.options as Record<string, unknown>)._onClose?.();
+    const onClose = (entry.options as Record<string, unknown>)._onClose as (() => void) | undefined;
+    onClose?.();
 
     await expect(promise).resolves.toBeUndefined();
   });
