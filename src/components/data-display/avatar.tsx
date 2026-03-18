@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { forwardRef, useState, useEffect, useRef } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -36,67 +36,71 @@ type AvatarProps = {
   className?: string;
 } & VariantProps<typeof avatarVariants>;
 
-function Avatar({
-  src,
-  alt = "",
-  initials,
-  size,
-  ring,
-  className,
-}: AvatarProps) {
-  const [imgLoaded, setImgLoaded] = useState(false);
-  const [imgError, setImgError] = useState(false);
-  const imgRef = useRef<HTMLImageElement>(null);
+const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
+  ({ src, alt = "", initials, size, ring, className }, ref) => {
+    const [imgLoaded, setImgLoaded] = useState(false);
+    const [imgError, setImgError] = useState(false);
+    const imgRef = useRef<HTMLImageElement>(null);
 
-  useEffect(() => {
-    setImgLoaded(false);
-    setImgError(false);
-    if (!src) return;
-    // If the browser already has the image cached, onLoad fires synchronously
-    // before React attaches the handler. Check img.complete after the next frame.
-    const raf = requestAnimationFrame(() => {
-      const img = imgRef.current;
-      if (img?.complete) {
-        if (img.naturalWidth > 0) setImgLoaded(true);
-        else setImgError(true);
-      }
-    });
-    return () => cancelAnimationFrame(raf);
-  }, [src]);
+    useEffect(() => {
+      setImgLoaded(false);
+      setImgError(false);
+      if (!src) return;
+      // SSR guard: requestAnimationFrame is not available on the server
+      if (typeof window === "undefined") return;
+      // If the browser already has the image cached, onLoad fires synchronously
+      // before React attaches the handler. Check img.complete after the next frame.
+      const raf = requestAnimationFrame(() => {
+        const img = imgRef.current;
+        if (img?.complete) {
+          if (img.naturalWidth > 0) setImgLoaded(true);
+          else setImgError(true);
+        }
+      });
+      return () => cancelAnimationFrame(raf);
+    }, [src]);
 
-  const fallbackText = initials ?? (alt ? alt.charAt(0).toUpperCase() : "?");
+    const fallbackText = initials ?? (alt ? alt.charAt(0).toUpperCase() : "?");
+    const showFallback = !src || imgError;
 
-  return (
-    <div className={cn(avatarVariants({ size, ring, className }))}>
-      {/* Skeleton — shown while image is fetching */}
-      {src && !imgLoaded && !imgError && (
-        <span className="absolute inset-0 animate-pulse bg-gray-300" />
-      )}
+    return (
+      <div
+        ref={ref}
+        role="img"
+        aria-label={alt || initials || undefined}
+        className={cn(avatarVariants({ size, ring }), className)}
+      >
+        {/* Skeleton — shown while image is fetching */}
+        {src && !imgLoaded && !imgError && (
+          <span className="absolute inset-0 animate-pulse bg-gray-300 motion-reduce:animate-none" />
+        )}
 
-      {/* Fallback initials — shown when there is no src or the image errored */}
-      {(!src || imgError) && (
-        <span className={cn("font-bold text-gray-500", s.textMuted)}>
-          {fallbackText}
-        </span>
-      )}
+        {/* Fallback initials — shown when there is no src or the image errored */}
+        {showFallback && (
+          <span aria-hidden="true" className={cn("font-bold text-gray-500", s.textMuted)}>
+            {fallbackText}
+          </span>
+        )}
 
-      {/* Image — fades in once loaded */}
-      {src && !imgError && (
-        <img
-          ref={imgRef}
-          src={src}
-          alt={alt}
-          className={cn(
-            "absolute inset-0 w-full h-full object-cover transition-opacity duration-300",
-            imgLoaded ? "opacity-100" : "opacity-0",
-          )}
-          onLoad={() => setImgLoaded(true)}
-          onError={() => setImgError(true)}
-        />
-      )}
-    </div>
-  );
-}
+        {/* Image — fades in once loaded */}
+        {src && !imgError && (
+          <img
+            ref={imgRef}
+            src={src}
+            alt={alt}
+            className={cn(
+              "absolute inset-0 w-full h-full object-cover transition-opacity duration-300 motion-reduce:transition-none",
+              imgLoaded ? "opacity-100" : "opacity-0",
+            )}
+            onLoad={() => setImgLoaded(true)}
+            onError={() => setImgError(true)}
+          />
+        )}
+      </div>
+    );
+  }
+);
+Avatar.displayName = "Avatar";
 
 export { Avatar, avatarVariants };
 export type { AvatarProps };

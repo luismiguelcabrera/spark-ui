@@ -1,4 +1,4 @@
-import { type HTMLAttributes } from "react";
+import { forwardRef, type HTMLAttributes } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 
@@ -17,7 +17,7 @@ const badgeVariants = cva(
         mint: "bg-mint/10 text-mint border-mint/20",
         purple: "bg-purple-50 text-purple-700 border-purple-100",
         indigo: "bg-indigo-50 text-indigo-700 border-indigo-100",
-        live: "bg-primary text-white border-primary shadow-lg shadow-primary/30 animate-pulse",
+        live: "bg-primary text-white border-primary shadow-lg shadow-primary/30 animate-pulse motion-reduce:animate-none",
       },
       size: {
         sm: "px-2 py-0.5 text-[10px]",
@@ -35,14 +35,18 @@ const badgeVariants = cva(
 type BadgeProps = HTMLAttributes<HTMLSpanElement> &
   VariantProps<typeof badgeVariants>;
 
-function Badge({ className, variant, size, ...props }: BadgeProps) {
-  return (
-    <span
-      className={cn(badgeVariants({ variant, size, className }))}
-      {...props}
-    />
-  );
-}
+const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
+  ({ className, variant, size, ...props }, ref) => {
+    return (
+      <span
+        ref={ref}
+        className={cn(badgeVariants({ variant, size }), className)}
+        {...props}
+      />
+    );
+  }
+);
+Badge.displayName = "Badge";
 
 export { Badge, badgeVariants };
 export type { BadgeProps };

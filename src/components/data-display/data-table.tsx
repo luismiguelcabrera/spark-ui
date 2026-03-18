@@ -12,6 +12,8 @@ type Column<T> = {
   header: string;
   render: (row: T) => ReactNode;
   width?: string;
+  /** Sort direction for this column, if sortable */
+  sortDirection?: "ascending" | "descending" | "none";
 };
 
 type DataTableProps<T> = {
@@ -40,12 +42,14 @@ type DataTableProps<T> = {
    * table. The grid table is still shown on md+.
    */
   mobileCard?: (row: T) => ReactNode;
+  /** Accessible caption for the table */
+  caption?: string;
   className?: string;
 };
 
 function DefaultSkeleton() {
   return (
-    <div className="p-6 animate-pulse">
+    <div className="p-6 animate-pulse motion-reduce:animate-none" role="status" aria-label="Loading table data">
       {[1, 2, 3, 4, 5].map((i) => (
         <div key={i} className="flex items-center gap-4 py-4 border-b border-slate-50 last:border-0">
           <div className="h-10 w-10 bg-gray-200 rounded-full" />
@@ -57,9 +61,11 @@ function DefaultSkeleton() {
           <div className="h-4 w-12 bg-gray-100 rounded" />
         </div>
       ))}
+      <span className="sr-only">Loading...</span>
     </div>
   );
 }
+DefaultSkeleton.displayName = "DefaultSkeleton";
 
 function DataTable<T>({
   columns,
@@ -75,6 +81,7 @@ function DataTable<T>({
   skeleton,
   emptyState,
   mobileCard,
+  caption,
   className,
 }: DataTableProps<T>) {
   const [selected, setSelected] = useControllable<number[]>({
@@ -83,8 +90,6 @@ function DataTable<T>({
     onChange: onSelectionChange,
   });
 
-  const gridTemplate = columns.map((col) => col.width ?? "1fr").join(" ");
-  const fullTemplate = selectable ? `40px ${gridTemplate}` : gridTemplate;
   const allSelected = data.length > 0 && selected.length === data.length;
 
   const toggleAll = () => {
@@ -98,7 +103,11 @@ function DataTable<T>({
   };
 
   const emptyContent = emptyState ? (
-    <div className="py-12 text-center">{emptyState}</div>
+    <tr>
+      <td colSpan={columns.length + (selectable ? 1 : 0)} className="py-12 text-center">
+        {emptyState}
+      </td>
+    </tr>
   ) : null;
 
   return (
@@ -114,57 +123,76 @@ function DataTable<T>({
       {/* Content */}
       {!isLoading && (
         <>
-          {/* Desktop: grid table — hidden on mobile when mobileCard is provided */}
-          <div className={cn(mobileCard && "hidden @[600px]:block")}>
-            <div
-              className={s.dataTableHeader}
-              style={{ gridTemplateColumns: fullTemplate }}
-            >
-              {selectable && (
-                <div className="flex items-center justify-center">
-                  <Checkbox checked={allSelected} onChange={toggleAll} />
-                </div>
-              )}
-              {columns.map((col) => (
-                <div key={col.key}>{col.header}</div>
-              ))}
-            </div>
-
-            {data.length === 0 ? (
-              emptyContent
-            ) : (
-              data.map((row, i) => (
-                <div
-                  key={i}
-                  className={s.dataTableRow}
-                  style={{ gridTemplateColumns: fullTemplate }}
-                >
+          {/* Desktop: semantic table — hidden on mobile when mobileCard is provided */}
+          <div className={cn(mobileCard && "hidden @[600px]:block", "overflow-x-auto")}>
+            <table className="w-full border-collapse" role="table">
+              {caption && <caption className="sr-only">{caption}</caption>}
+              <thead>
+                <tr className="border-b border-slate-100 bg-slate-50/50">
                   {selectable && (
-                    <div className="flex items-center justify-center">
+                    <th scope="col" className="w-10 text-center px-2 py-3">
                       <Checkbox
-                        checked={selected.includes(i)}
-                        onChange={() => toggleRow(i)}
+                        checked={allSelected}
+                        onChange={toggleAll}
+                        aria-label="Select all rows"
                       />
-                    </div>
+                    </th>
                   )}
                   {columns.map((col) => (
-                    <div key={col.key} className="text-sm text-slate-700">
-                      {col.render(row)}
-                    </div>
+                    <th
+                      key={col.key}
+                      scope="col"
+                      aria-sort={col.sortDirection ?? undefined}
+                      className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-400 bg-slate-50/50"
+                      style={col.width ? { width: col.width } : undefined}
+                    >
+                      {col.header}
+                    </th>
                   ))}
-                </div>
-              ))
-            )}
+                </tr>
+              </thead>
+              <tbody>
+                {data.length === 0 ? (
+                  emptyContent
+                ) : (
+                  data.map((row, i) => (
+                    <tr
+                      key={i}
+                      className={cn(
+                        "border-b border-slate-50 last:border-b-0 hover:bg-slate-50/80 transition-colors",
+                        selected.includes(i) && "bg-primary/5",
+                      )}
+                      aria-selected={selectable ? selected.includes(i) : undefined}
+                    >
+                      {selectable && (
+                        <td className="w-10 text-center px-2 py-3">
+                          <Checkbox
+                            checked={selected.includes(i)}
+                            onChange={() => toggleRow(i)}
+                            aria-label={`Select row ${i + 1}`}
+                          />
+                        </td>
+                      )}
+                      {columns.map((col) => (
+                        <td key={col.key} className="px-4 py-3 text-sm text-slate-700">
+                          {col.render(row)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
 
           {/* Mobile: card list — hidden on desktop */}
           {mobileCard && (
-            <div className="@[600px]:hidden divide-y divide-slate-100">
+            <div className="@[600px]:hidden divide-y divide-slate-100" role="list">
               {data.length === 0 ? (
-                emptyContent
+                emptyState ? <div className="py-12 text-center">{emptyState}</div> : null
               ) : (
                 data.map((row, i) => (
-                  <div key={i} className="px-4 py-3">
+                  <div key={i} className="px-4 py-3" role="listitem">
                     {mobileCard(row)}
                   </div>
                 ))
@@ -176,18 +204,19 @@ function DataTable<T>({
 
       {/* Pagination — only shown when there is more than one page */}
       {pagination && pagination.total > pagination.pageSize && (
-        <div className="px-4 py-3 border-t border-slate-100">
+        <nav className="px-4 py-3 border-t border-slate-100" aria-label="Table pagination">
           <Pagination
             current={pagination.current}
             total={pagination.total}
             pageSize={pagination.pageSize}
             onPageChange={onPageChange}
           />
-        </div>
+        </nav>
       )}
     </div>
   );
 }
+DataTable.displayName = "DataTable";
 
 export { DataTable };
 export type { DataTableProps, Column };

@@ -54,7 +54,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     if (title) {
       return (
         <div
-          className={cn(cardVariants({ variant, padding, className }))}
+          className={cn(cardVariants({ variant, padding }), className)}
           ref={ref}
           {...props}
         >
@@ -85,7 +85,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     // Default mode: raw card container
     return (
       <div
-        className={cn(cardVariants({ variant, padding, className }))}
+        className={cn(cardVariants({ variant, padding }), className)}
         ref={ref}
         {...props}
       >
@@ -129,5 +129,16 @@ const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 );
 CardContent.displayName = "CardContent";
 
-export { Card, CardHeader, CardTitle, CardContent, cardVariants };
+const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      className={cn("mt-4 pt-4 border-t border-slate-100", className)}
+      ref={ref}
+      {...props}
+    />
+  )
+);
+CardFooter.displayName = "CardFooter";
+
+export { Card, CardHeader, CardTitle, CardContent, CardFooter, cardVariants };
 export type { CardProps };
