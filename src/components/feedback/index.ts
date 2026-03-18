@@ -78,9 +78,6 @@ export type { DialogProps, DialogVariant, UseDialogOptions, UseDialogReturn } fr
 export { Overlay } from "./overlay";
 export type { OverlayProps } from "./overlay";
 
-export { BottomSheet } from "./bottom-sheet";
-export type { BottomSheetProps } from "./bottom-sheet";
-
 export { Banner } from "./banner";
 export type { BannerProps, BannerColor } from "./banner";
 

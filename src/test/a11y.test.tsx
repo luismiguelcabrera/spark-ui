@@ -74,7 +74,6 @@ import { Modal } from "../components/feedback/modal";
 import { Dialog } from "../components/feedback/dialog";
 import { Tooltip } from "../components/feedback/tooltip";
 import { Overlay } from "../components/feedback/overlay";
-import { BottomSheet } from "../components/feedback/bottom-sheet";
 import { Banner } from "../components/feedback/banner";
 import { Breadcrumb } from "../components/navigation/breadcrumb";
 import { Pagination } from "../components/navigation/pagination";
@@ -605,24 +604,6 @@ describe("Accessibility (axe)", () => {
       <Overlay open={true} onOpenChange={() => {}} blur>
         <div>Blurred overlay</div>
       </Overlay>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
-  });
-
-  it("BottomSheet (open with title)", async () => {
-    const { container } = render(
-      <BottomSheet open={true} onOpenChange={() => {}} title="Actions">
-        <p>Sheet content</p>
-      </BottomSheet>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
-  });
-
-  it("BottomSheet (fullscreen)", async () => {
-    const { container } = render(
-      <BottomSheet open={true} onOpenChange={() => {}} title="Full" fullscreen>
-        <p>Fullscreen content</p>
-      </BottomSheet>,
     );
     expect(await axe(container)).toHaveNoViolations();
   });
