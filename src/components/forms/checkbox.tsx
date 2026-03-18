@@ -1,54 +1,17 @@
-import { forwardRef, useEffect, useRef, type InputHTMLAttributes } from "react";
+import { forwardRef, useId, type InputHTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 
-type CheckboxColor = "primary" | "secondary" | "success" | "warning" | "destructive";
-
-type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "color"> & {
+type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
   label?: string;
   error?: string;
-  /** Show indeterminate state (dash icon instead of check) */
-  indeterminate?: boolean;
-  /** Color theme */
-  color?: CheckboxColor;
-};
-
-const colorStyles: Record<CheckboxColor, string> = {
-  primary: "text-primary focus:ring-primary",
-  secondary: "text-secondary focus:ring-secondary",
-  success: "text-green-600 focus:ring-green-600",
-  warning: "text-amber-500 focus:ring-amber-500",
-  destructive: "text-red-600 focus:ring-red-600",
 };
 
 const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
-  ({ className, label, error, id, indeterminate = false, color = "primary", ...props }, ref) => {
-    const internalRef = useRef<HTMLInputElement>(null);
-
-    // Sync indeterminate state to the DOM element
-    useEffect(() => {
-      const el = (ref && typeof ref === "object" && "current" in ref ? ref.current : null) || internalRef.current;
-      if (el) {
-        el.indeterminate = indeterminate;
-      }
-    }, [indeterminate, ref]);
-
-    // Combine refs
-    const setRef = (node: HTMLInputElement | null) => {
-      internalRef.current = node;
-      if (typeof ref === "function") {
-        ref(node);
-      } else if (ref && typeof ref === "object") {
-        (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
-      }
-    };
-
-    const checkboxClasses = cn(
-      "rounded border-slate-300 cursor-pointer",
-      colorStyles[color],
-      error && "border-red-300",
-      className
-    );
+  ({ className, label, error, id: idProp, ...props }, ref) => {
+    const autoId = useId();
+    const id = idProp ?? autoId;
+    const errorId = error ? `${id}-error` : undefined;
 
     if (label) {
       return (
@@ -57,15 +20,20 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             <input
               id={id}
               type="checkbox"
-              className={cn(checkboxClasses, "size-4")}
-              ref={setRef}
-              aria-checked={indeterminate ? "mixed" : undefined}
+              className={cn(
+                "rounded border-slate-300 text-primary focus:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary size-4 cursor-pointer transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed",
+                error && "border-red-300",
+                className
+              )}
+              ref={ref}
+              aria-invalid={error ? true : undefined}
+              aria-describedby={errorId}
               {...props}
             />
             <span className={s.textBody}>{label}</span>
           </label>
           {error && (
-            <p className="text-xs text-red-500 font-medium">{error}</p>
+            <p id={errorId} className="text-xs text-red-500 font-medium" role="alert">{error}</p>
           )}
         </div>
       );
@@ -76,13 +44,18 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         <input
           id={id}
           type="checkbox"
-          className={cn(checkboxClasses, "size-3.5")}
-          ref={setRef}
-          aria-checked={indeterminate ? "mixed" : undefined}
+          className={cn(
+            "rounded border-slate-300 text-primary focus:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary size-4 cursor-pointer transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed",
+            error && "border-red-300",
+            className
+          )}
+          ref={ref}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={errorId}
           {...props}
         />
         {error && (
-          <p className="text-xs text-red-500 font-medium">{error}</p>
+          <p id={errorId} className="text-xs text-red-500 font-medium" role="alert">{error}</p>
         )}
       </div>
     );
@@ -91,4 +64,4 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 Checkbox.displayName = "Checkbox";
 
 export { Checkbox };
-export type { CheckboxProps, CheckboxColor };
+export type { CheckboxProps };
