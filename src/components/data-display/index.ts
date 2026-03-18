@@ -29,7 +29,7 @@ export { EmptyState } from "./empty-state";
 export type { EmptyStateProps } from "./empty-state";
 
 export { DataTable } from "./data-table";
-export type { DataTableProps, Column } from "./data-table";
+export type { DataTableProps, Column, SortState, SortDirection } from "./data-table";
 
 export { List, ListItem } from "./list";
 export type { ListProps, ListItemProps } from "./list";

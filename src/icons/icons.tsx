@@ -22,6 +22,14 @@ export const ChevronUpIcon = createIcon(
   <polyline points="18 15 12 9 6 15" />,
 );
 
+export const ChevronsUpDownIcon = createIcon(
+  "ChevronsUpDownIcon",
+  <>
+    <polyline points="7 15 12 20 17 15" />
+    <polyline points="17 9 12 4 7 9" />
+  </>,
+);
+
 export const ArrowLeftIcon = createIcon(
   "ArrowLeftIcon",
   <>

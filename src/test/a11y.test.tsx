@@ -13,6 +13,7 @@ import { Badge } from "../components/data-display/badge";
 import { Card } from "../components/data-display/card";
 import { Avatar } from "../components/data-display/avatar";
 import { ProgressBar } from "../components/data-display/progress-bar";
+import { DataTable, type Column } from "../components/data-display/data-table";
 import { Spinner } from "../components/feedback/spinner";
 import { Toast } from "../components/feedback/toast";
 import { Alert } from "../components/feedback/alert";
@@ -146,6 +147,22 @@ describe("Accessibility (axe)", () => {
 
   it("ProgressBar", async () => {
     const { container } = render(<ProgressBar value={50} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("DataTable (with sortable columns)", async () => {
+    type Row = { name: string; score: number };
+    const cols: Column<Row>[] = [
+      { key: "name", header: "Name", render: (r) => r.name, sortable: true },
+      { key: "score", header: "Score", render: (r) => String(r.score) },
+    ];
+    const data = [
+      { name: "Alice", score: 95 },
+      { name: "Bob", score: 80 },
+    ];
+    const { container } = render(
+      <DataTable columns={cols} data={data} />,
+    );
     expect(await axe(container)).toHaveNoViolations();
   });
 
