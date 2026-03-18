@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, within, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import { Transfer, type TransferItem } from "../transfer";
@@ -198,5 +198,154 @@ describe("Transfer", () => {
   it("shows description for items that have one", () => {
     render(<Transfer dataSource={items} />);
     expect(screen.getByText("Dynamic language")).toBeInTheDocument();
+  });
+
+  describe("drag and drop", () => {
+    it("items have draggable attribute when draggable prop is true", () => {
+      render(<Transfer dataSource={items} draggable />);
+      const sourcePanel = screen.getAllByRole("group")[0];
+      const listItems = within(sourcePanel).getAllByRole("listitem");
+      // Non-disabled items should be draggable
+      const jsItem = listItems.find((li) =>
+        within(li).queryByText("JavaScript")
+      );
+      expect(jsItem).toHaveAttribute("draggable", "true");
+    });
+
+    it("items are not draggable when draggable is false (default)", () => {
+      render(<Transfer dataSource={items} />);
+      const sourcePanel = screen.getAllByRole("group")[0];
+      const listItems = within(sourcePanel).getAllByRole("listitem");
+      const jsItem = listItems.find((li) =>
+        within(li).queryByText("JavaScript")
+      );
+      expect(jsItem).not.toHaveAttribute("draggable");
+    });
+
+    it("disabled items are not draggable even when draggable is true", () => {
+      render(<Transfer dataSource={items} draggable />);
+      const sourcePanel = screen.getAllByRole("group")[0];
+      const listItems = within(sourcePanel).getAllByRole("listitem");
+      const disabledItem = listItems.find((li) =>
+        within(li).queryByText("Disabled Item")
+      );
+      expect(disabledItem).not.toHaveAttribute("draggable", "true");
+    });
+
+    it("items are not draggable when the component is disabled", () => {
+      render(<Transfer dataSource={items} draggable disabled />);
+      const sourcePanel = screen.getAllByRole("group")[0];
+      const listItems = within(sourcePanel).getAllByRole("listitem");
+      const jsItem = listItems.find((li) =>
+        within(li).queryByText("JavaScript")
+      );
+      expect(jsItem).not.toHaveAttribute("draggable", "true");
+    });
+
+    it("dragstart sets transfer data", () => {
+      render(<Transfer dataSource={items} draggable />);
+      const sourcePanel = screen.getAllByRole("group")[0];
+      const listItems = within(sourcePanel).getAllByRole("listitem");
+      const jsItem = listItems.find((li) =>
+        within(li).queryByText("JavaScript")
+      )!;
+
+      const setData = vi.fn();
+      const dataTransfer = {
+        setData,
+        effectAllowed: "",
+      };
+
+      fireEvent.dragStart(jsItem, { dataTransfer });
+      expect(setData).toHaveBeenCalledWith(
+        "application/spark-transfer",
+        JSON.stringify({ keys: ["js"], from: "source" })
+      );
+      expect(dataTransfer.effectAllowed).toBe("move");
+    });
+
+    it("drop triggers transfer from source to target", () => {
+      const onChange = vi.fn();
+      render(
+        <Transfer dataSource={items} draggable onChange={onChange} />
+      );
+      const panels = screen.getAllByRole("group");
+      const targetPanel = panels[1];
+
+      const dataTransfer = {
+        types: ["application/spark-transfer"],
+        getData: () =>
+          JSON.stringify({ keys: ["js"], from: "source" }),
+        dropEffect: "",
+      };
+
+      // dragover to allow drop
+      fireEvent.dragOver(targetPanel, { dataTransfer });
+      // drop
+      fireEvent.drop(targetPanel, { dataTransfer });
+
+      expect(onChange).toHaveBeenCalledWith(["js"], "right", ["js"]);
+    });
+
+    it("drop triggers transfer from target to source", () => {
+      const onChange = vi.fn();
+      render(
+        <Transfer
+          dataSource={items}
+          draggable
+          defaultTargetKeys={["js", "ts"]}
+          onChange={onChange}
+        />
+      );
+      const panels = screen.getAllByRole("group");
+      const sourcePanel = panels[0];
+
+      const dataTransfer = {
+        types: ["application/spark-transfer"],
+        getData: () =>
+          JSON.stringify({ keys: ["ts"], from: "target" }),
+        dropEffect: "",
+      };
+
+      fireEvent.dragOver(sourcePanel, { dataTransfer });
+      fireEvent.drop(sourcePanel, { dataTransfer });
+
+      expect(onChange).toHaveBeenCalledWith(["js"], "left", ["ts"]);
+    });
+
+    it("panels have aria-dropeffect when draggable", () => {
+      render(<Transfer dataSource={items} draggable />);
+      const panels = screen.getAllByRole("group");
+      panels.forEach((panel) => {
+        expect(panel).toHaveAttribute("aria-dropeffect", "move");
+      });
+    });
+
+    it("panels do not have aria-dropeffect when not draggable", () => {
+      render(<Transfer dataSource={items} />);
+      const panels = screen.getAllByRole("group");
+      panels.forEach((panel) => {
+        expect(panel).not.toHaveAttribute("aria-dropeffect");
+      });
+    });
+
+    it("drop on same panel does not trigger onChange", () => {
+      const onChange = vi.fn();
+      render(
+        <Transfer dataSource={items} draggable onChange={onChange} />
+      );
+      const panels = screen.getAllByRole("group");
+      const sourcePanel = panels[0];
+
+      const dataTransfer = {
+        types: ["application/spark-transfer"],
+        getData: () =>
+          JSON.stringify({ keys: ["js"], from: "source" }),
+        dropEffect: "",
+      };
+
+      fireEvent.drop(sourcePanel, { dataTransfer });
+      expect(onChange).not.toHaveBeenCalled();
+    });
   });
 });

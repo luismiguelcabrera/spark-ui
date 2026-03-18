@@ -9,6 +9,7 @@ const meta = {
     searchable: { control: "boolean" },
     showSelectAll: { control: "boolean" },
     disabled: { control: "boolean" },
+    draggable: { control: "boolean" },
     listHeight: { control: { type: "number", min: 150, max: 600 } },
   },
 } satisfies Meta<typeof Transfer>;
@@ -121,6 +122,33 @@ export const CompactHeight: Story = {
     dataSource: languages,
     listHeight: 180,
     searchable: true,
+  },
+  render: (args) => (
+    <div className="max-w-2xl mx-auto p-4">
+      <Transfer {...args} />
+    </div>
+  ),
+};
+
+export const Draggable: Story = {
+  args: {
+    dataSource: languages,
+    draggable: true,
+    defaultTargetKeys: ["js", "ts"],
+  },
+  render: (args) => (
+    <div className="max-w-2xl mx-auto p-4">
+      <Transfer {...args} />
+    </div>
+  ),
+};
+
+export const DraggableWithSearch: Story = {
+  args: {
+    dataSource: teamMembers,
+    draggable: true,
+    searchable: true,
+    titles: ["Available", "Assigned"],
   },
   render: (args) => (
     <div className="max-w-2xl mx-auto p-4">

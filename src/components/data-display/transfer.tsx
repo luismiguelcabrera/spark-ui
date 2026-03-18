@@ -6,6 +6,7 @@ import {
   useMemo,
   useCallback,
   type HTMLAttributes,
+  type DragEvent,
 } from "react";
 import { cn } from "../../lib/utils";
 import { Icon } from "./icon";
@@ -41,6 +42,8 @@ type TransferProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> & {
   disabled?: boolean;
   /** Height of each list panel in px */
   listHeight?: number;
+  /** Enable drag and drop to move items between panels */
+  draggable?: boolean;
 };
 
 const Transfer = forwardRef<HTMLDivElement, TransferProps>(
@@ -56,6 +59,7 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
       showSelectAll = true,
       disabled = false,
       listHeight = 300,
+      draggable: draggableProp = false,
       ...props
     },
     ref
@@ -171,6 +175,117 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
       []
     );
 
+    // --- Drag and Drop ---
+    const [dragOverPanel, setDragOverPanel] = useState<
+      "source" | "target" | null
+    >(null);
+    const [draggingKeys, setDraggingKeys] = useState<Set<string>>(new Set());
+
+    const handleDragStart = useCallback(
+      (
+        e: DragEvent<HTMLLIElement>,
+        item: TransferItem,
+        panelId: "source" | "target",
+        selected: Set<string>
+      ) => {
+        if (disabled || item.disabled) {
+          e.preventDefault();
+          return;
+        }
+
+        // If the dragged item is already selected, drag all selected items.
+        // Otherwise drag just this single item.
+        let keys: string[];
+        if (selected.has(item.key)) {
+          keys = Array.from(selected);
+        } else {
+          keys = [item.key];
+        }
+
+        e.dataTransfer.setData(
+          "application/spark-transfer",
+          JSON.stringify({ keys, from: panelId })
+        );
+        e.dataTransfer.effectAllowed = "move";
+
+        setDraggingKeys(new Set(keys));
+      },
+      [disabled]
+    );
+
+    const handleDragOver = useCallback(
+      (e: DragEvent<HTMLDivElement>, panelId: "source" | "target") => {
+        if (!draggableProp) return;
+        // Only accept our own transfer data
+        if (e.dataTransfer.types.includes("application/spark-transfer")) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+          setDragOverPanel(panelId);
+        }
+      },
+      [draggableProp]
+    );
+
+    const handleDragLeave = useCallback(
+      (e: DragEvent<HTMLDivElement>, panelId: "source" | "target") => {
+        // Only clear if actually leaving the panel (not entering a child)
+        const related = e.relatedTarget as Node | null;
+        if (!related || !e.currentTarget.contains(related)) {
+          if (dragOverPanel === panelId) {
+            setDragOverPanel(null);
+          }
+        }
+      },
+      [dragOverPanel]
+    );
+
+    const handleDrop = useCallback(
+      (e: DragEvent<HTMLDivElement>, panelId: "source" | "target") => {
+        e.preventDefault();
+        setDragOverPanel(null);
+        setDraggingKeys(new Set());
+
+        const raw = e.dataTransfer.getData("application/spark-transfer");
+        if (!raw) return;
+
+        let data: { keys: string[]; from: string };
+        try {
+          data = JSON.parse(raw);
+        } catch {
+          return;
+        }
+
+        // Don't drop on the same panel
+        if (data.from === panelId) return;
+
+        const moveKeys = data.keys;
+        if (moveKeys.length === 0) return;
+
+        if (panelId === "target") {
+          // Source → Target
+          const newTargetKeys = [...currentTargetKeys, ...moveKeys];
+          setCurrentTargetKeys(newTargetKeys);
+          setSourceSelected(new Set());
+          onChange?.(newTargetKeys, "right", moveKeys);
+        } else {
+          // Target → Source
+          const moveKeySet = new Set(moveKeys);
+          const newTargetKeys = currentTargetKeys.filter(
+            (k) => !moveKeySet.has(k)
+          );
+          setCurrentTargetKeys(newTargetKeys);
+          setTargetSelected(new Set());
+          onChange?.(newTargetKeys, "left", moveKeys);
+        }
+      },
+      [currentTargetKeys, setCurrentTargetKeys, onChange]
+    );
+
+    const handleDragEnd = useCallback(() => {
+      setDragOverPanel(null);
+      setDraggingKeys(new Set());
+    }, []);
+
     const renderPanel = (
       title: string,
       items: TransferItem[],
@@ -179,7 +294,7 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
       setSelected: React.Dispatch<React.SetStateAction<Set<string>>>,
       search: string,
       setSearch: React.Dispatch<React.SetStateAction<string>>,
-      panelId: string
+      panelId: "source" | "target"
     ) => {
       const selectableItems = filteredItems.filter((item) => !item.disabled);
       const allSelected =
@@ -188,12 +303,27 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
       const someSelected =
         selectableItems.some((item) => selected.has(item.key)) && !allSelected;
       const selectedCount = items.filter((item) => selected.has(item.key)).length;
+      const isDragOver = draggableProp && dragOverPanel === panelId;
 
       return (
         <div
-          className="flex flex-col border border-slate-200 rounded-xl overflow-hidden bg-white flex-1 min-w-0"
+          className={cn(
+            "flex flex-col border border-slate-200 rounded-xl overflow-hidden bg-white flex-1 min-w-0 transition-colors",
+            isDragOver && "border-primary bg-primary/5 ring-2 ring-primary/20"
+          )}
           role="group"
           aria-label={title}
+          {...(draggableProp
+            ? {
+                onDragOver: (e: DragEvent<HTMLDivElement>) =>
+                  handleDragOver(e, panelId),
+                onDragLeave: (e: DragEvent<HTMLDivElement>) =>
+                  handleDragLeave(e, panelId),
+                onDrop: (e: DragEvent<HTMLDivElement>) =>
+                  handleDrop(e, panelId),
+                "aria-dropeffect": "move" as const,
+              }
+            : {})}
         >
           {/* Header */}
           <div className="flex items-center gap-2 px-3 py-2.5 border-b border-slate-100 bg-slate-50/50">
@@ -254,43 +384,62 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
                 No items
               </li>
             ) : (
-              filteredItems.map((item) => (
-                <li
-                  key={item.key}
-                  className="list-none"
-                  aria-disabled={item.disabled || disabled || undefined}
-                >
-                  <label
-                    className={cn(
-                      "flex items-start gap-2.5 px-3 py-2 cursor-pointer transition-colors hover:bg-slate-50",
-                      selected.has(item.key) && "bg-primary/5",
-                      (item.disabled || disabled) &&
-                        "opacity-50 cursor-not-allowed pointer-events-none"
-                    )}
+              filteredItems.map((item) => {
+                const itemDraggable =
+                  draggableProp && !disabled && !item.disabled;
+                const isDragging = draggingKeys.has(item.key);
+
+                return (
+                  <li
+                    key={item.key}
+                    className="list-none"
+                    aria-disabled={item.disabled || disabled || undefined}
+                    draggable={itemDraggable || undefined}
+                    onDragStart={
+                      itemDraggable
+                        ? (e) =>
+                            handleDragStart(e, item, panelId, selected)
+                        : undefined
+                    }
+                    onDragEnd={itemDraggable ? handleDragEnd : undefined}
+                    {...(itemDraggable
+                      ? { "aria-grabbed": isDragging }
+                      : {})}
                   >
-                    <input
-                      type="checkbox"
-                      checked={selected.has(item.key)}
-                      onChange={() =>
-                        toggleItem(item.key, selected, setSelected)
-                      }
-                      disabled={item.disabled || disabled}
-                      tabIndex={0}
-                      className="h-4 w-4 mt-0.5 rounded border-slate-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-1"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-slate-700 truncate">
-                        {item.label}
-                      </div>
-                      {item.description && (
-                        <div className="text-xs text-slate-400 truncate">
-                          {item.description}
-                        </div>
+                    <label
+                      className={cn(
+                        "flex items-start gap-2.5 px-3 py-2 cursor-pointer transition-colors hover:bg-slate-50",
+                        selected.has(item.key) && "bg-primary/5",
+                        (item.disabled || disabled) &&
+                          "opacity-50 cursor-not-allowed pointer-events-none",
+                        itemDraggable && "cursor-grab active:cursor-grabbing",
+                        isDragging && "opacity-40"
                       )}
-                    </div>
-                  </label>
-                </li>
-              ))
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selected.has(item.key)}
+                        onChange={() =>
+                          toggleItem(item.key, selected, setSelected)
+                        }
+                        disabled={item.disabled || disabled}
+                        tabIndex={0}
+                        className="h-4 w-4 mt-0.5 rounded border-slate-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-1"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-slate-700 truncate">
+                          {item.label}
+                        </div>
+                        {item.description && (
+                          <div className="text-xs text-slate-400 truncate">
+                            {item.description}
+                          </div>
+                        )}
+                      </div>
+                    </label>
+                  </li>
+                );
+              })
             )}
           </ul>
         </div>
