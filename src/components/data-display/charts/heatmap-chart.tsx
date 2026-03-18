@@ -63,6 +63,13 @@ const HeatmapChart = forwardRef<HTMLDivElement, HeatmapChartProps>(
       return Array.from(unique);
     }, [yLabelsProp, data]);
 
+    // Build a lookup map
+    const valueMap = useMemo(() => {
+      const map = new Map<string, number>();
+      data.forEach((d) => map.set(`${d.x}|${d.y}`, d.value));
+      return map;
+    }, [data]);
+
     if (!data || data.length === 0) {
       return (
         <div
@@ -86,13 +93,6 @@ const HeatmapChart = forwardRef<HTMLDivElement, HeatmapChartProps>(
         </div>
       );
     }
-
-    // Build a lookup map
-    const valueMap = useMemo(() => {
-      const map = new Map<string, number>();
-      data.forEach((d) => map.set(`${d.x}|${d.y}`, d.value));
-      return map;
-    }, [data]);
 
     const values = data.map((d) => d.value);
     const minValue = Math.min(...values);
