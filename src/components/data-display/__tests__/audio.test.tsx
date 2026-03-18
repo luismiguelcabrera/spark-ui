@@ -1,0 +1,678 @@
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import {
+  Audio,
+  detectAudioProvider,
+  extractSpotifyPath,
+  getSoundCloudEmbedUrl,
+  getSpotifyEmbedUrl,
+  formatTime,
+} from "../audio";
+
+/* -------------------------------------------------------------------------- */
+/*  Mock HTMLMediaElement                                                       */
+/* -------------------------------------------------------------------------- */
+
+beforeEach(() => {
+  // jsdom does not implement play/pause
+  vi.spyOn(HTMLMediaElement.prototype, "play").mockImplementation(() =>
+    Promise.resolve(),
+  );
+  vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(
+    () => undefined,
+  );
+});
+
+/* -------------------------------------------------------------------------- */
+/*  URL parsing helpers                                                        */
+/* -------------------------------------------------------------------------- */
+
+describe("detectAudioProvider", () => {
+  it.each([
+    ["https://soundcloud.com/artist/track-name", "soundcloud"],
+    ["https://open.spotify.com/track/6rqhFgbbKwnb9MLmUQDhG6", "spotify"],
+    ["https://open.spotify.com/album/4aawyAB9vmqN3uQ7FjRGTy", "spotify"],
+    ["https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M", "spotify"],
+    ["https://open.spotify.com/episode/abc123def456", "spotify"],
+    ["/audio.mp3", "native"],
+    ["https://example.com/song.wav", "native"],
+    ["https://cdn.example.com/podcast.ogg", "native"],
+  ])("detects %s as %s", (url, expected) => {
+    expect(detectAudioProvider(url)).toBe(expected);
+  });
+});
+
+describe("extractSpotifyPath", () => {
+  it.each([
+    [
+      "https://open.spotify.com/track/6rqhFgbbKwnb9MLmUQDhG6",
+      "track/6rqhFgbbKwnb9MLmUQDhG6",
+    ],
+    [
+      "https://open.spotify.com/album/4aawyAB9vmqN3uQ7FjRGTy",
+      "album/4aawyAB9vmqN3uQ7FjRGTy",
+    ],
+    [
+      "https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M",
+      "playlist/37i9dQZF1DXcBWIGoYBM5M",
+    ],
+    [
+      "https://open.spotify.com/episode/abc123def456",
+      "episode/abc123def456",
+    ],
+    [
+      "https://open.spotify.com/show/xyz789abc123",
+      "show/xyz789abc123",
+    ],
+  ])("extracts path from %s", (url, expected) => {
+    expect(extractSpotifyPath(url)).toBe(expected);
+  });
+
+  it("returns null for invalid URL", () => {
+    expect(extractSpotifyPath("https://spotify.com/invalid")).toBeNull();
+  });
+});
+
+describe("getSoundCloudEmbedUrl", () => {
+  it("generates embed URL with encoded source", () => {
+    const url = getSoundCloudEmbedUrl(
+      "https://soundcloud.com/artist/track",
+      false,
+    );
+    expect(url).toContain("w.soundcloud.com/player");
+    expect(url).toContain(
+      encodeURIComponent("https://soundcloud.com/artist/track"),
+    );
+    expect(url).toContain("visual=false");
+  });
+
+  it("sets visual=true when requested", () => {
+    const url = getSoundCloudEmbedUrl(
+      "https://soundcloud.com/artist/track",
+      true,
+    );
+    expect(url).toContain("visual=true");
+  });
+});
+
+describe("getSpotifyEmbedUrl", () => {
+  it("generates embed URL from path", () => {
+    expect(getSpotifyEmbedUrl("track/abc123")).toBe(
+      "https://open.spotify.com/embed/track/abc123",
+    );
+  });
+});
+
+describe("formatTime", () => {
+  it.each([
+    [0, "0:00"],
+    [5, "0:05"],
+    [65, "1:05"],
+    [600, "10:00"],
+    [3661, "61:01"],
+    [-1, "0:00"],
+    [NaN, "0:00"],
+    [Infinity, "0:00"],
+  ])("formats %s as %s", (input, expected) => {
+    expect(formatTime(input)).toBe(expected);
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Native audio — rendering                                                   */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio (native)", () => {
+  it("renders a hidden audio element", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    const audio = container.querySelector("audio");
+    expect(audio).toBeInTheDocument();
+    expect(audio).toHaveAttribute("src", "/test.mp3");
+  });
+
+  it("forwards ref to audio element", () => {
+    const ref = { current: null as HTMLAudioElement | null };
+    render(<Audio ref={ref} src="/test.mp3" />);
+    expect(ref.current).toBeInstanceOf(HTMLAudioElement);
+  });
+
+  it("forwards function ref", () => {
+    let element: HTMLAudioElement | null = null;
+    render(
+      <Audio
+        ref={(el) => {
+          element = el;
+        }}
+        src="/test.mp3"
+      />,
+    );
+    expect(element).toBeInstanceOf(HTMLAudioElement);
+  });
+
+  it("passes autoPlay, loop, muted, preload to audio element", () => {
+    const { container } = render(
+      <Audio src="/test.mp3" autoPlay loop muted preload="auto" />,
+    );
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    expect(audio).toHaveAttribute("autoplay");
+    expect(audio.loop).toBe(true);
+    expect(audio.muted).toBe(true);
+    expect(audio).toHaveAttribute("preload", "auto");
+  });
+
+  it("defaults preload to metadata", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    const audio = container.querySelector("audio");
+    expect(audio).toHaveAttribute("preload", "metadata");
+  });
+
+  it("renders region with default aria-label", () => {
+    render(<Audio src="/test.mp3" />);
+    expect(
+      screen.getByRole("region", { name: "Audio player" }),
+    ).toBeInTheDocument();
+  });
+
+  it("includes track title in aria-label", () => {
+    render(<Audio src="/test.mp3" title="My Song" />);
+    expect(
+      screen.getByRole("region", { name: "Audio player: My Song" }),
+    ).toBeInTheDocument();
+  });
+
+  it("merges className", () => {
+    const { container } = render(
+      <Audio src="/test.mp3" className="custom-audio" />,
+    );
+    expect(container.firstChild).toHaveClass("custom-audio");
+  });
+
+  it.each(["none", "sm", "md", "lg", "xl"] as const)(
+    "applies rounded=%s",
+    (r) => {
+      const roundedClass = {
+        none: "rounded-none",
+        sm: "rounded-sm",
+        md: "rounded-lg",
+        lg: "rounded-xl",
+        xl: "rounded-2xl",
+      }[r];
+      const { container } = render(<Audio src="/test.mp3" rounded={r} />);
+      expect(container.firstChild).toHaveClass(roundedClass);
+    },
+  );
+
+  it("applies default rounded (md)", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    expect(container.firstChild).toHaveClass("rounded-lg");
+  });
+
+  it("has border and background on container", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    expect(container.firstChild).toHaveClass("bg-white", "border");
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Variants                                                                   */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio variants", () => {
+  it("standard variant shows play, seek, time, and volume", () => {
+    render(<Audio src="/test.mp3" variant="standard" />);
+    expect(screen.getByRole("button", { name: "Play" })).toBeInTheDocument();
+    expect(screen.getByRole("slider", { name: "Seek" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("slider", { name: "Volume" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Mute" })).toBeInTheDocument();
+  });
+
+  it("minimal variant shows play, seek, and time but no volume", () => {
+    render(<Audio src="/test.mp3" variant="minimal" />);
+    expect(screen.getByRole("button", { name: "Play" })).toBeInTheDocument();
+    expect(screen.getByRole("slider", { name: "Seek" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("slider", { name: "Volume" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Mute" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("card variant shows artwork placeholder when no artwork provided", () => {
+    const { container } = render(
+      <Audio src="/test.mp3" variant="card" title="Song" artist="Artist" />,
+    );
+    // Music note SVG icon is rendered as placeholder
+    const svgs = container.querySelectorAll("svg");
+    expect(svgs.length).toBeGreaterThan(0);
+  });
+
+  it("card variant shows artwork image", () => {
+    const { container } = render(
+      <Audio
+        src="/test.mp3"
+        variant="card"
+        title="Song"
+        artist="Artist"
+        artwork="/cover.jpg"
+      />,
+    );
+    const img = container.querySelector("img");
+    expect(img).toHaveAttribute("src", "/cover.jpg");
+    expect(img).toHaveAttribute("alt", "Song artwork");
+  });
+
+  it("card variant shows title and artist", () => {
+    render(
+      <Audio
+        src="/test.mp3"
+        variant="card"
+        title="My Song"
+        artist="The Artist"
+      />,
+    );
+    expect(screen.getByText("My Song")).toBeInTheDocument();
+    expect(screen.getByText("The Artist")).toBeInTheDocument();
+  });
+
+  it("card variant has volume controls", () => {
+    render(<Audio src="/test.mp3" variant="card" />);
+    expect(
+      screen.getByRole("slider", { name: "Volume" }),
+    ).toBeInTheDocument();
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Play / Pause                                                               */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio play/pause", () => {
+  it("calls play on the audio element when Play button is clicked", () => {
+    render(<Audio src="/test.mp3" />);
+    fireEvent.click(screen.getByRole("button", { name: "Play" }));
+    expect(HTMLMediaElement.prototype.play).toHaveBeenCalled();
+  });
+
+  it("switches to Pause button when audio plays", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    const audio = container.querySelector("audio")!;
+    fireEvent.play(audio);
+    expect(
+      screen.getByRole("button", { name: "Pause" }),
+    ).toBeInTheDocument();
+  });
+
+  it("calls pause on the audio element when Pause button is clicked", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    const audio = container.querySelector("audio")!;
+    // jsdom doesn't update `paused` on events, so mock it
+    Object.defineProperty(audio, "paused", { value: false, writable: true });
+    fireEvent.play(audio);
+    fireEvent.click(screen.getByRole("button", { name: "Pause" }));
+    expect(HTMLMediaElement.prototype.pause).toHaveBeenCalled();
+  });
+
+  it("switches back to Play button when audio pauses", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    const audio = container.querySelector("audio")!;
+    fireEvent.play(audio);
+    fireEvent.pause(audio);
+    expect(screen.getByRole("button", { name: "Play" })).toBeInTheDocument();
+  });
+
+  it("fires onPlay callback", () => {
+    const onPlay = vi.fn();
+    const { container } = render(<Audio src="/test.mp3" onPlay={onPlay} />);
+    const audio = container.querySelector("audio")!;
+    fireEvent.play(audio);
+    expect(onPlay).toHaveBeenCalledTimes(1);
+  });
+
+  it("fires onPause callback", () => {
+    const onPause = vi.fn();
+    const { container } = render(<Audio src="/test.mp3" onPause={onPause} />);
+    const audio = container.querySelector("audio")!;
+    fireEvent.pause(audio);
+    expect(onPause).toHaveBeenCalledTimes(1);
+  });
+
+  it("fires onEnded callback and resets to Play", () => {
+    const onEnded = vi.fn();
+    const { container } = render(<Audio src="/test.mp3" onEnded={onEnded} />);
+    const audio = container.querySelector("audio")!;
+    fireEvent.play(audio);
+    fireEvent.ended(audio);
+    expect(onEnded).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("button", { name: "Play" })).toBeInTheDocument();
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Seek bar                                                                   */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio seek bar", () => {
+  it("renders a seek slider with correct ARIA", () => {
+    render(<Audio src="/test.mp3" />);
+    const slider = screen.getByRole("slider", { name: "Seek" });
+    expect(slider).toHaveAttribute("aria-valuemin", "0");
+    expect(slider).toHaveAttribute("aria-valuenow", "0");
+    expect(slider).toHaveAttribute("aria-valuetext", "0:00 of 0:00");
+  });
+
+  it("updates time display on timeupdate event", () => {
+    const onTimeUpdate = vi.fn();
+    const { container } = render(
+      <Audio src="/test.mp3" onTimeUpdate={onTimeUpdate} />,
+    );
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+
+    // Simulate loaded metadata with 120s duration
+    Object.defineProperty(audio, "duration", { value: 120, writable: true });
+    fireEvent.loadedMetadata(audio);
+
+    // Simulate time update at 65s
+    Object.defineProperty(audio, "currentTime", {
+      value: 65,
+      writable: true,
+    });
+    fireEvent.timeUpdate(audio);
+
+    expect(onTimeUpdate).toHaveBeenCalledWith(65);
+  });
+
+  it("seeks on click", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+
+    Object.defineProperty(audio, "duration", { value: 100, writable: true });
+    Object.defineProperty(audio, "currentTime", {
+      value: 0,
+      writable: true,
+      configurable: true,
+    });
+    fireEvent.loadedMetadata(audio);
+
+    const seekBar = screen.getByRole("slider", { name: "Seek" });
+    // Mock getBoundingClientRect
+    vi.spyOn(seekBar, "getBoundingClientRect").mockReturnValue({
+      left: 0,
+      right: 200,
+      width: 200,
+      top: 0,
+      bottom: 10,
+      height: 10,
+      x: 0,
+      y: 0,
+      toJSON: () => {},
+    });
+
+    fireEvent.click(seekBar, { clientX: 100 });
+    // Audio currentTime should be set to 50% of 100s = 50s
+    expect(audio.currentTime).toBe(50);
+  });
+
+  it("seeks with ArrowRight key", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+
+    Object.defineProperty(audio, "duration", { value: 100, writable: true });
+    Object.defineProperty(audio, "currentTime", {
+      value: 0,
+      writable: true,
+      configurable: true,
+    });
+    fireEvent.loadedMetadata(audio);
+
+    const seekBar = screen.getByRole("slider", { name: "Seek" });
+    fireEvent.keyDown(seekBar, { key: "ArrowRight" });
+    // Should seek forward 5 seconds → fraction = 5/100 = 0.05
+    expect(audio.currentTime).toBe(5);
+  });
+
+  it("seeks with ArrowLeft key", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+
+    Object.defineProperty(audio, "duration", { value: 100, writable: true });
+    Object.defineProperty(audio, "currentTime", {
+      value: 50,
+      writable: true,
+      configurable: true,
+    });
+    fireEvent.loadedMetadata(audio);
+    fireEvent.timeUpdate(audio);
+
+    const seekBar = screen.getByRole("slider", { name: "Seek" });
+    fireEvent.keyDown(seekBar, { key: "ArrowLeft" });
+    expect(audio.currentTime).toBe(45);
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Volume controls                                                            */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio volume", () => {
+  it("renders volume slider with correct ARIA", () => {
+    render(<Audio src="/test.mp3" />);
+    const slider = screen.getByRole("slider", { name: "Volume" });
+    expect(slider).toHaveAttribute("aria-valuemin", "0");
+    expect(slider).toHaveAttribute("aria-valuemax", "100");
+    expect(slider).toHaveAttribute("aria-valuenow", "100");
+  });
+
+  it("mute button toggles muted state", () => {
+    render(<Audio src="/test.mp3" />);
+    const muteBtn = screen.getByRole("button", { name: "Mute" });
+    fireEvent.click(muteBtn);
+    expect(
+      screen.getByRole("button", { name: "Unmute" }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Unmute" }));
+    expect(screen.getByRole("button", { name: "Mute" })).toBeInTheDocument();
+  });
+
+  it("volume slider shows 0 when muted", () => {
+    render(<Audio src="/test.mp3" />);
+    fireEvent.click(screen.getByRole("button", { name: "Mute" }));
+    expect(screen.getByRole("slider", { name: "Volume" })).toHaveAttribute(
+      "aria-valuenow",
+      "0",
+    );
+  });
+
+  it("starts muted when muted prop is true", () => {
+    render(<Audio src="/test.mp3" muted />);
+    expect(
+      screen.getByRole("button", { name: "Unmute" }),
+    ).toBeInTheDocument();
+  });
+
+  it("adjusts volume on click", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    const volumeSlider = screen.getByRole("slider", { name: "Volume" });
+
+    vi.spyOn(volumeSlider, "getBoundingClientRect").mockReturnValue({
+      left: 0,
+      right: 100,
+      width: 100,
+      top: 0,
+      bottom: 10,
+      height: 10,
+      x: 0,
+      y: 0,
+      toJSON: () => {},
+    });
+
+    fireEvent.click(volumeSlider, { clientX: 50 });
+    expect(audio.volume).toBe(0.5);
+  });
+
+  it("adjusts volume with ArrowRight key", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    const volumeSlider = screen.getByRole("slider", { name: "Volume" });
+
+    // Volume starts at 1, pressing ArrowDown should decrease by 0.1
+    fireEvent.keyDown(volumeSlider, { key: "ArrowDown" });
+    expect(audio.volume).toBeCloseTo(0.9, 1);
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Sizes                                                                      */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio sizes", () => {
+  it.each(["sm", "md", "lg"] as const)("renders at size=%s", (s) => {
+    render(<Audio src="/test.mp3" size={s} />);
+    expect(
+      screen.getByRole("region", { name: "Audio player" }),
+    ).toBeInTheDocument();
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Colors                                                                     */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio colors", () => {
+  it.each([
+    "primary",
+    "secondary",
+    "accent",
+    "success",
+    "warning",
+    "destructive",
+  ] as const)("renders with color=%s", (c) => {
+    render(<Audio src="/test.mp3" color={c} />);
+    expect(
+      screen.getByRole("region", { name: "Audio player" }),
+    ).toBeInTheDocument();
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  SoundCloud embed                                                           */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio (SoundCloud)", () => {
+  const scUrl = "https://soundcloud.com/artist/track-name";
+
+  it("renders an iframe for SoundCloud", () => {
+    render(<Audio src={scUrl} />);
+    const iframe = screen.getByTitle("Audio player");
+    expect(iframe).toBeInTheDocument();
+    expect(iframe.tagName).toBe("IFRAME");
+  });
+
+  it("iframe src contains soundcloud player URL", () => {
+    render(<Audio src={scUrl} />);
+    const iframe = screen.getByTitle("Audio player") as HTMLIFrameElement;
+    expect(iframe.src).toContain("w.soundcloud.com/player");
+  });
+
+  it("encodes the source URL in the embed", () => {
+    render(<Audio src={scUrl} />);
+    const iframe = screen.getByTitle("Audio player") as HTMLIFrameElement;
+    expect(iframe.src).toContain(encodeURIComponent(scUrl));
+  });
+
+  it("uses custom iframeTitle", () => {
+    render(<Audio src={scUrl} iframeTitle="My SC player" />);
+    expect(screen.getByTitle("My SC player")).toBeInTheDocument();
+  });
+
+  it("applies rounded and className", () => {
+    const { container } = render(
+      <Audio src={scUrl} rounded="xl" className="my-sc" />,
+    );
+    expect(container.firstChild).toHaveClass("rounded-2xl", "my-sc");
+  });
+
+  it.each(["sm", "md", "lg"] as const)("adjusts height for size=%s", (s) => {
+    const heights = { sm: "80", md: "166", lg: "300" };
+    render(<Audio src={scUrl} size={s} />);
+    const iframe = screen.getByTitle("Audio player") as HTMLIFrameElement;
+    expect(iframe).toHaveAttribute("height", heights[s]);
+  });
+
+  it("uses visual mode for lg size", () => {
+    render(<Audio src={scUrl} size="lg" />);
+    const iframe = screen.getByTitle("Audio player") as HTMLIFrameElement;
+    expect(iframe.src).toContain("visual=true");
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Spotify embed                                                              */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio (Spotify)", () => {
+  const spotifyTrack =
+    "https://open.spotify.com/track/6rqhFgbbKwnb9MLmUQDhG6";
+
+  it("renders an iframe for Spotify track", () => {
+    render(<Audio src={spotifyTrack} />);
+    const iframe = screen.getByTitle("Audio player");
+    expect(iframe).toBeInTheDocument();
+    expect(iframe.tagName).toBe("IFRAME");
+  });
+
+  it("iframe src contains Spotify embed URL", () => {
+    render(<Audio src={spotifyTrack} />);
+    const iframe = screen.getByTitle("Audio player") as HTMLIFrameElement;
+    expect(iframe.src).toContain("open.spotify.com/embed/track");
+    expect(iframe.src).toContain("6rqhFgbbKwnb9MLmUQDhG6");
+  });
+
+  it("uses custom iframeTitle", () => {
+    render(<Audio src={spotifyTrack} iframeTitle="Spotify" />);
+    expect(screen.getByTitle("Spotify")).toBeInTheDocument();
+  });
+
+  it("applies rounded and className", () => {
+    const { container } = render(
+      <Audio src={spotifyTrack} rounded="lg" className="my-spotify" />,
+    );
+    expect(container.firstChild).toHaveClass("rounded-xl", "my-spotify");
+  });
+
+  it.each(["sm", "md", "lg"] as const)("adjusts height for size=%s", (s) => {
+    const heights = { sm: "80", md: "152", lg: "352" };
+    render(<Audio src={spotifyTrack} size={s} />);
+    const iframe = screen.getByTitle("Audio player") as HTMLIFrameElement;
+    expect(iframe).toHaveAttribute("height", heights[s]);
+  });
+
+  it("handles Spotify album URL", () => {
+    render(
+      <Audio src="https://open.spotify.com/album/4aawyAB9vmqN3uQ7FjRGTy" />,
+    );
+    const iframe = screen.getByTitle("Audio player") as HTMLIFrameElement;
+    expect(iframe.src).toContain("open.spotify.com/embed/album");
+  });
+
+  it("handles Spotify playlist URL", () => {
+    render(
+      <Audio src="https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M" />,
+    );
+    const iframe = screen.getByTitle("Audio player") as HTMLIFrameElement;
+    expect(iframe.src).toContain("open.spotify.com/embed/playlist");
+  });
+
+  it("warns in dev when Spotify path cannot be extracted", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(<Audio src="https://open.spotify.com/invalid" />);
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining("Could not extract Spotify path"),
+    );
+    warnSpy.mockRestore();
+  });
+});

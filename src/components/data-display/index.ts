@@ -146,6 +146,9 @@ export type { WindowProps, WindowItemProps } from "./window";
 export { Video, videoVariants, detectProvider, extractYouTubeId, extractVimeoId } from "./video";
 export type { VideoProps, VideoRounded, VideoProvider } from "./video";
 
+export { Audio, audioVariants, detectAudioProvider, extractSpotifyPath, formatTime } from "./audio";
+export type { AudioProps, AudioProvider, AudioVariant, AudioSize, AudioColor, AudioRounded } from "./audio";
+
 export * from "./charts";
 
 export { Transfer } from "./transfer";
