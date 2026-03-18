@@ -2,6 +2,21 @@ import { render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, it, expect } from "vitest";
 import { MegaMenu } from "../components/navigation/mega-menu";
+import { Terminal } from "../components/data-display/terminal";
+import { Dock } from "../components/data-display/dock";
+import { MeterGroup } from "../components/data-display/meter-group";
+import { RingProgress } from "../components/data-display/ring-progress";
+import { SemiCircleProgress } from "../components/data-display/semi-circle-progress";
+import { Statistic } from "../components/data-display/statistic";
+import { ColorSwatch } from "../components/data-display/color-swatch";
+import { Snippet } from "../components/data-display/snippet";
+import { OrganizationChart } from "../components/data-display/organization-chart";
+import { Affix } from "../components/layout/affix";
+import { ScrollShadow } from "../components/layout/scroll-shadow";
+import { ActionBar } from "../components/feedback/action-bar";
+import { Burger } from "../components/forms/burger";
+import { NativeSelect } from "../components/forms/native-select";
+import { PopupEdit } from "../components/forms/popup-edit";
 import { TableOfContents } from "../components/navigation/table-of-contents";
 import { EventCalendar } from "../components/data-display/event-calendar";
 import { Knob } from "../components/forms/knob";
@@ -1288,6 +1303,151 @@ describe("Accessibility (axe)", () => {
         defaultDate={new Date(2026, 2, 17)}
         defaultView="day"
       />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  // --- Wave 8 components ---
+
+  it("Terminal", async () => {
+    const { container } = render(
+      <Terminal
+        lines={[
+          { type: "input", content: "ls -la" },
+          { type: "output", content: "file1.txt" },
+        ]}
+      />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Dock", async () => {
+    const { container } = render(
+      <Dock
+        items={[
+          { id: "1", label: "Home", icon: "home" },
+          { id: "2", label: "Settings", icon: "settings" },
+        ]}
+      />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("MeterGroup", async () => {
+    const { container } = render(
+      <MeterGroup
+        items={[
+          { label: "Used", value: 60, color: "primary" },
+          { label: "Free", value: 40, color: "success" },
+        ]}
+      />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("RingProgress", async () => {
+    const { container } = render(
+      <RingProgress sections={[{ value: 60, color: "primary" }]} />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("SemiCircleProgress", async () => {
+    const { container } = render(
+      <SemiCircleProgress value={75} label="75%" />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Statistic", async () => {
+    const { container } = render(
+      <Statistic label="Revenue" value="$12,345" />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("ColorSwatch", async () => {
+    const { container } = render(
+      <ColorSwatch color="#3b82f6" aria-label="Blue" />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Snippet", async () => {
+    const { container } = render(
+      <Snippet>npm install spark-ui</Snippet>
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("OrganizationChart", async () => {
+    const { container } = render(
+      <OrganizationChart
+        data={{
+          id: "1",
+          label: "CEO",
+          children: [
+            { id: "2", label: "CTO" },
+            { id: "3", label: "CFO" },
+          ],
+        }}
+      />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Affix", async () => {
+    const { container } = render(
+      <Affix position="bottom-right">
+        <button type="button">Scroll to top</button>
+      </Affix>
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("ScrollShadow", async () => {
+    const { container } = render(
+      <ScrollShadow>
+        <div>Scrollable content</div>
+      </ScrollShadow>
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("ActionBar", async () => {
+    const { container } = render(
+      <ActionBar open count={3} onClose={() => {}}>
+        <button type="button">Delete</button>
+      </ActionBar>
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Burger", async () => {
+    const { container } = render(
+      <Burger opened={false} aria-label="Toggle menu" />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("NativeSelect", async () => {
+    const { container } = render(
+      <NativeSelect
+        options={[
+          { value: "a", label: "Option A" },
+          { value: "b", label: "Option B" },
+        ]}
+        aria-label="Select option"
+      />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("PopupEdit", async () => {
+    const { container } = render(
+      <PopupEdit value="Test" onSave={() => {}}>
+        <span>Test value</span>
+      </PopupEdit>
     );
     expect(await axe(container)).toHaveNoViolations();
   });

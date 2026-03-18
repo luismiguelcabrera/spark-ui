@@ -110,3 +110,9 @@ export type { MasonryProps } from "./masonry";
 
 export { ThemeScript } from "./theme-script";
 export type { ThemeScriptProps } from "./theme-script";
+
+export { Affix } from "./affix";
+export type { AffixProps, AffixPosition } from "./affix";
+
+export { ScrollShadow } from "./scroll-shadow";
+export type { ScrollShadowProps, ScrollShadowOrientation } from "./scroll-shadow";

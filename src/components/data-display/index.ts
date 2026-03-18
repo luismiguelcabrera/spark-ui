@@ -161,3 +161,30 @@ export type { GalleriaProps, GalleriaImage } from "./galleria";
 
 export { EventCalendar } from "./event-calendar";
 export type { EventCalendarProps, CalendarEvent, CalendarView } from "./event-calendar";
+
+export { Terminal } from "./terminal";
+export type { TerminalProps, TerminalLine } from "./terminal";
+
+export { Dock } from "./dock";
+export type { DockProps, DockItem, DockPosition } from "./dock";
+
+export { MeterGroup } from "./meter-group";
+export type { MeterGroupProps, MeterGroupItem, MeterGroupSize } from "./meter-group";
+
+export { RingProgress } from "./ring-progress";
+export type { RingProgressProps, RingProgressSection } from "./ring-progress";
+
+export { SemiCircleProgress } from "./semi-circle-progress";
+export type { SemiCircleProgressProps } from "./semi-circle-progress";
+
+export { Statistic } from "./statistic";
+export type { StatisticProps, StatisticTrend } from "./statistic";
+
+export { ColorSwatch } from "./color-swatch";
+export type { ColorSwatchProps } from "./color-swatch";
+
+export { Snippet } from "./snippet";
+export type { SnippetProps, SnippetColor } from "./snippet";
+
+export { OrganizationChart } from "./organization-chart";
+export type { OrganizationChartProps, OrgNode, OrganizationChartDirection } from "./organization-chart";

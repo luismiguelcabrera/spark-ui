@@ -108,3 +108,6 @@ export type { SwipeableDrawerProps } from "./swipeable-drawer";
 
 export { ImperativeFeedbackProvider } from "./imperative-provider";
 export type { ImperativeFeedbackProviderProps } from "./imperative-provider";
+
+export { ActionBar } from "./action-bar";
+export type { ActionBarProps, ActionBarPosition } from "./action-bar";

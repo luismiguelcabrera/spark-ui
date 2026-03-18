@@ -161,3 +161,12 @@ export type { CheckboxCardProps } from "./checkbox-card";
 
 export { RadioCardGroup } from "./radio-card";
 export type { RadioCardGroupProps, RadioCardOption } from "./radio-card";
+
+export { Burger } from "./burger";
+export type { BurgerProps, BurgerSize } from "./burger";
+
+export { NativeSelect } from "./native-select";
+export type { NativeSelectProps, NativeSelectOption, NativeSelectSize, NativeSelectVariant } from "./native-select";
+
+export { PopupEdit } from "./popup-edit";
+export type { PopupEditProps, PopupEditMode } from "./popup-edit";
