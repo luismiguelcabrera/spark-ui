@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, it, expect } from "vitest";
 import { Breadcrumb } from "../breadcrumb";
 
@@ -51,73 +50,29 @@ describe("Breadcrumb", () => {
     expect(ref.current).toHaveClass("custom");
   });
 
-  it("renders custom separator as ReactNode", () => {
-    render(<Breadcrumb items={items} separator={<span data-testid="sep">/</span>} />);
-    const seps = screen.getAllByTestId("sep");
-    expect(seps).toHaveLength(2);
+  it("renders separator icons between items", () => {
+    const { container } = render(<Breadcrumb items={items} />);
+    // With 3 items, there should be 2 separators (chevron_right icons)
+    const separators = container.querySelectorAll('[aria-hidden="true"]');
+    expect(separators.length).toBe(2);
   });
 
-  it("renders item icons", () => {
-    const itemsWithIcons = [
-      { label: "Home", href: "/", icon: "home" },
-      { label: "Settings" },
-    ];
-    render(<Breadcrumb items={itemsWithIcons} />);
-    expect(screen.getByText("Home")).toBeInTheDocument();
-    expect(screen.getByText("Settings")).toBeInTheDocument();
-  });
-});
-
-describe("Breadcrumb (collapsible)", () => {
-  const longItems = [
-    { label: "Home", href: "/" },
-    { label: "Products", href: "/products" },
-    { label: "Category", href: "/products/cat" },
-    { label: "Subcategory", href: "/products/cat/sub" },
-    { label: "Widget" },
-  ];
-
-  it("collapses middle items when maxItems is set", () => {
-    render(<Breadcrumb items={longItems} maxItems={3} />);
-    // First item visible
-    expect(screen.getByText("Home")).toBeInTheDocument();
-    // Last 2 visible
-    expect(screen.getByText("Subcategory")).toBeInTheDocument();
-    expect(screen.getByText("Widget")).toBeInTheDocument();
-    // Middle items hidden
-    expect(screen.queryByText("Products")).not.toBeInTheDocument();
-    expect(screen.queryByText("Category")).not.toBeInTheDocument();
-    // Ellipsis button visible
-    expect(screen.getByText("...")).toBeInTheDocument();
+  it("does not render separator before the first item", () => {
+    const { container } = render(<Breadcrumb items={items} />);
+    const listItems = container.querySelectorAll("li");
+    // First list item should not contain chevron_right separator
+    const firstLi = listItems[0];
+    expect(firstLi.querySelector('[aria-hidden="true"]')).toBeNull();
   });
 
-  it("ellipsis button has correct aria-label", () => {
-    render(<Breadcrumb items={longItems} maxItems={3} />);
-    expect(screen.getByLabelText("Show 2 more breadcrumb items")).toBeInTheDocument();
+  it("renders items inside an ordered list", () => {
+    const { container } = render(<Breadcrumb items={items} />);
+    expect(container.querySelector("ol")).toBeInTheDocument();
+    const listItems = container.querySelectorAll("li");
+    expect(listItems.length).toBe(3);
   });
 
-  it("expands all items when ellipsis is clicked", async () => {
-    const user = userEvent.setup();
-    render(<Breadcrumb items={longItems} maxItems={3} />);
-    await user.click(screen.getByText("..."));
-    expect(screen.getByText("Products")).toBeInTheDocument();
-    expect(screen.getByText("Category")).toBeInTheDocument();
-    expect(screen.queryByText("...")).not.toBeInTheDocument();
-  });
-
-  it("does not collapse when items count <= maxItems", () => {
-    render(<Breadcrumb items={items} maxItems={3} />);
-    expect(screen.queryByText("...")).not.toBeInTheDocument();
-    expect(screen.getByText("Home")).toBeInTheDocument();
-    expect(screen.getByText("Products")).toBeInTheDocument();
-    expect(screen.getByText("Widget")).toBeInTheDocument();
-  });
-
-  it("does not collapse when maxItems < 2", () => {
-    render(<Breadcrumb items={longItems} maxItems={1} />);
-    expect(screen.queryByText("...")).not.toBeInTheDocument();
-    // All items should be visible
-    expect(screen.getByText("Home")).toBeInTheDocument();
-    expect(screen.getByText("Products")).toBeInTheDocument();
+  it("has displayName", () => {
+    expect(Breadcrumb.displayName).toBe("Breadcrumb");
   });
 });

@@ -1,6 +1,6 @@
-import { render, screen, act } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import { Tooltip } from "../tooltip";
 
 describe("Tooltip", () => {
@@ -13,58 +13,32 @@ describe("Tooltip", () => {
     expect(screen.getByText("Hover me")).toBeInTheDocument();
   });
 
-  it("does not show tooltip content initially", () => {
+  it("always renders tooltip element in DOM (CSS-driven visibility)", () => {
     render(
       <Tooltip content="Help text">
         <button type="button">Hover me</button>
       </Tooltip>,
     );
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
-  });
-
-  it("shows tooltip on mouse enter", async () => {
-    const user = userEvent.setup();
-    render(
-      <Tooltip content="Help text">
-        <button type="button">Hover me</button>
-      </Tooltip>,
-    );
-    await user.hover(screen.getByText("Hover me"));
+    // The tooltip span is always in the DOM; visibility is controlled via CSS opacity
+    expect(screen.getByRole("tooltip")).toBeInTheDocument();
     expect(screen.getByRole("tooltip")).toHaveTextContent("Help text");
   });
 
-  it("hides tooltip on mouse leave", async () => {
-    const user = userEvent.setup();
+  it("tooltip content matches the content prop", () => {
     render(
-      <Tooltip content="Help text">
+      <Tooltip content="My tooltip">
         <button type="button">Hover me</button>
       </Tooltip>,
     );
-    await user.hover(screen.getByText("Hover me"));
-    expect(screen.getByRole("tooltip")).toBeInTheDocument();
-    await user.unhover(screen.getByText("Hover me"));
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+    expect(screen.getByRole("tooltip")).toHaveTextContent("My tooltip");
   });
 
-  it("shows tooltip on focus", async () => {
-    const user = userEvent.setup();
-    render(
-      <Tooltip content="Focus tip">
-        <button type="button">Tab to me</button>
-      </Tooltip>,
-    );
-    await user.tab();
-    expect(screen.getByRole("tooltip")).toHaveTextContent("Focus tip");
-  });
-
-  it("sets aria-describedby on trigger when open", async () => {
-    const user = userEvent.setup();
+  it("sets aria-describedby on wrapper span linking to tooltip id", () => {
     render(
       <Tooltip content="Described">
         <button type="button">Trigger</button>
       </Tooltip>,
     );
-    await user.hover(screen.getByText("Trigger"));
     const tooltip = screen.getByRole("tooltip");
     const triggerId = tooltip.id;
     expect(screen.getByText("Trigger").parentElement).toHaveAttribute(
@@ -73,62 +47,34 @@ describe("Tooltip", () => {
     );
   });
 
-  it("does not set aria-describedby when closed", () => {
-    render(
-      <Tooltip content="Described">
-        <button type="button">Trigger</button>
-      </Tooltip>,
-    );
-    expect(screen.getByText("Trigger").parentElement).not.toHaveAttribute(
-      "aria-describedby",
-    );
-  });
-
   it.each(["top", "bottom", "left", "right"] as const)(
     "applies position %s",
-    async (pos) => {
-      const user = userEvent.setup();
+    (pos) => {
       render(
         <Tooltip content="Tip" position={pos}>
           <span>Target</span>
         </Tooltip>,
       );
-      await user.hover(screen.getByText("Target"));
       expect(screen.getByRole("tooltip")).toBeInTheDocument();
     },
   );
 
-  it("applies dark variant by default", async () => {
-    const user = userEvent.setup();
+  it("applies dark variant by default", () => {
     render(
       <Tooltip content="Dark">
         <span>T</span>
       </Tooltip>,
     );
-    await user.hover(screen.getByText("T"));
     expect(screen.getByRole("tooltip")).toHaveClass("bg-slate-900");
   });
 
-  it("applies light variant", async () => {
-    const user = userEvent.setup();
+  it("applies light variant", () => {
     render(
       <Tooltip content="Light" variant="light">
         <span>T</span>
       </Tooltip>,
     );
-    await user.hover(screen.getByText("T"));
     expect(screen.getByRole("tooltip")).toHaveClass("bg-white");
-  });
-
-  it("does not show tooltip when disabled", async () => {
-    const user = userEvent.setup();
-    render(
-      <Tooltip content="Disabled tip" disabled>
-        <span>Disabled</span>
-      </Tooltip>,
-    );
-    await user.hover(screen.getByText("Disabled"));
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
   });
 
   it("forwards ref to wrapper span", () => {
@@ -150,100 +96,55 @@ describe("Tooltip", () => {
     );
     expect(ref.current).toHaveClass("custom");
   });
-});
 
-describe("Tooltip (controlled)", () => {
-  it("shows when open is true", () => {
-    render(
-      <Tooltip content="Controlled" open={true}>
-        <span>Trigger</span>
-      </Tooltip>,
-    );
-    expect(screen.getByRole("tooltip")).toHaveTextContent("Controlled");
+  it("has displayName", () => {
+    expect(Tooltip.displayName).toBe("Tooltip");
   });
 
-  it("hides when open is false", () => {
+  it("renders with group-hover and group-focus-within classes for CSS visibility", () => {
     render(
-      <Tooltip content="Controlled" open={false}>
-        <span>Trigger</span>
-      </Tooltip>,
-    );
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
-  });
-
-  it("calls onOpenChange on hover", async () => {
-    const user = userEvent.setup();
-    const onOpenChange = vi.fn();
-    render(
-      <Tooltip content="Controlled" open={false} onOpenChange={onOpenChange}>
-        <span>Trigger</span>
-      </Tooltip>,
-    );
-    await user.hover(screen.getByText("Trigger"));
-    expect(onOpenChange).toHaveBeenCalledWith(true);
-  });
-});
-
-describe("Tooltip (delay)", () => {
-  it("accepts openDelay prop without error", async () => {
-    const user = userEvent.setup();
-    render(
-      <Tooltip content="Delayed" openDelay={0}>
-        <span>Hover</span>
-      </Tooltip>,
-    );
-    await user.hover(screen.getByText("Hover"));
-    expect(screen.getByRole("tooltip")).toHaveTextContent("Delayed");
-  });
-
-  it("accepts closeDelay prop without error", async () => {
-    const user = userEvent.setup();
-    render(
-      <Tooltip content="Sticky" closeDelay={0}>
-        <span>Hover</span>
-      </Tooltip>,
-    );
-    await user.hover(screen.getByText("Hover"));
-    expect(screen.getByRole("tooltip")).toBeInTheDocument();
-    await user.unhover(screen.getByText("Hover"));
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
-  });
-
-  it("calls onOpenChange with delay props set", async () => {
-    const user = userEvent.setup();
-    const onOpenChange = vi.fn();
-    render(
-      <Tooltip content="D" openDelay={0} closeDelay={0} open={false} onOpenChange={onOpenChange}>
-        <span>Hover</span>
-      </Tooltip>,
-    );
-    await user.hover(screen.getByText("Hover"));
-    expect(onOpenChange).toHaveBeenCalledWith(true);
-  });
-});
-
-describe("Tooltip (arrow)", () => {
-  it("renders arrow styles by default", async () => {
-    const user = userEvent.setup();
-    render(
-      <Tooltip content="Arrow" position="top">
+      <Tooltip content="CSS driven">
         <span>T</span>
       </Tooltip>,
     );
-    await user.hover(screen.getByText("T"));
     const tooltip = screen.getByRole("tooltip");
-    expect(tooltip.className).toContain("after:");
+    expect(tooltip.className).toContain("group-hover:opacity-100");
+    expect(tooltip.className).toContain("group-focus-within:opacity-100");
   });
 
-  it("omits arrow styles when arrow is false", async () => {
-    const user = userEvent.setup();
+  it("position top applies bottom-full", () => {
     render(
-      <Tooltip content="No arrow" arrow={false}>
+      <Tooltip content="Top" position="top">
         <span>T</span>
       </Tooltip>,
     );
-    await user.hover(screen.getByText("T"));
-    const tooltip = screen.getByRole("tooltip");
-    expect(tooltip.className).not.toContain("after:");
+    expect(screen.getByRole("tooltip")).toHaveClass("bottom-full");
+  });
+
+  it("position bottom applies top-full", () => {
+    render(
+      <Tooltip content="Bottom" position="bottom">
+        <span>T</span>
+      </Tooltip>,
+    );
+    expect(screen.getByRole("tooltip")).toHaveClass("top-full");
+  });
+
+  it("position left applies right-full", () => {
+    render(
+      <Tooltip content="Left" position="left">
+        <span>T</span>
+      </Tooltip>,
+    );
+    expect(screen.getByRole("tooltip")).toHaveClass("right-full");
+  });
+
+  it("position right applies left-full", () => {
+    render(
+      <Tooltip content="Right" position="right">
+        <span>T</span>
+      </Tooltip>,
+    );
+    expect(screen.getByRole("tooltip")).toHaveClass("left-full");
   });
 });

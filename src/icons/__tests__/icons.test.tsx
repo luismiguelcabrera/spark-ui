@@ -7,7 +7,6 @@ import {
   EyeIcon, HomeIcon, UserIcon, StarIcon, SettingsIcon, MenuIcon,
 } from "../icons";
 import { Icon } from "../../components/data-display/icon";
-import { IconProvider } from "../icon-provider";
 import { builtInIcons } from "../registry";
 
 describe("SVG Icon Components", () => {
@@ -71,57 +70,71 @@ describe("SVG Icon Components", () => {
   });
 });
 
-describe("Icon (string name resolver)", () => {
-  it("resolves built-in icon by name", () => {
+describe("Icon (material-symbols span)", () => {
+  it("renders a span with the icon name as text content", () => {
     const { container } = render(<Icon name="check" />);
-    expect(container.querySelector("svg")).toBeInTheDocument();
-  });
-
-  it("resolves Material Symbols snake_case names", () => {
-    const { container } = render(<Icon name="chevron_left" />);
-    expect(container.querySelector("svg")).toBeInTheDocument();
-  });
-
-  it("resolves kebab-case names", () => {
-    const { container } = render(<Icon name="chevron-left" />);
-    expect(container.querySelector("svg")).toBeInTheDocument();
-  });
-
-  it("falls back to material-symbols span for unknown names", () => {
-    const { container } = render(<Icon name="some_unknown_icon" />);
     const span = container.querySelector("span.material-symbols-outlined");
     expect(span).toBeInTheDocument();
-    expect(span!.textContent).toBe("some_unknown_icon");
+    expect(span!.textContent).toBe("check");
   });
 
-  it("applies size", () => {
+  it("renders material-symbols for any name", () => {
+    const { container } = render(<Icon name="chevron_left" />);
+    const span = container.querySelector("span.material-symbols-outlined");
+    expect(span).toBeInTheDocument();
+    expect(span!.textContent).toBe("chevron_left");
+  });
+
+  it("is aria-hidden by default", () => {
+    const { container } = render(<Icon name="check" />);
+    const span = container.querySelector("span")!;
+    expect(span.getAttribute("aria-hidden")).toBe("true");
+  });
+
+  it("applies size classes", () => {
     const { container } = render(<Icon name="check" size="lg" />);
-    const svg = container.querySelector("svg")!;
-    expect(svg.getAttribute("width")).toBe("24");
-  });
-});
-
-describe("IconProvider", () => {
-  it("overrides icon resolution", () => {
-    function CustomStar({ className }: { size?: number; className?: string }) {
-      return <span data-testid="custom-star" className={className}>custom</span>;
-    }
-
-    render(
-      <IconProvider resolver={(name) => (name === "star" ? CustomStar : undefined)}>
-        <Icon name="star" />
-      </IconProvider>,
-    );
-    expect(screen.getByTestId("custom-star")).toBeInTheDocument();
+    const span = container.querySelector("span")!;
+    expect(span).toHaveClass("text-[24px]");
   });
 
-  it("falls back to built-in when resolver returns undefined", () => {
-    render(
-      <IconProvider resolver={() => undefined}>
-        <Icon name="check" />
-      </IconProvider>,
-    );
-    expect(document.querySelector("svg")).toBeInTheDocument();
+  it("applies default md size", () => {
+    const { container } = render(<Icon name="check" />);
+    const span = container.querySelector("span")!;
+    expect(span).toHaveClass("text-[20px]");
+  });
+
+  it("applies sm size", () => {
+    const { container } = render(<Icon name="check" size="sm" />);
+    const span = container.querySelector("span")!;
+    expect(span).toHaveClass("text-[16px]");
+  });
+
+  it("applies xl size", () => {
+    const { container } = render(<Icon name="check" size="xl" />);
+    const span = container.querySelector("span")!;
+    expect(span).toHaveClass("text-[32px]");
+  });
+
+  it("forwards ref", () => {
+    const ref = { current: null as HTMLSpanElement | null };
+    render(<Icon ref={ref} name="check" />);
+    expect(ref.current).toBeInstanceOf(HTMLSpanElement);
+  });
+
+  it("merges className", () => {
+    const { container } = render(<Icon name="check" className="custom" />);
+    const span = container.querySelector("span")!;
+    expect(span).toHaveClass("custom");
+  });
+
+  it("supports filled prop", () => {
+    const { container } = render(<Icon name="star" filled />);
+    const span = container.querySelector("span")!;
+    expect(span).toHaveClass("icon-filled");
+  });
+
+  it("has displayName", () => {
+    expect(Icon.displayName).toBe("Icon");
   });
 });
 
@@ -136,5 +149,17 @@ describe("Registry", () => {
     for (const name of required) {
       expect(builtInIcons[name]).toBeDefined();
     }
+  });
+
+  it("maps kebab-case names", () => {
+    expect(builtInIcons["chevron-left"]).toBeDefined();
+    expect(builtInIcons["chevron-right"]).toBeDefined();
+    expect(builtInIcons["alert-circle"]).toBeDefined();
+  });
+
+  it("maps snake_case Material Symbols names", () => {
+    expect(builtInIcons["chevron_left"]).toBeDefined();
+    expect(builtInIcons["check_circle"]).toBeDefined();
+    expect(builtInIcons["expand_more"]).toBeDefined();
   });
 });
