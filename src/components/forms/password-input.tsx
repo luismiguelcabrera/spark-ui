@@ -1,4 +1,6 @@
-import { forwardRef, type InputHTMLAttributes } from "react";
+"use client";
+
+import { forwardRef, useState, type InputHTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { Icon } from "../data-display/icon";
@@ -8,17 +10,23 @@ type PasswordInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & 
 };
 
 const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
-  ({ className, error, ...props }, ref) => {
+  ({ className, error, id, ...props }, ref) => {
+    const [visible, setVisible] = useState(false);
+
     return (
       <div className="flex flex-col gap-1.5">
         <div className="relative">
           <input
-            type="password"
+            id={id}
+            type={visible ? "text" : "password"}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error && id ? `${id}-error` : undefined}
             className={cn(
               s.inputBase,
               "pr-12",
               s.inputFocus,
               s.inputDisabled,
+              "transition-colors duration-150",
               error && "border-red-300 focus:border-red-500 focus:ring-red-500/20",
               className
             )}
@@ -26,15 +34,21 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             {...props}
           />
           <button
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
             type="button"
             tabIndex={-1}
+            aria-label={visible ? "Hide password" : "Show password"}
+            onClick={() => setVisible((v) => !v)}
+            className={cn(
+              "absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600",
+              "transition-colors duration-150",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
+            )}
           >
-            <Icon name="visibility" size="md" />
+            <Icon name={visible ? "visibility_off" : "visibility"} size="md" />
           </button>
         </div>
         {error && (
-          <p className="text-xs text-red-500 font-medium">{error}</p>
+          <p id={id ? `${id}-error` : undefined} className="text-xs text-red-500 font-medium" role="alert">{error}</p>
         )}
       </div>
     );

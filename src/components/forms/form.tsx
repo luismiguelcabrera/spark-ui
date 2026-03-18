@@ -30,6 +30,7 @@ function Form<T extends FieldValues>({
     </FormProvider>
   );
 }
+Form.displayName = "Form";
 
 export { Form };
 export type { FormProps };

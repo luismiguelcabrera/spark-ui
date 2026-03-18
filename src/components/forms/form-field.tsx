@@ -27,6 +27,8 @@ function FormField({
 }: FormFieldProps) {
   const autoId = useId();
   const id = idProp ?? autoId;
+  const errorId = error ? `${id}-error` : undefined;
+  const hintId = hint && !error ? `${id}-hint` : undefined;
 
   // When children provided, wrap them with label/error/hint
   if (children) {
@@ -61,10 +63,10 @@ function FormField({
           )}
         </div>
         {error && (
-          <p className="text-xs text-red-500 font-medium">{error}</p>
+          <p id={errorId} className="text-xs text-red-500 font-medium" role="alert">{error}</p>
         )}
         {hint && !error && (
-          <p className="text-xs text-slate-400">{hint}</p>
+          <p id={hintId} className="text-xs text-slate-400">{hint}</p>
         )}
       </div>
     );
@@ -80,11 +82,14 @@ function FormField({
         iconPosition={iconPosition}
         error={error}
         hint={hint}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={errorId ?? hintId}
         {...inputProps}
       />
     </div>
   );
 }
+FormField.displayName = "FormField";
 
 export { FormField };
 export type { FormFieldProps };

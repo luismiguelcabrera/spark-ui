@@ -4,7 +4,7 @@ import { cn } from "../../lib/utils";
 import { Icon } from "../data-display/icon";
 
 const iconButtonVariants = cva(
-  "inline-flex items-center justify-center rounded-full transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
+  "inline-flex items-center justify-center rounded-full transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
   {
     variants: {
       variant: {
@@ -40,7 +40,8 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     const resolvedIconSize = iconSize ?? (size === "sm" ? "sm" : "md");
     return (
       <button
-        className={cn(iconButtonVariants({ variant, size, className }))}
+        type="button"
+        className={cn(iconButtonVariants({ variant, size }), className)}
         ref={ref}
         {...props}
       >
