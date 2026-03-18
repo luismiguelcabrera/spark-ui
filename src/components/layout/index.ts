@@ -7,43 +7,13 @@ export type {
 
 export {
   Sidebar,
-  SidebarProvider,
-  useSidebar,
-  SidebarHeader,
-  SidebarFooter,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  SidebarSeparator,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
   SidebarNavGroup,
   SidebarNavItem,
 } from "./sidebar";
 export type {
   SidebarProps,
-  SidebarProviderProps,
-  SidebarHeaderProps,
-  SidebarFooterProps,
-  SidebarContentProps,
-  SidebarGroupProps,
-  SidebarGroupLabelProps,
-  SidebarGroupContentProps,
-  SidebarSeparatorProps,
-  SidebarMenuProps,
-  SidebarMenuItemProps,
-  SidebarMenuButtonProps,
-  SidebarMenuSubProps,
-  SidebarMenuSubItemProps,
-  SidebarMenuSubButtonProps,
   SidebarNavGroupProps,
   SidebarNavItemProps,
-  SidebarContextValue,
 } from "./sidebar";
 
 export { AuthLayout } from "./auth-layout";

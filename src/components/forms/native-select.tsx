@@ -69,10 +69,10 @@ const variantStyles: Record<NativeSelectVariant, string> = {
   ),
 };
 
-const iconSizeMap: Record<NativeSelectSize, "xs" | "sm" | "md"> = {
-  sm: "xs",
-  md: "sm",
-  lg: "md",
+const iconSizeMap: Record<NativeSelectSize, "sm" | "md" | "lg"> = {
+  sm: "sm",
+  md: "md",
+  lg: "lg",
 };
 
 const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(

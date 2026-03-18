@@ -72,10 +72,10 @@ const chipSizeMap: Record<MultiSelectSize, string> = {
   lg: "text-sm px-2.5 py-1 gap-1",
 };
 
-const chipIconSize: Record<MultiSelectSize, "xs" | "sm"> = {
-  sm: "xs",
-  md: "xs",
-  lg: "sm",
+const chipIconSize: Record<MultiSelectSize, "sm" | "md"> = {
+  sm: "sm",
+  md: "sm",
+  lg: "md",
 };
 
 /* -------------------------------------------------------------------------- */
@@ -382,7 +382,7 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
                       )}
                     >
                       {selected.includes(option.value) && (
-                        <Icon name="check" size="xs" />
+                        <Icon name="check" size="sm" />
                       )}
                     </span>
                     {option.label}

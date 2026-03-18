@@ -220,7 +220,7 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
               >
                 {loading ? (
                   <span className="inline-flex items-center gap-2">
-                    <Spinner size="xs" color="white" />
+                    <Spinner size="sm" color="white" />
                     {loadingText ?? confirmText}
                   </span>
                 ) : (

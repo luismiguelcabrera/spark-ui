@@ -1,5 +1,5 @@
 export { Button, buttonVariants } from "./button";
-export type { ButtonProps, ButtonColor } from "./button";
+export type { ButtonProps } from "./button";
 
 export { ButtonGroup } from "./button-group";
 export type { ButtonGroupProps } from "./button-group";
@@ -8,7 +8,7 @@ export { IconButton, iconButtonVariants } from "./icon-button";
 export type { IconButtonProps } from "./icon-button";
 
 export { Input } from "./input";
-export type { InputProps, InputVariant } from "./input";
+export type { InputProps } from "./input";
 
 export {
   InputGroup,
@@ -28,13 +28,13 @@ export { Label } from "./label";
 export type { LabelProps } from "./label";
 
 export { Select } from "./select";
-export type { SelectProps, SelectVariant } from "./select";
+export type { SelectProps } from "./select";
 
 export { Textarea } from "./textarea";
 export type { TextareaProps } from "./textarea";
 
 export { Checkbox } from "./checkbox";
-export type { CheckboxProps, CheckboxColor } from "./checkbox";
+export type { CheckboxProps } from "./checkbox";
 
 export { PasswordInput } from "./password-input";
 export type { PasswordInputProps } from "./password-input";
