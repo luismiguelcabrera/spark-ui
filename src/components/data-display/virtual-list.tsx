@@ -57,7 +57,7 @@ function VirtualListInner<T>(
   const totalHeight = items.length * itemHeight;
 
   // Calculate visible range
-  const { startIndex, endIndex, visibleItems } = useMemo(() => {
+  const { visibleItems } = useMemo(() => {
     const start = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan);
     const visibleCount = Math.ceil(height / itemHeight);
     const end = Math.min(items.length - 1, start + visibleCount + overscan * 2);

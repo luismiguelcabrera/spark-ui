@@ -49,7 +49,6 @@ import { NavigationProgress } from "../components/feedback/navigation-progress";
 import { Tour } from "../components/feedback/tour";
 import { Parallax } from "../components/data-display/parallax";
 import { Window } from "../components/data-display/window";
-import { Video } from "../components/data-display/video";
 
 import { Button } from "../components/forms/button";
 import { Input } from "../components/forms/input";

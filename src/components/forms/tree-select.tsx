@@ -8,7 +8,6 @@ import {
   useMemo,
   useCallback,
   type KeyboardEvent,
-  type ReactNode,
 } from "react";
 import { cn } from "../../lib/utils";
 import { useControllable } from "../../hooks/use-controllable";
@@ -85,18 +84,6 @@ const dropdownTextSize: Record<TreeSelectSize, string> = {
 /*  Helpers                                                                    */
 /* -------------------------------------------------------------------------- */
 
-/** Collect all node values in the tree */
-function collectAllValues(nodes: TreeSelectNode[]): string[] {
-  const result: string[] = [];
-  for (const node of nodes) {
-    result.push(node.value);
-    if (node.children) {
-      result.push(...collectAllValues(node.children));
-    }
-  }
-  return result;
-}
-
 /** Collect all expanded node values for expandAll */
 function collectExpandableValues(nodes: TreeSelectNode[]): string[] {
   const result: string[] = [];
@@ -107,14 +94,6 @@ function collectExpandableValues(nodes: TreeSelectNode[]): string[] {
     }
   }
   return result;
-}
-
-/** Get all leaf (non-disabled) descendant values of a node */
-function getLeafValues(node: TreeSelectNode): string[] {
-  if (!node.children || node.children.length === 0) {
-    return node.disabled ? [] : [node.value];
-  }
-  return node.children.flatMap((c) => getLeafValues(c));
 }
 
 /** Get all non-disabled descendant values (including branches) */

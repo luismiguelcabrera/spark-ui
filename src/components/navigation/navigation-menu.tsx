@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useState, type HTMLAttributes, type ReactNode } from "react";
+import { forwardRef, useState, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { Icon } from "../data-display/icon";
 
@@ -107,7 +107,7 @@ const NavigationMenu = forwardRef<HTMLElement, NavigationMenuProps>(
                     <a
                       key={child.label}
                       href={child.href}
-                      onClick={(e) => {
+                      onClick={(_e) => {
                         child.onClick?.();
                         setOpenIndex(null);
                       }}

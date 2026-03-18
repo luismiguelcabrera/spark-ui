@@ -301,7 +301,7 @@ export const AllTypes: Story = {
 // ── Sub-components ──
 
 export const TextLines: Story = {
-  render: (args) => (
+  render: (_args) => (
     <div className="max-w-md space-y-4">
       <SkeletonText lines={2} />
       <SkeletonText lines={4} />
@@ -310,7 +310,7 @@ export const TextLines: Story = {
 };
 
 export const Circles: Story = {
-  render: (args) => (
+  render: (_args) => (
     <div className="flex gap-4">
       <SkeletonCircle size="sm" />
       <SkeletonCircle size="md" />

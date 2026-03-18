@@ -57,7 +57,7 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
       loop = false,
       continuous,
       pauseOnHover = true,
-      align = "start",
+      align: _align = "start",
       progress = false,
       ...props
     },
@@ -157,6 +157,7 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
             )}
             style={{
               gap: `${gap}px`,
+              // eslint-disable-next-line react-hooks/refs -- intentional: read track width for slide offset calculation
               transform: `translateX(-${currentIndex * (100 / slidesPerView + (gap * 100) / (trackRef.current?.clientWidth ?? 1000))}%)`,
             }}
           >

@@ -5,7 +5,6 @@ import {
   useState,
   useRef,
   useCallback,
-  useEffect,
   type ReactNode,
   type HTMLAttributes,
 } from "react";
@@ -116,7 +115,7 @@ const Splitter = forwardRef<HTMLDivElement, SplitterProps>(
 
     // Touch drag
     const handleTouchStart = useCallback(
-      (e: React.TouchEvent) => {
+      (_e: React.TouchEvent) => {
         isDragging.current = true;
 
         const handleTouchMove = (ev: TouchEvent) => {

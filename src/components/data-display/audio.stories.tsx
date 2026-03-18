@@ -270,7 +270,6 @@ export const SoundCloudLarge: Story = {
 /* -------------------------------------------------------------------------- */
 
 export const SpotifyTrack: Story = {
-  name: "Spotify Track",
   args: {
     src: spotifyTrackSrc,
   },
@@ -284,7 +283,6 @@ export const SpotifyTrack: Story = {
 };
 
 export const SpotifyAlbum: Story = {
-  name: "Spotify Album",
   args: {
     src: spotifyAlbumSrc,
     size: "lg",
@@ -299,7 +297,6 @@ export const SpotifyAlbum: Story = {
 };
 
 export const SpotifyPlaylist: Story = {
-  name: "Spotify Playlist",
   args: {
     src: spotifyPlaylistSrc,
     size: "lg",

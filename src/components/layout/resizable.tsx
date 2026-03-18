@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useState, useRef, useCallback, type HTMLAttributes, type ReactNode } from "react";
+import { forwardRef, useState, useRef, useCallback, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 
 type ResizableProps = HTMLAttributes<HTMLDivElement> & {

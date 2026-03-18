@@ -93,7 +93,7 @@ describe("Affix", () => {
   // ── Portal ──────────────────────────────────────────────────────────
 
   it("renders into document.body via portal by default", () => {
-    const { container } = render(
+    render(
       <div data-testid="parent">
         <Affix>Portal Content</Affix>
       </div>,

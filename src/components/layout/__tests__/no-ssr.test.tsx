@@ -25,14 +25,12 @@ describe("NoSsr", () => {
   });
 
   it("renders nothing by default as fallback (no fallback prop)", async () => {
-    let container: HTMLElement;
     await act(async () => {
-      const result = render(
+      render(
         <NoSsr>
           <div data-testid="content">Content</div>
         </NoSsr>
       );
-      container = result.container;
     });
     expect(screen.getByTestId("content")).toBeInTheDocument();
   });

@@ -1699,7 +1699,7 @@ describe("useTouch", () => {
     const el = document.createElement("div");
     document.body.appendChild(el);
 
-    const { result } = renderHook(() => {
+    renderHook(() => {
       const touch = useTouch({ onSwipeLeft, threshold: 50 });
       (touch.ref as React.MutableRefObject<HTMLElement | null>).current = el;
       return touch;

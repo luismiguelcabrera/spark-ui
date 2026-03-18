@@ -119,7 +119,7 @@ const RadarChart = forwardRef<HTMLDivElement, RadarChartProps>(
       return max || 1;
     });
 
-    const globalMax = Math.max(...axisMaxValues);
+    const _globalMax = Math.max(...axisMaxValues);
     const cx = size / 2;
     const cy = size / 2;
     const radius = (size - 80) / 2; // Leave room for labels

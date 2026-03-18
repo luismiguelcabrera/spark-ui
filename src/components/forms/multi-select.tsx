@@ -9,7 +9,6 @@ import {
   type KeyboardEvent,
 } from "react";
 import { cn } from "../../lib/utils";
-import { s } from "../../lib/styles";
 import { useControllable } from "../../hooks/use-controllable";
 import { Icon } from "../data-display/icon";
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { DataIterator, type DataIteratorProps } from "./data-iterator";
+import { DataIterator } from "./data-iterator";
 
 type Person = { name: string; age: number; department: string };
 

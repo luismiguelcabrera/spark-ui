@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useState, useRef, useEffect, type HTMLAttributes, type ReactNode } from "react";
+import { forwardRef, useState, useRef, useEffect, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { Icon } from "../data-display/icon";
 

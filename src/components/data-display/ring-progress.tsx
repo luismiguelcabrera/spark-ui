@@ -103,10 +103,9 @@ const RingProgress = forwardRef<HTMLDivElement, RingProgressProps>(
           {sections.map((section, index) => {
             const value = Math.max(0, section.value);
             const sectionLength = animated ? (value / 100) * circumference : 0;
-            const gapSize = 0;
             const dashArray = `${sectionLength} ${circumference - sectionLength}`;
             const offset = -(accumulatedOffset / 100) * circumference;
-            accumulatedOffset += value;
+            accumulatedOffset += value; // eslint-disable-line react-hooks/immutability -- intentional: accumulator for section offset positioning in render
 
             return (
               <circle

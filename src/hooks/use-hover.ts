@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, type RefObject } from "react";
+import { useState, type RefObject } from "react";
 import { useEffect } from "react";
 
 /**

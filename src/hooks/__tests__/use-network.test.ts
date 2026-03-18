@@ -1,10 +1,8 @@
 import { renderHook, act } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { useNetwork } from "../use-network";
 
 describe("useNetwork", () => {
-  const originalNavigator = globalThis.navigator;
-
   afterEach(() => {
     vi.restoreAllMocks();
     // Restore navigator.onLine

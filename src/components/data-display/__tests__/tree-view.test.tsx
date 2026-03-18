@@ -76,7 +76,7 @@ describe("TreeView", () => {
 
     it("unchecks a previously checked node", () => {
       const onSelectionChange = vi.fn();
-      const { rerender } = render(
+      render(
         <TreeView
           nodes={nodes}
           selectable

@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useState, useRef, type HTMLAttributes } from "react";
+import { forwardRef, useRef, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { useControllable } from "../../hooks/use-controllable";
 

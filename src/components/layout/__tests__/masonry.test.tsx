@@ -58,7 +58,7 @@ describe("Masonry", () => {
   });
 
   it("wraps each child in a container with break-inside avoid", () => {
-    const { container } = render(
+    render(
       <Masonry>
         <div>Item 1</div>
         <div>Item 2</div>

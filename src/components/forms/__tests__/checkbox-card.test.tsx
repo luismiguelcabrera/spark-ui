@@ -58,7 +58,6 @@ describe("CheckboxCard", () => {
   });
 
   it("does not toggle when disabled", async () => {
-    const user = userEvent.setup();
     const onChange = vi.fn();
     render(<CheckboxCard title="Option A" disabled onChange={onChange} />);
     // pointer-events-none prevents userEvent clicks, so use fireEvent

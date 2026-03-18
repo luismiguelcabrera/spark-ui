@@ -147,7 +147,7 @@ describe("useFocusWithin", () => {
     const container = document.createElement("div");
     document.body.appendChild(container);
 
-    const { result, unmount } = renderHook(() => {
+    const { unmount } = renderHook(() => {
       const hookResult = useFocusWithin<HTMLDivElement>();
       (hookResult.ref as { current: HTMLDivElement | null }).current =
         container;

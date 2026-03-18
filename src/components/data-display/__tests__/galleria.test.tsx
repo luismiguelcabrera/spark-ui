@@ -11,10 +11,7 @@ const images: GalleriaImage[] = [
 ];
 
 // Helper to get the main (non-thumbnail) image by alt text
-function getMainImage(altText: string) {
-  // Main images have object-contain class, thumbnails have role="presentation"
-  const allImages = screen.getAllByRole("img", { hidden: true });
-  // Also try direct query — main image will be the one with object-contain
+function _getMainImage(altText: string) {
   return screen.getByAltText(altText);
 }
 

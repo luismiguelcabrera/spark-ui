@@ -70,17 +70,6 @@ function formatValue(mask: string, raw: string, placeholder: string): string {
   return result;
 }
 
-/** Extract raw characters from a display string */
-function extractRaw(mask: string, display: string): string {
-  let raw = "";
-  for (let i = 0; i < mask.length && i < display.length; i++) {
-    if (isMaskChar(mask[i]) && display[i] !== undefined) {
-      raw += display[i];
-    }
-  }
-  return raw;
-}
-
 const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
   (
     {

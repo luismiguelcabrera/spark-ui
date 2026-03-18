@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { RingProgress } from "../ring-progress";
 
 describe("RingProgress", () => {
@@ -207,7 +207,7 @@ describe("RingProgress", () => {
   });
 
   it("spreads extra HTML attributes", () => {
-    const { container } = render(
+    render(
       <RingProgress sections={defaultSections} data-testid="my-ring" />,
     );
     expect(screen.getByTestId("my-ring")).toBeInTheDocument();

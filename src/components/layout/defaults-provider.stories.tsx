@@ -63,7 +63,6 @@ export const BasicUsage: Story = {
 };
 
 export const GhostTheme: Story = {
-  name: "Ghost Theme",
   args: {
     defaults: { Button: { variant: "ghost", size: "md" } },
     children: null,
@@ -80,7 +79,6 @@ export const GhostTheme: Story = {
 };
 
 export const NestedProviders: Story = {
-  name: "Nested Providers",
   args: {
     defaults: { Button: { variant: "solid", size: "lg" } },
     children: null,

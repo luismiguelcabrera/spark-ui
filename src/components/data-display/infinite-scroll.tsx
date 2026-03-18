@@ -31,7 +31,7 @@ const InfiniteScroll = forwardRef<HTMLDivElement, InfiniteScrollProps>(
       threshold = 200,
       loader,
       endMessage,
-      useWindow = false,
+      useWindow: _useWindow = false,
       children,
       ...props
     },

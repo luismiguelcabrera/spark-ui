@@ -1,9 +1,8 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
 import { BottomNav } from "../bottom-nav";
 import { Link } from "../link";
 import { SkipNavLink, SkipNavContent } from "../skip-nav";
-import { Breadcrumb } from "../breadcrumb";
 
 describe("BottomNav", () => {
   const items = [

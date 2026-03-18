@@ -45,7 +45,7 @@ describe("defaultMessages", () => {
   });
 
   it("all values are non-empty strings", () => {
-    for (const [key, value] of Object.entries(defaultMessages)) {
+    for (const [_key, value] of Object.entries(defaultMessages)) {
       expect(typeof value).toBe("string");
       expect(value.length).toBeGreaterThan(0);
     }

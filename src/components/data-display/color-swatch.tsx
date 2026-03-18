@@ -38,14 +38,6 @@ const ColorSwatch = forwardRef<HTMLDivElement, ColorSwatchProps>(
     },
     ref
   ) => {
-    const isTailwindClass =
-      color.startsWith("bg-") ||
-      color.startsWith("text-") ||
-      color.startsWith("#") === false &&
-        color.startsWith("rgb") === false &&
-        color.startsWith("hsl") === false &&
-        !color.match(/^[a-z]+$/i);
-
     // If the color looks like a CSS value, apply via inline style.
     // If it looks like a Tailwind class, apply as className.
     const isCssColor =

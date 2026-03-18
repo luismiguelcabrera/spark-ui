@@ -180,25 +180,6 @@ export function useForm<T extends Record<string, any>>(
     (key) => !errors[key as keyof T],
   );
 
-  // ── Validate a single field (sync only, for internal use) ──
-  const validateSingleField = useCallback(
-    (name: keyof T, val: any): string | null => {
-      const fieldRules = rulesRef.current[name];
-      const syncError = validateField(val, fieldRules);
-      if (syncError) return syncError;
-
-      // Check custom sync validate (non-Promise result)
-      if (fieldRules?.validate) {
-        const result = fieldRules.validate(val);
-        if (typeof result === "string") return result;
-        // If it's a Promise we skip it in sync context
-      }
-
-      return null;
-    },
-    [],
-  );
-
   // ── Validate all fields ──
   const validate = useCallback((): Partial<Record<keyof T, string>> => {
     const newErrors: Partial<Record<keyof T, string>> = {};

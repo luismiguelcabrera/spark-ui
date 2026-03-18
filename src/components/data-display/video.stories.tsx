@@ -132,7 +132,6 @@ export const YouTubeNoPrivacy: Story = {
 /* -------------------------------------------------------------------------- */
 
 export const Vimeo: Story = {
-  name: "Vimeo",
   args: {
     src: vimeoSrc,
     width: 640,

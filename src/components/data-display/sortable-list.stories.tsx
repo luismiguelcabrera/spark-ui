@@ -156,7 +156,6 @@ export const LabelKeyFallback: Story = {
 };
 
 export const CustomHandle: Story = {
-  name: "Custom Handle",
   render: () => {
     const [items, setItems] = useState(initialTasks.slice(0, 4));
     return (

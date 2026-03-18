@@ -215,7 +215,6 @@ describe("NotificationItem", () => {
       <NotificationItem title="Unread" timestamp="now" state="unread" />
     );
     // The unread dot has a specific class pattern
-    const dot = container.querySelector("[class*='notificationDot']");
     // Since we use style tokens, check for the dot's presence via the container
     expect(container.firstChild?.childNodes.length).toBeGreaterThanOrEqual(2);
   });

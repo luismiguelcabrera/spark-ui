@@ -112,7 +112,7 @@ describe("Snippet", () => {
   });
 
   it("copy button has an SVG icon", () => {
-    const { container } = render(<Snippet>npm install</Snippet>);
+    render(<Snippet>npm install</Snippet>);
     const btn = screen.getByRole("button", { name: "Copy to clipboard" });
     const svg = btn.querySelector("svg");
     expect(svg).toBeInTheDocument();

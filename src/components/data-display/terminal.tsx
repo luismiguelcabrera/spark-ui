@@ -46,7 +46,7 @@ const Terminal = forwardRef<HTMLDivElement, TerminalProps>(
   ) => {
     const [inputValue, setInputValue] = useState("");
     const [history, setHistory] = useState<string[]>([]);
-    const [historyIndex, setHistoryIndex] = useState(-1);
+    const [, setHistoryIndex] = useState(-1);
     const outputRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
