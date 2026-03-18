@@ -57,3 +57,9 @@ export type { FormProps } from "./form";
 
 export { OtpInput } from "./otp-input";
 export type { OtpInputProps } from "./otp-input";
+
+export { Mention } from "./mention";
+export type { MentionProps, MentionOption } from "./mention";
+
+export { RichTextEditor } from "./rich-text-editor";
+export type { RichTextEditorProps, ToolbarAction } from "./rich-text-editor";
