@@ -227,7 +227,7 @@ describe("Modal.confirm rendering", () => {
     });
 
     expect(screen.getByText("Are you sure?")).toBeInTheDocument();
-    expect(screen.getByRole("alertdialog")).toBeInTheDocument();
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 
   it("shows confirm dialog with description", () => {
@@ -346,7 +346,7 @@ describe("Modal.confirm rendering", () => {
       Modal.confirm({ title: "ARIA test" });
     });
 
-    expect(screen.getByRole("alertdialog")).toHaveAttribute(
+    expect(screen.getByRole("dialog")).toHaveAttribute(
       "aria-modal",
       "true"
     );

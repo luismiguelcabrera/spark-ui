@@ -10,6 +10,7 @@ import {
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { Icon } from "../data-display/icon";
+import { Dialog } from "./dialog";
 import {
   __setImperativeFeedbackStore,
   type ToastEntry,
@@ -286,127 +287,56 @@ function ImperativeFeedbackProvider({
         </div>
       )}
 
-      {/* Modal overlay(s) */}
+      {/* Modal overlay(s) — rendered via Dialog component */}
       {modals.map((m) => {
         if (m.type === "confirm") {
           const opts = m.options as ModalConfirmOptions;
           return (
-            <div
+            <Dialog
               key={m.id}
-              className={s.modalOverlay}
-              onClick={(e) => {
-                if (e.target === e.currentTarget) {
-                  opts.onCancel?.();
-                  removeModal(m.id);
-                }
+              open
+              onOpenChange={() => {}}
+              title={opts.title}
+              description={opts.description}
+              confirmText={opts.confirmLabel ?? "Confirm"}
+              cancelText={opts.cancelLabel ?? "Cancel"}
+              closeOnEscape={false}
+              closeOnBackdrop={false}
+              onConfirm={() => {
+                opts.onConfirm?.();
+                removeModal(m.id);
               }}
-            >
-              <div
-                role="alertdialog"
-                aria-modal="true"
-                aria-labelledby={`${m.id}-title`}
-                aria-describedby={
-                  opts.description ? `${m.id}-desc` : undefined
-                }
-                className={cn(s.modalContent, "w-full max-w-md")}
-              >
-                <div className={s.modalHeader}>
-                  <h2
-                    id={`${m.id}-title`}
-                    className="text-lg font-bold text-secondary"
-                  >
-                    {opts.title}
-                  </h2>
-                </div>
-                {opts.description && (
-                  <div className={s.modalBody}>
-                    <p id={`${m.id}-desc`} className="text-sm text-slate-600">
-                      {opts.description}
-                    </p>
-                  </div>
-                )}
-                <div className={s.modalFooter}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      opts.onCancel?.();
-                      removeModal(m.id);
-                    }}
-                    className="px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
-                  >
-                    {opts.cancelLabel ?? "Cancel"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      opts.onConfirm?.();
-                      removeModal(m.id);
-                    }}
-                    className="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
-                  >
-                    {opts.confirmLabel ?? "Confirm"}
-                  </button>
-                </div>
-              </div>
-            </div>
+              onCancel={() => {
+                opts.onCancel?.();
+                removeModal(m.id);
+              }}
+            />
           );
         }
 
         // info modal
         const opts = m.options as ModalInfoOptions;
         const onClose = (m.options as Record<string, unknown>)._onClose as (() => void) | undefined;
-        const dismissInfo = () => {
-          onClose?.();
-          removeModal(m.id);
-        };
         return (
-          <div
+          <Dialog
             key={m.id}
-            className={s.modalOverlay}
-            onClick={(e) => {
-              if (e.target === e.currentTarget) dismissInfo();
+            open
+            onOpenChange={() => {}}
+            title={opts.title}
+            description={opts.description}
+            showCancel={false}
+            confirmText={opts.closeLabel ?? "OK"}
+            closeOnEscape={false}
+            closeOnBackdrop={false}
+            onConfirm={() => {
+              onClose?.();
+              removeModal(m.id);
             }}
-          >
-            <div
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby={`${m.id}-title`}
-              aria-describedby={opts.description ? `${m.id}-desc` : undefined}
-              className={cn(s.modalContent, "w-full max-w-md")}
-            >
-              <div className={s.modalHeader}>
-                <h2
-                  id={`${m.id}-title`}
-                  className="text-lg font-bold text-secondary"
-                >
-                  {opts.title}
-                </h2>
-                <button
-                  type="button"
-                  onClick={dismissInfo}
-                  className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-400 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
-                >
-                  <Icon name="close" size="md" />
-                </button>
-              </div>
-              {opts.description && (
-                <div className={s.modalBody}>
-                  <p id={`${m.id}-desc`} className="text-sm text-slate-600">
-                    {opts.description}
-                  </p>
-                </div>
-              )}
-              <div className={s.modalFooter}>
-                <button
-                  type="button"
-                  onClick={dismissInfo}
-                  className="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
-                >
-                  {opts.closeLabel ?? "OK"}
-                </button>
-              </div>
-            </div>
-          </div>
+            onCancel={() => {
+              onClose?.();
+              removeModal(m.id);
+            }}
+          />
         );
       })}
     </>

@@ -50,6 +50,8 @@ type DialogProps = {
   loadingText?: string;
   /** Whether clicking the backdrop closes the dialog */
   closeOnBackdrop?: boolean;
+  /** Whether pressing Escape closes the dialog */
+  closeOnEscape?: boolean;
   /** Additional class names for the dialog panel */
   className?: string;
 };
@@ -86,6 +88,7 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
       loading = false,
       loadingText,
       closeOnBackdrop = true,
+      closeOnEscape = true,
       className,
     },
     ref,
@@ -147,7 +150,7 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
         onOpenChange={handleDismiss}
         blur
         closeOnClick={closeOnBackdrop}
-        closeOnEscape
+        closeOnEscape={closeOnEscape}
         aria-labelledby={titleId}
         aria-describedby={description ? descId : undefined}
       >
