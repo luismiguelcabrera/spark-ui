@@ -155,7 +155,7 @@ const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(
     const handleKeyDown = useCallback(
       (thumbIndex: 0 | 1) => (e: React.KeyboardEvent) => {
         if (disabled) return;
-        let newVal = value[thumbIndex];
+        let newVal: number;
         switch (e.key) {
           case "ArrowRight":
           case "ArrowUp":

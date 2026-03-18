@@ -103,12 +103,10 @@ function DataIterator<T>({
       if (aVal == null) return 1;
       if (bVal == null) return -1;
 
-      let cmp = 0;
-      if (typeof aVal === "string" && typeof bVal === "string") {
-        cmp = aVal.localeCompare(bVal);
-      } else {
-        cmp = Number(aVal) - Number(bVal);
-      }
+      const cmp =
+        typeof aVal === "string" && typeof bVal === "string"
+          ? aVal.localeCompare(bVal)
+          : Number(aVal) - Number(bVal);
       return sortDirection === "desc" ? -cmp : cmp;
     });
     return arr;

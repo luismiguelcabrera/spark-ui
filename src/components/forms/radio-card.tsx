@@ -129,7 +129,7 @@ const RadioCardGroup = forwardRef<HTMLDivElement, RadioCardGroupProps>(
         if (enabledIndices.length === 0) return;
 
         const currentEnabledIdx = enabledIndices.indexOf(index);
-        let nextIndex = -1;
+        let nextIndex: number;
 
         switch (e.key) {
           case "ArrowDown":

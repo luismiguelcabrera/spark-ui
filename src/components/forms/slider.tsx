@@ -182,7 +182,7 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
         if (isRange) {
           const [lo, hi] = rangeValue;
           const current = thumbIndex === 0 ? lo : hi;
-          let newVal = current;
+          let newVal: number;
 
           switch (e.key) {
             case "ArrowRight":
@@ -216,7 +216,7 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
           }
         } else {
           const current = singleValue;
-          let newVal = current;
+          let newVal: number;
           switch (e.key) {
             case "ArrowRight":
             case "ArrowUp":

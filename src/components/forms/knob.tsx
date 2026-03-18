@@ -214,7 +214,7 @@ const Knob = forwardRef<HTMLDivElement, KnobProps>(
     const handleKeyDown = useCallback(
       (e: KeyboardEvent) => {
         if (disabled) return;
-        let next = current;
+        let next: number;
         switch (e.key) {
           case "ArrowUp":
           case "ArrowRight":
