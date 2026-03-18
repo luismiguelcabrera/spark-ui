@@ -122,11 +122,12 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
 
     // Floating mode: badge positioned over children
     if (floating) {
+      const floatingSize = size ?? "sm";
       const indicator = dot ? (
         <span
           className={cn(
             "inline-block rounded-full border-0",
-            dotSizeMap[size ?? "md"],
+            dotSizeMap[floatingSize],
             dotColorMap[variant ?? "default"] ?? "bg-gray-500",
             bordered && "ring-2 ring-white",
           )}
@@ -135,7 +136,7 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       ) : (
         <span
           className={cn(
-            badgeVariants({ variant, size }),
+            badgeVariants({ variant, size: floatingSize }),
             bordered && "ring-2 ring-white",
           )}
         >
@@ -150,7 +151,9 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
           {...props}
         >
           {children}
-          <span className="absolute -top-1 -right-1 z-10">{indicator}</span>
+          <span className="absolute top-0 right-0 z-10 translate-x-1/2 -translate-y-1/2">
+            {indicator}
+          </span>
         </span>
       );
     }
