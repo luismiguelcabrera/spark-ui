@@ -46,12 +46,16 @@ const ContextMenu = forwardRef<HTMLDivElement, ContextMenuProps>(
         if (e.key === "Escape") close();
       };
 
-      document.addEventListener("click", close);
-      document.addEventListener("contextmenu", close);
-      document.addEventListener("keydown", handleEscape);
-      document.addEventListener("scroll", close);
+      // Defer so listeners don't catch the right-click event that opened the menu
+      const frame = requestAnimationFrame(() => {
+        document.addEventListener("click", close);
+        document.addEventListener("contextmenu", close);
+        document.addEventListener("keydown", handleEscape);
+        document.addEventListener("scroll", close);
+      });
 
       return () => {
+        cancelAnimationFrame(frame);
         document.removeEventListener("click", close);
         document.removeEventListener("contextmenu", close);
         document.removeEventListener("keydown", handleEscape);
