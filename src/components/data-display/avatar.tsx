@@ -1,9 +1,10 @@
 "use client";
 
-import { forwardRef, useState, useEffect, useRef } from "react";
+import { forwardRef, useState, useEffect, useRef, type ReactNode } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { cva, type VariantProps } from "class-variance-authority";
+import { Icon } from "./icon";
 
 const avatarVariants = cva(
   "relative inline-flex items-center justify-center rounded-full bg-gray-200 overflow-hidden shrink-0",
@@ -21,10 +22,16 @@ const avatarVariants = cva(
         white: "ring-2 ring-white",
         primary: "ring-2 ring-primary",
       },
+      density: {
+        default: "",
+        comfortable: "p-1",
+        compact: "p-0.5",
+      },
     },
     defaultVariants: {
       size: "md",
       ring: "none",
+      density: "default",
     },
   }
 );
@@ -33,11 +40,20 @@ type AvatarProps = {
   src?: string;
   alt?: string;
   initials?: string;
+  icon?: string | ReactNode;
   className?: string;
 } & VariantProps<typeof avatarVariants>;
 
+const iconSizeMap = {
+  xs: "sm",
+  sm: "sm",
+  md: "md",
+  lg: "lg",
+  xl: "xl",
+} as const;
+
 const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
-  ({ src, alt = "", initials, size, ring, className }, ref) => {
+  ({ src, alt = "", initials, icon, size, ring, density, className }, ref) => {
     const [imgLoaded, setImgLoaded] = useState(false);
     const [imgError, setImgError] = useState(false);
     const imgRef = useRef<HTMLImageElement>(null);
@@ -63,23 +79,31 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
     const fallbackText = initials ?? (alt ? alt.charAt(0).toUpperCase() : "?");
     const showFallback = !src || imgError;
 
+    const iconContent = icon
+      ? typeof icon === "string"
+        ? <Icon name={icon} size={iconSizeMap[size ?? "md"]} className="text-gray-500" />
+        : icon
+      : null;
+
     return (
       <div
         ref={ref}
         role="img"
         aria-label={alt || initials || undefined}
-        className={cn(avatarVariants({ size, ring }), className)}
+        className={cn(avatarVariants({ size, ring, density }), className)}
       >
         {/* Skeleton — shown while image is fetching */}
         {src && !imgLoaded && !imgError && (
           <span className="absolute inset-0 animate-pulse bg-gray-300 motion-reduce:animate-none" />
         )}
 
-        {/* Fallback initials — shown when there is no src or the image errored */}
+        {/* Fallback: icon > initials > first letter of alt > "?" */}
         {showFallback && (
-          <span aria-hidden="true" className={cn("font-bold text-gray-500", s.textMuted)}>
-            {fallbackText}
-          </span>
+          iconContent ?? (
+            <span aria-hidden="true" className={cn("font-bold text-gray-500", s.textMuted)}>
+              {fallbackText}
+            </span>
+          )
         )}
 
         {/* Image — fades in once loaded */}

@@ -64,6 +64,23 @@ describe("Avatar", () => {
     expect(root.className).toContain("custom-class");
   });
 
+  it("renders icon when icon prop is a string", () => {
+    const { container } = render(<Avatar icon="user" />);
+    expect(container.querySelector("svg")).toBeInTheDocument();
+    expect(screen.queryByText("?")).not.toBeInTheDocument();
+  });
+
+  it("renders custom ReactNode icon", () => {
+    render(<Avatar icon={<span data-testid="custom">IC</span>} />);
+    expect(screen.getByTestId("custom")).toBeInTheDocument();
+  });
+
+  it("applies density variant", () => {
+    const { container } = render(<Avatar density="compact" />);
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.className).toContain("p-0.5");
+  });
+
   it.each(["xs", "sm", "md", "lg", "xl"] as const)(
     "renders at size %s without error",
     (size) => {
