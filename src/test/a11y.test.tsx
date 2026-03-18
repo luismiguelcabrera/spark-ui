@@ -19,6 +19,7 @@ import { Toast } from "../components/feedback/toast";
 import { Alert } from "../components/feedback/alert";
 import { AlertBanner } from "../components/feedback/alert-banner";
 import { Modal } from "../components/feedback/modal";
+import { Breadcrumb } from "../components/navigation/breadcrumb";
 import { Pagination } from "../components/navigation/pagination";
 import { Tabs } from "../components/navigation/tabs";
 import { Accordion } from "../components/navigation/accordion";
@@ -210,6 +211,47 @@ describe("Accessibility (axe)", () => {
 
   it("Modal (inline)", async () => {
     const { container } = render(<Modal title="Confirm">Are you sure?</Modal>);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Breadcrumb (basic)", async () => {
+    const { container } = render(
+      <Breadcrumb
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Products", href: "/products" },
+          { label: "Widget" },
+        ]}
+      />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Breadcrumb (with icons)", async () => {
+    const { container } = render(
+      <Breadcrumb
+        items={[
+          { label: "Home", href: "/", icon: "home" },
+          { label: "Settings" },
+        ]}
+      />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Breadcrumb (collapsed)", async () => {
+    const { container } = render(
+      <Breadcrumb
+        items={[
+          { label: "Home", href: "/" },
+          { label: "A", href: "/a" },
+          { label: "B", href: "/b" },
+          { label: "C", href: "/c" },
+          { label: "Current" },
+        ]}
+        maxItems={3}
+      />,
+    );
     expect(await axe(container)).toHaveNoViolations();
   });
 
