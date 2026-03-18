@@ -303,6 +303,12 @@ function getEventTopAndHeight(event: CalendarEvent): { top: number; height: numb
 
 // ── Sub-components ──────────────────────────────────────────────────────────
 
+const VIEW_LABELS: Record<CalendarView, { full: string; short: string }> = {
+  month: { full: "month", short: "M" },
+  week: { full: "week", short: "W" },
+  day: { full: "day", short: "D" },
+};
+
 function ViewSwitcher({
   view,
   onViewChange,
@@ -319,14 +325,17 @@ function ViewSwitcher({
           type="button"
           onClick={() => onViewChange(v)}
           className={cn(
-            "px-3 py-1.5 text-xs font-medium rounded-md transition-colors capitalize",
+            "py-1.5 text-xs font-medium rounded-md transition-colors capitalize",
+            "px-2 sm:px-3",
             v === view
               ? "bg-white text-slate-900 shadow-sm ring-1 ring-black/5 font-semibold"
               : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
           )}
           aria-pressed={v === view}
+          aria-label={v}
         >
-          {v}
+          <span className="sm:hidden" aria-hidden="true">{VIEW_LABELS[v].short}</span>
+          <span className="hidden sm:inline" aria-hidden="true">{VIEW_LABELS[v].full}</span>
         </button>
       ))}
     </div>
@@ -362,7 +371,8 @@ function EventPill({
         colors.bg,
         colors.text,
         colors.border,
-        compact && "py-0"
+        compact && "py-0",
+        compact && "hidden sm:block"
       )}
       aria-label={`${event.title}, ${timeLabel}`}
     >
@@ -377,6 +387,16 @@ function EventPill({
         </span>
       )}
     </button>
+  );
+}
+
+/** Colored dot for mobile month view — replaces unreadable truncated pills */
+function EventDot({ color }: { color?: string }) {
+  const colors = getEventColor(color);
+  return (
+    <span
+      className={cn("inline-block w-1.5 h-1.5 rounded-full", colors.bg, colors.border, "border")}
+    />
   );
 }
 
@@ -406,7 +426,10 @@ function MonthView({
 
   const dayHeaders = useMemo(() => {
     const week = getWeekDays(days[0], weekStartsOn);
-    return week.map((d) => formatDayLabel(d, locale));
+    return week.map((d) => ({
+      full: formatDayLabel(d, locale),
+      narrow: new Intl.DateTimeFormat(locale, { weekday: "narrow" }).format(d),
+    }));
   }, [days, weekStartsOn, locale]);
 
   const today = useMemo(() => new Date(), []);
@@ -421,7 +444,8 @@ function MonthView({
             className="py-2 text-center text-[11px] font-semibold text-slate-400 uppercase"
             role="columnheader"
           >
-            {label}
+            <span className="sm:hidden" aria-hidden="true">{label.narrow}</span>
+            <span className="hidden sm:inline">{label.full}</span>
           </div>
         ))}
       </div>
@@ -443,7 +467,7 @@ function MonthView({
                 role="gridcell"
                 aria-current={isToday ? "date" : undefined}
                 className={cn(
-                  "min-h-[100px] border-b border-r border-slate-100 p-1 cursor-pointer transition-colors hover:bg-slate-50/50",
+                  "min-h-[60px] sm:min-h-[100px] border-b border-r border-slate-100 p-1 cursor-pointer transition-colors hover:bg-slate-50/50",
                   !isCurrentMonth && "bg-slate-50/30",
                   colIdx === 0 && "border-l-0"
                 )}
@@ -477,8 +501,18 @@ function MonthView({
                   </span>
                 </div>
 
-                {/* Events */}
-                <div className="space-y-0.5">
+                {/* Events — dots on mobile, pills on sm+ */}
+                {dayEvents.length > 0 && (
+                  <div className="flex flex-wrap gap-0.5 sm:hidden mt-0.5 justify-center">
+                    {dayEvents.slice(0, 4).map((ev) => (
+                      <EventDot key={ev.id} color={ev.color} />
+                    ))}
+                    {dayEvents.length > 4 && (
+                      <span className="text-[8px] text-slate-400 leading-none">+</span>
+                    )}
+                  </div>
+                )}
+                <div className="hidden sm:block space-y-0.5">
                   {visible.map((ev) => (
                     <EventPill
                       key={ev.id}
@@ -870,9 +904,6 @@ const EventCalendar = forwardRef<HTMLDivElement, EventCalendarProps>(
       onChange: onDateChange,
     });
 
-    // Track the view we came from when drilling down (e.g. clicking "+N more")
-    const [previousView, setPreviousView] = useState<CalendarView | null>(null);
-
     const goToToday = useCallback(() => {
       setDate(new Date());
     }, [setDate]);
@@ -907,27 +938,10 @@ const EventCalendar = forwardRef<HTMLDivElement, EventCalendarProps>(
 
     const handleDayClick = useCallback(
       (day: Date) => {
-        setPreviousView(view);
         setDate(day);
         setView("day");
       },
-      [view, setDate, setView]
-    );
-
-    const handleBack = useCallback(() => {
-      if (previousView) {
-        setView(previousView);
-        setPreviousView(null);
-      }
-    }, [previousView, setView]);
-
-    // Clear previousView when user manually switches views via the switcher
-    const handleViewChange = useCallback(
-      (v: CalendarView) => {
-        setPreviousView(null);
-        setView(v);
-      },
-      [setView]
+      [setDate, setView]
     );
 
     const headerLabel = useMemo(() => {
@@ -972,23 +986,12 @@ const EventCalendar = forwardRef<HTMLDivElement, EventCalendarProps>(
         data-testid="event-calendar"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
-          <div className="flex items-center gap-2">
-            {previousView && view === "day" && (
-              <button
-                type="button"
-                onClick={handleBack}
-                className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors"
-                aria-label={`Back to ${previousView} view`}
-              >
-                <Icon name="chevron_left" size="xs" className="text-slate-500" />
-                <span className="capitalize">{previousView}</span>
-              </button>
-            )}
+        <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 sm:px-4 sm:py-3 border-b border-slate-200">
+          <div className="flex items-center gap-1 sm:gap-2">
             <button
               type="button"
               onClick={goToToday}
-              className="px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors"
+              className="px-2 py-1 sm:px-3 sm:py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors"
             >
               Today
             </button>
@@ -997,7 +1000,7 @@ const EventCalendar = forwardRef<HTMLDivElement, EventCalendarProps>(
               <button
                 type="button"
                 onClick={goToPrev}
-                className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                className="p-1 sm:p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
                 aria-label="Previous"
               >
                 <Icon name="chevron_left" size="sm" className="text-slate-500" />
@@ -1005,19 +1008,19 @@ const EventCalendar = forwardRef<HTMLDivElement, EventCalendarProps>(
               <button
                 type="button"
                 onClick={goToNext}
-                className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                className="p-1 sm:p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
                 aria-label="Next"
               >
                 <Icon name="chevron_right" size="sm" className="text-slate-500" />
               </button>
             </div>
 
-            <h2 className="text-sm font-bold text-secondary ml-2">
+            <h2 className="text-xs sm:text-sm font-bold text-secondary ml-1 sm:ml-2">
               {headerLabel}
             </h2>
           </div>
 
-          <ViewSwitcher view={view} onViewChange={handleViewChange} />
+          <ViewSwitcher view={view} onViewChange={setView} />
         </div>
 
         {/* Body */}
