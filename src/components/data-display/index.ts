@@ -142,8 +142,6 @@ export type { LazyRenderProps } from "./lazy-render";
 export { Window, WindowItem } from "./window";
 export type { WindowProps, WindowItemProps } from "./window";
 
-export { Pie } from "./pie";
-export type { PieProps, PieSegment } from "./pie";
 
 export { Video, videoVariants } from "./video";
 export type { VideoProps, VideoRounded } from "./video";

@@ -50,7 +50,6 @@ import { NavigationProgress } from "../components/feedback/navigation-progress";
 import { Tour } from "../components/feedback/tour";
 import { Parallax } from "../components/data-display/parallax";
 import { Window } from "../components/data-display/window";
-import { Pie } from "../components/data-display/pie";
 import { Video } from "../components/data-display/video";
 
 import { Button } from "../components/forms/button";
@@ -695,33 +694,6 @@ describe("Accessibility (axe)", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("Pie (basic)", async () => {
-    const { container } = render(
-      <Pie
-        data={[
-          { value: 60, color: "#3b82f6", label: "Blue" },
-          { value: 40, color: "#ef4444", label: "Red" },
-        ]}
-      />,
-    );
-    expect(await axe(container)).toHaveNoViolations();
-  });
-
-  it("Pie (donut with center)", async () => {
-    const { container } = render(
-      <Pie
-        data={[
-          { value: 70, color: "#22c55e", label: "Complete" },
-          { value: 30, color: "#e2e8f0", label: "Remaining" },
-        ]}
-        donut
-        strokeWidth={30}
-      >
-        <span>70%</span>
-      </Pie>,
-    );
-    expect(await axe(container)).toHaveNoViolations();
-  });
 
   // Video a11y tests skipped — axe + <video> in jsdom causes timeouts.
   // The Video component wraps a native <video> element with no custom ARIA needed.
