@@ -154,8 +154,6 @@ export * from "./charts";
 export { Transfer } from "./transfer";
 export type { TransferProps, TransferItem } from "./transfer";
 
-export { Descriptions } from "./descriptions";
-export type { DescriptionsProps, DescriptionsItem, DescriptionsSize, DescriptionsVariant } from "./descriptions";
 
 export { Galleria } from "./galleria";
 export type { GalleriaProps, GalleriaImage } from "./galleria";

@@ -36,7 +36,6 @@ import { FieldLabel } from "../components/forms/field-label";
 import { FieldDescription } from "../components/forms/field-description";
 import { FieldError } from "../components/forms/field-error";
 import { Transfer } from "../components/data-display/transfer";
-import { Descriptions } from "../components/data-display/descriptions";
 import { Galleria } from "../components/data-display/galleria";
 import { Cascader } from "../components/forms/cascader";
 import { TreeSelect } from "../components/forms/tree-select";
@@ -907,33 +906,6 @@ describe("Accessibility (axe)", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("Descriptions (default)", async () => {
-    const items = [
-      { label: "Name", children: "John Doe" },
-      { label: "Email", children: "john@example.com" },
-    ];
-    const { container } = render(<Descriptions items={items} />);
-    expect(await axe(container)).toHaveNoViolations();
-  });
-
-  it("Descriptions (bordered)", async () => {
-    const items = [
-      { label: "Name", children: "John Doe" },
-      { label: "Email", children: "john@example.com" },
-    ];
-    const { container } = render(<Descriptions items={items} bordered />);
-    expect(await axe(container)).toHaveNoViolations();
-  });
-
-  it("Descriptions (with title)", async () => {
-    const items = [
-      { label: "Name", children: "John Doe" },
-    ];
-    const { container } = render(
-      <Descriptions items={items} title="User Info" />,
-    );
-    expect(await axe(container)).toHaveNoViolations();
-  });
 
   it("Galleria (default)", async () => {
     const images = [
