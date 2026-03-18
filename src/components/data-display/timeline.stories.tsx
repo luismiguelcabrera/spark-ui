@@ -27,7 +27,7 @@ const items = [
     title: "Processing",
     description: "Your items are being prepared",
     date: "Mar 16, 2025",
-    icon: "package",
+    icon: "archive",
     color: "primary" as const,
     active: true,
   },
