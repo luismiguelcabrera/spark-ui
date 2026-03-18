@@ -36,3 +36,12 @@ export type { AudioPlayerProps } from "./audio-player";
 
 export { MobileFilterSheet } from "./mobile-filter-sheet";
 export type { MobileFilterSheetProps } from "./mobile-filter-sheet";
+
+export { Tour } from "./tour";
+export type { TourProps, TourStep, TourPlacement } from "./tour";
+
+export { Result } from "./result";
+export type { ResultProps, ResultStatus } from "./result";
+
+export { NavigationProgress } from "./navigation-progress";
+export type { NavigationProgressProps, NavigationProgressColor } from "./navigation-progress";
