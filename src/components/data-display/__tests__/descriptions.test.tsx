@@ -56,6 +56,15 @@ describe("Descriptions", () => {
       expect(screen.getByText("User Details")).toBeInTheDocument();
       expect(screen.getByRole("table")).toBeInTheDocument();
     });
+
+    it("does not have redundant role=table on native table", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} bordered />
+      );
+      const table = container.querySelector("table");
+      // Native <table> should not have explicit role="table"
+      expect(table).not.toHaveAttribute("role", "table");
+    });
   });
 
   describe("borderless mode", () => {
@@ -100,11 +109,14 @@ describe("Descriptions", () => {
   });
 
   describe("layout", () => {
-    it("renders horizontal layout by default", () => {
+    it("renders horizontal layout by default with grid alignment", () => {
       const { container } = render(<Descriptions items={basicItems} />);
-      // In horizontal layout, dt/dd are in a flex row
-      const flexItems = container.querySelectorAll(".flex.gap-2");
-      expect(flexItems.length).toBeGreaterThan(0);
+      // In horizontal layout, each item uses CSS grid for aligned label/value columns
+      const gridItems = container.querySelectorAll("dl > div");
+      const hasGrid = Array.from(gridItems).some((el) =>
+        el.className.includes("grid")
+      );
+      expect(hasGrid).toBe(true);
     });
 
     it("renders vertical layout", () => {
@@ -129,18 +141,165 @@ describe("Descriptions", () => {
   });
 
   describe("sizes", () => {
-    it.each(["sm", "md", "lg"] as const)("renders size %s", (sz) => {
+    it.each(["xs", "sm", "md", "lg", "xl"] as const)("renders size %s", (sz) => {
       render(<Descriptions items={basicItems} size={sz} />);
       expect(screen.getByText("John Doe")).toBeInTheDocument();
     });
 
-    it.each(["sm", "md", "lg"] as const)(
+    it.each(["xs", "sm", "md", "lg", "xl"] as const)(
       "renders size %s in bordered mode",
       (sz) => {
         render(<Descriptions items={basicItems} size={sz} bordered />);
         expect(screen.getByRole("table")).toBeInTheDocument();
       }
     );
+  });
+
+  describe("variant", () => {
+    it("renders plain variant by default", () => {
+      const { container } = render(<Descriptions items={basicItems} />);
+      const dlItems = container.querySelectorAll("dl > div");
+      // No items should have striped background class
+      const hasStriped = Array.from(dlItems).some((el) =>
+        el.className.includes("bg-light/50")
+      );
+      expect(hasStriped).toBe(false);
+    });
+
+    it("renders striped variant in borderless mode", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} variant="striped" />
+      );
+      const dlItems = container.querySelectorAll("dl > div");
+      // Odd-indexed items (index 1, 3, ...) should have striped class
+      if (dlItems.length > 1) {
+        expect(dlItems[1].className).toContain("bg-light/50");
+      }
+    });
+
+    it("renders striped variant in bordered mode", () => {
+      render(
+        <Descriptions items={basicItems} variant="striped" bordered />
+      );
+      expect(screen.getByRole("table")).toBeInTheDocument();
+    });
+  });
+
+  describe("responsive", () => {
+    it("uses responsive grid classes by default", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} columns={3} />
+      );
+      const dl = container.querySelector("dl");
+      expect(dl?.className).toContain("grid-cols-1");
+      expect(dl?.className).toContain("md:grid-cols-3");
+    });
+
+    it("uses fixed grid classes when responsive=false", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} columns={3} responsive={false} />
+      );
+      const dl = container.querySelector("dl");
+      expect(dl?.className).toContain("grid-cols-3");
+      expect(dl?.className).not.toContain("sm:grid-cols");
+      expect(dl?.className).not.toContain("md:grid-cols");
+    });
+
+    it("does not use inline style for gridTemplateColumns when responsive", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} columns={3} responsive={true} />
+      );
+      const dl = container.querySelector("dl");
+      expect((dl as HTMLElement)?.style.gridTemplateColumns).toBe("");
+    });
+  });
+
+  describe("empty value placeholder", () => {
+    it("renders em dash for null children", () => {
+      const { container } = render(
+        <Descriptions
+          items={[{ label: "Field", children: null }]}
+        />
+      );
+      const dd = container.querySelector("dd");
+      expect(dd?.textContent).toBe("\u2014");
+    });
+
+    it("renders em dash for undefined children", () => {
+      const { container } = render(
+        <Descriptions
+          items={[{ label: "Field", children: undefined }]}
+        />
+      );
+      const dd = container.querySelector("dd");
+      expect(dd?.textContent).toBe("\u2014");
+    });
+
+    it("renders em dash for empty string children", () => {
+      const { container } = render(
+        <Descriptions
+          items={[{ label: "Field", children: "" }]}
+        />
+      );
+      const dd = container.querySelector("dd");
+      expect(dd?.textContent).toBe("\u2014");
+    });
+
+    it("renders actual content when children is provided", () => {
+      render(
+        <Descriptions
+          items={[{ label: "Field", children: "Value" }]}
+        />
+      );
+      expect(screen.getByText("Value")).toBeInTheDocument();
+    });
+
+    it("renders em dash for null children in bordered mode", () => {
+      const { container } = render(
+        <Descriptions
+          items={[{ label: "Field", children: null }]}
+          bordered
+        />
+      );
+      const td = container.querySelector("td");
+      expect(td?.textContent).toBe("\u2014");
+    });
+  });
+
+  describe("heading semantics", () => {
+    it("renders title with role=heading and default aria-level=3", () => {
+      render(<Descriptions items={basicItems} title="My Title" />);
+      const heading = screen.getByRole("heading", { level: 3 });
+      expect(heading).toHaveTextContent("My Title");
+    });
+
+    it("respects headingLevel prop", () => {
+      render(
+        <Descriptions items={basicItems} title="My Title" headingLevel={2} />
+      );
+      const heading = screen.getByRole("heading", { level: 2 });
+      expect(heading).toHaveTextContent("My Title");
+    });
+
+    it("does not render h3 element directly", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} title="My Title" />
+      );
+      expect(container.querySelector("h3")).toBeNull();
+    });
+
+    it("uses headingLevel in bordered mode", () => {
+      render(
+        <Descriptions
+          items={basicItems}
+          title="My Title"
+          bordered
+          headingLevel={4}
+        />
+      );
+      const heading = screen.getByRole("heading", { level: 4 });
+      expect(heading).toHaveTextContent("My Title");
+    });
   });
 
   it("forwards ref", () => {
@@ -195,5 +354,144 @@ describe("Descriptions", () => {
       />
     );
     expect(screen.getByTestId("status-badge")).toBeInTheDocument();
+  });
+
+  it("uses theme CSS variable tokens instead of hardcoded colors", () => {
+    const ref = { current: null as HTMLDivElement | null };
+    render(
+      <Descriptions ref={ref} items={basicItems} />
+    );
+    // Should use bg-surface instead of bg-white
+    expect(ref.current?.className).toContain("bg-surface");
+    expect(ref.current?.className).not.toContain("bg-white");
+  });
+
+  describe("extra header slot", () => {
+    it("renders extra content next to title", () => {
+      render(
+        <Descriptions
+          items={basicItems}
+          title="Profile"
+          extra={<button data-testid="edit-btn">Edit</button>}
+        />
+      );
+      expect(screen.getByText("Profile")).toBeInTheDocument();
+      expect(screen.getByTestId("edit-btn")).toBeInTheDocument();
+    });
+
+    it("renders extra without title", () => {
+      render(
+        <Descriptions
+          items={basicItems}
+          extra={<span data-testid="extra-only">Actions</span>}
+        />
+      );
+      expect(screen.getByTestId("extra-only")).toBeInTheDocument();
+    });
+
+    it("renders extra in bordered mode", () => {
+      render(
+        <Descriptions
+          items={basicItems}
+          title="Profile"
+          bordered
+          extra={<button data-testid="bordered-edit">Edit</button>}
+        />
+      );
+      expect(screen.getByTestId("bordered-edit")).toBeInTheDocument();
+    });
+  });
+
+  describe("labelWidth", () => {
+    it("applies labelWidth as number in borderless horizontal mode", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} labelWidth={120} />
+      );
+      const gridItem = container.querySelector("dl > div") as HTMLElement;
+      expect(gridItem?.style.gridTemplateColumns).toBe("120px 1fr");
+    });
+
+    it("applies labelWidth as string in borderless horizontal mode", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} labelWidth="10rem" />
+      );
+      const gridItem = container.querySelector("dl > div") as HTMLElement;
+      expect(gridItem?.style.gridTemplateColumns).toBe("10rem 1fr");
+    });
+
+    it("applies labelWidth in bordered horizontal mode", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} bordered labelWidth={150} />
+      );
+      const th = container.querySelector("th") as HTMLElement;
+      expect(th?.style.width).toBe("150px");
+    });
+
+    it("does not apply labelWidth in vertical layout", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} layout="vertical" labelWidth={120} />
+      );
+      const gridItem = container.querySelector("dl > div") as HTMLElement;
+      expect(gridItem?.style.gridTemplateColumns).toBeFalsy();
+    });
+  });
+
+  describe("labelClassName and contentClassName", () => {
+    it("applies global labelClassName to all labels", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} labelClassName="uppercase" />
+      );
+      const dts = container.querySelectorAll("dt");
+      dts.forEach((dt) => {
+        expect(dt.className).toContain("uppercase");
+      });
+    });
+
+    it("applies global contentClassName to all values", () => {
+      const { container } = render(
+        <Descriptions items={basicItems} contentClassName="italic" />
+      );
+      const dds = container.querySelectorAll("dd");
+      dds.forEach((dd) => {
+        expect(dd.className).toContain("italic");
+      });
+    });
+
+    it("applies per-item labelClassName", () => {
+      const items: typeof basicItems = [
+        { label: "A", children: "1", labelClassName: "text-red-500" },
+        { label: "B", children: "2" },
+      ];
+      const { container } = render(<Descriptions items={items} />);
+      const dts = container.querySelectorAll("dt");
+      expect(dts[0].className).toContain("text-red-500");
+      expect(dts[1].className).not.toContain("text-red-500");
+    });
+
+    it("applies per-item contentClassName", () => {
+      const items: typeof basicItems = [
+        { label: "A", children: "1", contentClassName: "font-bold" },
+        { label: "B", children: "2" },
+      ];
+      const { container } = render(<Descriptions items={items} />);
+      const dds = container.querySelectorAll("dd");
+      expect(dds[0].className).toContain("font-bold");
+      expect(dds[1].className).not.toContain("font-bold");
+    });
+
+    it("applies global and per-item classNames in bordered mode", () => {
+      const items: typeof basicItems = [
+        { label: "A", children: "1", labelClassName: "text-red-500", contentClassName: "font-bold" },
+      ];
+      const { container } = render(
+        <Descriptions items={items} bordered labelClassName="uppercase" contentClassName="italic" />
+      );
+      const th = container.querySelector("th");
+      const td = container.querySelector("td");
+      expect(th?.className).toContain("uppercase");
+      expect(th?.className).toContain("text-red-500");
+      expect(td?.className).toContain("italic");
+      expect(td?.className).toContain("font-bold");
+    });
   });
 });
