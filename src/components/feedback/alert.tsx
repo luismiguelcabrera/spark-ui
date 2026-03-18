@@ -94,6 +94,8 @@ type AlertProps = Omit<HTMLAttributes<HTMLDivElement>, "title"> & {
   border?: AlertBorderSide;
   /** Larger icon and bolder styling */
   prominent?: boolean;
+  /** Action buttons rendered after the content */
+  actions?: ReactNode;
   /** Additional CSS classes */
   className?: string;
 } & VariantProps<typeof alertVariants>;
@@ -110,6 +112,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
       onDismiss,
       border,
       prominent = false,
+      actions,
       className,
       ...props
     },
@@ -156,6 +159,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
             </div>
           )}
         </div>
+        {actions && <div className="shrink-0 flex items-center gap-2">{actions}</div>}
         {dismissible && (
           <button
             type="button"

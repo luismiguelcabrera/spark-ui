@@ -22,6 +22,7 @@ const meta = {
     dismissible: { control: "boolean" },
     title: { control: "text" },
     icon: { control: "text" },
+    actions: { control: false },
   },
 } satisfies Meta<typeof Alert>;
 
@@ -90,6 +91,30 @@ export const CustomIcon: Story = {
     icon: "star",
     title: "Featured",
     children: "This alert uses a custom icon instead of the default.",
+  },
+};
+
+export const WithActions: Story = {
+  args: {
+    variant: "warning",
+    title: "Session expiring",
+    children: "Your session will expire in 5 minutes.",
+    actions: <button className="text-sm font-medium underline">Renew</button>,
+  },
+};
+
+export const WithActionsAndDismiss: Story = {
+  args: {
+    variant: "error",
+    title: "Update failed",
+    children: "Could not save your changes. Please try again.",
+    dismissible: true,
+    onDismiss: () => {},
+    actions: (
+      <button className="text-sm font-semibold px-3 py-1 rounded-lg bg-red-100 hover:bg-red-200 transition-colors">
+        Retry
+      </button>
+    ),
   },
 };
 

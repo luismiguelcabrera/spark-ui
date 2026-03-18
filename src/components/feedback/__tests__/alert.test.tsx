@@ -180,6 +180,51 @@ describe("Alert", () => {
     });
   });
 
+  // === Actions prop tests ===
+
+  describe("actions prop", () => {
+    it("renders actions when provided", () => {
+      render(
+        <Alert actions={<button>Retry</button>}>Something failed.</Alert>
+      );
+      expect(screen.getByRole("button", { name: "Retry" })).toBeInTheDocument();
+    });
+
+    it("does not render actions container when actions is not provided", () => {
+      render(<Alert>Content</Alert>);
+      const alert = screen.getByRole("alert");
+      // Only the dismiss button would add a button element; no actions = no extra wrapper
+      expect(alert.querySelectorAll("button")).toHaveLength(0);
+    });
+
+    it("renders multiple action buttons", () => {
+      render(
+        <Alert
+          actions={
+            <>
+              <button>Retry</button>
+              <button>Cancel</button>
+            </>
+          }
+        >
+          Something went wrong.
+        </Alert>
+      );
+      expect(screen.getByRole("button", { name: "Retry" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument();
+    });
+
+    it("renders actions alongside dismiss button", () => {
+      render(
+        <Alert dismissible actions={<button>Retry</button>}>
+          Content
+        </Alert>
+      );
+      expect(screen.getByRole("button", { name: "Retry" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Dismiss" })).toBeInTheDocument();
+    });
+  });
+
   // === Combination tests ===
 
   it("combines border, fill, and prominent props", () => {

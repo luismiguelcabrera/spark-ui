@@ -71,7 +71,6 @@ import { DataTable, type Column } from "../components/data-display/data-table";
 import { Spinner } from "../components/feedback/spinner";
 import { Toast } from "../components/feedback/toast";
 import { Alert } from "../components/feedback/alert";
-import { AlertBanner } from "../components/feedback/alert-banner";
 import { Modal } from "../components/feedback/modal";
 import { Dialog } from "../components/feedback/dialog";
 import { Tooltip } from "../components/feedback/tooltip";
@@ -328,11 +327,6 @@ describe("Accessibility (axe)", () => {
         <Alert variant="error">Error</Alert>
       </div>,
     );
-    expect(await axe(container)).toHaveNoViolations();
-  });
-
-  it("AlertBanner", async () => {
-    const { container } = render(<AlertBanner title="Warning" variant="warning" />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
