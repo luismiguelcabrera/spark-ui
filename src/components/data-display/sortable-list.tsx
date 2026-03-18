@@ -145,10 +145,11 @@ function SortableListInner<T extends SortableItem>(
     [grabbed, items, onReorder],
   );
 
-  // ── Pointer drag ──────────────────────────────────────
-  const handlePointerDown = useCallback(
-    (index: number, e: React.PointerEvent) => {
-      e.preventDefault();
+  const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // ── Start drag (shared logic for immediate + long-press) ──
+  const startDrag = useCallback(
+    (index: number, startY: number) => {
       if (!containerRef.current) return;
 
       const listItems = containerRef.current.querySelectorAll("[data-sortable-item]");
@@ -157,12 +158,16 @@ function SortableListInner<T extends SortableItem>(
 
       const rect = draggedEl.getBoundingClientRect();
       const containerRect = containerRef.current.getBoundingClientRect();
-      const offsetY = e.clientY - rect.top;
+      const offsetY = startY - rect.top;
 
       dragItemIndex.current = index;
       overIndexRef.current = index;
       setActiveIndex(index);
       setOverIndex(index);
+
+      // Prevent page scroll during touch drag
+      const preventScroll = (te: TouchEvent) => te.preventDefault();
+      document.addEventListener("touchmove", preventScroll, { passive: false });
 
       // Initial ghost position
       setGhostStyle({
@@ -182,14 +187,12 @@ function SortableListInner<T extends SortableItem>(
       const handlePointerMove = (moveEvent: PointerEvent) => {
         if (dragItemIndex.current === null || !containerRef.current) return;
 
-        // Update ghost position
         const newTop = moveEvent.clientY - containerRect.top - offsetY;
         setGhostStyle((prev) => ({
           ...prev,
           top: newTop,
         }));
 
-        // Find target index
         const currentItems = containerRef.current.querySelectorAll("[data-sortable-item]");
         let targetIndex = dragItemIndex.current;
 
@@ -216,6 +219,7 @@ function SortableListInner<T extends SortableItem>(
         document.removeEventListener("pointermove", handlePointerMove);
         document.removeEventListener("pointerup", handlePointerUp);
         document.removeEventListener("keydown", handleKeyCancel);
+        document.removeEventListener("touchmove", preventScroll);
       };
 
       const handlePointerUp = () => {
@@ -243,6 +247,74 @@ function SortableListInner<T extends SortableItem>(
     },
     [onReorder],
   );
+
+  // ── Pointer down handler ──────────────────────────────
+  const handlePointerDown = useCallback(
+    (index: number, e: React.PointerEvent) => {
+      const isTouch = e.pointerType === "touch";
+      const startY = e.clientY;
+
+      if (!isTouch) {
+        // Mouse: start drag immediately
+        e.preventDefault();
+        startDrag(index, startY);
+        return;
+      }
+
+      // Touch: require long-press (300ms) before starting drag
+      const LONG_PRESS_MS = 300;
+      const MOVE_THRESHOLD = 10;
+
+      // Show visual hint that long-press is in progress
+      setActiveIndex(index);
+
+      const cancelLongPress = () => {
+        if (longPressTimerRef.current) {
+          clearTimeout(longPressTimerRef.current);
+          longPressTimerRef.current = null;
+        }
+        setActiveIndex(null);
+        document.removeEventListener("pointermove", onMoveBeforeActivation);
+        document.removeEventListener("pointerup", onUpBeforeActivation);
+        document.removeEventListener("pointercancel", onUpBeforeActivation);
+      };
+
+      const onMoveBeforeActivation = (moveEvent: PointerEvent) => {
+        // If finger moves too much, cancel long-press (user is scrolling)
+        const dy = Math.abs(moveEvent.clientY - startY);
+        const dx = Math.abs(moveEvent.clientX - e.clientX);
+        if (dy > MOVE_THRESHOLD || dx > MOVE_THRESHOLD) {
+          cancelLongPress();
+        }
+      };
+
+      const onUpBeforeActivation = () => {
+        cancelLongPress();
+      };
+
+      longPressTimerRef.current = setTimeout(() => {
+        longPressTimerRef.current = null;
+        document.removeEventListener("pointermove", onMoveBeforeActivation);
+        document.removeEventListener("pointerup", onUpBeforeActivation);
+        document.removeEventListener("pointercancel", onUpBeforeActivation);
+        startDrag(index, startY);
+      }, LONG_PRESS_MS);
+
+      document.addEventListener("pointermove", onMoveBeforeActivation);
+      document.addEventListener("pointerup", onUpBeforeActivation);
+      document.addEventListener("pointercancel", onUpBeforeActivation);
+    },
+    [startDrag],
+  );
+
+  // Cleanup long-press timer on unmount
+  useEffect(() => {
+    return () => {
+      if (longPressTimerRef.current) {
+        clearTimeout(longPressTimerRef.current);
+      }
+    };
+  }, []);
 
   const isDragging = activeIndex !== null && !grabbed;
 
