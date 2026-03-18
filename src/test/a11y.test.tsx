@@ -1,6 +1,10 @@
 import { render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, it, expect } from "vitest";
+import { RadarChart } from "../components/data-display/charts/radar-chart";
+import { ScatterChart } from "../components/data-display/charts/scatter-chart";
+import { FunnelChart } from "../components/data-display/charts/funnel-chart";
+import { HeatmapChart } from "../components/data-display/charts/heatmap-chart";
 import { FieldLabel } from "../components/forms/field-label";
 import { FieldDescription } from "../components/forms/field-description";
 import { FieldError } from "../components/forms/field-error";
@@ -1006,6 +1010,61 @@ describe("Accessibility (axe)", () => {
         <FieldError id="email-err">Invalid email address</FieldError>
       </div>,
     );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("RadarChart (default)", async () => {
+    const data = [
+      { label: "Design", value: 80, max: 100 },
+      { label: "Frontend", value: 90, max: 100 },
+      { label: "Backend", value: 70, max: 100 },
+    ];
+    const { container } = render(<RadarChart data={data} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("RadarChart (empty)", async () => {
+    const { container } = render(<RadarChart data={[]} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("ScatterChart (default)", async () => {
+    const data = [{ x: 10, y: 20 }, { x: 30, y: 50 }];
+    const { container } = render(<ScatterChart data={data} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("ScatterChart (empty)", async () => {
+    const { container } = render(<ScatterChart data={[]} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("FunnelChart (default)", async () => {
+    const data = [
+      { label: "Leads", value: 1000 },
+      { label: "Qualified", value: 600 },
+      { label: "Proposal", value: 400 },
+    ];
+    const { container } = render(<FunnelChart data={data} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("FunnelChart (empty)", async () => {
+    const { container } = render(<FunnelChart data={[]} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("HeatmapChart (default)", async () => {
+    const data = [
+      { x: "Mon", y: "AM", value: 10 },
+      { x: "Mon", y: "PM", value: 20 },
+    ];
+    const { container } = render(<HeatmapChart data={data} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("HeatmapChart (empty)", async () => {
+    const { container } = render(<HeatmapChart data={[]} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 });
