@@ -27,7 +27,9 @@ function SidebarProvider({
   const toggleCollapse = () =>
     setIsCollapsed((v) => {
       const next = !v;
-      document.cookie = `${COOKIE_NAME}=${next}; path=/; max-age=31536000`;
+      if (typeof document !== "undefined") {
+        document.cookie = `${COOKIE_NAME}=${next}; path=/; max-age=31536000`;
+      }
       return next;
     });
 

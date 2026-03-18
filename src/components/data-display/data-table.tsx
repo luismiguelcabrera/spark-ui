@@ -45,7 +45,7 @@ type DataTableProps<T> = {
 
 function DefaultSkeleton() {
   return (
-    <div className="p-6 animate-pulse">
+    <div className="p-6 animate-pulse motion-reduce:animate-none" aria-busy="true" aria-label="Loading table data">
       {[1, 2, 3, 4, 5].map((i) => (
         <div key={i} className="flex items-center gap-4 py-4 border-b border-slate-50 last:border-0">
           <div className="h-10 w-10 bg-gray-200 rounded-full" />
@@ -115,18 +115,19 @@ function DataTable<T>({
       {!isLoading && (
         <>
           {/* Desktop: grid table — hidden on mobile when mobileCard is provided */}
-          <div className={cn(mobileCard && "hidden @[600px]:block")}>
+          <div className={cn(mobileCard && "hidden @[600px]:block")} role="table">
             <div
+              role="row"
               className={s.dataTableHeader}
               style={{ gridTemplateColumns: fullTemplate }}
             >
               {selectable && (
-                <div className="flex items-center justify-center">
-                  <Checkbox checked={allSelected} onChange={toggleAll} />
+                <div role="columnheader" className="flex items-center justify-center">
+                  <Checkbox checked={allSelected} onChange={toggleAll} aria-label="Select all rows" />
                 </div>
               )}
               {columns.map((col) => (
-                <div key={col.key}>{col.header}</div>
+                <div role="columnheader" key={col.key}>{col.header}</div>
               ))}
             </div>
 
@@ -136,19 +137,21 @@ function DataTable<T>({
               data.map((row, i) => (
                 <div
                   key={i}
+                  role="row"
                   className={s.dataTableRow}
                   style={{ gridTemplateColumns: fullTemplate }}
                 >
                   {selectable && (
-                    <div className="flex items-center justify-center">
+                    <div role="cell" className="flex items-center justify-center">
                       <Checkbox
                         checked={selected.includes(i)}
                         onChange={() => toggleRow(i)}
+                        aria-label={`Select row ${i + 1}`}
                       />
                     </div>
                   )}
                   {columns.map((col) => (
-                    <div key={col.key} className="text-sm text-slate-700">
+                    <div role="cell" key={col.key} className="text-sm text-slate-700">
                       {col.render(row)}
                     </div>
                   ))}

@@ -1,47 +1,77 @@
+import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 
 type SkeletonProps = {
   className?: string;
-};
+} & Omit<HTMLAttributes<HTMLDivElement>, "children">;
 
-function Skeleton({ className }: SkeletonProps) {
-  return <div className={cn(s.skeletonBase, "h-4 w-full", className)} />;
-}
+const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        aria-busy="true"
+        aria-label="Loading"
+        className={cn(s.skeletonBase, "h-4 w-full motion-reduce:animate-none", className)}
+        {...props}
+      />
+    );
+  }
+);
+Skeleton.displayName = "Skeleton";
 
-function SkeletonText({
-  lines = 3,
-  className,
-}: {
+type SkeletonTextProps = {
   lines?: number;
   className?: string;
-}) {
-  return (
-    <div className={cn("space-y-2", className)}>
-      {Array.from({ length: lines }).map((_, i) => (
-        <div
-          key={i}
-          className={cn(
-            s.skeletonBase,
-            "h-3",
-            i === lines - 1 ? "w-2/3" : "w-full"
-          )}
-        />
-      ))}
-    </div>
-  );
-}
+} & Omit<HTMLAttributes<HTMLDivElement>, "children">;
 
-function SkeletonCircle({
-  size = "md",
-  className,
-}: {
+const SkeletonText = forwardRef<HTMLDivElement, SkeletonTextProps>(
+  ({ lines = 3, className, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        aria-busy="true"
+        aria-label="Loading text"
+        className={cn("space-y-2", className)}
+        {...props}
+      >
+        {Array.from({ length: lines }).map((_, i) => (
+          <div
+            key={i}
+            className={cn(
+              s.skeletonBase,
+              "h-3 motion-reduce:animate-none",
+              i === lines - 1 ? "w-2/3" : "w-full"
+            )}
+          />
+        ))}
+      </div>
+    );
+  }
+);
+SkeletonText.displayName = "SkeletonText";
+
+type SkeletonCircleProps = {
   size?: "sm" | "md" | "lg";
   className?: string;
-}) {
-  const sizeMap = { sm: "w-8 h-8", md: "w-12 h-12", lg: "w-16 h-16" };
-  return <div className={cn(s.skeletonCircle, sizeMap[size], className)} />;
-}
+} & Omit<HTMLAttributes<HTMLDivElement>, "children">;
+
+const SkeletonCircle = forwardRef<HTMLDivElement, SkeletonCircleProps>(
+  ({ size = "md", className, ...props }, ref) => {
+    const sizeMap = { sm: "w-8 h-8", md: "w-12 h-12", lg: "w-16 h-16" };
+    return (
+      <div
+        ref={ref}
+        aria-busy="true"
+        aria-label="Loading"
+        className={cn(s.skeletonCircle, sizeMap[size], "motion-reduce:animate-none", className)}
+        {...props}
+      />
+    );
+  }
+);
+SkeletonCircle.displayName = "SkeletonCircle";
 
 export { Skeleton, SkeletonText, SkeletonCircle };
-export type { SkeletonProps };
+export type { SkeletonProps, SkeletonTextProps, SkeletonCircleProps };

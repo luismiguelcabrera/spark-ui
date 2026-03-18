@@ -160,17 +160,21 @@ function Calendar({
       {/* Header */}
       <div className={s.calendarHeader}>
         <button
+          type="button"
           onClick={onPrevMonth ?? (isAutoMode ? goToPrevMonth : undefined)}
-          className="p-1 rounded-lg hover:bg-slate-100 transition-colors"
+          aria-label="Previous month"
+          className="p-1 rounded-lg hover:bg-slate-100 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
           <Icon name="chevron_left" size="sm" className="text-slate-500" />
         </button>
-        <h3 className="text-sm font-bold text-secondary">
+        <h3 className="text-sm font-bold text-secondary" aria-live="polite">
           {displayMonth} {displayYear}
         </h3>
         <button
+          type="button"
           onClick={onNextMonth ?? (isAutoMode ? goToNextMonth : undefined)}
-          className="p-1 rounded-lg hover:bg-slate-100 transition-colors"
+          aria-label="Next month"
+          className="p-1 rounded-lg hover:bg-slate-100 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
           <Icon name="chevron_right" size="sm" className="text-slate-500" />
         </button>
