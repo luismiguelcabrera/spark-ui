@@ -1,5 +1,6 @@
 "use client";
 
+import { forwardRef } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { Icon } from "../data-display/icon";
@@ -15,79 +16,110 @@ type PaginationProps = {
   className?: string;
 };
 
-function Pagination({
-  current,
-  defaultCurrent,
-  onPageChange,
-  total,
-  pageSize,
-  variant = "simple",
-  className,
-}: PaginationProps) {
-  const [page, setPage] = useControllable({
-    value: current,
-    defaultValue: defaultCurrent ?? current ?? 1,
-    onChange: onPageChange,
-  });
+const Pagination = forwardRef<HTMLElement, PaginationProps>(
+  (
+    {
+      current,
+      defaultCurrent,
+      onPageChange,
+      total,
+      pageSize,
+      variant = "simple",
+      className,
+    },
+    ref,
+  ) => {
+    const [page, setPage] = useControllable({
+      value: current,
+      defaultValue: defaultCurrent ?? current ?? 1,
+      onChange: onPageChange,
+    });
 
-  const start = (page - 1) * pageSize + 1;
-  const end = Math.min(page * pageSize, total);
-  const totalPages = Math.ceil(total / pageSize);
-  const isFirst = page <= 1;
-  const isLast = page >= totalPages;
+    const start = (page - 1) * pageSize + 1;
+    const end = Math.min(page * pageSize, total);
+    const totalPages = Math.ceil(total / pageSize);
+    const isFirst = page <= 1;
+    const isLast = page >= totalPages;
 
-  if (variant === "numbered") {
+    if (variant === "numbered") {
+      return (
+        <nav
+          ref={ref}
+          aria-label="Pagination"
+          className={cn("flex items-center justify-between", className)}
+        >
+          <p className="text-xs text-slate-400 font-medium">
+            Showing {start}-{end} of {total.toLocaleString()}
+          </p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              className="p-2 border border-slate-200 rounded-xl hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
+              disabled={isFirst}
+              aria-label="Previous page"
+              onClick={() => !isFirst && setPage(page - 1)}
+            >
+              <Icon name="chevron_left" size="sm" />
+            </button>
+            <button
+              type="button"
+              className="p-2 border border-slate-200 rounded-xl hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
+              disabled={isLast}
+              aria-label="Next page"
+              onClick={() => !isLast && setPage(page + 1)}
+            >
+              <Icon name="chevron_right" size="sm" />
+            </button>
+          </div>
+        </nav>
+      );
+    }
+
     return (
-      <div className={cn("flex items-center justify-between", className)}>
-        <p className="text-xs text-slate-400 font-medium">
-          Showing {start}-{end} of {total.toLocaleString()}
-        </p>
+      <nav
+        ref={ref}
+        aria-label="Pagination"
+        className={cn("px-1 flex items-center justify-between", className)}
+      >
+        <div className="text-xs text-slate-500">
+          Showing{" "}
+          <span className="font-bold text-slate-900">
+            {start}-{end}
+          </span>{" "}
+          of <span className="font-bold text-slate-900">{total}</span>
+        </div>
         <div className="flex gap-2">
           <button
-            className="p-2 border border-slate-200 rounded-xl hover:bg-slate-50 disabled:opacity-50 transition-colors"
+            type="button"
+            className={cn(
+              s.paginationButton,
+              "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
+            )}
             disabled={isFirst}
+            aria-label="Previous page"
             onClick={() => !isFirst && setPage(page - 1)}
           >
-            <Icon name="chevron_left" size="sm" />
+            Previous
           </button>
           <button
-            className="p-2 border border-slate-200 rounded-xl hover:bg-slate-50 disabled:opacity-50 transition-colors"
+            type="button"
+            className={cn(
+              s.paginationButton,
+              "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
+            )}
             disabled={isLast}
+            aria-label="Next page"
             onClick={() => !isLast && setPage(page + 1)}
           >
-            <Icon name="chevron_right" size="sm" />
+            Next
           </button>
         </div>
-      </div>
+      </nav>
     );
-  }
+  },
+);
 
-  return (
-    <div className={cn("px-1 flex items-center justify-between", className)}>
-      <div className="text-xs text-slate-500">
-        Showing{" "}
-        <span className="font-bold text-slate-900">{start}-{end}</span> of{" "}
-        <span className="font-bold text-slate-900">{total}</span>
-      </div>
-      <div className="flex gap-2">
-        <button
-          className={s.paginationButton}
-          disabled={isFirst}
-          onClick={() => !isFirst && setPage(page - 1)}
-        >
-          Previous
-        </button>
-        <button
-          className={s.paginationButton}
-          disabled={isLast}
-          onClick={() => !isLast && setPage(page + 1)}
-        >
-          Next
-        </button>
-      </div>
-    </div>
-  );
-}
+Pagination.displayName = "Pagination";
 
 export { Pagination };
 export type { PaginationProps };

@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
@@ -28,96 +29,114 @@ type StepperProps = {
   className?: string;
 } & VariantProps<typeof stepperVariants>;
 
-function Stepper({
-  steps,
-  activeStep,
-  orientation = "horizontal",
-  className,
-}: StepperProps) {
-  const getState = (index: number): StepState => {
-    if (index < activeStep) return "complete";
-    if (index === activeStep) return "active";
-    return "upcoming";
-  };
+const Stepper = forwardRef<HTMLDivElement, StepperProps>(
+  ({ steps, activeStep, orientation = "horizontal", className }, ref) => {
+    const getState = (index: number): StepState => {
+      if (index < activeStep) return "complete";
+      if (index === activeStep) return "active";
+      return "upcoming";
+    };
 
-  const isHorizontal = orientation === "horizontal";
+    const isHorizontal = orientation === "horizontal";
 
-  return (
-    <div className={cn(stepperVariants({ orientation, className }))}>
-      {steps.map((step, i) => {
-        const state = getState(i);
-        const isLast = i === steps.length - 1;
+    return (
+      <div
+        ref={ref}
+        role="list"
+        aria-label="Progress"
+        className={cn(stepperVariants({ orientation }), className)}
+      >
+        {steps.map((step, i) => {
+          const state = getState(i);
+          const isLast = i === steps.length - 1;
 
-        return (
-          <div
-            key={step.label}
-            className={cn(
-              "flex",
-              isHorizontal ? "flex-1 flex-col items-center" : "flex-row gap-3"
-            )}
-          >
+          return (
             <div
+              key={step.label}
+              role="listitem"
+              aria-current={state === "active" ? "step" : undefined}
               className={cn(
-                "flex items-center",
-                isHorizontal ? "w-full" : "flex-col"
+                "flex",
+                isHorizontal
+                  ? "flex-1 flex-col items-center"
+                  : "flex-row gap-3",
               )}
             >
-              {/* Step circle */}
               <div
                 className={cn(
-                  s.stepperCircle,
-                  state === "complete" && s.stepperCircleComplete,
-                  state === "active" && s.stepperCircleActive,
-                  state === "upcoming" && s.stepperCircleUpcoming
+                  "flex items-center",
+                  isHorizontal ? "w-full" : "flex-col",
                 )}
               >
-                {state === "complete" ? (
-                  <Icon name="check" size="sm" />
-                ) : (
-                  <span>{i + 1}</span>
+                {/* Step circle */}
+                <div
+                  aria-hidden="true"
+                  className={cn(
+                    s.stepperCircle,
+                    state === "complete" && s.stepperCircleComplete,
+                    state === "active" && s.stepperCircleActive,
+                    state === "upcoming" && s.stepperCircleUpcoming,
+                  )}
+                >
+                  {state === "complete" ? (
+                    <Icon name="check" size="sm" />
+                  ) : (
+                    <span>{i + 1}</span>
+                  )}
+                </div>
+
+                {/* Connector */}
+                {!isLast && (
+                  <div
+                    aria-hidden="true"
+                    className={cn(
+                      s.stepperConnector,
+                      "transition-colors duration-300",
+                      isHorizontal ? "mx-2" : "w-0.5 h-8 mx-auto my-1",
+                      state === "complete"
+                        ? s.stepperConnectorComplete
+                        : s.stepperConnectorIncomplete,
+                    )}
+                  />
                 )}
               </div>
 
-              {/* Connector */}
-              {!isLast && (
-                <div
+              {/* Label */}
+              <div className={cn(isHorizontal ? "text-center" : "pb-8")}>
+                <p
                   className={cn(
-                    s.stepperConnector,
-                    isHorizontal ? "mx-2" : "w-0.5 h-8 mx-auto my-1",
-                    state === "complete"
-                      ? s.stepperConnectorComplete
-                      : s.stepperConnectorIncomplete
+                    s.stepperLabel,
+                    state === "active"
+                      ? "text-primary"
+                      : state === "complete"
+                        ? "text-secondary"
+                        : "text-slate-400",
                   )}
-                />
-              )}
-            </div>
-
-            {/* Label */}
-            <div className={cn(isHorizontal ? "text-center" : "pb-8")}>
-              <p
-                className={cn(
-                  s.stepperLabel,
-                  state === "active"
-                    ? "text-primary"
-                    : state === "complete"
-                      ? "text-secondary"
-                      : "text-slate-400"
-                )}
-              >
-                {step.label}
-              </p>
-              {step.description && (
-                <p className="text-[11px] text-slate-400 mt-0.5">
-                  {step.description}
+                >
+                  {step.label}
+                  <span className="sr-only">
+                    {state === "complete"
+                      ? " (completed)"
+                      : state === "active"
+                        ? " (current)"
+                        : " (upcoming)"}
+                  </span>
                 </p>
-              )}
+                {step.description && (
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    {step.description}
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
+          );
+        })}
+      </div>
+    );
+  },
+);
+
+Stepper.displayName = "Stepper";
 
 export { Stepper, stepperVariants };
 export type { StepperProps, StepItem };

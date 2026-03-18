@@ -1,6 +1,7 @@
-import Link from "next/link";
+import { forwardRef } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
+import { Icon } from "../data-display/icon";
 
 type BreadcrumbItem = {
   label: string;
@@ -12,31 +13,55 @@ type BreadcrumbProps = {
   className?: string;
 };
 
-function Breadcrumb({ items, className }: BreadcrumbProps) {
-  return (
-    <nav className={cn("flex items-center gap-2 text-sm", className)}>
-      {items.map((item, i) => (
-        <span key={i} className="flex items-center gap-2">
-          {i > 0 && (
-            <span className={cn("material-symbols-outlined text-[16px]", s.textSubtle)}>
-              chevron_right
-            </span>
-          )}
-          {item.href ? (
-            <Link
-              href={item.href}
-              className={cn(s.textMuted, "text-sm hover:text-primary transition-colors")}
-            >
-              {item.label}
-            </Link>
-          ) : (
-            <span className="text-gray-900 font-medium">{item.label}</span>
-          )}
-        </span>
-      ))}
-    </nav>
-  );
-}
+const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(
+  ({ items, className }, ref) => {
+    return (
+      <nav
+        ref={ref}
+        aria-label="Breadcrumb"
+        className={cn("flex items-center text-sm", className)}
+      >
+        <ol className="flex items-center gap-2">
+          {items.map((item, i) => {
+            const isLast = i === items.length - 1;
+
+            return (
+              <li key={i} className="flex items-center gap-2">
+                {i > 0 && (
+                  <Icon
+                    name="chevron_right"
+                    size="sm"
+                    className={cn(s.textSubtle)}
+                  />
+                )}
+                {item.href && !isLast ? (
+                  <a
+                    href={item.href}
+                    className={cn(
+                      s.textMuted,
+                      "text-sm hover:text-primary transition-colors",
+                    )}
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <span
+                    className="text-gray-900 font-medium"
+                    aria-current={isLast ? "page" : undefined}
+                  >
+                    {item.label}
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
+    );
+  },
+);
+
+Breadcrumb.displayName = "Breadcrumb";
 
 export { Breadcrumb };
 export type { BreadcrumbProps, BreadcrumbItem };

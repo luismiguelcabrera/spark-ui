@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
@@ -25,15 +26,20 @@ type SpinnerProps = {
   className?: string;
 } & VariantProps<typeof spinnerVariants>;
 
-function Spinner({ size, color, className }: SpinnerProps) {
-  return (
-    <span
-      className={cn(spinnerVariants({ size, color, className }))}
-      role="status"
-      aria-label="Loading"
-    />
-  );
-}
+const Spinner = forwardRef<HTMLSpanElement, SpinnerProps>(
+  ({ size, color, className }, ref) => {
+    return (
+      <span
+        ref={ref}
+        className={cn(spinnerVariants({ size, color }), className)}
+        role="status"
+        aria-label="Loading"
+      />
+    );
+  },
+);
+
+Spinner.displayName = "Spinner";
 
 export { Spinner, spinnerVariants };
 export type { SpinnerProps };

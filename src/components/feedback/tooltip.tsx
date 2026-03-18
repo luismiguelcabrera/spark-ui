@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { forwardRef, useId, type ReactNode } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 
@@ -17,29 +17,35 @@ const positionStyles = {
   right: "left-full top-1/2 -translate-y-1/2 ml-2",
 } as const;
 
-function Tooltip({
-  content,
-  position = "top",
-  variant = "dark",
-  children,
-  className,
-}: TooltipProps) {
-  return (
-    <span className={cn(s.tooltipTrigger, className)}>
-      {children}
+const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(
+  ({ content, position = "top", variant = "dark", children, className }, ref) => {
+    const tooltipId = useId();
+
+    return (
       <span
-        className={cn(
-          s.tooltipContent,
-          positionStyles[position],
-          variant === "dark" ? s.tooltipDark : s.tooltipLight
-        )}
-        role="tooltip"
+        ref={ref}
+        className={cn(s.tooltipTrigger, className)}
+        aria-describedby={tooltipId}
       >
-        {content}
+        {children}
+        <span
+          id={tooltipId}
+          className={cn(
+            s.tooltipContent,
+            "transition-[opacity,transform] delay-150 scale-95 group-hover:scale-100 group-hover:delay-200 group-focus-within:opacity-100 group-focus-within:scale-100",
+            positionStyles[position],
+            variant === "dark" ? s.tooltipDark : s.tooltipLight,
+          )}
+          role="tooltip"
+        >
+          {content}
+        </span>
       </span>
-    </span>
-  );
-}
+    );
+  },
+);
+
+Tooltip.displayName = "Tooltip";
 
 export { Tooltip };
 export type { TooltipProps };
