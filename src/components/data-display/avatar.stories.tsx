@@ -28,10 +28,10 @@ export const WithRing: Story = {
 export const WithIcon: Story = {
   render: (args) => (
     <div className="flex items-center gap-4">
-      <Avatar {...args} icon="person" size="sm" />
-      <Avatar {...args} icon="person" size="md" />
-      <Avatar {...args} icon="person" size="lg" />
-      <Avatar {...args} icon="person" size="xl" />
+      <Avatar {...args} icon="user" size="sm" />
+      <Avatar {...args} icon="user" size="md" />
+      <Avatar {...args} icon="user" size="lg" />
+      <Avatar {...args} icon="user" size="xl" />
     </div>
   ),
 };
@@ -70,9 +70,9 @@ export const Density: Story = {
 export const IconWithDensity: Story = {
   render: (args) => (
     <div className="flex items-center gap-4">
-      <Avatar {...args} icon="person" density="compact" size="md" />
-      <Avatar {...args} icon="person" density="default" size="md" />
-      <Avatar {...args} icon="person" density="comfortable" size="md" />
+      <Avatar {...args} icon="user" density="compact" size="md" />
+      <Avatar {...args} icon="user" density="default" size="md" />
+      <Avatar {...args} icon="user" density="comfortable" size="md" />
     </div>
   ),
 };
