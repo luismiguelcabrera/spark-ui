@@ -17,6 +17,7 @@ const builtInIcons: Record<string, ComponentType<IconComponentProps>> = {
   "expand_more": icons.ChevronDownIcon,
   "chevron-up": icons.ChevronUpIcon,
   "chevron_up": icons.ChevronUpIcon,
+  "expand_less": icons.ChevronUpIcon,
   "chevrons-left": icons.ChevronsLeftIcon,
   "chevrons_left": icons.ChevronsLeftIcon,
   "first-page": icons.ChevronsLeftIcon,
