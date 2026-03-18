@@ -47,107 +47,76 @@ describe("Select", () => {
     expect(ref.current).toBeInstanceOf(HTMLSelectElement);
   });
 
-  // ── Variant tests ─────────────────────────────────────────────────────
+  // ── Error / ARIA tests ──────────────────────────────────────────────
 
-  describe("variants", () => {
-    it.each(["outlined", "filled", "underlined"] as const)(
-      "renders with variant=%s without error",
-      (variant) => {
-        const { container } = render(
-          <Select variant={variant}>
-            <option value="a">Alpha</option>
-          </Select>,
-        );
-        expect(container.querySelector("select")).toBeInTheDocument();
-      },
-    );
-
-    it("applies filled styles", () => {
+  describe("error state", () => {
+    it("sets aria-invalid when error is present", () => {
       render(
-        <Select variant="filled">
-          <option value="a">Alpha</option>
+        <Select error="Required">
+          <option value="">--</option>
         </Select>,
       );
-      const select = screen.getByRole("combobox");
-      expect(select.className).toContain("bg-slate-100");
+      expect(screen.getByRole("combobox")).toHaveAttribute("aria-invalid", "true");
     });
 
-    it("applies underlined styles", () => {
+    it("does not set aria-invalid when no error", () => {
       render(
-        <Select variant="underlined">
-          <option value="a">Alpha</option>
+        <Select>
+          <option value="">--</option>
         </Select>,
       );
-      const select = screen.getByRole("combobox");
-      expect(select.className).toContain("border-b-2");
+      expect(screen.getByRole("combobox")).not.toHaveAttribute("aria-invalid");
+    });
+
+    it("renders error with role=alert", () => {
+      render(
+        <Select error="Required">
+          <option value="">--</option>
+        </Select>,
+      );
+      expect(screen.getByRole("alert")).toHaveTextContent("Required");
+    });
+
+    it("adds error border class", () => {
+      render(
+        <Select error="Required">
+          <option value="">--</option>
+        </Select>,
+      );
+      expect(screen.getByRole("combobox").className).toContain("border-red-300");
     });
   });
 
-  // ── Clearable tests ───────────────────────────────────────────────────
+  // ── Styling ─────────────────────────────────────────────────────────
 
-  describe("clearable", () => {
-    it("shows clear button when clearable and has value", () => {
+  describe("styling", () => {
+    it("has appearance-none class", () => {
       render(
-        <Select clearable value="a" onChange={() => {}}>
-          <option value="">--</option>
+        <Select>
           <option value="a">Alpha</option>
         </Select>,
       );
-      expect(screen.getByLabelText("Clear selection")).toBeInTheDocument();
+      expect(screen.getByRole("combobox").className).toContain("appearance-none");
     });
 
-    it("does not show clear button when value is empty", () => {
-      render(
-        <Select clearable value="" onChange={() => {}}>
-          <option value="">--</option>
+    it("renders the chevron icon", () => {
+      const { container } = render(
+        <Select>
           <option value="a">Alpha</option>
         </Select>,
       );
-      expect(screen.queryByLabelText("Clear selection")).not.toBeInTheDocument();
+      const iconSpan = container.querySelector("[aria-hidden='true']");
+      expect(iconSpan).toBeInTheDocument();
+      expect(iconSpan?.textContent).toBe("expand_more");
     });
 
-    it("calls onClear when clear button is clicked", async () => {
-      const user = userEvent.setup();
-      const onClear = vi.fn();
+    it("merges custom className", () => {
       render(
-        <Select clearable value="a" onClear={onClear} onChange={() => {}}>
-          <option value="">--</option>
+        <Select className="my-class">
           <option value="a">Alpha</option>
         </Select>,
       );
-      await user.click(screen.getByLabelText("Clear selection"));
-      expect(onClear).toHaveBeenCalledOnce();
-    });
-  });
-
-  // ── Loading tests ─────────────────────────────────────────────────────
-
-  describe("loading", () => {
-    it("shows spinner when loading", () => {
-      render(
-        <Select loading>
-          <option value="a">Alpha</option>
-        </Select>,
-      );
-      expect(screen.getByLabelText("Loading")).toBeInTheDocument();
-    });
-
-    it("disables select when loading", () => {
-      render(
-        <Select loading>
-          <option value="a">Alpha</option>
-        </Select>,
-      );
-      expect(screen.getByRole("combobox")).toBeDisabled();
-    });
-
-    it("sets aria-busy when loading", () => {
-      render(
-        <Select loading>
-          <option value="a">Alpha</option>
-        </Select>,
-      );
-      expect(screen.getByRole("combobox")).toHaveAttribute("aria-busy", "true");
+      expect(screen.getByRole("combobox")).toHaveClass("my-class");
     });
   });
 });

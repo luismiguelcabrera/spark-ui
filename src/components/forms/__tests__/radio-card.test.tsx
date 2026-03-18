@@ -160,7 +160,10 @@ describe("RadioCardGroup", () => {
   it("renders icon when provided as string", () => {
     const opts = [{ value: "a", title: "A", icon: "star" }];
     const { container } = render(<RadioCardGroup options={opts} />);
-    expect(container.querySelector("svg")).toBeInTheDocument();
+    // Icon component renders as a <span> with material-symbols-outlined class
+    const iconSpan = container.querySelector(".material-symbols-outlined");
+    expect(iconSpan).toBeInTheDocument();
+    expect(iconSpan?.textContent).toBe("star");
   });
 
   it("renders icon when provided as ReactNode", () => {

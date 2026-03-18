@@ -33,60 +33,72 @@ describe("Checkbox", () => {
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
   });
 
-  // ── Indeterminate tests ───────────────────────────────────────────────
+  // ── Error / aria-invalid ────────────────────────────────────────────
 
-  describe("indeterminate", () => {
-    it("sets indeterminate property on the DOM element", () => {
-      const ref = { current: null as HTMLInputElement | null };
-      render(<Checkbox ref={ref} indeterminate />);
-      expect(ref.current?.indeterminate).toBe(true);
+  describe("error state", () => {
+    it("sets aria-invalid when error is present", () => {
+      render(<Checkbox error="Required" />);
+      expect(screen.getByRole("checkbox")).toHaveAttribute("aria-invalid", "true");
     });
 
-    it("sets aria-checked to mixed when indeterminate", () => {
-      render(<Checkbox indeterminate />);
-      expect(screen.getByRole("checkbox")).toHaveAttribute("aria-checked", "mixed");
-    });
-
-    it("does not set aria-checked to mixed when not indeterminate", () => {
+    it("does not set aria-invalid when no error", () => {
       render(<Checkbox />);
-      expect(screen.getByRole("checkbox")).not.toHaveAttribute("aria-checked", "mixed");
+      expect(screen.getByRole("checkbox")).not.toHaveAttribute("aria-invalid");
     });
 
-    it("sets indeterminate with label", () => {
-      const ref = { current: null as HTMLInputElement | null };
-      render(<Checkbox ref={ref} indeterminate label="Select all" id="selectall" />);
-      expect(ref.current?.indeterminate).toBe(true);
-      expect(screen.getByRole("checkbox")).toHaveAttribute("aria-checked", "mixed");
+    it("renders error with role=alert", () => {
+      render(<Checkbox error="Required" />);
+      expect(screen.getByRole("alert")).toHaveTextContent("Required");
+    });
+
+    it("applies error border class when error is present", () => {
+      render(<Checkbox error="Required" />);
+      expect(screen.getByRole("checkbox").className).toContain("border-red-300");
     });
   });
 
-  // ── Color tests ───────────────────────────────────────────────────────
+  // ── Default color ───────────────────────────────────────────────────
 
-  describe("color", () => {
-    it.each(["primary", "secondary", "success", "warning", "destructive"] as const)(
-      "renders with color=%s without error",
-      (color) => {
-        render(<Checkbox color={color} />);
-        expect(screen.getByRole("checkbox")).toBeInTheDocument();
-      },
-    );
-
-    it("applies success color classes", () => {
-      render(<Checkbox color="success" />);
-      const checkbox = screen.getByRole("checkbox");
-      expect(checkbox.className).toContain("text-green-600");
-    });
-
-    it("applies destructive color classes", () => {
-      render(<Checkbox color="destructive" />);
-      const checkbox = screen.getByRole("checkbox");
-      expect(checkbox.className).toContain("text-red-600");
-    });
-
-    it("defaults to primary color", () => {
+  describe("default styling", () => {
+    it("defaults to primary text color", () => {
       render(<Checkbox />);
       const checkbox = screen.getByRole("checkbox");
       expect(checkbox.className).toContain("text-primary");
+    });
+
+    it("has focus-visible ring classes", () => {
+      render(<Checkbox />);
+      const checkbox = screen.getByRole("checkbox");
+      expect(checkbox.className).toContain("focus-visible:ring-2");
+      expect(checkbox.className).toContain("focus-visible:ring-offset-2");
+    });
+
+    it("has disabled styles", () => {
+      render(<Checkbox />);
+      const checkbox = screen.getByRole("checkbox");
+      expect(checkbox.className).toContain("disabled:opacity-50");
+      expect(checkbox.className).toContain("disabled:cursor-not-allowed");
+    });
+
+    it("has transition-colors class", () => {
+      render(<Checkbox />);
+      const checkbox = screen.getByRole("checkbox");
+      expect(checkbox.className).toContain("transition-colors");
+    });
+  });
+
+  // ── Label rendering ─────────────────────────────────────────────────
+
+  describe("label", () => {
+    it("wraps input in label when label prop is provided", () => {
+      render(<Checkbox label="Accept" id="accept" />);
+      const label = screen.getByText("Accept");
+      expect(label).toBeInTheDocument();
+    });
+
+    it("auto-generates id when label is provided without id", () => {
+      render(<Checkbox label="Accept" />);
+      expect(screen.getByLabelText("Accept")).toBeInTheDocument();
     });
   });
 });

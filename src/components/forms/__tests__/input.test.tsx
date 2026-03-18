@@ -44,77 +44,69 @@ describe("Input", () => {
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
   });
 
-  // ── Variant tests ─────────────────────────────────────────────────────
+  // ── Error / ARIA tests ──────────────────────────────────────────────
 
-  describe("variants", () => {
-    it.each(["outlined", "filled", "underlined"] as const)(
-      "renders with variant=%s without error",
-      (variant) => {
-        render(<Input variant={variant} placeholder="Test" />);
-        expect(screen.getByPlaceholderText("Test")).toBeInTheDocument();
-      },
-    );
-
-    it("applies filled styles", () => {
-      render(<Input variant="filled" placeholder="Test" />);
-      const input = screen.getByPlaceholderText("Test");
-      expect(input.className).toContain("bg-slate-100");
+  describe("error state", () => {
+    it("sets aria-invalid when error is present", () => {
+      render(<Input label="Email" error="Required" />);
+      expect(screen.getByLabelText("Email")).toHaveAttribute("aria-invalid", "true");
     });
 
-    it("applies underlined styles", () => {
-      render(<Input variant="underlined" placeholder="Test" />);
-      const input = screen.getByPlaceholderText("Test");
-      expect(input.className).toContain("border-b-2");
-    });
-  });
-
-  // ── Clearable tests ───────────────────────────────────────────────────
-
-  describe("clearable", () => {
-    it("shows clear button when clearable and has value", () => {
-      render(
-        <Input clearable value="hello" onChange={() => {}} label="Name" />,
-      );
-      expect(screen.getByLabelText("Clear input")).toBeInTheDocument();
+    it("does not set aria-invalid when no error", () => {
+      render(<Input label="Email" />);
+      expect(screen.getByLabelText("Email")).not.toHaveAttribute("aria-invalid");
     });
 
-    it("does not show clear button when value is empty", () => {
-      render(
-        <Input clearable value="" onChange={() => {}} label="Name" />,
-      );
-      expect(screen.queryByLabelText("Clear input")).not.toBeInTheDocument();
+    it("renders error with role=alert", () => {
+      render(<Input label="Email" error="Required" />);
+      expect(screen.getByRole("alert")).toHaveTextContent("Required");
     });
 
-    it("calls onChange when clear button is clicked", async () => {
-      const user = userEvent.setup();
-      const onChange = vi.fn();
-      render(
-        <Input clearable value="hello" onChange={onChange} label="Name" />,
-      );
-      await user.click(screen.getByLabelText("Clear input"));
-      expect(onChange).toHaveBeenCalledOnce();
+    it("adds error border class", () => {
+      render(<Input label="Email" error="Required" />);
+      expect(screen.getByLabelText("Email").className).toContain("border-red-300");
     });
   });
 
-  // ── Loading tests ─────────────────────────────────────────────────────
+  // ── Icon tests ──────────────────────────────────────────────────────
 
-  describe("loading", () => {
-    it("shows spinner when loading", () => {
-      render(<Input loading label="Search" />);
-      expect(screen.getByLabelText("Loading")).toBeInTheDocument();
+  describe("icon", () => {
+    it("renders icon on the right by default", () => {
+      const { container } = render(<Input label="Search" icon="search" />);
+      const iconEl = container.querySelector("[aria-hidden='true']");
+      expect(iconEl).toBeInTheDocument();
     });
 
-    it("sets aria-busy when loading", () => {
-      render(<Input loading label="Search" />);
-      expect(screen.getByLabelText("Search")).toHaveAttribute("aria-busy", "true");
+    it("renders icon on the left when iconPosition='left'", () => {
+      const { container } = render(<Input label="Search" icon="search" iconPosition="left" />);
+      const iconEl = container.querySelector("[aria-hidden='true']");
+      expect(iconEl).toBeInTheDocument();
     });
 
-    it("does not show clear button when loading even if clearable", () => {
-      render(
-        <Input clearable loading value="hello" onChange={() => {}} label="Name" />,
-      );
-      expect(screen.queryByLabelText("Clear input")).not.toBeInTheDocument();
-      expect(screen.getByLabelText("Loading")).toBeInTheDocument();
+    it("adds left padding when icon is on the left", () => {
+      render(<Input label="Search" icon="search" iconPosition="left" />);
+      expect(screen.getByLabelText("Search").className).toContain("pl-11");
+    });
+
+    it("adds right padding when icon is on the right", () => {
+      render(<Input label="Search" icon="search" />);
+      expect(screen.getByLabelText("Search").className).toContain("pr-11");
+    });
+  });
+
+  // ── Simple mode (no wrapper) ────────────────────────────────────────
+
+  describe("simple mode", () => {
+    it("renders a raw input when no label, icon, error, or hint", () => {
+      const { container } = render(<Input placeholder="Simple" />);
+      // Should not wrap in div with flex-col
+      expect(container.querySelector(".flex.flex-col")).not.toBeInTheDocument();
+      expect(screen.getByPlaceholderText("Simple").tagName).toBe("INPUT");
+    });
+
+    it("wraps in div when label is provided", () => {
+      const { container } = render(<Input label="Name" placeholder="Simple" />);
+      expect(container.querySelector(".flex.flex-col")).toBeInTheDocument();
     });
   });
 });

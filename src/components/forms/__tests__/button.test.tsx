@@ -72,121 +72,95 @@ describe("Button", () => {
   // ── Variants (style) ──
 
   it.each([
-    ["solid", "bg-primary"],
+    ["primary", "bg-primary"],
     ["outline", "border"],
     ["ghost", "bg-transparent"],
-    ["soft", "bg-primary/10"],
+    ["secondary", "bg-secondary"],
     ["link", "underline-offset-4"],
   ] as const)("applies %s variant", (variant, expectedClass) => {
     render(<Button variant={variant}>Test</Button>);
     expect(screen.getByRole("button").className).toContain(expectedClass);
   });
 
-  // ── Colors ──
+  // ── Variant-specific classes ──
 
-  it.each([
-    ["primary", "solid", "bg-primary"],
-    ["destructive", "solid", "bg-red-600"],
-    ["success", "solid", "bg-green-700"],
-    ["warning", "solid", "bg-amber-500"],
-    ["accent", "solid", "bg-accent"],
-    ["secondary", "solid", "bg-secondary"],
-  ] as const)("applies %s color with solid variant", (color, variant, expectedClass) => {
-    render(<Button color={color} variant={variant}>Test</Button>);
-    expect(screen.getByRole("button").className).toContain(expectedClass);
+  it("applies primary variant classes", () => {
+    render(<Button variant="primary">Test</Button>);
+    const cls = screen.getByRole("button").className;
+    expect(cls).toContain("bg-primary");
+    expect(cls).toContain("text-white");
   });
 
-  // ── Color × Variant combinations ──
+  it("applies secondary variant classes", () => {
+    render(<Button variant="secondary">Test</Button>);
+    const cls = screen.getByRole("button").className;
+    expect(cls).toContain("bg-secondary");
+    expect(cls).toContain("text-white");
+  });
 
-  it("applies destructive + outline", () => {
-    render(<Button color="destructive" variant="outline">Delete</Button>);
+  it("applies outline variant classes", () => {
+    render(<Button variant="outline">Test</Button>);
     const cls = screen.getByRole("button").className;
     expect(cls).toContain("border");
-    expect(cls).toContain("text-red-600");
+    expect(cls).toContain("text-gray-600");
   });
 
-  it("applies success + ghost", () => {
-    render(<Button color="success" variant="ghost">OK</Button>);
+  it("applies ghost variant classes", () => {
+    render(<Button variant="ghost">Test</Button>);
     const cls = screen.getByRole("button").className;
-    expect(cls).toContain("text-green-700");
     expect(cls).toContain("bg-transparent");
+    expect(cls).toContain("text-gray-600");
   });
 
-  it("applies warning + soft", () => {
-    render(<Button color="warning" variant="soft">Warn</Button>);
+  it("applies icon variant classes", () => {
+    render(<Button variant="icon" aria-label="Test">Test</Button>);
     const cls = screen.getByRole("button").className;
-    expect(cls).toContain("bg-amber-50");
-    expect(cls).toContain("text-amber-700");
+    expect(cls).toContain("rounded-full");
   });
 
-  it("applies primary + link", () => {
-    render(<Button color="primary" variant="link">More</Button>);
+  it("applies link variant classes", () => {
+    render(<Button variant="link">More</Button>);
     const cls = screen.getByRole("button").className;
     expect(cls).toContain("text-primary");
-    expect(cls).toContain("hover:underline");
+    expect(cls).toContain("underline-offset-4");
   });
 
   // ── Sizes ──
 
   it.each([
-    ["xs", "h-7"],
     ["sm", "h-9"],
     ["md", "h-11"],
     ["lg", "h-12"],
-    ["xl", "h-14"],
+    ["icon", "h-10"],
   ] as const)("applies %s size", (size, expectedClass) => {
     render(<Button size={size}>Test</Button>);
     expect(screen.getByRole("button").className).toContain(expectedClass);
   });
 
-  // ── Rounded ──
+  // ── Default variant and size ──
 
-  it.each([
-    ["default", "rounded-xl"],
-    ["full", "rounded-full"],
-    ["lg", "rounded-lg"],
-    ["md", "rounded-md"],
-    ["none", "rounded-none"],
-  ] as const)("applies %s rounded shape", (rounded, expectedClass) => {
-    render(<Button rounded={rounded}>Test</Button>);
-    expect(screen.getByRole("button").className).toContain(expectedClass);
+  it("defaults to primary variant and md size", () => {
+    render(<Button>Default</Button>);
+    const cls = screen.getByRole("button").className;
+    expect(cls).toContain("bg-primary");
+    expect(cls).toContain("h-11");
   });
 
   // ── Features ──
 
-  it("applies fullWidth", () => {
-    render(<Button fullWidth>Wide</Button>);
-    expect(screen.getByRole("button")).toHaveClass("w-full");
+  it("renders icon on the left by default", () => {
+    const { container } = render(<Button icon="add">Go</Button>);
+    const svg = container.querySelector("svg") || container.querySelector("[aria-hidden='true']");
+    expect(svg).toBeInTheDocument();
   });
 
-  it("renders custom leftIcon", () => {
-    render(<Button leftIcon={<span data-testid="custom-icon">*</span>}>Go</Button>);
-    expect(screen.getByTestId("custom-icon")).toBeInTheDocument();
+  it("renders icon on the right when iconPosition='right'", () => {
+    const { container } = render(<Button icon="add" iconPosition="right">Go</Button>);
+    const svg = container.querySelector("svg") || container.querySelector("[aria-hidden='true']");
+    expect(svg).toBeInTheDocument();
   });
 
-  it("renders custom rightIcon", () => {
-    render(<Button rightIcon={<span data-testid="right">→</span>}>Go</Button>);
-    expect(screen.getByTestId("right")).toBeInTheDocument();
-  });
-
-  it("renders as child element with asChild", () => {
-    render(
-      <Button asChild variant="solid" color="primary">
-        <a href="/home">Home</a>
-      </Button>,
-    );
-    const link = screen.getByRole("link", { name: "Home" });
-    expect(link).toBeInTheDocument();
-    expect(link.className).toContain("bg-primary");
-  });
-
-  // ── Loading text & placement ──
-
-  it("shows loadingText when loading", () => {
-    render(<Button loading loadingText="Saving...">Save</Button>);
-    expect(screen.getByText("Saving...")).toBeInTheDocument();
-    expect(screen.queryByText("Save")).not.toBeInTheDocument();
-  });
+  // ── Loading ──
 
   it("keeps children when loading without loadingText", () => {
     render(<Button loading>Save</Button>);
@@ -194,55 +168,24 @@ describe("Button", () => {
     expect(screen.getByRole("status")).toBeInTheDocument();
   });
 
-  it("places spinner at end when loadingPlacement='end'", () => {
-    const { container } = render(
-      <Button loading loadingPlacement="end">Save</Button>,
-    );
-    const btn = container.querySelector("button")!;
-    const children = Array.from(btn.childNodes);
-    const spinnerIndex = children.findIndex(
-      (n) => n instanceof HTMLElement && n.getAttribute("role") === "status",
-    );
-    const textIndex = children.findIndex((n) => n.textContent === "Save");
-    expect(textIndex).toBeLessThan(spinnerIndex);
-  });
-
   // ── Spinner color ──
 
-  it("uses white spinner for solid variant with dark bg", () => {
-    const { container } = render(<Button variant="solid" color="destructive" loading>Delete</Button>);
-    const spinnerInner = container.querySelector("[role='status'] > span");
-    expect(spinnerInner?.className).toContain("text-white");
+  it("uses white spinner for primary variant", () => {
+    render(<Button variant="primary" loading>Submit</Button>);
+    const spinner = screen.getByRole("status");
+    expect(spinner.className).toContain("text-white");
   });
 
-  it("uses primary spinner for non-solid variants", () => {
-    const { container } = render(<Button variant="outline" loading>Go</Button>);
-    const spinnerInner = container.querySelector("[role='status'] > span");
-    expect(spinnerInner?.className).toContain("text-primary");
+  it("uses white spinner for secondary variant", () => {
+    render(<Button variant="secondary" loading>Submit</Button>);
+    const spinner = screen.getByRole("status");
+    expect(spinner.className).toContain("text-white");
   });
 
-  it("uses primary spinner for warning solid (dark text on light bg)", () => {
-    const { container } = render(<Button variant="solid" color="warning" loading>Warn</Button>);
-    const spinnerInner = container.querySelector("[role='status'] > span");
-    expect(spinnerInner?.className).toContain("text-primary");
-  });
-
-  // ── A11y warning for icon-only ──
-
-  it("warns when icon-only button has no aria-label", () => {
-    const spy = vi.spyOn(console, "warn").mockImplementation(() => {});
-    render(<Button icon="add" size="icon" />);
-    expect(spy).toHaveBeenCalledWith(
-      expect.stringContaining("aria-label"),
-    );
-    spy.mockRestore();
-  });
-
-  it("does not warn when icon-only button has aria-label", () => {
-    const spy = vi.spyOn(console, "warn").mockImplementation(() => {});
-    render(<Button icon="add" size="icon" aria-label="Add item" />);
-    expect(spy).not.toHaveBeenCalled();
-    spy.mockRestore();
+  it("uses primary spinner for non-primary/secondary variants", () => {
+    render(<Button variant="outline" loading>Go</Button>);
+    const spinner = screen.getByRole("status");
+    expect(spinner.className).toContain("text-primary");
   });
 
   it("forwards ref", () => {

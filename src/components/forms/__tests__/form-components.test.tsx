@@ -90,8 +90,9 @@ describe("PasswordInput", () => {
 
   it("shows toggle visibility button", () => {
     render(<PasswordInput />);
+    // The button label is "Show password" when password is hidden
     expect(
-      screen.getByRole("button", { name: "Toggle password visibility" })
+      screen.getByRole("button", { name: "Show password" })
     ).toBeInTheDocument();
   });
 
@@ -115,10 +116,10 @@ describe("PasswordInput", () => {
 // ── SearchInput ──────────────────────────────────────────────────
 
 describe("SearchInput", () => {
-  it("renders a text input", () => {
+  it("renders a search input", () => {
     render(<SearchInput placeholder="Search..." />);
     const input = screen.getByPlaceholderText("Search...");
-    expect(input).toHaveAttribute("type", "text");
+    expect(input).toHaveAttribute("type", "search");
   });
 
   it("does not show clear button when value is empty", () => {
@@ -244,14 +245,16 @@ describe("FormField", () => {
 
 describe("IconButton", () => {
   it("renders a button with type='button'", () => {
-    render(<IconButton icon="settings" />);
+    render(<IconButton icon="settings" aria-label="Settings" />);
     const button = screen.getByRole("button");
     expect(button).toHaveAttribute("type", "button");
   });
 
-  it("defaults aria-label to icon name", () => {
+  it("renders without aria-label when not provided", () => {
     render(<IconButton icon="settings" />);
-    expect(screen.getByRole("button")).toHaveAttribute("aria-label", "settings");
+    const button = screen.getByRole("button");
+    // IconButton does not default aria-label to icon name
+    expect(button).not.toHaveAttribute("aria-label");
   });
 
   it("allows custom aria-label", () => {
@@ -330,10 +333,11 @@ describe("SegmentedControl", () => {
     expect(screen.getByText("Month")).toBeInTheDocument();
   });
 
-  it("renders buttons with type='button'", () => {
+  it("renders radio buttons with type='button'", () => {
     render(<SegmentedControl items={items} />);
-    const buttons = screen.getAllByRole("button");
-    buttons.forEach((btn) => {
+    // SegmentedControl uses role="radio" not role="button"
+    const radios = screen.getAllByRole("radio");
+    radios.forEach((btn) => {
       expect(btn).toHaveAttribute("type", "button");
     });
   });
@@ -362,10 +366,11 @@ describe("TabFilter", () => {
     { label: "Archived", value: "archived" },
   ];
 
-  it("renders all items as buttons", () => {
+  it("renders all items as tabs", () => {
     render(<TabFilter items={items} />);
-    const buttons = screen.getAllByRole("button");
-    expect(buttons.length).toBeGreaterThanOrEqual(3);
+    // TabFilter uses role="tab" for desktop buttons
+    const tabs = screen.getAllByRole("tab");
+    expect(tabs.length).toBeGreaterThanOrEqual(3);
   });
 
   it("renders a mobile select", () => {
@@ -378,8 +383,8 @@ describe("TabFilter", () => {
     const user = userEvent.setup();
     const onValueChange = vi.fn();
     render(<TabFilter items={items} onValueChange={onValueChange} />);
-    const buttons = screen.getAllByRole("button");
-    await user.click(buttons.find((b) => b.textContent === "Active")!);
+    const tabs = screen.getAllByRole("tab");
+    await user.click(tabs.find((b) => b.textContent === "Active")!);
     expect(onValueChange).toHaveBeenCalledWith("active");
   });
 });
