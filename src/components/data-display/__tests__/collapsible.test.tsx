@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- render function children pattern */
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "../collapsible";
@@ -52,12 +53,12 @@ describe("Collapsible", () => {
     const onOpenChange = vi.fn();
     render(
       <Collapsible onOpenChange={onOpenChange}>
-        {({ isOpen, toggle }: { isOpen: boolean; toggle: () => void }) => (
+        {(({ isOpen, toggle }: any) => (
           <>
             <button onClick={toggle}>Toggle</button>
             {isOpen && <div>Expanded content</div>}
           </>
-        )}
+        )) as any}
       </Collapsible>
     );
 
@@ -71,12 +72,12 @@ describe("Collapsible", () => {
     const onOpenChange = vi.fn();
     render(
       <Collapsible disabled onOpenChange={onOpenChange}>
-        {({ isOpen, toggle }: { isOpen: boolean; toggle: () => void }) => (
+        {(({ isOpen, toggle }: any) => (
           <>
             <button onClick={toggle}>Toggle</button>
             {isOpen && <div>Expanded content</div>}
           </>
-        )}
+        )) as any}
       </Collapsible>
     );
 

@@ -1,7 +1,7 @@
 import { forwardRef, type SVGAttributes } from "react";
 import { cn } from "../../lib/utils";
 
-type SparklineProps = SVGAttributes<SVGSVGElement> & {
+type SparklineProps = Omit<SVGAttributes<SVGSVGElement>, "fill"> & {
   data: number[];
   width?: number;
   height?: number;

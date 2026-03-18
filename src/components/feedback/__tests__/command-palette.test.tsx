@@ -75,7 +75,7 @@ describe("CommandPalette", () => {
         <CommandPalette.Item onClick={onClick}>Clickable</CommandPalette.Item>
       </CommandPalette>
     );
-    screen.getByText("Clickable").closest('[role="option"]')!.click();
+    (screen.getByText("Clickable").closest('[role="option"]') as HTMLElement)!.click();
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 });
