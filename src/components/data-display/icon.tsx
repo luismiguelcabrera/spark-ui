@@ -41,6 +41,7 @@ const Icon = forwardRef<SVGSVGElement | HTMLSpanElement, IconProps>(
       const CustomIcon = resolver(name);
       if (CustomIcon) {
         return (
+          // eslint-disable-next-line react-hooks/static-components -- dynamic icon resolution from consumer IconProvider
           <CustomIcon
             ref={ref as React.Ref<SVGSVGElement>}
             size={svgSizeMap[size]}

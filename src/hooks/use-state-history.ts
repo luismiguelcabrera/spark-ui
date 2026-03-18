@@ -14,13 +14,13 @@ export type UseStateHistoryReturn<T> = {
   reset: (value?: T) => void;
 };
 
-// eslint-disable react-hooks/refs -- intentional: ref-based state for O(1) undo/redo without re-render on every push
+/* eslint-disable react-hooks/refs -- intentional: ref-based state for O(1) undo/redo without re-render on every push */
 export function useStateHistory<T>(initial: T): UseStateHistoryReturn<T> {
   const [, forceRender] = useState(0);
   const historyRef = useRef<T[]>([initial]);
   const pointerRef = useRef(0);
 
-  const state = historyRef.current[pointerRef.current]; // eslint-disable-line react-hooks/refs -- intentional: read ref-based history for O(1) undo/redo
+  const state = historyRef.current[pointerRef.current];  
 
   const set = useCallback((value: T) => {
     const pointer = pointerRef.current;

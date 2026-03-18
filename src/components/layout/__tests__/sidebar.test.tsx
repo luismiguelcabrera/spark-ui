@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/globals -- test pattern: capture context via render */
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { Sidebar, SidebarNavGroup, SidebarNavItem } from "../sidebar";
