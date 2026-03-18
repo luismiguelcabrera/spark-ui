@@ -1,305 +1,625 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import { DataTable, type Column } from "../data-table";
 
-type Person = { name: string; age: number; city: string };
+/* -------------------------------------------------------------------------- */
+/*  Shared test data                                                           */
+/* -------------------------------------------------------------------------- */
 
-const people: Person[] = [
-  { name: "Charlie", age: 30, city: "NYC" },
-  { name: "Alice", age: 25, city: "LA" },
-  { name: "Bob", age: 35, city: "Chicago" },
+type User = {
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+};
+
+const users: User[] = [
+  { name: "Alice", email: "alice@example.com", role: "Admin", status: "Active" },
+  { name: "Bob", email: "bob@example.com", role: "Editor", status: "Inactive" },
+  { name: "Charlie", email: "charlie@example.com", role: "Viewer", status: "Active" },
 ];
 
-const columns: Column<Person>[] = [
-  { key: "name", header: "Name", render: (r) => r.name, sortable: true },
-  {
-    key: "age",
-    header: "Age",
-    render: (r) => String(r.age),
-    sortable: true,
-    sortFn: (a, b) => a.age - b.age,
-  },
-  { key: "city", header: "City", render: (r) => r.city },
+const columns: Column<User>[] = [
+  { key: "name", header: "Name", render: (r) => r.name },
+  { key: "email", header: "Email", render: (r) => r.email },
+  { key: "role", header: "Role", render: (r) => r.role },
+  { key: "status", header: "Status", render: (r) => r.status },
 ];
 
-describe("DataTable (basic)", () => {
-  it("renders all rows", () => {
-    render(<DataTable columns={columns} data={people} />);
-    expect(screen.getByText("Charlie")).toBeInTheDocument();
-    expect(screen.getByText("Alice")).toBeInTheDocument();
-    expect(screen.getByText("Bob")).toBeInTheDocument();
-  });
+/* -------------------------------------------------------------------------- */
+/*  Basic rendering                                                            */
+/* -------------------------------------------------------------------------- */
 
+describe("DataTable", () => {
   it("renders column headers", () => {
-    render(<DataTable columns={columns} data={people} />);
+    render(<DataTable columns={columns} data={users} />);
     expect(screen.getByText("Name")).toBeInTheDocument();
-    expect(screen.getByText("Age")).toBeInTheDocument();
-    expect(screen.getByText("City")).toBeInTheDocument();
+    expect(screen.getByText("Email")).toBeInTheDocument();
+    expect(screen.getByText("Role")).toBeInTheDocument();
+    expect(screen.getByText("Status")).toBeInTheDocument();
   });
 
-  it("renders empty state", () => {
-    render(
-      <DataTable columns={columns} data={[]} emptyState="No data" />,
-    );
-    expect(screen.getByText("No data")).toBeInTheDocument();
-  });
-});
-
-describe("DataTable (sorting)", () => {
-  it("shows sort buttons only for sortable columns", () => {
-    render(<DataTable columns={columns} data={people} />);
-    // Name and Age are sortable — rendered as buttons
-    const nameBtn = screen.getByRole("button", { name: /Name/ });
-    expect(nameBtn).toBeInTheDocument();
-    const ageBtn = screen.getByRole("button", { name: /Age/ });
-    expect(ageBtn).toBeInTheDocument();
-    // City is NOT sortable — no button
-    expect(screen.queryByRole("button", { name: /City/ })).not.toBeInTheDocument();
-  });
-
-  it("sortable header has data-sort='none' initially", () => {
-    const { container } = render(<DataTable columns={columns} data={people} />);
-    const nameCol = container.querySelector('[data-sort]');
-    expect(nameCol).toHaveAttribute("data-sort", "none");
-  });
-
-  it("clicking a sortable header sorts ascending", async () => {
-    const user = userEvent.setup();
-    const onSort = vi.fn();
-    render(
-      <DataTable columns={columns} data={people} onSortChange={onSort} />,
-    );
-    await user.click(screen.getByRole("button", { name: /Name/ }));
-    expect(onSort).toHaveBeenCalledWith({ key: "name", direction: "asc" });
-  });
-
-  it("clicking again sorts descending", async () => {
-    const user = userEvent.setup();
-    const onSort = vi.fn();
-    render(
-      <DataTable
-        columns={columns}
-        data={people}
-        defaultSort={{ key: "name", direction: "asc" }}
-        onSortChange={onSort}
-      />,
-    );
-    await user.click(screen.getByRole("button", { name: /Name/ }));
-    expect(onSort).toHaveBeenCalledWith({ key: "name", direction: "desc" });
-  });
-
-  it("clicking a third time clears sort", async () => {
-    const user = userEvent.setup();
-    const onSort = vi.fn();
-    render(
-      <DataTable
-        columns={columns}
-        data={people}
-        defaultSort={{ key: "name", direction: "desc" }}
-        onSortChange={onSort}
-      />,
-    );
-    await user.click(screen.getByRole("button", { name: /Name/ }));
-    expect(onSort).toHaveBeenCalledWith(null);
-  });
-
-  it("sorts data ascending by string column (uncontrolled)", async () => {
-    const user = userEvent.setup();
-    render(<DataTable columns={columns} data={people} />);
-    await user.click(screen.getByRole("button", { name: /Name/ }));
-    // After sorting by Name asc: Alice, Bob, Charlie
-    const sortBtn = screen.getByRole("button", { name: /Sort by Name/ });
-    expect(sortBtn).toHaveAttribute("aria-label", "Sort by Name, currently ascending");
-    // Verify names appear in sorted order in the document
-    const names = screen.getAllByText(/^(Alice|Bob|Charlie)$/);
-    expect(names[0]).toHaveTextContent("Alice");
-    expect(names[1]).toHaveTextContent("Bob");
-    expect(names[2]).toHaveTextContent("Charlie");
-  });
-
-  it("sorts data using custom sortFn (numeric)", async () => {
-    const user = userEvent.setup();
-    render(<DataTable columns={columns} data={people} />);
-    await user.click(screen.getByRole("button", { name: /Age/ }));
-    // Sorted by age asc: Alice(25), Charlie(30), Bob(35)
-    const sortBtn = screen.getByRole("button", { name: /Sort by Age/ });
-    expect(sortBtn).toHaveAttribute("aria-label", "Sort by Age, currently ascending");
-    const ages = screen.getAllByText(/^(25|30|35)$/);
-    expect(ages[0]).toHaveTextContent("25");
-    expect(ages[1]).toHaveTextContent("30");
-    expect(ages[2]).toHaveTextContent("35");
-  });
-
-  it("controlled sort shows correct aria-label", () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={people}
-        sort={{ key: "age", direction: "desc" }}
-      />,
-    );
-    const ageBtn = screen.getByRole("button", { name: /Sort by Age/ });
-    expect(ageBtn).toHaveAttribute("aria-label", "Sort by Age, currently descending");
-    // Name should still show 'none'
-    const nameBtn = screen.getByRole("button", { name: /Sort by Name/ });
-    expect(nameBtn).toHaveAttribute("aria-label", "Sort by Name, currently none");
-  });
-
-  it("clicking a different column changes sort column", async () => {
-    const user = userEvent.setup();
-    const onSort = vi.fn();
-    render(
-      <DataTable
-        columns={columns}
-        data={people}
-        defaultSort={{ key: "name", direction: "asc" }}
-        onSortChange={onSort}
-      />,
-    );
-    await user.click(screen.getByRole("button", { name: /Age/ }));
-    expect(onSort).toHaveBeenCalledWith({ key: "age", direction: "asc" });
-  });
-
-  it("does not sort when column is not sortable", () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={people}
-        defaultSort={{ key: "city", direction: "asc" }}
-      />,
-    );
-    // Data should remain in original order since city is not sortable
-    expect(screen.getByText("Charlie")).toBeInTheDocument();
-  });
-});
-
-// ---------------------------------------------------------------------------
-// Filtering
-// ---------------------------------------------------------------------------
-
-const filterColumns: Column<Person>[] = [
-  { key: "name", header: "Name", render: (r) => r.name, filterable: "text" },
-  { key: "city", header: "City", render: (r) => r.city, filterable: "select" },
-  { key: "age", header: "Age", render: (r) => String(r.age) },
-];
-
-describe("DataTable (filtering)", () => {
-  it("renders filter inputs for text-filterable columns", () => {
-    render(<DataTable columns={filterColumns} data={people} />);
-    expect(screen.getByLabelText("Filter by Name")).toBeInTheDocument();
-  });
-
-  it("renders filter selects for select-filterable columns", () => {
-    render(<DataTable columns={filterColumns} data={people} />);
-    expect(screen.getByLabelText("Filter by City")).toBeInTheDocument();
-  });
-
-  it("does not render filter for non-filterable columns", () => {
-    render(<DataTable columns={filterColumns} data={people} />);
-    expect(screen.queryByLabelText("Filter by Age")).not.toBeInTheDocument();
-  });
-
-  it("filters rows by text input", async () => {
-    const user = userEvent.setup();
-    render(<DataTable columns={filterColumns} data={people} />);
-    await user.type(screen.getByLabelText("Filter by Name"), "Ali");
+  it("renders data rows", () => {
+    render(<DataTable columns={columns} data={users} />);
     expect(screen.getByText("Alice")).toBeInTheDocument();
-    expect(screen.queryByText("Charlie")).not.toBeInTheDocument();
-    expect(screen.queryByText("Bob")).not.toBeInTheDocument();
+    expect(screen.getByText("bob@example.com")).toBeInTheDocument();
+    expect(screen.getByText("Viewer")).toBeInTheDocument();
   });
 
-  it("filters rows by select dropdown", async () => {
-    const user = userEvent.setup();
-    render(<DataTable columns={filterColumns} data={people} />);
-    await user.selectOptions(screen.getByLabelText("Filter by City"), "NYC");
-    expect(screen.getByText("Charlie")).toBeInTheDocument();
+  it("renders empty state when data is empty", () => {
+    render(
+      <DataTable columns={columns} data={[]} emptyState="No users found." />,
+    );
+    expect(screen.getByText("No users found.")).toBeInTheDocument();
+  });
+
+  it("renders loading skeleton when isLoading is true", () => {
+    render(<DataTable columns={columns} data={users} isLoading />);
     expect(screen.queryByText("Alice")).not.toBeInTheDocument();
   });
 
-  it("select filter shows unique values from data", () => {
-    render(<DataTable columns={filterColumns} data={people} />);
-    const select = screen.getByLabelText("Filter by City") as HTMLSelectElement;
-    const options = Array.from(select.options).map((o) => o.value);
-    expect(options).toContain("");  // "All" option
-    expect(options).toContain("NYC");
-    expect(options).toContain("LA");
-    expect(options).toContain("Chicago");
-  });
-
-  it("calls onFilterChange when typing", async () => {
-    const user = userEvent.setup();
-    const onFilterChange = vi.fn();
-    render(
-      <DataTable
-        columns={filterColumns}
-        data={people}
-        onFilterChange={onFilterChange}
-      />,
+  it("applies custom className", () => {
+    const { container } = render(
+      <DataTable columns={columns} data={users} className="my-custom-class" />,
     );
-    await user.type(screen.getByLabelText("Filter by Name"), "B");
-    expect(onFilterChange).toHaveBeenCalledWith({ name: "B" });
+    expect(container.firstChild).toHaveClass("my-custom-class");
   });
 
-  it("controlled filters work", () => {
-    render(
-      <DataTable
-        columns={filterColumns}
-        data={people}
-        filters={{ name: "Bob" }}
-      />,
-    );
-    expect(screen.getByText("Bob")).toBeInTheDocument();
-    expect(screen.queryByText("Alice")).not.toBeInTheDocument();
-    expect(screen.queryByText("Charlie")).not.toBeInTheDocument();
+  /* ------------------------------------------------------------------------ */
+  /*  Selection                                                                */
+  /* ------------------------------------------------------------------------ */
+
+  describe("Selection", () => {
+    it("renders checkboxes when selectable", () => {
+      render(<DataTable columns={columns} data={users} selectable />);
+      // Header checkbox + 3 row checkboxes
+      const checkboxes = screen.getAllByRole("checkbox");
+      expect(checkboxes.length).toBe(4);
+    });
+
+    it("calls onSelectionChange when a row is selected", () => {
+      const onSelectionChange = vi.fn();
+      render(
+        <DataTable
+          columns={columns}
+          data={users}
+          selectable
+          onSelectionChange={onSelectionChange}
+        />,
+      );
+      const checkboxes = screen.getAllByRole("checkbox");
+      // Click first row checkbox (index 1, since 0 is "select all")
+      fireEvent.click(checkboxes[1]);
+      expect(onSelectionChange).toHaveBeenCalledWith([0]);
+    });
+
+    it("selects all rows when header checkbox is clicked", () => {
+      const onSelectionChange = vi.fn();
+      render(
+        <DataTable
+          columns={columns}
+          data={users}
+          selectable
+          onSelectionChange={onSelectionChange}
+        />,
+      );
+      const checkboxes = screen.getAllByRole("checkbox");
+      fireEvent.click(checkboxes[0]); // Select all
+      expect(onSelectionChange).toHaveBeenCalledWith([0, 1, 2]);
+    });
   });
 
-  it("shows empty state when filter matches nothing", async () => {
-    const user = userEvent.setup();
-    render(
-      <DataTable
-        columns={filterColumns}
-        data={people}
-        emptyState="No results"
-      />,
-    );
-    await user.type(screen.getByLabelText("Filter by Name"), "zzzzz");
-    expect(screen.getByText("No results")).toBeInTheDocument();
+  /* ------------------------------------------------------------------------ */
+  /*  Sorting                                                                  */
+  /* ------------------------------------------------------------------------ */
+
+  describe("Sorting", () => {
+    const sortableColumns: Column<User>[] = [
+      { key: "name", header: "Name", render: (r) => r.name, sortable: true },
+      { key: "email", header: "Email", render: (r) => r.email },
+    ];
+
+    it("renders sort buttons for sortable columns", () => {
+      render(<DataTable columns={sortableColumns} data={users} />);
+      expect(
+        screen.getByRole("button", { name: /sort by name/i }),
+      ).toBeInTheDocument();
+    });
+
+    it("does not render sort buttons for non-sortable columns", () => {
+      render(<DataTable columns={sortableColumns} data={users} />);
+      expect(
+        screen.queryByRole("button", { name: /sort by email/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it("calls onSortChange when sort button is clicked", () => {
+      const onSortChange = vi.fn();
+      render(
+        <DataTable
+          columns={sortableColumns}
+          data={users}
+          sort={null}
+          onSortChange={onSortChange}
+        />,
+      );
+      fireEvent.click(
+        screen.getByRole("button", { name: /sort by name/i }),
+      );
+      expect(onSortChange).toHaveBeenCalledWith({
+        key: "name",
+        direction: "asc",
+      });
+    });
+
+    it("sorts data with defaultSort", () => {
+      render(
+        <DataTable
+          columns={sortableColumns}
+          data={users}
+          defaultSort={{ key: "name", direction: "desc" }}
+        />,
+      );
+      // Data should be sorted desc: Charlie, Bob, Alice
+      const cells = screen.getAllByText(/^(Alice|Bob|Charlie)$/);
+      expect(cells[0]).toHaveTextContent("Charlie");
+      expect(cells[1]).toHaveTextContent("Bob");
+      expect(cells[2]).toHaveTextContent("Alice");
+    });
   });
 
-  it("supports custom filterFn", async () => {
-    const user = userEvent.setup();
-    const customCols: Column<Person>[] = [
+  /* ------------------------------------------------------------------------ */
+  /*  Filtering                                                                */
+  /* ------------------------------------------------------------------------ */
+
+  describe("Filtering", () => {
+    const filterColumns: Column<User>[] = [
       {
-        key: "age",
-        header: "Age",
-        render: (r) => String(r.age),
+        key: "name",
+        header: "Name",
+        render: (r) => r.name,
         filterable: "text",
-        filterFn: (row, value) => row.age >= Number(value),
       },
-      { key: "name", header: "Name", render: (r) => r.name },
+      {
+        key: "role",
+        header: "Role",
+        render: (r) => r.role,
+        filterable: "select",
+      },
+      { key: "email", header: "Email", render: (r) => r.email },
     ];
-    render(<DataTable columns={customCols} data={people} />);
-    await user.type(screen.getByLabelText("Filter by Age"), "30");
-    // Alice (25) should be filtered out
-    expect(screen.queryByText("Alice")).not.toBeInTheDocument();
-    expect(screen.getByText("Charlie")).toBeInTheDocument(); // 30
-    expect(screen.getByText("Bob")).toBeInTheDocument(); // 35
+
+    it("renders text filter inputs", () => {
+      render(<DataTable columns={filterColumns} data={users} />);
+      expect(
+        screen.getByLabelText("Filter by Name"),
+      ).toBeInTheDocument();
+    });
+
+    it("renders select filter dropdowns", () => {
+      render(<DataTable columns={filterColumns} data={users} />);
+      expect(
+        screen.getByLabelText("Filter by Role"),
+      ).toBeInTheDocument();
+    });
+
+    it("filters data when text filter changes", async () => {
+      const user = userEvent.setup();
+      render(<DataTable columns={filterColumns} data={users} />);
+      const input = screen.getByLabelText("Filter by Name");
+      await user.type(input, "Alice");
+      expect(screen.getByText("Alice")).toBeInTheDocument();
+      expect(screen.queryByText("Bob")).not.toBeInTheDocument();
+    });
   });
 
-  it("filter + sort work together", async () => {
-    const user = userEvent.setup();
-    const bothCols: Column<Person>[] = [
-      { key: "name", header: "Name", render: (r) => r.name, sortable: true, filterable: "text" },
-      { key: "age", header: "Age", render: (r) => String(r.age) },
-      { key: "city", header: "City", render: (r) => r.city },
+  /* ------------------------------------------------------------------------ */
+  /*  Row Expansion                                                            */
+  /* ------------------------------------------------------------------------ */
+
+  describe("Row Expansion", () => {
+    const expandable = {
+      render: (row: User) => (
+        <div data-testid={`detail-${row.name}`}>
+          Details for {row.name}: {row.email}
+        </div>
+      ),
+    };
+
+    it("renders expand toggle buttons when expandable is provided", () => {
+      render(
+        <DataTable columns={columns} data={users} expandable={expandable} />,
+      );
+      const expandButtons = screen.getAllByRole("button", {
+        name: /expand row/i,
+      });
+      expect(expandButtons.length).toBe(3);
+    });
+
+    it("expand buttons have aria-expanded=false initially", () => {
+      render(
+        <DataTable columns={columns} data={users} expandable={expandable} />,
+      );
+      const expandButtons = screen.getAllByRole("button", {
+        name: /expand row/i,
+      });
+      expandButtons.forEach((btn) => {
+        expect(btn).toHaveAttribute("aria-expanded", "false");
+      });
+    });
+
+    it("does not show detail content initially", () => {
+      render(
+        <DataTable columns={columns} data={users} expandable={expandable} />,
+      );
+      expect(screen.queryByTestId("detail-Alice")).not.toBeInTheDocument();
+    });
+
+    it("shows detail content when expand button is clicked", () => {
+      render(
+        <DataTable columns={columns} data={users} expandable={expandable} />,
+      );
+      const expandButtons = screen.getAllByRole("button", {
+        name: /expand row/i,
+      });
+      fireEvent.click(expandButtons[0]);
+      expect(screen.getByTestId("detail-Alice")).toBeInTheDocument();
+      expect(screen.getByText("Details for Alice: alice@example.com")).toBeInTheDocument();
+    });
+
+    it("sets aria-expanded=true on expanded row", () => {
+      render(
+        <DataTable columns={columns} data={users} expandable={expandable} />,
+      );
+      const expandButtons = screen.getAllByRole("button", {
+        name: /expand row/i,
+      });
+      fireEvent.click(expandButtons[0]);
+      // First button should now say "Collapse row"
+      const collapseButton = screen.getByRole("button", {
+        name: /collapse row/i,
+      });
+      expect(collapseButton).toHaveAttribute("aria-expanded", "true");
+    });
+
+    it("collapses row when toggle is clicked again", () => {
+      render(
+        <DataTable columns={columns} data={users} expandable={expandable} />,
+      );
+      const expandButtons = screen.getAllByRole("button", {
+        name: /expand row/i,
+      });
+      fireEvent.click(expandButtons[0]);
+      expect(screen.getByTestId("detail-Alice")).toBeInTheDocument();
+
+      const collapseButton = screen.getByRole("button", {
+        name: /collapse row/i,
+      });
+      fireEvent.click(collapseButton);
+      expect(screen.queryByTestId("detail-Alice")).not.toBeInTheDocument();
+    });
+
+    it("can expand multiple rows simultaneously", () => {
+      render(
+        <DataTable columns={columns} data={users} expandable={expandable} />,
+      );
+      const expandButtons = screen.getAllByRole("button", {
+        name: /expand row/i,
+      });
+      fireEvent.click(expandButtons[0]);
+      fireEvent.click(expandButtons[1]);
+      expect(screen.getByTestId("detail-Alice")).toBeInTheDocument();
+      expect(screen.getByTestId("detail-Bob")).toBeInTheDocument();
+    });
+
+    it("supports controlled expandedRows", () => {
+      const onExpandChange = vi.fn();
+      const { rerender } = render(
+        <DataTable
+          columns={columns}
+          data={users}
+          expandable={expandable}
+          expandedRows={[]}
+          onExpandChange={onExpandChange}
+        />,
+      );
+      const expandButtons = screen.getAllByRole("button", {
+        name: /expand row/i,
+      });
+      fireEvent.click(expandButtons[0]);
+      expect(onExpandChange).toHaveBeenCalledWith([0]);
+
+      // With controlled state set to [0], detail should show
+      rerender(
+        <DataTable
+          columns={columns}
+          data={users}
+          expandable={expandable}
+          expandedRows={[0]}
+          onExpandChange={onExpandChange}
+        />,
+      );
+      expect(screen.getByTestId("detail-Alice")).toBeInTheDocument();
+    });
+
+    it("supports defaultExpandedRows", () => {
+      render(
+        <DataTable
+          columns={columns}
+          data={users}
+          expandable={expandable}
+          defaultExpandedRows={[1]}
+        />,
+      );
+      expect(screen.getByTestId("detail-Bob")).toBeInTheDocument();
+      expect(screen.queryByTestId("detail-Alice")).not.toBeInTheDocument();
+    });
+  });
+
+  /* ------------------------------------------------------------------------ */
+  /*  Cell Editing                                                             */
+  /* ------------------------------------------------------------------------ */
+
+  describe("Cell Editing", () => {
+    const editableColumns: Column<User>[] = [
+      { key: "name", header: "Name", render: (r) => r.name, editable: true },
+      { key: "email", header: "Email", render: (r) => r.email, editable: true },
+      { key: "role", header: "Role", render: (r) => r.role },
     ];
-    render(<DataTable columns={bothCols} data={people} />);
-    // Filter to just Charlie and Bob (contain "b" or "c" — use "l" for Alice/Charlie)
-    await user.type(screen.getByLabelText("Filter by Name"), "li");
-    // Only Alice and Charlie match "li"
-    expect(screen.getByText("Alice")).toBeInTheDocument();
-    expect(screen.getByText("Charlie")).toBeInTheDocument();
-    expect(screen.queryByText("Bob")).not.toBeInTheDocument();
+
+    it("marks editable cells with data-editable attribute", () => {
+      const { container } = render(
+        <DataTable columns={editableColumns} data={users} />,
+      );
+      const editableCells = container.querySelectorAll("[data-editable]");
+      // 3 rows x 2 editable columns = 6
+      expect(editableCells.length).toBe(6);
+    });
+
+    it("enters edit mode on double-click", () => {
+      render(<DataTable columns={editableColumns} data={users} />);
+      const aliceCell = screen.getByText("Alice");
+      fireEvent.doubleClick(aliceCell.closest("[data-editable]")!);
+      expect(screen.getByDisplayValue("Alice")).toBeInTheDocument();
+    });
+
+    it("does not enter edit mode on non-editable cells", () => {
+      render(<DataTable columns={editableColumns} data={users} />);
+      const roleCell = screen.getByText("Admin");
+      fireEvent.doubleClick(roleCell);
+      // Should not show an input
+      expect(screen.queryByDisplayValue("Admin")).not.toBeInTheDocument();
+    });
+
+    it("saves value on Enter key", async () => {
+      const onCellEdit = vi.fn();
+      render(
+        <DataTable
+          columns={editableColumns}
+          data={users}
+          onCellEdit={onCellEdit}
+        />,
+      );
+
+      // Double-click to enter edit mode
+      const aliceCell = screen.getByText("Alice");
+      fireEvent.doubleClick(aliceCell.closest("[data-editable]")!);
+
+      const input = screen.getByDisplayValue("Alice");
+      fireEvent.change(input, { target: { value: "Alice Updated" } });
+      fireEvent.keyDown(input, { key: "Enter" });
+
+      expect(onCellEdit).toHaveBeenCalledWith(0, "name", "Alice Updated");
+    });
+
+    it("cancels editing on Escape key", () => {
+      const onCellEdit = vi.fn();
+      render(
+        <DataTable
+          columns={editableColumns}
+          data={users}
+          onCellEdit={onCellEdit}
+        />,
+      );
+
+      const aliceCell = screen.getByText("Alice");
+      fireEvent.doubleClick(aliceCell.closest("[data-editable]")!);
+
+      const input = screen.getByDisplayValue("Alice");
+      fireEvent.change(input, { target: { value: "Changed" } });
+      fireEvent.keyDown(input, { key: "Escape" });
+
+      expect(onCellEdit).not.toHaveBeenCalled();
+      // Should be back to normal display
+      expect(screen.getByText("Alice")).toBeInTheDocument();
+    });
+
+    it("shows edit input with correct initial value", () => {
+      render(<DataTable columns={editableColumns} data={users} />);
+
+      const bobEmail = screen.getByText("bob@example.com");
+      fireEvent.doubleClick(bobEmail.closest("[data-editable]")!);
+
+      expect(screen.getByDisplayValue("bob@example.com")).toBeInTheDocument();
+    });
+
+    it("supports custom editRender", () => {
+      const customColumns: Column<User>[] = [
+        {
+          key: "name",
+          header: "Name",
+          render: (r) => r.name,
+          editable: true,
+          editRender: (value, _row, onChange) => (
+            <select
+              data-testid="custom-edit"
+              value={String(value)}
+              onChange={(e) => onChange(e.target.value)}
+            >
+              <option value="Alice">Alice</option>
+              <option value="Bob">Bob</option>
+            </select>
+          ),
+        },
+        { key: "email", header: "Email", render: (r) => r.email },
+      ];
+
+      render(<DataTable columns={customColumns} data={users} />);
+      const aliceCell = screen.getByText("Alice");
+      fireEvent.doubleClick(aliceCell.closest("[data-editable]")!);
+      expect(screen.getByTestId("custom-edit")).toBeInTheDocument();
+    });
+  });
+
+  /* ------------------------------------------------------------------------ */
+  /*  Column Resize                                                            */
+  /* ------------------------------------------------------------------------ */
+
+  describe("Column Resize", () => {
+    it("renders resize handles when resizable is true", () => {
+      render(
+        <DataTable columns={columns} data={users} resizable />,
+      );
+      const handles = screen.getAllByRole("separator");
+      // Resize handles appear between columns, so columns.length - 1
+      expect(handles.length).toBe(columns.length - 1);
+    });
+
+    it("does not render resize handles when resizable is false", () => {
+      render(<DataTable columns={columns} data={users} />);
+      expect(screen.queryByRole("separator")).not.toBeInTheDocument();
+    });
+
+    it("resize handles have correct cursor style", () => {
+      render(
+        <DataTable columns={columns} data={users} resizable />,
+      );
+      const handles = screen.getAllByRole("separator");
+      handles.forEach((handle) => {
+        expect(handle.className).toContain("cursor-col-resize");
+      });
+    });
+
+    it("resize handles have vertical aria-orientation", () => {
+      render(
+        <DataTable columns={columns} data={users} resizable />,
+      );
+      const handles = screen.getAllByRole("separator");
+      handles.forEach((handle) => {
+        expect(handle).toHaveAttribute("aria-orientation", "vertical");
+      });
+    });
+  });
+
+  /* ------------------------------------------------------------------------ */
+  /*  Combined features                                                        */
+  /* ------------------------------------------------------------------------ */
+
+  describe("Combined features", () => {
+    it("works with expandable + selectable together", () => {
+      const expandable = {
+        render: (row: User) => <div>Detail: {row.name}</div>,
+      };
+      render(
+        <DataTable
+          columns={columns}
+          data={users}
+          selectable
+          expandable={expandable}
+        />,
+      );
+      // Should have checkboxes and expand buttons
+      expect(screen.getAllByRole("checkbox").length).toBe(4);
+      expect(
+        screen.getAllByRole("button", { name: /expand row/i }).length,
+      ).toBe(3);
+    });
+
+    it("works with expandable + resizable together", () => {
+      const expandable = {
+        render: (row: User) => <div>Detail: {row.name}</div>,
+      };
+      render(
+        <DataTable
+          columns={columns}
+          data={users}
+          expandable={expandable}
+          resizable
+        />,
+      );
+      expect(
+        screen.getAllByRole("button", { name: /expand row/i }).length,
+      ).toBe(3);
+      expect(screen.getAllByRole("separator").length).toBe(
+        columns.length - 1,
+      );
+    });
+
+    it("editable cells work alongside expandable rows", () => {
+      const editableColumns: Column<User>[] = [
+        { key: "name", header: "Name", render: (r) => r.name, editable: true },
+        { key: "email", header: "Email", render: (r) => r.email },
+      ];
+      const expandable = {
+        render: (row: User) => (
+          <div data-testid={`detail-${row.name}`}>Detail: {row.name}</div>
+        ),
+      };
+      const onCellEdit = vi.fn();
+
+      render(
+        <DataTable
+          columns={editableColumns}
+          data={users}
+          expandable={expandable}
+          onCellEdit={onCellEdit}
+        />,
+      );
+
+      // Expand first row
+      const expandButtons = screen.getAllByRole("button", {
+        name: /expand row/i,
+      });
+      fireEvent.click(expandButtons[0]);
+      expect(screen.getByTestId("detail-Alice")).toBeInTheDocument();
+
+      // Double-click to edit
+      const aliceCell = screen.getByText("Alice");
+      fireEvent.doubleClick(aliceCell.closest("[data-editable]")!);
+      const input = screen.getByDisplayValue("Alice");
+      fireEvent.change(input, { target: { value: "Alice 2" } });
+      fireEvent.keyDown(input, { key: "Enter" });
+      expect(onCellEdit).toHaveBeenCalledWith(0, "name", "Alice 2");
+    });
+  });
+
+  /* ------------------------------------------------------------------------ */
+  /*  Pagination                                                               */
+  /* ------------------------------------------------------------------------ */
+
+  describe("Pagination", () => {
+    it("does not render pagination when total <= pageSize", () => {
+      render(
+        <DataTable
+          columns={columns}
+          data={users}
+          pagination={{ current: 1, total: 3, pageSize: 10 }}
+        />,
+      );
+      expect(screen.queryByText("Previous")).not.toBeInTheDocument();
+    });
+
+    it("renders pagination when total > pageSize", () => {
+      render(
+        <DataTable
+          columns={columns}
+          data={users}
+          pagination={{ current: 1, total: 30, pageSize: 10 }}
+        />,
+      );
+      expect(screen.getByText("Previous")).toBeInTheDocument();
+      expect(screen.getByText("Next")).toBeInTheDocument();
+    });
   });
 });

@@ -3,8 +3,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DataTable, type Column, type SortState } from "./data-table";
 import { Badge } from "./badge";
 
+/* -------------------------------------------------------------------------- */
+/*  Shared data                                                                */
+/* -------------------------------------------------------------------------- */
+
 type Employee = {
   name: string;
+  email: string;
   role: string;
   department: string;
   salary: number;
@@ -12,17 +17,28 @@ type Employee = {
 };
 
 const employees: Employee[] = [
-  { name: "Alice Johnson", role: "Engineer", department: "Product", salary: 120000, status: "active" },
-  { name: "Bob Smith", role: "Designer", department: "Design", salary: 95000, status: "away" },
-  { name: "Charlie Brown", role: "Manager", department: "Product", salary: 140000, status: "active" },
-  { name: "Diana Prince", role: "Engineer", department: "Platform", salary: 130000, status: "offline" },
-  { name: "Eve Wilson", role: "Analyst", department: "Data", salary: 85000, status: "active" },
-  { name: "Frank Castle", role: "Engineer", department: "Platform", salary: 115000, status: "away" },
-  { name: "Grace Hopper", role: "Lead", department: "Product", salary: 160000, status: "active" },
+  { name: "Alice Johnson", email: "alice@acme.com", role: "Engineer", department: "Product", salary: 120000, status: "active" },
+  { name: "Bob Smith", email: "bob@acme.com", role: "Designer", department: "Design", salary: 95000, status: "away" },
+  { name: "Charlie Brown", email: "charlie@acme.com", role: "Manager", department: "Product", salary: 140000, status: "active" },
+  { name: "Diana Prince", email: "diana@acme.com", role: "Engineer", department: "Platform", salary: 130000, status: "offline" },
+  { name: "Eve Wilson", email: "eve@acme.com", role: "Analyst", department: "Data", salary: 85000, status: "active" },
+  { name: "Frank Castle", email: "frank@acme.com", role: "Engineer", department: "Platform", salary: 115000, status: "away" },
+  { name: "Grace Hopper", email: "grace@acme.com", role: "Lead", department: "Product", salary: 160000, status: "active" },
 ];
 
-const columns: Column<Employee>[] = [
+const statusBadge = (status: Employee["status"]) => (
+  <Badge
+    variant={
+      status === "active" ? "success" : status === "away" ? "warning" : "default"
+    }
+  >
+    {status}
+  </Badge>
+);
+
+const baseColumns: Column<Employee>[] = [
   { key: "name", header: "Name", render: (r) => r.name, sortable: true },
+  { key: "email", header: "Email", render: (r) => r.email },
   { key: "role", header: "Role", render: (r) => r.role, sortable: true },
   { key: "department", header: "Department", render: (r) => r.department, sortable: true },
   {
@@ -35,17 +51,13 @@ const columns: Column<Employee>[] = [
   {
     key: "status",
     header: "Status",
-    render: (r) => (
-      <Badge
-        variant={
-          r.status === "active" ? "success" : r.status === "away" ? "warning" : "secondary"
-        }
-      >
-        {r.status}
-      </Badge>
-    ),
+    render: (r) => statusBadge(r.status),
   },
 ];
+
+/* -------------------------------------------------------------------------- */
+/*  Meta                                                                       */
+/* -------------------------------------------------------------------------- */
 
 const meta = {
   title: "Data Display/DataTable",
@@ -56,57 +68,149 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/* -------------------------------------------------------------------------- */
+/*  Stories                                                                     */
+/* -------------------------------------------------------------------------- */
+
 export const Default: Story = {
-  render: () => <DataTable columns={columns} data={employees} />,
+  render: () => <DataTable columns={baseColumns} data={employees} />,
 };
 
 export const WithSorting: Story = {
   render: () => {
     const [sort, setSort] = useState<SortState | null>(null);
     return (
+      <DataTable
+        columns={baseColumns}
+        data={employees}
+        sort={sort}
+        onSortChange={setSort}
+      />
+    );
+  },
+};
+
+export const WithRowExpansion: Story = {
+  render: () => (
+    <DataTable
+      columns={baseColumns}
+      data={employees}
+      expandable={{
+        render: (row) => (
+          <div className="flex flex-col gap-2 py-2">
+            <p className="text-sm font-medium text-slate-900">
+              Employee Details
+            </p>
+            <div className="grid grid-cols-3 gap-4 text-sm">
+              <div>
+                <span className="text-slate-400">Email:</span>{" "}
+                <span className="text-slate-700">{row.email}</span>
+              </div>
+              <div>
+                <span className="text-slate-400">Department:</span>{" "}
+                <span className="text-slate-700">{row.department}</span>
+              </div>
+              <div>
+                <span className="text-slate-400">Annual Salary:</span>{" "}
+                <span className="text-slate-700 font-semibold">
+                  ${row.salary.toLocaleString()}
+                </span>
+              </div>
+            </div>
+          </div>
+        ),
+      }}
+    />
+  ),
+};
+
+export const WithCellEditing: Story = {
+  render: () => {
+    const [data, setData] = useState(employees);
+
+    const editableColumns: Column<Employee>[] = [
+      { key: "name", header: "Name", render: (r) => r.name, editable: true, sortable: true },
+      { key: "email", header: "Email", render: (r) => r.email, editable: true },
+      { key: "role", header: "Role", render: (r) => r.role, editable: true },
+      { key: "department", header: "Department", render: (r) => r.department },
+      {
+        key: "salary",
+        header: "Salary",
+        render: (r) => `$${r.salary.toLocaleString()}`,
+      },
+      {
+        key: "status",
+        header: "Status",
+        render: (r) => statusBadge(r.status),
+      },
+    ];
+
+    return (
       <div className="flex flex-col gap-3">
-        <DataTable
-          columns={columns}
-          data={employees}
-          sort={sort}
-          onSortChange={setSort}
-        />
         <p className="text-xs text-slate-400">
-          Sort: {sort ? `${sort.key} ${sort.direction}` : "none"}
+          Double-click editable cells (Name, Email, Role) to edit. Enter to
+          save, Escape to cancel.
         </p>
+        <DataTable
+          columns={editableColumns}
+          data={data}
+          onCellEdit={(rowIndex, columnKey, newValue) => {
+            setData((prev) =>
+              prev.map((row, i) =>
+                i === rowIndex ? { ...row, [columnKey]: newValue } : row,
+              ),
+            );
+          }}
+        />
       </div>
     );
   },
 };
 
-export const DefaultSorted: Story = {
+export const WithColumnResize: Story = {
   render: () => (
     <DataTable
-      columns={columns}
+      columns={baseColumns}
       data={employees}
-      defaultSort={{ key: "salary", direction: "desc" }}
+      resizable
     />
   ),
 };
 
-export const SortableWithSelection: Story = {
-  render: () => (
-    <DataTable
-      columns={columns}
-      data={employees}
-      selectable
-      defaultSort={{ key: "name", direction: "asc" }}
-    />
-  ),
-};
-
-export const MixedSortable: Story = {
-  name: "Mixed: Some Columns Sortable",
+export const AllFeatures: Story = {
+  name: "All Features Combined",
   render: () => {
-    const mixedCols: Column<Employee>[] = [
-      { key: "name", header: "Name", render: (r) => r.name, sortable: true },
-      { key: "role", header: "Role", render: (r) => r.role },
-      { key: "department", header: "Dept", render: (r) => r.department },
+    const [data, setData] = useState(employees);
+    const [sort, setSort] = useState<SortState | null>(null);
+
+    const allColumns: Column<Employee>[] = [
+      {
+        key: "name",
+        header: "Name",
+        render: (r) => r.name,
+        editable: true,
+        sortable: true,
+        filterable: "text",
+      },
+      {
+        key: "email",
+        header: "Email",
+        render: (r) => r.email,
+        editable: true,
+      },
+      {
+        key: "role",
+        header: "Role",
+        render: (r) => r.role,
+        sortable: true,
+        filterable: "select",
+      },
+      {
+        key: "department",
+        header: "Department",
+        render: (r) => r.department,
+        filterable: "select",
+      },
       {
         key: "salary",
         header: "Salary",
@@ -114,64 +218,48 @@ export const MixedSortable: Story = {
         sortable: true,
         sortFn: (a, b) => a.salary - b.salary,
       },
+      {
+        key: "status",
+        header: "Status",
+        render: (r) => statusBadge(r.status),
+        filterable: "select",
+      },
     ];
-    return <DataTable columns={mixedCols} data={employees} />;
-  },
-};
 
-export const EmptyWithSort: Story = {
-  render: () => <DataTable columns={columns} data={[]} emptyState="No employees found." />,
-};
-
-const filterColumns: Column<Employee>[] = [
-  { key: "name", header: "Name", render: (r) => r.name, sortable: true, filterable: "text" },
-  { key: "role", header: "Role", render: (r) => r.role, filterable: "select" },
-  { key: "department", header: "Department", render: (r) => r.department, filterable: "select" },
-  {
-    key: "salary",
-    header: "Salary",
-    render: (r) => `$${r.salary.toLocaleString()}`,
-    sortable: true,
-    sortFn: (a, b) => a.salary - b.salary,
-  },
-  {
-    key: "status",
-    header: "Status",
-    render: (r) => (
-      <Badge
-        variant={
-          r.status === "active" ? "success" : r.status === "away" ? "warning" : "secondary"
-        }
-      >
-        {r.status}
-      </Badge>
-    ),
-    filterable: "select",
-  },
-];
-
-export const WithFiltering: Story = {
-  render: () => (
-    <DataTable
-      columns={filterColumns}
-      data={employees}
-      emptyState="No matches found."
-    />
-  ),
-};
-
-export const FilterAndSort: Story = {
-  name: "Filtering + Sorting",
-  render: () => {
-    const [sort, setSort] = useState<SortState | null>(null);
     return (
-      <DataTable
-        columns={filterColumns}
-        data={employees}
-        sort={sort}
-        onSortChange={setSort}
-        emptyState="No matches."
-      />
+      <div className="flex flex-col gap-3">
+        <p className="text-xs text-slate-400">
+          Expandable rows, inline editing (Name, Email), sorting, filtering,
+          selection, and resizable columns.
+        </p>
+        <DataTable
+          columns={allColumns}
+          data={data}
+          selectable
+          resizable
+          sort={sort}
+          onSortChange={setSort}
+          expandable={{
+            render: (row) => (
+              <div className="flex flex-col gap-1 text-sm text-slate-600">
+                <p>
+                  <strong>{row.name}</strong> works in the {row.department}{" "}
+                  department as a {row.role}.
+                </p>
+                <p>Contact: {row.email}</p>
+              </div>
+            ),
+          }}
+          onCellEdit={(rowIndex, columnKey, newValue) => {
+            setData((prev) =>
+              prev.map((row, i) =>
+                i === rowIndex ? { ...row, [columnKey]: newValue } : row,
+              ),
+            );
+          }}
+          emptyState="No employees match the current filters."
+        />
+      </div>
     );
   },
 };

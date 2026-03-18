@@ -3,6 +3,7 @@ import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, it, expect } from "vitest";
 import { MegaMenu } from "../components/navigation/mega-menu";
 import { TableOfContents } from "../components/navigation/table-of-contents";
+import { EventCalendar } from "../components/data-display/event-calendar";
 import { Knob } from "../components/forms/knob";
 import { CheckboxCard } from "../components/forms/checkbox-card";
 import { RadioCardGroup } from "../components/forms/radio-card";
@@ -1240,6 +1241,54 @@ describe("Accessibility (axe)", () => {
       { id: "s1", label: "Overview", children: [{ id: "s1-1", label: "Details" }] },
     ];
     const { container } = render(<TableOfContents items={items} variant="bordered" />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("DataTable (with expandable rows)", async () => {
+    const columns = [
+      { key: "name", header: "Name", render: (r: { name: string }) => r.name },
+    ];
+    const data = [{ name: "Alice" }, { name: "Bob" }];
+    const { container } = render(
+      <DataTable
+        columns={columns}
+        data={data}
+        expandable={{ render: (row: { name: string }) => <div>{row.name} details</div> }}
+      />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("EventCalendar (month view)", async () => {
+    const { container } = render(
+      <EventCalendar
+        events={[
+          { id: "1", title: "Meeting", start: new Date(2026, 2, 17, 10, 0), end: new Date(2026, 2, 17, 11, 0) },
+        ]}
+        defaultDate={new Date(2026, 2, 17)}
+        defaultView="month"
+      />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("EventCalendar (week view)", async () => {
+    const { container } = render(
+      <EventCalendar
+        defaultDate={new Date(2026, 2, 17)}
+        defaultView="week"
+      />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("EventCalendar (day view)", async () => {
+    const { container } = render(
+      <EventCalendar
+        defaultDate={new Date(2026, 2, 17)}
+        defaultView="day"
+      />
+    );
     expect(await axe(container)).toHaveNoViolations();
   });
 });
