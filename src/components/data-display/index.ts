@@ -42,3 +42,12 @@ export type { CalendarProps, CalendarDay } from "./calendar";
 
 export { QrCode } from "./qr-code";
 export type { QrCodeProps } from "./qr-code";
+
+export { Transfer } from "./transfer";
+export type { TransferProps, TransferItem } from "./transfer";
+
+export { Descriptions } from "./descriptions";
+export type { DescriptionsProps, DescriptionsItem } from "./descriptions";
+
+export { Galleria } from "./galleria";
+export type { GalleriaProps, GalleriaImage } from "./galleria";
