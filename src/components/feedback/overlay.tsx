@@ -7,7 +7,7 @@ import { cn } from "../../lib/utils";
 /*  Types                                                                      */
 /* -------------------------------------------------------------------------- */
 
-type OverlayProps = {
+type OverlayProps = React.HTMLAttributes<HTMLDivElement> & {
   /** Whether the overlay is visible */
   open: boolean;
   /** Callback when open state should change */
@@ -22,8 +22,6 @@ type OverlayProps = {
   closeOnClick?: boolean;
   /** Whether pressing Escape closes the overlay */
   closeOnEscape?: boolean;
-  /** Additional class names for the overlay container */
-  className?: string;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -41,6 +39,7 @@ const Overlay = forwardRef<HTMLDivElement, OverlayProps>(
       closeOnClick = true,
       closeOnEscape = true,
       className,
+      ...props
     },
     ref,
   ) => {
@@ -75,6 +74,7 @@ const Overlay = forwardRef<HTMLDivElement, OverlayProps>(
         role="dialog"
         aria-modal="true"
         aria-label="Overlay"
+        {...props}
       >
         {/* Scrim / backdrop */}
         {scrim && (
