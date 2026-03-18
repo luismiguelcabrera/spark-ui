@@ -153,26 +153,55 @@ describe("Modal.confirm()", () => {
     const onConfirm = vi.fn();
     const onCancel = vi.fn();
 
-    const id = Modal.confirm({
+    const promise = Modal.confirm({
       title: "Delete?",
       description: "This cannot be undone.",
       onConfirm,
       onCancel,
     });
 
+    expect(promise).toBeInstanceOf(Promise);
     expect(store.addModal).toHaveBeenCalledTimes(1);
     const entry = (store.addModal as ReturnType<typeof vi.fn>).mock.calls[0][0];
     expect(entry.type).toBe("confirm");
     expect(entry.options.title).toBe("Delete?");
     expect(entry.options.description).toBe("This cannot be undone.");
-    expect(typeof id).toBe("string");
-    expect(id).toBeTruthy();
   });
 
-  it("returns empty string when no store is set", () => {
+  it("resolves true when confirmed", async () => {
+    const store = createMockStore();
+    __setImperativeFeedbackStore(store);
+
+    const onConfirm = vi.fn();
+    const promise = Modal.confirm({ title: "Delete?", onConfirm });
+
+    const entry = (store.addModal as ReturnType<typeof vi.fn>).mock.calls[0][0];
+    entry.options.onConfirm();
+
+    const result = await promise;
+    expect(result).toBe(true);
+    expect(onConfirm).toHaveBeenCalled();
+  });
+
+  it("resolves false when cancelled", async () => {
+    const store = createMockStore();
+    __setImperativeFeedbackStore(store);
+
+    const onCancel = vi.fn();
+    const promise = Modal.confirm({ title: "Delete?", onCancel });
+
+    const entry = (store.addModal as ReturnType<typeof vi.fn>).mock.calls[0][0];
+    entry.options.onCancel();
+
+    const result = await promise;
+    expect(result).toBe(false);
+    expect(onCancel).toHaveBeenCalled();
+  });
+
+  it("resolves false when no store is set", async () => {
     const spy = vi.spyOn(console, "warn").mockImplementation(() => {});
-    const id = Modal.confirm({ title: "No store" });
-    expect(id).toBe("");
+    const result = await Modal.confirm({ title: "No store" });
+    expect(result).toBe(false);
     spy.mockRestore();
   });
 });
@@ -186,23 +215,33 @@ describe("Modal.info()", () => {
     const store = createMockStore();
     __setImperativeFeedbackStore(store);
 
-    const id = Modal.info({
+    const promise = Modal.info({
       title: "Info",
       description: "Some info text.",
     });
 
+    expect(promise).toBeInstanceOf(Promise);
     expect(store.addModal).toHaveBeenCalledTimes(1);
     const entry = (store.addModal as ReturnType<typeof vi.fn>).mock.calls[0][0];
     expect(entry.type).toBe("info");
     expect(entry.options.title).toBe("Info");
-    expect(typeof id).toBe("string");
-    expect(id).toBeTruthy();
   });
 
-  it("returns empty string when no store is set", () => {
+  it("resolves when dismissed", async () => {
+    const store = createMockStore();
+    __setImperativeFeedbackStore(store);
+
+    const promise = Modal.info({ title: "Info" });
+
+    const entry = (store.addModal as ReturnType<typeof vi.fn>).mock.calls[0][0];
+    (entry.options as Record<string, unknown>)._onClose?.();
+
+    await expect(promise).resolves.toBeUndefined();
+  });
+
+  it("resolves void when no store is set", async () => {
     const spy = vi.spyOn(console, "warn").mockImplementation(() => {});
-    const id = Modal.info({ title: "No store" });
-    expect(id).toBe("");
+    await expect(Modal.info({ title: "No store" })).resolves.toBeUndefined();
     spy.mockRestore();
   });
 });

@@ -133,30 +133,47 @@ export const toast = toastFn;
 // ---------------------------------------------------------------------------
 
 export const Modal = {
-  confirm(options: ModalConfirmOptions): string {
+  confirm(options: ModalConfirmOptions): Promise<boolean> {
     const store = storeRef;
     if (!store) {
       console.warn(
         "Modal.confirm() was called but no ImperativeFeedbackProvider is mounted."
       );
-      return "";
+      return Promise.resolve(false);
     }
     const id = generateId("modal");
-    store.addModal({ id, type: "confirm", options });
-    return id;
+    return new Promise<boolean>((resolve) => {
+      const wrappedOptions: ModalConfirmOptions = {
+        ...options,
+        onConfirm: () => {
+          options.onConfirm?.();
+          resolve(true);
+        },
+        onCancel: () => {
+          options.onCancel?.();
+          resolve(false);
+        },
+      };
+      store.addModal({ id, type: "confirm", options: wrappedOptions });
+    });
   },
 
-  info(options: ModalInfoOptions): string {
+  info(options: ModalInfoOptions): Promise<void> {
     const store = storeRef;
     if (!store) {
       console.warn(
         "Modal.info() was called but no ImperativeFeedbackProvider is mounted."
       );
-      return "";
+      return Promise.resolve();
     }
     const id = generateId("modal");
-    store.addModal({ id, type: "info", options });
-    return id;
+    return new Promise<void>((resolve) => {
+      const wrappedOptions: ModalInfoOptions = {
+        ...options,
+        _onClose: () => resolve(),
+      } as ModalInfoOptions & { _onClose: () => void };
+      store.addModal({ id, type: "info", options: wrappedOptions });
+    });
   },
 };
 
