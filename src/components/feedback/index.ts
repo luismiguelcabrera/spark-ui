@@ -61,7 +61,7 @@ export { Snackbar } from "./snackbar";
 export type { SnackbarProps, SnackbarLocation } from "./snackbar";
 
 export { SpeedDial } from "./speed-dial";
-export type { SpeedDialProps, SpeedDialAction } from "./speed-dial";
+export type { SpeedDialProps, SpeedDialAction, SpeedDialColor, SpeedDialShape, SpeedDialDirection, SpeedDialPosition } from "./speed-dial";
 
 export { Popconfirm } from "./popconfirm";
 export type { PopconfirmProps } from "./popconfirm";
