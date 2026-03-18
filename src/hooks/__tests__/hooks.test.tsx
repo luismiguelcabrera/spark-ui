@@ -2,6 +2,8 @@ import { renderHook, act } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
 import { useAsync } from "../use-async";
 import { useDebounce } from "../use-debounce";
+import { useWindowScroll } from "../use-window-scroll";
+import { useUpdateEffect } from "../use-update-effect";
 import { useClipboard } from "../use-clipboard";
 import { useDisclosure } from "../use-disclosure";
 import { useToggle } from "../use-toggle";
@@ -613,5 +615,198 @@ describe("useAsync", () => {
     });
     expect(result.current.isSuccess).toBe(true);
     expect(result.current.data).toBe("second succeeds");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useWindowScroll
+// ---------------------------------------------------------------------------
+describe("useWindowScroll", () => {
+  let scrollHandlers: Array<() => void>;
+
+  beforeEach(() => {
+    scrollHandlers = [];
+    vi.spyOn(window, "addEventListener").mockImplementation(
+      (event: string, handler: unknown) => {
+        if (event === "scroll") scrollHandlers.push(handler as () => void);
+      },
+    );
+    vi.spyOn(window, "removeEventListener").mockImplementation(() => {});
+    vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+
+    Object.defineProperty(window, "scrollX", { value: 0, writable: true, configurable: true });
+    Object.defineProperty(window, "scrollY", { value: 0, writable: true, configurable: true });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("returns initial scroll position", () => {
+    const { result } = renderHook(() => useWindowScroll());
+    expect(result.current.x).toBe(0);
+    expect(result.current.y).toBe(0);
+  });
+
+  it("updates position on scroll event", () => {
+    const { result } = renderHook(() => useWindowScroll());
+
+    Object.defineProperty(window, "scrollX", { value: 100, writable: true, configurable: true });
+    Object.defineProperty(window, "scrollY", { value: 250, writable: true, configurable: true });
+
+    act(() => {
+      scrollHandlers.forEach((h) => h());
+    });
+
+    expect(result.current.x).toBe(100);
+    expect(result.current.y).toBe(250);
+  });
+
+  it("scrollToTop calls window.scrollTo with top: 0", () => {
+    const { result } = renderHook(() => useWindowScroll());
+
+    act(() => {
+      result.current.scrollToTop();
+    });
+
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  });
+
+  it("scrollToTop accepts behavior argument", () => {
+    const { result } = renderHook(() => useWindowScroll());
+
+    act(() => {
+      result.current.scrollToTop("instant");
+    });
+
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: 0,
+      left: 0,
+      behavior: "instant",
+    });
+  });
+
+  it("scrollToBottom calls window.scrollTo with scrollHeight", () => {
+    const { result } = renderHook(() => useWindowScroll());
+
+    act(() => {
+      result.current.scrollToBottom();
+    });
+
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: document.documentElement.scrollHeight,
+      left: 0,
+      behavior: "smooth",
+    });
+  });
+
+  it("scrollTo passes options through to window.scrollTo", () => {
+    const { result } = renderHook(() => useWindowScroll());
+
+    act(() => {
+      result.current.scrollTo({ top: 500, behavior: "instant" });
+    });
+
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: 500,
+      behavior: "instant",
+    });
+  });
+
+  it("provides stable function references across re-renders", () => {
+    const { result, rerender } = renderHook(() => useWindowScroll());
+
+    const firstScrollTo = result.current.scrollTo;
+    const firstScrollToTop = result.current.scrollToTop;
+    const firstScrollToBottom = result.current.scrollToBottom;
+
+    rerender();
+
+    expect(result.current.scrollTo).toBe(firstScrollTo);
+    expect(result.current.scrollToTop).toBe(firstScrollToTop);
+    expect(result.current.scrollToBottom).toBe(firstScrollToBottom);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useUpdateEffect
+// ---------------------------------------------------------------------------
+describe("useUpdateEffect", () => {
+  it("does NOT fire the effect on initial mount", () => {
+    const effect = vi.fn();
+    renderHook(() => useUpdateEffect(effect, [1]));
+    expect(effect).not.toHaveBeenCalled();
+  });
+
+  it("fires the effect when deps change after mount", () => {
+    const effect = vi.fn();
+    const { rerender } = renderHook(
+      ({ dep }) => useUpdateEffect(effect, [dep]),
+      { initialProps: { dep: 1 } },
+    );
+
+    expect(effect).not.toHaveBeenCalled();
+
+    rerender({ dep: 2 });
+    expect(effect).toHaveBeenCalledTimes(1);
+  });
+
+  it("fires on every subsequent dep change", () => {
+    const effect = vi.fn();
+    const { rerender } = renderHook(
+      ({ dep }) => useUpdateEffect(effect, [dep]),
+      { initialProps: { dep: "a" } },
+    );
+
+    rerender({ dep: "b" });
+    rerender({ dep: "c" });
+
+    expect(effect).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not fire when deps stay the same", () => {
+    const effect = vi.fn();
+    const { rerender } = renderHook(
+      ({ dep }) => useUpdateEffect(effect, [dep]),
+      { initialProps: { dep: 42 } },
+    );
+
+    rerender({ dep: 42 });
+    rerender({ dep: 42 });
+
+    expect(effect).not.toHaveBeenCalled();
+  });
+
+  it("calls the cleanup function on re-run", () => {
+    const cleanup = vi.fn();
+    const effect = vi.fn().mockReturnValue(cleanup);
+    const { rerender } = renderHook(
+      ({ dep }) => useUpdateEffect(effect, [dep]),
+      { initialProps: { dep: 1 } },
+    );
+
+    rerender({ dep: 2 }); // first real run
+    expect(cleanup).not.toHaveBeenCalled();
+
+    rerender({ dep: 3 }); // second run → cleanup of first
+    expect(cleanup).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls cleanup on unmount", () => {
+    const cleanup = vi.fn();
+    const effect = vi.fn().mockReturnValue(cleanup);
+    const { rerender, unmount } = renderHook(
+      ({ dep }) => useUpdateEffect(effect, [dep]),
+      { initialProps: { dep: 1 } },
+    );
+
+    rerender({ dep: 2 }); // trigger effect
+    unmount();
+
+    expect(cleanup).toHaveBeenCalledTimes(1);
   });
 });
