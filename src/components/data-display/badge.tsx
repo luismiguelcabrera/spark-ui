@@ -137,6 +137,7 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         <span
           className={cn(
             badgeVariants({ variant, size: floatingSize }),
+            "px-1.5 min-w-5 justify-center",
             bordered && "ring-2 ring-white",
           )}
         >
