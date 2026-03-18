@@ -1,6 +1,8 @@
 import { render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, it, expect } from "vitest";
+import { Splitter } from "../components/layout/splitter";
+import { Masonry } from "../components/layout/masonry";
 import { Mention } from "../components/forms/mention";
 import { RichTextEditor } from "../components/forms/rich-text-editor";
 import { RadarChart } from "../components/data-display/charts/radar-chart";
@@ -1103,6 +1105,32 @@ describe("Accessibility (axe)", () => {
 
   it("RichTextEditor (custom toolbar)", async () => {
     const { container } = render(<RichTextEditor toolbar={["bold", "italic", "separator", "undo", "redo"]} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Splitter (horizontal)", async () => {
+    const { container } = render(
+      <Splitter><div>Left</div><div>Right</div></Splitter>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Splitter (vertical)", async () => {
+    const { container } = render(
+      <Splitter orientation="vertical"><div>Top</div><div>Bottom</div></Splitter>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Masonry (fixed columns)", async () => {
+    const { container } = render(
+      <Masonry columns={3}><div>1</div><div>2</div><div>3</div></Masonry>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Masonry (empty)", async () => {
+    const { container } = render(<Masonry>{[]}</Masonry>);
     expect(await axe(container)).toHaveNoViolations();
   });
 });
