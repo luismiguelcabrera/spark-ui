@@ -1,8 +1,6 @@
 export { Alert, alertVariants } from "./alert";
 export type { AlertProps, AlertVariant, AlertFillVariant, AlertBorderSide } from "./alert";
 
-export { AlertBanner, alertBannerVariants } from "./alert-banner";
-export type { AlertBannerProps } from "./alert-banner";
 
 export { Toast, toastVariants } from "./toast";
 export type { ToastProps } from "./toast";
@@ -46,8 +44,6 @@ export type { DrawerProps } from "./drawer";
 export { Popover } from "./popover";
 export type { PopoverProps } from "./popover";
 
-export { AlertDialog } from "./alert-dialog";
-export type { AlertDialogProps } from "./alert-dialog";
 
 export { ContextMenu } from "./context-menu";
 export type { ContextMenuProps, ContextMenuItem } from "./context-menu";

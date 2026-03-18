@@ -29,6 +29,8 @@ type ModalProps = {
   description?: string;
   children: ReactNode;
   footer?: ReactNode;
+  /** ARIA role for the modal. Use "alertdialog" for confirmation dialogs that require user action. */
+  role?: "dialog" | "alertdialog";
   className?: string;
 } & VariantProps<typeof modalVariants>;
 
@@ -61,6 +63,7 @@ function Modal({
   description,
   children,
   footer,
+  role = "dialog",
   size,
   className,
 }: ModalProps) {
@@ -87,7 +90,7 @@ function Modal({
   // Inline (legacy) mode: render without overlay when not managed
   if (!isManaged) {
     return (
-      <div role="dialog" aria-label={title} className={cn(modalVariants({ size, className }))}>
+      <div role={role} aria-label={title} className={cn(modalVariants({ size, className }))}>
         {title && (
           <div className={s.modalHeader}>
             <div>
@@ -112,7 +115,7 @@ function Modal({
 
   return (
     <ModalOverlay onClick={close}>
-      <div role="dialog" aria-modal="true" aria-label={title} className={cn(modalVariants({ size, className }))}>
+      <div role={role} aria-modal="true" aria-label={title} className={cn(modalVariants({ size, className }))}>
         {title && (
           <div className={s.modalHeader}>
             <div>
