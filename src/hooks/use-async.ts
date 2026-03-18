@@ -128,7 +128,7 @@ export function useAsync<T, Args extends unknown[] = []>(
   if (options?.immediate && !immediateRan.current) {
     immediateRan.current = true; // eslint-disable-line react-hooks/refs
     // Execute without args — only valid when Args is [] or all optional
-    (execute as (...args: unknown[]) => Promise<T | null>)();
+    (execute as (...args: unknown[]) => Promise<T | null>)(); // eslint-disable-line react-hooks/refs -- intentional: immediate execution guard
   }
 
   return {

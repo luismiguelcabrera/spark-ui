@@ -13,7 +13,7 @@ function Portal({ children, container }: PortalProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect -- intentional: detect client-side mount for SSR-safe portal
   }, []);
 
   if (!mounted) return null;

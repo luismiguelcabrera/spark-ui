@@ -154,6 +154,7 @@ function Tour({
   const isFirstStep = currentStep === 0;
 
   // Find and measure target element
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization -- intentional: useCallback memoization for DOM measurement
   const updateTargetRect = useCallback(() => {
     if (typeof document === "undefined" || !step?.target) {
       setTargetRect(null);
@@ -178,7 +179,7 @@ function Tour({
   // Update target rect on mount, step change, resize, and scroll
   useEffect(() => {
     if (!isOpen) return;
-    updateTargetRect();
+    updateTargetRect(); // eslint-disable-line react-hooks/set-state-in-effect -- intentional: measure target element when step changes
 
     const handleUpdate = () => updateTargetRect();
     if (typeof window !== "undefined") {

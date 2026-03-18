@@ -91,7 +91,7 @@ const FunnelChart = forwardRef<HTMLDivElement, FunnelChartProps>(
         showPercentage,
         hoveredIndex,
         setHoveredIndex,
-        ref,
+        ref, // eslint-disable-line react-hooks/refs -- intentional: forward ref to render helper
         className,
         props
       );
@@ -107,7 +107,7 @@ const FunnelChart = forwardRef<HTMLDivElement, FunnelChartProps>(
       showPercentage,
       hoveredIndex,
       setHoveredIndex,
-      ref,
+      ref, // eslint-disable-line react-hooks/refs -- intentional: forward ref to render helper
       className,
       props
     );

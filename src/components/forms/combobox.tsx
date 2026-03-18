@@ -265,7 +265,7 @@ const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
 
     // ---- Clamp highlight when filtered list shrinks ----
     useEffect(() => {
-      setHighlightIndex((prev) =>
+      setHighlightIndex((prev) => // eslint-disable-line react-hooks/set-state-in-effect -- intentional: clamp highlight index when filtered list shrinks
         prev >= filtered.length ? Math.max(0, filtered.length - 1) : prev
       );
     }, [filtered.length]);

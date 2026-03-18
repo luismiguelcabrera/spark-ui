@@ -43,7 +43,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
     const imgRef = useRef<HTMLImageElement>(null);
 
     useEffect(() => {
-      setImgLoaded(false);
+      setImgLoaded(false); // eslint-disable-line react-hooks/set-state-in-effect -- intentional: reset image state when src changes
       setImgError(false);
       if (!src) return;
       // SSR guard: requestAnimationFrame is not available on the server

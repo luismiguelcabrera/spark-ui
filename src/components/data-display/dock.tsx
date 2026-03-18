@@ -60,7 +60,7 @@ const Dock = forwardRef<HTMLDivElement, DockProps>(
     useEffect(() => {
       if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
       const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
-      setPrefersReducedMotion(mql.matches);
+      setPrefersReducedMotion(mql.matches); // eslint-disable-line react-hooks/set-state-in-effect -- intentional: sync reduced-motion preference on mount
       const handler = (e: MediaQueryListEvent) =>
         setPrefersReducedMotion(e.matches);
       mql.addEventListener("change", handler);

@@ -20,7 +20,7 @@ export function useStateHistory<T>(initial: T): UseStateHistoryReturn<T> {
   const historyRef = useRef<T[]>([initial]);
   const pointerRef = useRef(0);
 
-  const state = historyRef.current[pointerRef.current];
+  const state = historyRef.current[pointerRef.current]; // eslint-disable-line react-hooks/refs -- intentional: read ref-based history for O(1) undo/redo
 
   const set = useCallback((value: T) => {
     const pointer = pointerRef.current;

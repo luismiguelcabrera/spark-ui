@@ -141,7 +141,7 @@ const DonutChart = forwardRef<HTMLDivElement, DonutChartProps>(
       // Midpoint angle for label positioning (in radians)
       const midAngle =
         (cumulativePercent + percent / 2) * 2 * Math.PI - Math.PI / 2;
-      cumulativePercent += percent;
+      cumulativePercent += percent; // eslint-disable-line react-hooks/immutability -- intentional: accumulator for segment positioning in render
 
       return {
         ...d,

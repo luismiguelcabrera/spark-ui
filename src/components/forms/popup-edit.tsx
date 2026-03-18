@@ -48,7 +48,7 @@ const PopupEdit = forwardRef<HTMLDivElement, PopupEditProps>(
     // Sync edit value when value prop changes while not editing
     useEffect(() => {
       if (!editing) {
-        setEditValue(value);
+        setEditValue(value); // eslint-disable-line react-hooks/set-state-in-effect -- intentional: sync edit value with prop when not actively editing
       }
     }, [value, editing]);
 

@@ -127,7 +127,7 @@ const ConfirmEdit = forwardRef<HTMLDivElement, ConfirmEditProps>(
         {...props}
       >
         {renderInput ? (
-          renderInput({
+          renderInput({ // eslint-disable-line react-hooks/refs -- intentional: pass inputRef to custom render prop for focus management
             value: draft,
             onChange: setDraft,
             ref: inputRef,

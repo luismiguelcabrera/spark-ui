@@ -107,7 +107,7 @@ const Image = forwardRef<HTMLImageElement, ImageProps>(
     // Reset status when src changes
     useEffect(() => {
       if (!src) {
-        setStatus("idle");
+        setStatus("idle"); // eslint-disable-line react-hooks/set-state-in-effect -- intentional: reset status when src changes
         return;
       }
       setStatus("loading");

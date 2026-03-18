@@ -83,7 +83,7 @@ const Transition = forwardRef<HTMLDivElement, TransitionProps>(
 
       if (show) {
         // Mount immediately, then start enter transition
-        setMounted(true);
+        setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect -- intentional: mount element to begin enter transition
         // Apply enter + enterFrom on same frame as mount
         setTransitionClasses(cn(enter, enterFrom));
 

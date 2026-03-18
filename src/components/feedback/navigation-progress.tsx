@@ -44,7 +44,7 @@ const NavigationProgress = forwardRef<HTMLDivElement, NavigationProgressProps>(
     useEffect(() => {
       if (prevLoadingRef.current && !loading && !isDeterminate) {
         // Was loading, now stopped: animate to 100% then fade out
-        setCompleting(true);
+        setCompleting(true); // eslint-disable-line react-hooks/set-state-in-effect -- intentional: trigger completion animation when loading ends
         const timer = setTimeout(() => {
           setCompleting(false);
           setVisible(false);
@@ -63,7 +63,7 @@ const NavigationProgress = forwardRef<HTMLDivElement, NavigationProgressProps>(
     // For determinate mode, always show when progress is set
     useEffect(() => {
       if (isDeterminate) {
-        setVisible(true);
+        setVisible(true); // eslint-disable-line react-hooks/set-state-in-effect -- intentional: show progress bar when switching to determinate mode
       }
     }, [isDeterminate]);
 

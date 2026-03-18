@@ -57,7 +57,7 @@ const ExpandTransition = forwardRef<HTMLDivElement, ExpandTransitionProps>(
 
       if (show) {
         // Mount immediately
-        setMounted(true);
+        setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect -- intentional: mount element to begin expand animation
 
         // Start collapsed
         setStyle({

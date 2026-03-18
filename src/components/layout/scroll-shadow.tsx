@@ -58,7 +58,7 @@ const ScrollShadow = forwardRef<HTMLDivElement, ScrollShadowProps>(
     }, [orientation]);
 
     useEffect(() => {
-      updateScrollState();
+      updateScrollState(); // eslint-disable-line react-hooks/set-state-in-effect -- intentional: sync scroll shadow state on mount and resize
 
       const el = innerRef.current;
       if (!el) return;

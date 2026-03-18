@@ -381,12 +381,13 @@ const Sheet = forwardRef<HTMLDivElement, SheetProps>(
       ) : null;
 
     // When not mounted and no edge swiping is happening, only render edge area
+    // eslint-disable-next-line react-hooks/refs -- intentional: read swipe source ref to determine render path
     if (!isMounted && !(isSwiping && swipeSourceRef.current === "edge")) {
       return edgeSwipeArea;
     }
 
-    const swipeTransform = getSwipeTransform();
-    const swipeOverlayOpacity = getSwipeOverlayOpacity();
+    const swipeTransform = getSwipeTransform(); // eslint-disable-line react-hooks/refs -- intentional: compute swipe transform from ref-based gesture state
+    const swipeOverlayOpacity = getSwipeOverlayOpacity(); // eslint-disable-line react-hooks/refs -- intentional: compute overlay opacity from ref-based gesture state
 
     return (
       <>

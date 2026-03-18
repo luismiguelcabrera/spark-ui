@@ -78,7 +78,7 @@ const ContextMenu = forwardRef<HTMLDivElement, ContextMenuProps>(
       }
 
       if (newPos.x !== position.x || newPos.y !== position.y) {
-        setPosition(newPos);
+        setPosition(newPos); // eslint-disable-line react-hooks/set-state-in-effect -- intentional: adjust menu position to stay within viewport
       }
     }, [open, position]);
 
