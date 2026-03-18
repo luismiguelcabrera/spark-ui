@@ -387,6 +387,17 @@ function SortableListInner<T extends SortableItem>(
           />
         ) : null;
 
+        // When no handle, make the whole row the drag target
+        const rowDragProps = !showHandle
+          ? {
+              onPointerDown: (e: React.PointerEvent) => handlePointerDown(index, e),
+              onKeyDown: (e: React.KeyboardEvent) => handleKeyDown(index, e as unknown as KeyboardEvent),
+              tabIndex: 0,
+              "aria-roledescription": "sortable" as const,
+              "aria-label": "Drag to reorder",
+            }
+          : {};
+
         return (
           <li
             key={item.id}
@@ -396,8 +407,11 @@ function SortableListInner<T extends SortableItem>(
               "flex items-center gap-2 rounded-lg transition-transform duration-200",
               isActive && isDragging && "opacity-0",
               isKeyboardActive && "bg-primary/5 ring-2 ring-primary/30 shadow-md z-10",
+              !showHandle && "cursor-grab touch-none",
+              !showHandle && isActive && isDragging && "cursor-grabbing",
               shiftClass,
             )}
+            {...rowDragProps}
           >
             {resolvedRenderItem(item, handle, index)}
           </li>

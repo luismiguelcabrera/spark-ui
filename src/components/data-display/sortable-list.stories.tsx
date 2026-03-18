@@ -155,19 +155,25 @@ export const LabelKeyFallback: Story = {
   },
 };
 
-export const NoHandle: Story = {
-  name: "Custom Handle (no built-in)",
+export const CustomHandle: Story = {
+  name: "Custom Handle",
   render: () => {
-    const [items, setItems] = useState(initialTasks.slice(0, 3));
+    const [items, setItems] = useState(initialTasks.slice(0, 4));
     return (
-      <div className="max-w-sm">
+      <div className="max-w-md">
         <SortableList
           items={items}
           onReorder={setItems}
           showHandle={false}
-          renderItem={(item) => (
-            <div className="flex items-center gap-2 p-3 flex-1">
-              <span className="text-sm text-slate-700">{item.title}</span>
+          renderItem={(item, _handle, index) => (
+            <div className="flex items-center gap-3 p-3 flex-1 bg-white border border-slate-200 rounded-lg">
+              <div className="w-7 h-7 rounded-md bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-400 shrink-0 cursor-grab">
+                {index + 1}
+              </div>
+              <span className="text-sm font-medium text-slate-700 flex-1">
+                {item.title}
+              </span>
+              <Icon name="move" size="sm" className="text-slate-300" />
             </div>
           )}
         />

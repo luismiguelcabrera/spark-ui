@@ -62,7 +62,7 @@ describe("SortableList", () => {
     expect(screen.getAllByRole("listitem")).toHaveLength(3);
   });
 
-  it("hides handles when showHandle is false", () => {
+  it("hides handle buttons when showHandle is false", () => {
     const onReorder = vi.fn();
     render(
       <SortableList
@@ -72,7 +72,23 @@ describe("SortableList", () => {
         showHandle={false}
       />,
     );
-    expect(screen.queryByLabelText("Drag to reorder")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Drag to reorder" })).not.toBeInTheDocument();
+  });
+
+  it("makes rows draggable when showHandle is false", () => {
+    const onReorder = vi.fn();
+    render(
+      <SortableList
+        items={tasks}
+        onReorder={onReorder}
+        renderItem={defaultRender}
+        showHandle={false}
+      />,
+    );
+    const listItems = screen.getAllByRole("listitem");
+    listItems.forEach((item) => {
+      expect(item).toHaveClass("cursor-grab");
+    });
   });
 
   it("merges className on container", () => {
