@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sidebar, SidebarNavGroup, SidebarNavItem } from "./sidebar";
-import { SidebarProvider } from "./sidebar-context";
 import { AppShell, AppShellHeader, AppShellContent } from "./app-shell";
 
 const meta = {

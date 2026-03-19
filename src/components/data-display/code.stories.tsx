@@ -31,7 +31,7 @@ export const InlineVariable: InlineStory = {
 /* CodeBlock stories exported from same file                           */
 /* ------------------------------------------------------------------ */
 
-const blockMeta = {
+const _blockMeta = {
   title: "Data Display/Code/CodeBlock",
   component: CodeBlock,
   tags: ["autodocs"],
@@ -41,7 +41,7 @@ const blockMeta = {
   },
 } satisfies Meta<typeof CodeBlock>;
 
-type BlockStory = StoryObj<typeof blockMeta>;
+type BlockStory = StoryObj<typeof _blockMeta>;
 
 export const Block: BlockStory = {
   args: {

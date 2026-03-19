@@ -121,7 +121,7 @@ export const CustomRadius: Story = {
 export const RuntimeColorChange: Story = {
   render: () => {
     function ColorChanger() {
-      const { colors, setColors } = useTheme();
+      const { setColors } = useTheme();
       const [hue, setHue] = useState(210);
 
       const handleChange = (newHue: number) => {
