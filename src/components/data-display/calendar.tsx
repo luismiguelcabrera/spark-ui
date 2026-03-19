@@ -302,8 +302,6 @@ function MonthGrid({
                 day.muted && s.calendarDayMuted,
                 day.disabled && !day.muted && "opacity-40 cursor-not-allowed",
                 showToday && day.today && !day.selected && !day.inRange && !day.inHoverRange && !isColorMark && s.calendarDayToday,
-                // Today inside a range: keep it identifiable with bold + underline
-                showToday && day.today && (day.inRange || day.inHoverRange) && "font-bold underline underline-offset-2",
                 day.selected && !isColorMark && s.calendarDaySelected,
                 day.hasEvent && !day.mark?.dotColor && (
                   day.selected
@@ -323,8 +321,12 @@ function MonthGrid({
               title={day.mark?.label}
             >
               {day.day}
-              {showToday && day.today && day.selected && (
-                <span className="absolute bottom-1 w-1 h-1 rounded-full bg-white" />
+              {/* Today dot — adapts color to context */}
+              {showToday && day.today && (day.selected || day.inRange || day.inHoverRange) && (
+                <span className={cn(
+                  "absolute bottom-1 w-1.5 h-1.5 rounded-full",
+                  day.selected ? "bg-white" : "bg-primary"
+                )} />
               )}
               {day.mark?.dotColor && !day.selected && (
                 <span
