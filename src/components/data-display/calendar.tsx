@@ -321,11 +321,11 @@ function MonthGrid({
               title={day.mark?.label}
             >
               {day.day}
-              {/* Today dot — adapts color to context */}
+              {/* Today underline — visible in all contexts */}
               {showToday && day.today && (day.selected || day.inRange || day.inHoverRange) && (
                 <span className={cn(
-                  "absolute bottom-1 w-1.5 h-1.5 rounded-full",
-                  day.selected ? "bg-white" : "bg-primary"
+                  "absolute bottom-0.5 left-1/2 -translate-x-1/2 w-3.5 h-0.5 rounded-full",
+                  day.selected ? "bg-white/70" : "bg-primary"
                 )} />
               )}
               {day.mark?.dotColor && !day.selected && (
