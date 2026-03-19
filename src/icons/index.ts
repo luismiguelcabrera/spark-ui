@@ -1,6 +1,9 @@
 // ── Individual icon components ──
 export * from "./icons";
 
+// ── Animated icon components ──
+export * from "./animated-icons";
+
 // ── Factory ──
 export { createIcon } from "./create-icon";
 export type { SvgIconProps } from "./create-icon";

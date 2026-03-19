@@ -359,6 +359,290 @@
 .group:hover .spark-icon-group-hover-shake { animation: spark-icon-shake 0.5s ease; }
 .group:hover .spark-icon-group-hover-tada { animation: spark-icon-tada 0.8s ease; }
 
+/* ── Per-Icon SVG Animations ── */
+
+/* Bell — clapper swings */
+@keyframes spark-anim-bell-swing {
+  0%, 100% { transform-origin: top center; transform: rotate(0); }
+  15% { transform: rotate(18deg); }
+  30% { transform: rotate(-15deg); }
+  45% { transform: rotate(10deg); }
+  60% { transform: rotate(-6deg); }
+  75% { transform: rotate(2deg); }
+}
+.spark-anim-hover:hover .spark-anim-bell-body,
+.spark-anim-active .spark-anim-bell-body {
+  transform-origin: top center;
+  animation: spark-anim-bell-swing 0.8s ease;
+}
+.spark-anim-hover:hover .spark-anim-bell-clapper,
+.spark-anim-active .spark-anim-bell-clapper {
+  transform-origin: top center;
+  animation: spark-anim-bell-swing 0.8s ease 0.1s;
+}
+
+/* Heart — fills up */
+@keyframes spark-anim-heart-beat {
+  0% { fill: transparent; transform: scale(1); }
+  15% { fill: currentColor; transform: scale(1.2); }
+  30% { transform: scale(0.95); }
+  45% { fill: currentColor; transform: scale(1.1); }
+  100% { fill: currentColor; transform: scale(1); }
+}
+.spark-anim-hover:hover .spark-anim-heart-fill,
+.spark-anim-active .spark-anim-heart-fill {
+  transform-origin: center;
+  animation: spark-anim-heart-beat 0.6s ease forwards;
+}
+
+/* Mail — flap rotates open */
+@keyframes spark-anim-mail-open {
+  0% { transform: scaleY(1); }
+  50% { transform: scaleY(-0.5); }
+  100% { transform: scaleY(-1); }
+}
+.spark-anim-hover:hover .spark-anim-mail-flap,
+.spark-anim-active .spark-anim-mail-flap {
+  transform-origin: top center;
+  animation: spark-anim-mail-open 0.5s ease forwards;
+}
+
+/* Check Circle — checkmark draws in */
+@keyframes spark-anim-check-draw {
+  from { stroke-dashoffset: 20; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes spark-anim-circle-pop {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.spark-anim-hover:hover .spark-anim-check-mark,
+.spark-anim-active .spark-anim-check-mark {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: spark-anim-check-draw 0.4s ease 0.2s forwards;
+}
+.spark-anim-hover:hover .spark-anim-check-circle,
+.spark-anim-active .spark-anim-check-circle {
+  transform-origin: center;
+  animation: spark-anim-circle-pop 0.4s ease;
+}
+
+/* Star — scales up with fill */
+@keyframes spark-anim-star-pop {
+  0% { transform: scale(1) rotate(0); fill: transparent; }
+  30% { transform: scale(1.3) rotate(-15deg); fill: currentColor; }
+  60% { transform: scale(0.9) rotate(5deg); }
+  100% { transform: scale(1) rotate(0); fill: currentColor; }
+}
+.spark-anim-hover:hover .spark-anim-star-shape,
+.spark-anim-active .spark-anim-star-shape {
+  transform-origin: center;
+  animation: spark-anim-star-pop 0.5s ease forwards;
+}
+
+/* Eye — blinks */
+@keyframes spark-anim-eye-blink {
+  0%, 100% { transform: scaleY(1); }
+  45%, 55% { transform: scaleY(0.05); }
+}
+.spark-anim-hover:hover .spark-anim-eye-outline,
+.spark-anim-hover:hover .spark-anim-eye-pupil,
+.spark-anim-active .spark-anim-eye-outline,
+.spark-anim-active .spark-anim-eye-pupil {
+  transform-origin: center;
+  animation: spark-anim-eye-blink 0.4s ease;
+}
+
+/* Lock — shackle lifts */
+@keyframes spark-anim-lock-lift {
+  0% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-3px) rotate(-8deg); }
+  100% { transform: translateY(-3px) rotate(-8deg); }
+}
+.spark-anim-hover:hover .spark-anim-lock-shackle,
+.spark-anim-active .spark-anim-lock-shackle {
+  transform-origin: right bottom;
+  animation: spark-anim-lock-lift 0.4s ease forwards;
+}
+
+/* Trash — lid lifts and tilts */
+@keyframes spark-anim-trash-open {
+  0% { transform: translateY(0) rotate(0); }
+  60% { transform: translateY(-3px) rotate(-8deg); }
+  100% { transform: translateY(-3px) rotate(-8deg); }
+}
+.spark-anim-hover:hover .spark-anim-trash-lid,
+.spark-anim-active .spark-anim-trash-lid {
+  transform-origin: right center;
+  animation: spark-anim-trash-open 0.3s ease forwards;
+}
+.spark-anim-hover:hover .spark-anim-trash-handle,
+.spark-anim-active .spark-anim-trash-handle {
+  transform-origin: right center;
+  animation: spark-anim-trash-open 0.3s ease forwards;
+}
+
+/* Download — arrow bounces down */
+@keyframes spark-anim-arrow-down {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+.spark-anim-hover:hover .spark-anim-dl-arrow,
+.spark-anim-active .spark-anim-dl-arrow {
+  animation: spark-anim-arrow-down 0.6s ease infinite;
+}
+
+/* Upload — arrow bounces up */
+@keyframes spark-anim-arrow-up {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+.spark-anim-hover:hover .spark-anim-ul-arrow,
+.spark-anim-active .spark-anim-ul-arrow {
+  animation: spark-anim-arrow-up 0.6s ease infinite;
+}
+
+/* Settings — gear rotates slowly */
+.spark-anim-hover:hover .spark-anim-gear,
+.spark-anim-active .spark-anim-gear {
+  transform-origin: center;
+  animation: spark-icon-spin 2s linear infinite;
+}
+
+/* Rocket — lifts off with shake */
+@keyframes spark-anim-liftoff {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-1px, 0); }
+  20% { transform: translate(1px, -1px); }
+  30% { transform: translate(-1px, -2px); }
+  50% { transform: translate(1px, -4px); }
+  70% { transform: translate(-1px, -6px); }
+  100% { transform: translate(2px, -8px); opacity: 0.8; }
+}
+.spark-anim-hover:hover .spark-anim-rocket-body,
+.spark-anim-active .spark-anim-rocket-body {
+  animation: spark-anim-liftoff 0.6s ease forwards;
+}
+
+/* Wifi — arcs appear in sequence */
+@keyframes spark-anim-wifi-in {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+.spark-anim-hover:hover .spark-anim-wifi-1,
+.spark-anim-active .spark-anim-wifi-1 {
+  opacity: 0; animation: spark-anim-wifi-in 0.3s ease 0.1s forwards;
+}
+.spark-anim-hover:hover .spark-anim-wifi-2,
+.spark-anim-active .spark-anim-wifi-2 {
+  opacity: 0; animation: spark-anim-wifi-in 0.3s ease 0.25s forwards;
+}
+.spark-anim-hover:hover .spark-anim-wifi-3,
+.spark-anim-active .spark-anim-wifi-3 {
+  opacity: 0; animation: spark-anim-wifi-in 0.3s ease 0.4s forwards;
+}
+
+/* Volume — waves pulse outward */
+@keyframes spark-anim-vol-pulse {
+  0%, 100% { opacity: 1; transform: scaleX(1); }
+  50% { opacity: 0.5; transform: scaleX(1.15); }
+}
+.spark-anim-hover:hover .spark-anim-vol-wave-1,
+.spark-anim-active .spark-anim-vol-wave-1 {
+  transform-origin: left center;
+  animation: spark-anim-vol-pulse 0.8s ease infinite;
+}
+.spark-anim-hover:hover .spark-anim-vol-wave-2,
+.spark-anim-active .spark-anim-vol-wave-2 {
+  transform-origin: left center;
+  animation: spark-anim-vol-pulse 0.8s ease 0.2s infinite;
+}
+
+/* Sun — rays rotate */
+.spark-anim-hover:hover .spark-anim-sun-rays,
+.spark-anim-active .spark-anim-sun-rays {
+  transform-origin: center;
+  animation: spark-icon-spin 8s linear infinite;
+}
+@keyframes spark-anim-sun-glow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+.spark-anim-hover:hover .spark-anim-sun-core,
+.spark-anim-active .spark-anim-sun-core {
+  transform-origin: center;
+  animation: spark-anim-sun-glow 2s ease infinite;
+}
+
+/* Search — lens zooms */
+@keyframes spark-anim-search-zoom {
+  0%, 100% { transform: scale(1) rotate(0); }
+  30% { transform: scale(1.1) rotate(-5deg); }
+  60% { transform: scale(0.95) rotate(3deg); }
+}
+.spark-anim-hover:hover .spark-anim-search-lens,
+.spark-anim-active .spark-anim-search-lens {
+  transform-origin: center;
+  animation: spark-anim-search-zoom 0.5s ease;
+}
+
+/* Copy — front page slides */
+@keyframes spark-anim-copy-slide {
+  0% { transform: translate(0, 0); }
+  40% { transform: translate(2px, 2px); }
+  100% { transform: translate(0, 0); }
+}
+.spark-anim-hover:hover .spark-anim-copy-front,
+.spark-anim-active .spark-anim-copy-front {
+  animation: spark-anim-copy-slide 0.4s ease;
+}
+
+/* Bookmark — fills */
+@keyframes spark-anim-bookmark-fill {
+  0% { fill: transparent; transform: scaleY(1); }
+  30% { fill: currentColor; transform: scaleY(0.95); }
+  100% { fill: currentColor; transform: scaleY(1); }
+}
+.spark-anim-hover:hover .spark-anim-bookmark-shape,
+.spark-anim-active .spark-anim-bookmark-shape {
+  transform-origin: top center;
+  animation: spark-anim-bookmark-fill 0.4s ease forwards;
+}
+
+/* Sparkles — twinkle staggered */
+@keyframes spark-anim-twinkle {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.4); opacity: 0.3; }
+}
+.spark-anim-hover:hover .spark-anim-sparkle-1,
+.spark-anim-active .spark-anim-sparkle-1 {
+  transform-origin: center;
+  animation: spark-anim-twinkle 0.8s ease infinite;
+}
+.spark-anim-hover:hover .spark-anim-sparkle-2,
+.spark-anim-active .spark-anim-sparkle-2 {
+  transform-origin: center;
+  animation: spark-anim-twinkle 0.8s ease 0.3s infinite;
+}
+.spark-anim-hover:hover .spark-anim-sparkle-3,
+.spark-anim-active .spark-anim-sparkle-3 {
+  transform-origin: center;
+  animation: spark-anim-twinkle 0.8s ease 0.6s infinite;
+}
+
+/* Send — plane flies out */
+@keyframes spark-anim-fly {
+  0% { transform: translate(0, 0) rotate(0); }
+  50% { transform: translate(3px, -3px) rotate(-5deg); }
+  100% { transform: translate(6px, -6px) rotate(-5deg); opacity: 0.5; }
+}
+.spark-anim-hover:hover .spark-anim-send-plane,
+.spark-anim-active .spark-anim-send-plane {
+  animation: spark-anim-fly 0.5s ease forwards;
+}
+
 /* ── Reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {
