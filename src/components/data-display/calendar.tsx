@@ -87,8 +87,8 @@ type CalendarProps = {
   showToday?: boolean;
   showTodayButton?: boolean;
   showSelectedLabel?: boolean;
-  /** Number of months to display side by side (1 or 2) */
-  numberOfMonths?: 1 | 2;
+  /** Number of months to display side by side (1–6) */
+  numberOfMonths?: number;
   eventDays?: number[];
   markedDates?: MarkedDate[];
 
@@ -370,7 +370,8 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
     const gridId = useId();
     const isAutoMode = !days;
     const gridRef = useRef<HTMLDivElement>(null);
-    const isDual = numberOfMonths === 2;
+    const numMonths = Math.max(1, Math.min(numberOfMonths, 6));
+    const isMultiMonth = numMonths > 1;
 
     const markedMap = useMemo(() => new Map((markedDatesProp ?? []).map((m) => [m.day, m])), [markedDatesProp]);
     const disabledSet = useMemo(() => new Set((disabledDates ?? []).map((d) => d.toDateString())), [disabledDates]);
@@ -512,25 +513,26 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
 
     const genArgs = [weekStartsOn, fixedWeeks, activeSelectedDay, mode === "multiple" ? multiDateSet : new Set<number>(), mode === "range" ? dateRange : null, hoverDate, rangeStep === "end", eventDays, markedMap, minDate, maxDate, disabledSet] as const;
 
-    const month1Days = useMemo(
-      () => isAutoMode ? generateCalendarDays(activeMonth, activeYear, ...genArgs) : [],
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [isAutoMode, activeMonth, activeYear, ...genArgs]
-    );
+    // Generate days for each visible month
+    const monthPanels = useMemo(() => {
+      if (!isAutoMode) return [{ month: activeMonth, year: activeYear, days: days! }];
+      const panels: { month: number; year: number; days: CalendarDay[] }[] = [];
+      let m = activeMonth;
+      let y = activeYear;
+      for (let i = 0; i < numMonths; i++) {
+        panels.push({ month: m, year: y, days: generateCalendarDays(m, y, ...genArgs) });
+        [m, y] = nextMonth(m, y);
+      }
+      return panels;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isAutoMode, activeMonth, activeYear, numMonths, days, ...genArgs]);
 
-    const [m2, y2] = nextMonth(activeMonth, activeYear);
-    const month2Days = useMemo(
-      () => isDual && isAutoMode ? generateCalendarDays(m2, y2, ...genArgs) : [],
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [isDual, isAutoMode, m2, y2, ...genArgs]
-    );
-
-    const displayDays = !isAutoMode ? days! : month1Days;
     const displayMonth = hasExternalNav ? MONTH_NAMES[activeMonth] : (isAutoMode ? MONTH_NAMES[navMonth] : month);
     const displayYear = hasExternalNav ? activeYear : (isAutoMode ? navYear : year);
+    const lastPanel = monthPanels[monthPanels.length - 1];
 
     const canGoPrev = !minDate || new Date(Date.UTC(activeYear, activeMonth, 0)) >= minDate;
-    const canGoNext = !maxDate || new Date(Date.UTC(activeYear, activeMonth + (isDual ? 2 : 1), 1)) <= maxDate;
+    const canGoNext = !maxDate || new Date(Date.UTC(activeYear, activeMonth + numMonths, 1)) <= maxDate;
     const isCurrentMonth = navMonth === now.getMonth() && navYear === now.getFullYear();
 
     const selectedLabel = showSelectedLabel
@@ -542,7 +544,7 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
     return (
       <div
         ref={ref}
-        className={cn(s.calendarContainer, "select-none", isDual && "w-auto", className)}
+        className={cn(s.calendarContainer, "select-none", isMultiMonth && "w-auto", className)}
         role="group"
         aria-label="Calendar"
         onTouchStart={handleTouchStart}
@@ -571,8 +573,8 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
             aria-label={`${displayMonth} ${displayYear}, click to pick month`}
           >
             <span aria-live="polite">
-              {isDual
-                ? `${MONTH_NAMES[activeMonth]} – ${MONTH_NAMES[m2]} ${y2}`
+              {isMultiMonth
+                ? `${MONTH_NAMES[activeMonth]}${lastPanel.year !== activeYear ? ` ${activeYear}` : ""} – ${MONTH_NAMES[lastPanel.month]} ${lastPanel.year}`
                 : `${displayMonth} ${displayYear}`
               }
             </span>
@@ -627,59 +629,45 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
         {/* Calendar grid(s) */}
         {!pickerOpen && (
           <>
-            <div className={cn(isDual && "flex gap-6 px-2")}>
-              {/* Month 1 */}
-              <div className={cn(isDual && "flex-1 min-w-0")}>
-                {isDual && (
-                  <div className="text-center text-xs font-semibold text-slate-500 pb-1">
-                    {MONTH_NAMES[activeMonth]} {activeYear}
-                  </div>
-                )}
-                <MonthGrid
-                  monthIndex={activeMonth}
-                  year={activeYear}
-                  days={displayDays}
-                  dayLabels={dayLabels as unknown as string[]}
-                  showToday={showToday}
-                  mode={mode}
-                  rangePickingEnd={rangeStep === "end"}
-                  slideDir={slideDir}
-                  gridRef={gridRef}
-                  gridId={gridId}
-                  focusedIndex={focusedIndex}
-                  onDayClick={handleDayClick}
-                  onDayHover={setHoverDate}
-                  onGridKeyDown={handleGridKeyDown}
-                />
+            {/* Range picking indicator — shown when start is selected on a non-visible month */}
+            {mode === "range" && rangeStep === "end" && dateRange?.start && (
+              <div className="px-4 pb-2">
+                <div className="text-xs text-primary bg-primary/5 rounded-lg px-3 py-1.5 text-center font-medium">
+                  From <strong>{MONTH_SHORT[dateRange.start.getMonth()]} {dateRange.start.getDate()}, {dateRange.start.getFullYear()}</strong> — select end date
+                </div>
               </div>
+            )}
 
-              {/* Month 2 (dual mode) */}
-              {isDual && isAutoMode && (
-                <>
-                  <div className="w-px bg-slate-200 self-stretch my-2" />
+            <div className={cn(isMultiMonth && "flex gap-6 px-2")}>
+              {monthPanels.map((panel, idx) => (
+                <div key={`${panel.month}-${panel.year}`} className={cn("flex items-start", isMultiMonth && "flex-1 min-w-0")}>
+                  {/* Divider between months */}
+                  {idx > 0 && <div className="w-px bg-slate-200 self-stretch mx-0 -ml-3 mr-3" />}
                   <div className="flex-1 min-w-0">
-                    <div className="text-center text-xs font-semibold text-slate-500 pb-1">
-                      {MONTH_NAMES[m2]} {y2}
-                    </div>
+                    {isMultiMonth && (
+                      <div className="text-center text-xs font-semibold text-slate-500 pb-1">
+                        {MONTH_NAMES[panel.month]} {panel.year}
+                      </div>
+                    )}
                     <MonthGrid
-                      monthIndex={m2}
-                      year={y2}
-                      days={month2Days}
+                      monthIndex={panel.month}
+                      year={panel.year}
+                      days={panel.days}
                       dayLabels={dayLabels as unknown as string[]}
                       showToday={showToday}
                       mode={mode}
                       rangePickingEnd={rangeStep === "end"}
                       slideDir={slideDir}
-                      gridRef={undefined}
-                      gridId={`${gridId}-m2`}
-                      focusedIndex={null}
+                      gridRef={idx === 0 ? gridRef : undefined}
+                      gridId={idx === 0 ? gridId : `${gridId}-m${idx + 1}`}
+                      focusedIndex={idx === 0 ? focusedIndex : null}
                       onDayClick={handleDayClick}
                       onDayHover={setHoverDate}
                       onGridKeyDown={handleGridKeyDown}
                     />
                   </div>
-                </>
-              )}
+                </div>
+              ))}
             </div>
 
             {/* Footer */}

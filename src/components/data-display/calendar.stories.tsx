@@ -131,6 +131,23 @@ export const DualCalendarWithEvents: Story = {
   },
 };
 
+export const ThreeMonths: Story = {
+  args: {
+    mode: "range",
+    numberOfMonths: 3,
+    showSelectedLabel: true,
+    showTodayButton: true,
+  },
+};
+
+export const CrossMonthRange: Story = {
+  args: {
+    mode: "range",
+    showSelectedLabel: true,
+    showTodayButton: true,
+  },
+};
+
 export const FullFeatured: Story = {
   args: {
     mode: "range",
