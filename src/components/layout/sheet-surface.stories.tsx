@@ -44,7 +44,7 @@ export const ElevationScale: Story = {
     <div className="grid grid-cols-3 gap-6 p-4">
       {([0, 1, 2, 3, 4, 5] as const).map((elevation) => (
         <SheetSurface key={elevation} {...args} elevation={elevation} className="p-6 text-center">
-          <p className="text-xs font-mono text-slate-400 mb-1">elevation={elevation}</p>
+          <p className="text-xs font-mono text-slate-500 mb-1">elevation={elevation}</p>
           <p className="text-sm font-medium text-slate-700">Content</p>
         </SheetSurface>
       ))}
@@ -57,7 +57,7 @@ export const RoundedVariants: Story = {
     <div className="grid grid-cols-3 gap-6 p-4">
       {(["none", "sm", "md", "lg", "xl", "2xl"] as const).map((rounded) => (
         <SheetSurface key={rounded} {...args} rounded={rounded} elevation={2} className="p-6 text-center">
-          <p className="text-xs font-mono text-slate-400 mb-1">rounded=&quot;{rounded}&quot;</p>
+          <p className="text-xs font-mono text-slate-500 mb-1">rounded=&quot;{rounded}&quot;</p>
           <p className="text-sm font-medium text-slate-700">Content</p>
         </SheetSurface>
       ))}

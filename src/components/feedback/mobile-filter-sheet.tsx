@@ -40,7 +40,7 @@ type PillProps = {
 function Section({ label, children }: SectionProps) {
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+      <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
         {label}
       </p>
       <div className="flex flex-wrap gap-2">{children}</div>
@@ -107,6 +107,7 @@ function MobileFilterSheet({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
+        aria-label={label || "Filters"}
         className={cn(
           "relative flex items-center gap-1 bg-slate-50 text-slate-700 rounded-lg border border-slate-200 hover:border-slate-300 transition-colors shrink-0 p-2",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
@@ -151,7 +152,7 @@ function MobileFilterSheet({
                 type="button"
                 aria-label="Close filters"
                 onClick={close}
-                className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="p-1 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 <Icon name="close" size="md" />
               </button>

@@ -149,23 +149,23 @@ export const Gallery: Story = {
   render: (args) => (
     <div className="flex flex-col gap-6 max-w-md">
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-2">SMALL</p>
+        <p className="text-xs font-semibold text-slate-500 mb-2">SMALL</p>
         <Cascader {...args} size="sm" placeholder="Small cascader" />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-2">MEDIUM (DEFAULT)</p>
+        <p className="text-xs font-semibold text-slate-500 mb-2">MEDIUM (DEFAULT)</p>
         <Cascader {...args} size="md" placeholder="Medium cascader" />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-2">LARGE</p>
+        <p className="text-xs font-semibold text-slate-500 mb-2">LARGE</p>
         <Cascader {...args} size="lg" placeholder="Large cascader" />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-2">WITH SEARCH</p>
+        <p className="text-xs font-semibold text-slate-500 mb-2">WITH SEARCH</p>
         <Cascader {...args} searchable placeholder="Search locations..." />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-2">DISABLED</p>
+        <p className="text-xs font-semibold text-slate-500 mb-2">DISABLED</p>
         <Cascader {...args} disabled defaultValue={["us", "ca", "la"]} />
       </div>
     </div>

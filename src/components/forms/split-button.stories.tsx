@@ -111,7 +111,7 @@ export const Gallery: Story = {
   render: (args) => (
     <div className="flex flex-col gap-6">
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-3">VARIANTS</p>
+        <p className="text-xs font-semibold text-slate-500 mb-3">VARIANTS</p>
         <div className="flex flex-wrap gap-4 items-center">
           <SplitButton {...args} variant="solid">Solid</SplitButton>
           <SplitButton {...args} variant="outline">Outline</SplitButton>
@@ -119,7 +119,7 @@ export const Gallery: Story = {
         </div>
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-3">COLORS (SOLID)</p>
+        <p className="text-xs font-semibold text-slate-500 mb-3">COLORS (SOLID)</p>
         <div className="flex flex-wrap gap-4 items-center">
           <SplitButton {...args} color="primary">Primary</SplitButton>
           <SplitButton {...args} color="secondary">Secondary</SplitButton>
@@ -129,7 +129,7 @@ export const Gallery: Story = {
         </div>
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-3">SIZES</p>
+        <p className="text-xs font-semibold text-slate-500 mb-3">SIZES</p>
         <div className="flex flex-wrap gap-4 items-center">
           <SplitButton {...args} size="sm">Small</SplitButton>
           <SplitButton {...args} size="md">Medium</SplitButton>
@@ -137,7 +137,7 @@ export const Gallery: Story = {
         </div>
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-3">STATES</p>
+        <p className="text-xs font-semibold text-slate-500 mb-3">STATES</p>
         <div className="flex flex-wrap gap-4 items-center">
           <SplitButton {...args} loading>Loading</SplitButton>
           <SplitButton {...args} disabled>Disabled</SplitButton>

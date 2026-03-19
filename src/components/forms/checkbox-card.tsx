@@ -179,7 +179,7 @@ const CheckboxCard = forwardRef<HTMLDivElement, CheckboxCardProps>(
                 <span className={cn(sizes.title, "text-slate-800")}>{title}</span>
               </div>
               {description && (
-                <p className={cn(sizes.desc, "text-slate-500 mt-1")}>{description}</p>
+                <p className={cn(sizes.desc, "text-slate-600 mt-1")}>{description}</p>
               )}
               {children && <div className="mt-2">{children}</div>}
             </div>

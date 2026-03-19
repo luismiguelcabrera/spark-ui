@@ -18,13 +18,15 @@ type CircularProgressProps = HTMLAttributes<HTMLDivElement> & {
   showValue?: boolean;
   /** Format value for display */
   formatValue?: (value: number) => string;
+  /** Accessible label */
+  label?: string;
 };
 
 const colorMap: Record<string, string> = {
   primary: "text-primary",
   secondary: "text-secondary",
-  success: "text-green-600",
-  warning: "text-amber-500",
+  success: "text-green-700",
+  warning: "text-amber-600",
   destructive: "text-red-600",
   accent: "text-accent",
 };
@@ -41,6 +43,7 @@ const CircularProgress = forwardRef<HTMLDivElement, CircularProgressProps>(
       trackColor = "text-slate-200",
       showValue = false,
       formatValue = (v) => `${Math.round(v)}%`,
+      label,
       ...props
     },
     ref
@@ -58,6 +61,7 @@ const CircularProgress = forwardRef<HTMLDivElement, CircularProgressProps>(
         aria-valuenow={indeterminate ? undefined : progress}
         aria-valuemin={0}
         aria-valuemax={100}
+        aria-label={label ?? "Progress"}
         style={{ width: size, height: size }}
         {...props}
       >

@@ -11,6 +11,7 @@ import {
 } from "react";
 import { cn } from "../../lib/utils";
 import { Icon } from "../data-display/icon";
+import { useLocale } from "../../lib/locale";
 
 type SheetSide = "left" | "right" | "top" | "bottom";
 
@@ -123,6 +124,8 @@ const Sheet = forwardRef<HTMLDivElement, SheetProps>(
     },
     ref
   ) => {
+    const { t } = useLocale();
+
     // isMounted keeps the DOM present during exit animation
     const [isMounted, setIsMounted] = useState(open);
     // isVisible drives the CSS transition classes (true = on-screen, false = off-screen)
@@ -450,7 +453,7 @@ const Sheet = forwardRef<HTMLDivElement, SheetProps>(
                       </h2>
                     )}
                     {description && (
-                      <p className="text-sm text-slate-500 mt-0.5">
+                      <p className="text-sm text-slate-600 mt-0.5">
                         {description}
                       </p>
                     )}
@@ -460,8 +463,8 @@ const Sheet = forwardRef<HTMLDivElement, SheetProps>(
                   <button
                     type="button"
                     onClick={() => onOpenChange(false)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-                    aria-label="Close"
+                    className="p-1.5 rounded-lg text-slate-600 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                    aria-label={t("sheet.close", "Close")}
                   >
                     <Icon name="close" size="md" />
                   </button>

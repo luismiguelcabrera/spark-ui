@@ -53,7 +53,7 @@ describe("Chip", () => {
 
   it("applies disabled styles", () => {
     const { container } = render(<Chip disabled>Disabled</Chip>);
-    expect(container.firstElementChild!.className).toContain("opacity-50");
+    expect(container.firstElementChild!.className).toContain("cursor-not-allowed");
   });
 
   // --- New: filter prop ---
@@ -86,14 +86,14 @@ describe("Chip", () => {
       expect(container.firstElementChild!.className).toContain("ring-primary");
     });
 
-    it("sets aria-selected", () => {
-      const { container } = render(<Chip selected>Selected</Chip>);
-      expect(container.firstElementChild!).toHaveAttribute("aria-selected", "true");
+    it("sets aria-pressed when clickable and selected", () => {
+      const { container } = render(<Chip clickable selected>Selected</Chip>);
+      expect(container.firstElementChild!).toHaveAttribute("aria-pressed", "true");
     });
 
-    it("sets aria-selected=false when explicitly not selected", () => {
-      const { container } = render(<Chip selected={false}>Not selected</Chip>);
-      expect(container.firstElementChild!).toHaveAttribute("aria-selected", "false");
+    it("sets aria-pressed=false when clickable and explicitly not selected", () => {
+      const { container } = render(<Chip clickable selected={false}>Not selected</Chip>);
+      expect(container.firstElementChild!).toHaveAttribute("aria-pressed", "false");
     });
   });
 

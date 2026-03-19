@@ -128,7 +128,7 @@ const Countdown = forwardRef<HTMLDivElement, CountdownProps>(
             <span key={unit.label}>
               <span className={cn(sizes.value, "text-secondary")}>{pad(unit.value)}</span>
               {i < units.length - 1 && (
-                <span className={cn(sizes.value, "text-slate-300 mx-0.5")}>{separator}</span>
+                <span className={cn(sizes.value, "text-slate-600 mx-0.5")}>{separator}</span>
               )}
             </span>
           ))}
@@ -150,10 +150,10 @@ const Countdown = forwardRef<HTMLDivElement, CountdownProps>(
                 <span className={cn(sizes.value, "text-secondary tabular-nums leading-none")}>
                   {pad(unit.value)}
                 </span>
-                <span className={cn(sizes.label, "text-slate-400 mt-0.5")}>{unit.label}</span>
+                <span className={cn(sizes.label, "text-slate-600 mt-0.5")}>{unit.label}</span>
               </div>
               {i < units.length - 1 && (
-                <span className={cn(sizes.value, "text-slate-300")}>{separator}</span>
+                <span className={cn(sizes.value, "text-slate-600")}>{separator}</span>
               )}
             </div>
           ))}
@@ -168,7 +168,7 @@ const Countdown = forwardRef<HTMLDivElement, CountdownProps>(
           <div key={unit.label} className="flex items-center gap-4">
             <div className="flex flex-col items-center">
               <span className={cn(sizes.value, "text-secondary tabular-nums")}>{pad(unit.value)}</span>
-              <span className={cn(sizes.label, "text-slate-400 uppercase tracking-wider")}>{unit.label}</span>
+              <span className={cn(sizes.label, "text-slate-600 uppercase tracking-wider")}>{unit.label}</span>
             </div>
             {i < units.length - 1 && (
               <span className={cn(sizes.value, "text-slate-200 -mt-4")}>{separator}</span>

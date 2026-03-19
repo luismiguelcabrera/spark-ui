@@ -345,7 +345,7 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
             <span className="text-sm font-semibold text-slate-700 flex-1">
               {title}
             </span>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-600">
               {selectedCount > 0 && `${selectedCount}/`}
               {items.length}
             </span>
@@ -358,7 +358,7 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
                 <Icon
                   name="search"
                   size="sm"
-                  className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400"
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500"
                 />
                 <input
                   type="text"
@@ -366,7 +366,7 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   disabled={disabled}
-                  className="w-full pl-8 pr-3 py-1.5 text-sm border border-slate-200 rounded-lg bg-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary disabled:opacity-50"
+                  className="w-full pl-8 pr-3 py-1.5 text-sm border border-slate-200 rounded-lg bg-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary disabled:opacity-50"
                   aria-label={`Search ${title.toLowerCase()}`}
                 />
               </div>
@@ -378,9 +378,10 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
             className="overflow-y-auto"
             style={{ height: `${listHeight}px` }}
             aria-label={`${title} items`}
+            tabIndex={0}
           >
             {filteredItems.length === 0 ? (
-              <li className="flex items-center justify-center h-full text-sm text-slate-400 list-none">
+              <li className="flex items-center justify-center h-full text-sm text-slate-600 list-none">
                 No items
               </li>
             ) : (
@@ -431,7 +432,7 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
                           {item.label}
                         </div>
                         {item.description && (
-                          <div className="text-xs text-slate-400 truncate">
+                          <div className="text-xs text-slate-600 truncate">
                             {item.description}
                           </div>
                         )}
@@ -474,7 +475,7 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
               "flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 bg-white shadow-sm transition-all",
               "hover:bg-primary hover:text-white hover:border-primary",
               "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
-              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-slate-400 disabled:hover:border-slate-200"
+              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-slate-500 disabled:hover:border-slate-200"
             )}
             aria-label="Move selected items to target"
           >
@@ -488,7 +489,7 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
               "flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 bg-white shadow-sm transition-all",
               "hover:bg-primary hover:text-white hover:border-primary",
               "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
-              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-slate-400 disabled:hover:border-slate-200"
+              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-slate-500 disabled:hover:border-slate-200"
             )}
             aria-label="Move selected items to source"
           >

@@ -5,6 +5,7 @@ import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { Icon } from "../data-display/icon";
 import { useControllable } from "../../hooks/use-controllable";
+import { useLocale } from "../../lib/locale";
 
 type PaginationProps = {
   current?: number;
@@ -14,6 +15,8 @@ type PaginationProps = {
   pageSize: number;
   variant?: "simple" | "numbered";
   className?: string;
+  /** Accessible label for the navigation landmark */
+  "aria-label"?: string;
 };
 
 const Pagination = forwardRef<HTMLElement, PaginationProps>(
@@ -26,9 +29,12 @@ const Pagination = forwardRef<HTMLElement, PaginationProps>(
       pageSize,
       variant = "simple",
       className,
+      "aria-label": ariaLabel,
     },
     ref,
   ) => {
+    const { t } = useLocale();
+
     const [page, setPage] = useControllable({
       value: current,
       defaultValue: defaultCurrent ?? current ?? 1,
@@ -45,18 +51,18 @@ const Pagination = forwardRef<HTMLElement, PaginationProps>(
       return (
         <nav
           ref={ref}
-          aria-label="Pagination"
+          aria-label={ariaLabel ?? "Pagination"}
           className={cn("flex items-center justify-between", className)}
         >
-          <p className="text-xs text-slate-400 font-medium">
-            Showing {start}-{end} of {total.toLocaleString()}
+          <p className="text-xs text-slate-600 font-medium">
+            {t("pagination.showing", "Showing")} {start}-{end} of {total.toLocaleString()}
           </p>
           <div className="flex gap-2">
             <button
               type="button"
               className="p-2 border border-slate-200 rounded-xl hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
               disabled={isFirst}
-              aria-label="Previous page"
+              aria-label={t("pagination.previousPage", "Previous page")}
               onClick={() => !isFirst && setPage(page - 1)}
             >
               <Icon name="chevron_left" size="sm" />
@@ -65,7 +71,7 @@ const Pagination = forwardRef<HTMLElement, PaginationProps>(
               type="button"
               className="p-2 border border-slate-200 rounded-xl hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
               disabled={isLast}
-              aria-label="Next page"
+              aria-label={t("pagination.nextPage", "Next page")}
               onClick={() => !isLast && setPage(page + 1)}
             >
               <Icon name="chevron_right" size="sm" />
@@ -81,8 +87,8 @@ const Pagination = forwardRef<HTMLElement, PaginationProps>(
         aria-label="Pagination"
         className={cn("px-1 flex items-center justify-between", className)}
       >
-        <div className="text-xs text-slate-500">
-          Showing{" "}
+        <div className="text-xs text-slate-600">
+          {t("pagination.showing", "Showing")}{" "}
           <span className="font-bold text-slate-900">
             {start}-{end}
           </span>{" "}
@@ -96,10 +102,10 @@ const Pagination = forwardRef<HTMLElement, PaginationProps>(
               "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
             )}
             disabled={isFirst}
-            aria-label="Previous page"
+            aria-label={t("pagination.previousPage", "Previous page")}
             onClick={() => !isFirst && setPage(page - 1)}
           >
-            Previous
+            {t("pagination.previous", "Previous")}
           </button>
           <button
             type="button"
@@ -108,10 +114,10 @@ const Pagination = forwardRef<HTMLElement, PaginationProps>(
               "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
             )}
             disabled={isLast}
-            aria-label="Next page"
+            aria-label={t("pagination.nextPage", "Next page")}
             onClick={() => !isLast && setPage(page + 1)}
           >
-            Next
+            {t("pagination.next", "Next")}
           </button>
         </div>
       </nav>

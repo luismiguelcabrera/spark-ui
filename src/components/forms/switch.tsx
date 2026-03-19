@@ -48,8 +48,8 @@ const thumbTranslateMap = {
 const colorMap: Record<string, string> = {
   primary: "bg-primary",
   secondary: "bg-secondary",
-  success: "bg-green-600",
-  warning: "bg-amber-500",
+  success: "bg-green-700",
+  warning: "bg-amber-600",
   destructive: "bg-red-600",
   accent: "bg-accent",
 };
@@ -125,12 +125,12 @@ const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
       <div className={cn("flex items-start gap-3", labelPlacement === "left" && "flex-row-reverse")}>
         {track}
         <div className="flex flex-col">
-          <span className={cn("text-sm font-medium text-slate-700", disabled && "opacity-50")}>
+          <span className="text-sm font-medium text-slate-700">
             {label}
-            {required && <span className="text-red-500 ml-0.5">*</span>}
+            {required && <span className="text-red-600 ml-0.5">*</span>}
           </span>
           {description && (
-            <span className={cn("text-xs text-slate-500", disabled && "opacity-50")}>
+            <span className="text-xs text-slate-600">
               {description}
             </span>
           )}

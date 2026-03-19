@@ -64,7 +64,7 @@ const Snippet = forwardRef<HTMLDivElement, SnippetProps>(
       >
         <code className="flex items-center gap-2 flex-1 min-w-0">
           {!hideSymbol && (
-            <span className="opacity-50 select-none" aria-hidden="true">
+            <span className="select-none" aria-hidden="true">
               {symbol}
             </span>
           )}

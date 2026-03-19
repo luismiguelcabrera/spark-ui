@@ -45,7 +45,7 @@ const variantStyles: Record<
 > = {
   default: { bg: "bg-slate-900 text-white", icon: "", iconColor: "" },
   success: {
-    bg: "bg-green-600 text-white",
+    bg: "bg-green-700 text-white",
     icon: "check-circle",
     iconColor: "text-green-200",
   },

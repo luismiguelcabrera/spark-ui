@@ -118,7 +118,7 @@ export const DensityVariants: Story = {
     <div className="flex flex-col gap-8">
       {(["compact", "default", "comfortable"] as const).map((density) => (
         <div key={density}>
-          <p className="text-xs font-semibold text-slate-400 uppercase mb-3">{density}</p>
+          <p className="text-xs font-semibold text-slate-500 uppercase mb-3">{density}</p>
           <Tabs defaultValue="a" density={density} {...args}>
             <Tabs.List>
               <Tabs.Tab value="a">Tab A</Tabs.Tab>
@@ -157,7 +157,7 @@ export const Gallery: Story = {
   render: (args) => (
     <div className="flex flex-col gap-10">
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Horizontal (default)</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">Horizontal (default)</p>
         <Tabs defaultValue="a" {...args}>
           <Tabs.List>
             <Tabs.Tab value="a">Tab A</Tabs.Tab>
@@ -170,7 +170,7 @@ export const Gallery: Story = {
         </Tabs>
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Vertical</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">Vertical</p>
         <Tabs defaultValue="x" orientation="vertical">
           <Tabs.List>
             <Tabs.Tab value="x">Tab X</Tabs.Tab>
@@ -185,7 +185,7 @@ export const Gallery: Story = {
         </Tabs>
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Grow + Compact</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">Grow + Compact</p>
         <Tabs defaultValue="a" grow density="compact">
           <Tabs.List>
             <Tabs.Tab value="a">Tab A</Tabs.Tab>

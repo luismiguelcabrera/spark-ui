@@ -89,7 +89,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       <div
         ref={ref}
         role="img"
-        aria-label={alt || initials || undefined}
+        aria-label={alt || initials || "Avatar"}
         className={cn(avatarVariants({ size, ring, density }), className)}
       >
         {/* Skeleton — shown while image is fetching */}
@@ -100,7 +100,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         {/* Fallback: icon > initials > first letter of alt > "?" */}
         {showFallback && (
           iconContent ?? (
-            <span aria-hidden="true" className={cn("font-bold text-gray-500", s.textMuted)}>
+            <span aria-hidden="true" className="font-bold text-gray-600">
               {fallbackText}
             </span>
           )

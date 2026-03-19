@@ -80,6 +80,7 @@ const SlideGroup = forwardRef<HTMLDivElement, SlideGroupProps>(
           ref={scrollRef}
           className="flex overflow-x-auto scrollbar-hide gap-2 w-full"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          tabIndex={0}
         >
           {children}
         </div>

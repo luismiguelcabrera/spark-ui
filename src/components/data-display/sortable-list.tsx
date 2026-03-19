@@ -54,7 +54,7 @@ const DragHandle = forwardRef<HTMLButtonElement, DragHandleProps>(
       aria-label="Drag to reorder"
       aria-roledescription="sortable"
       className={cn(
-        "touch-none cursor-grab shrink-0 text-slate-300 hover:text-slate-500 transition-colors p-1.5 rounded-md",
+        "touch-none cursor-grab shrink-0 text-slate-500 hover:text-slate-500 transition-colors p-1.5 rounded-md",
         "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
         "hover:bg-slate-100",
         isDragging && "cursor-grabbing text-primary",

@@ -19,7 +19,7 @@ export const Default: Story = {
   args: {
     once: true,
     placeholder: (
-      <div className="h-40 rounded-xl bg-slate-100 animate-pulse flex items-center justify-center text-sm text-slate-400">
+      <div className="h-40 rounded-xl bg-slate-100 animate-pulse flex items-center justify-center text-sm text-slate-700">
         Loading content...
       </div>
     ),
@@ -38,7 +38,7 @@ export const ScrollToReveal: Story = {
   },
   render: (args) => (
     <div>
-      <div className="h-[80vh] flex items-center justify-center text-slate-400">
+      <div className="h-[80vh] flex items-center justify-center text-slate-700">
         Scroll down to reveal lazy content
       </div>
       {Array.from({ length: 5 }, (_, i) => (
@@ -64,7 +64,7 @@ export const WithRootMargin: Story = {
     once: true,
     rootMargin: "200px 0px",
     placeholder: (
-      <div className="h-40 rounded-xl bg-slate-100 animate-pulse flex items-center justify-center text-sm text-slate-400">
+      <div className="h-40 rounded-xl bg-slate-100 animate-pulse flex items-center justify-center text-sm text-slate-700">
         Will load 200px before entering viewport
       </div>
     ),
@@ -80,7 +80,7 @@ export const ToggleOnScroll: Story = {
   args: {
     once: false,
     placeholder: (
-      <div className="h-40 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-sm text-red-500">
+      <div className="h-40 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-sm text-red-700">
         Out of viewport
       </div>
     ),
@@ -99,7 +99,7 @@ export const LazyImage: Story = {
   },
   render: (args) => (
     <div>
-      <div className="h-[80vh] flex items-center justify-center text-slate-400">
+      <div className="h-[80vh] flex items-center justify-center text-slate-700">
         Scroll down for lazy images
       </div>
       {Array.from({ length: 3 }, (_, i) => (

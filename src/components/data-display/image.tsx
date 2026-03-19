@@ -167,9 +167,9 @@ const Image = forwardRef<HTMLImageElement, ImageProps>(
 
         {/* Error / empty fallback */}
         {showError && (
-          <div className="absolute inset-0 flex items-center justify-center bg-slate-100 text-slate-400">
+          <div className="absolute inset-0 flex items-center justify-center bg-slate-100 text-slate-600">
             {fallback ?? (
-              <Icon name={fallbackIcon} size="lg" className="text-slate-300" />
+              <Icon name={fallbackIcon} size="lg" className="text-slate-600" />
             )}
           </div>
         )}

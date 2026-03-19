@@ -9,7 +9,7 @@ const toastVariants = cva(s.toastBase, {
     variant: {
       success: "bg-green-50 border-green-200 text-green-800",
       error: "bg-red-50 border-red-200 text-red-800",
-      warning: "bg-amber-50 border-amber-200 text-amber-800",
+      warning: "bg-amber-50 border-amber-200 text-amber-900",
       info: "bg-blue-50 border-blue-200 text-blue-800",
     },
   },
@@ -49,7 +49,7 @@ const Toast = forwardRef<HTMLDivElement, ToastProps>(
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-sm">{title}</p>
           {description && (
-            <p className="text-sm mt-1 opacity-80">{description}</p>
+            <p className="text-sm mt-1">{description}</p>
           )}
         </div>
         {actions && (

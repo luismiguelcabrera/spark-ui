@@ -115,7 +115,7 @@ export const RichValues: Story = {
         />
         <MetadataItem
           label="Rating"
-          value={<span className="text-amber-500">4.8 / 5.0</span>}
+          value={<span className="text-amber-700">4.8 / 5.0</span>}
         />
       </>
     ),

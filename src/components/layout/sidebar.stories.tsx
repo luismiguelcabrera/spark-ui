@@ -44,7 +44,7 @@ export const Default: Story = {
       </AppShellHeader>
       <AppShellContent>
         <div className="p-6">
-          <p className="text-sm text-slate-500">Main content area</p>
+          <p className="text-sm text-slate-700">Main content area</p>
         </div>
       </AppShellContent>
     </AppShell>
@@ -74,7 +74,7 @@ export const Collapsible: Story = {
       </AppShellHeader>
       <AppShellContent>
         <div className="p-6">
-          <p className="text-sm text-slate-500">Click the toggle button on the sidebar edge to collapse/expand.</p>
+          <p className="text-sm text-slate-700">Click the toggle button on the sidebar edge to collapse/expand.</p>
         </div>
       </AppShellContent>
     </AppShell>
@@ -106,7 +106,7 @@ export const WithFooter: Story = {
     >
       <AppShellContent>
         <div className="p-6">
-          <p className="text-sm text-slate-500">Sidebar with a footer section containing user info.</p>
+          <p className="text-sm text-slate-700">Sidebar with a footer section containing user info.</p>
         </div>
       </AppShellContent>
     </AppShell>
@@ -136,7 +136,7 @@ export const MultipleGroups: Story = {
     >
       <AppShellContent>
         <div className="p-6">
-          <p className="text-sm text-slate-500">Sidebar with multiple nav groups.</p>
+          <p className="text-sm text-slate-700">Sidebar with multiple nav groups.</p>
         </div>
       </AppShellContent>
     </AppShell>

@@ -116,7 +116,7 @@ export const WithImage: Story = {
     opacity: 0.08,
     children: (
       <div className="p-4 bg-white border rounded-lg">
-        <div className="w-full h-[200px] bg-gradient-to-br from-blue-100 to-purple-100 rounded flex items-center justify-center text-gray-400">
+        <div className="w-full h-[200px] bg-gradient-to-br from-blue-100 to-purple-100 rounded flex items-center justify-center text-gray-500">
           Image placeholder
         </div>
       </div>

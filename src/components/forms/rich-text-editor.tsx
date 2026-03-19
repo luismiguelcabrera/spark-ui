@@ -6,10 +6,12 @@ import {
   useCallback,
   useEffect,
   useState,
+  useMemo,
   type KeyboardEvent,
 } from "react";
 import { cn } from "../../lib/utils";
 import { Icon } from "../data-display/icon";
+import { useLocale } from "../../lib/locale";
 
 export type ToolbarAction =
   | "bold"
@@ -124,11 +126,27 @@ const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
     },
     ref
   ) => {
+    const { t } = useLocale();
     const editorRef = useRef<HTMLDivElement>(null);
     const isInternalChange = useRef(false);
     const [activeFormats, setActiveFormats] = useState<Set<string>>(
       new Set()
     );
+
+    const toolbarLabels = useMemo(() => ({
+      bold: t("rte.bold", "Bold"),
+      italic: t("rte.italic", "Italic"),
+      underline: t("rte.underline", "Underline"),
+      strikethrough: t("rte.strikethrough", "Strikethrough"),
+      heading: t("rte.heading", "Heading"),
+      bulletList: t("rte.bulletList", "Bullet list"),
+      orderedList: t("rte.orderedList", "Ordered list"),
+      blockquote: t("rte.blockquote", "Blockquote"),
+      code: t("rte.code", "Code block"),
+      link: t("rte.link", "Insert link"),
+      undo: t("rte.undo", "Undo"),
+      redo: t("rte.redo", "Redo"),
+    }), [t]);
 
     // Set initial content
     useEffect(() => {
@@ -195,7 +213,7 @@ const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
         editorRef.current?.focus();
 
         if (action === "link") {
-          const url = typeof window !== "undefined" ? window.prompt("Enter URL:") : null;
+          const url = typeof window !== "undefined" ? window.prompt(t("rte.enterUrl", "Enter URL:")) : null;
           if (url) {
             execCmd("createLink", url);
           }
@@ -236,7 +254,7 @@ const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
           }
         });
       },
-      [disabled, readOnly, onChange, updateActiveFormats]
+      [disabled, readOnly, onChange, updateActiveFormats, t]
     );
 
     const handleKeyDown = useCallback(
@@ -279,14 +297,14 @@ const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
         className={cn(
           "border border-slate-200 rounded-xl overflow-hidden bg-white",
           "focus-within:ring-2 focus-within:ring-primary focus-within:border-primary",
-          disabled && "opacity-50 cursor-not-allowed",
+          disabled && "cursor-not-allowed",
           className
         )}
       >
         {/* Toolbar */}
         <div
           role="toolbar"
-          aria-label="Formatting options"
+          aria-label={t("rte.formattingOptions", "Formatting options")}
           className={cn(
             "flex items-center flex-wrap gap-0.5 px-2 py-1.5 border-b border-slate-100 bg-slate-50/50",
             disabled && "pointer-events-none"
@@ -307,17 +325,18 @@ const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
             if (!config) return null;
 
             const isActive = activeFormats.has(action);
+            const translatedLabel = toolbarLabels[action as keyof typeof toolbarLabels] ?? config.label;
 
             return (
               <button
                 key={action}
                 type="button"
-                aria-label={config.label}
+                aria-label={translatedLabel}
                 aria-pressed={isActive}
                 title={
                   config.shortcut
-                    ? `${config.label} (${config.shortcut})`
-                    : config.label
+                    ? `${translatedLabel} (${config.shortcut})`
+                    : translatedLabel
                 }
                 disabled={disabled || readOnly}
                 className={cn(
@@ -345,7 +364,7 @@ const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
             suppressContentEditableWarning
             role="textbox"
             aria-multiline="true"
-            aria-label="Rich text editor"
+            aria-label={t("rte.editor", "Rich text editor")}
             aria-placeholder={placeholder}
             aria-disabled={disabled}
             aria-readonly={readOnly}
@@ -377,7 +396,7 @@ const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
           {/* Placeholder */}
           {placeholder && isEmpty && (
             <div
-              className="absolute top-3 left-4 text-sm text-slate-400 pointer-events-none select-none"
+              className="absolute top-3 left-4 text-sm text-slate-600 pointer-events-none select-none"
               aria-hidden="true"
             >
               {placeholder}

@@ -103,7 +103,7 @@ export const InCard: Story = {
       <div className="flex justify-center">
         <QrCode {...args} dataUrl={SAMPLE_QR_DATA_URL} size={160} />
       </div>
-      <p className="text-xs text-slate-400 text-center mt-3">https://example.com</p>
+      <p className="text-xs text-slate-500 text-center mt-3">https://example.com</p>
     </div>
   ),
 };

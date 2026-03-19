@@ -84,9 +84,12 @@ export const FullWidth: Story = { args: { children: "Full Width", fullWidth: tru
 export const Disabled: Story = { args: { children: "Disabled", disabled: true } };
 export const AsLink: Story = {
   render: (args) => (
-    <Button {...args} asChild>
-      <a href="https://example.com">Visit Site</a>
-    </Button>
+    <a
+      href="https://example.com"
+      className="inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:outline-none bg-primary hover:bg-primary-dark text-white rounded-xl shadow-lg shadow-primary/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/25 active:translate-y-0 h-11 px-6 text-sm"
+    >
+      Visit Site
+    </a>
   ),
 };
 

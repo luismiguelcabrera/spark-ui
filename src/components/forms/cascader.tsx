@@ -386,7 +386,7 @@ const Cascader = forwardRef<HTMLDivElement, CascaderProps>(
                   setFocusedIndex(0);
                 }}
                 placeholder={displayText || placeholder}
-                className="flex-1 bg-transparent outline-none placeholder:text-slate-400 text-inherit min-w-0"
+                className="flex-1 bg-transparent outline-none placeholder:text-slate-500 text-inherit min-w-0"
                 aria-label="Search options"
                 onClick={(e) => e.stopPropagation()}
               />
@@ -394,7 +394,7 @@ const Cascader = forwardRef<HTMLDivElement, CascaderProps>(
               <span
                 className={cn(
                   "flex-1 truncate",
-                  !displayText && "text-slate-400",
+                  !displayText && "text-slate-600",
                 )}
               >
                 {displayText || placeholder}
@@ -404,7 +404,7 @@ const Cascader = forwardRef<HTMLDivElement, CascaderProps>(
               name="expand_more"
               size="sm"
               className={cn(
-                "text-slate-400 transition-transform shrink-0 ml-1",
+                "text-slate-500 transition-transform shrink-0 ml-1",
                 isOpen && "rotate-180",
               )}
             />
@@ -420,7 +420,7 @@ const Cascader = forwardRef<HTMLDivElement, CascaderProps>(
                 /* Search results */
                 <ul className="max-h-60 overflow-auto py-1 min-w-[200px]">
                   {searchResults.length === 0 && (
-                    <li className={cn("px-4 py-3 text-slate-500", dropdownTextSize[size])}>
+                    <li className={cn("px-4 py-3 text-slate-600", dropdownTextSize[size])}>
                       No results found.
                     </li>
                   )}
@@ -488,7 +488,7 @@ const Cascader = forwardRef<HTMLDivElement, CascaderProps>(
                           >
                             <span className="truncate">{option.label}</span>
                             {option.children && option.children.length > 0 && (
-                              <Icon name="chevron_right" size="sm" className="text-slate-400 shrink-0" />
+                              <Icon name="chevron_right" size="sm" className="text-slate-500 shrink-0" />
                             )}
                             {isSelectedLeaf && (
                               <Icon name="check" size="sm" className="text-primary shrink-0" />

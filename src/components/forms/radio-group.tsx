@@ -128,7 +128,7 @@ const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
                         <Icon
                           name={opt.icon}
                           size="sm"
-                          className="text-slate-500"
+                          className="text-slate-600"
                         />
                       )}
                       <span className="text-sm font-semibold text-secondary">
@@ -136,7 +136,7 @@ const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
                       </span>
                     </div>
                     {opt.description && (
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-600 mt-1">
                         {opt.description}
                       </p>
                     )}

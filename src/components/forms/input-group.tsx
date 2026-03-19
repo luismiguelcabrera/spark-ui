@@ -74,7 +74,7 @@ type InputAddonProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const addonBase =
-  "flex items-center shrink-0 px-3.5 border border-slate-200 bg-slate-50 text-slate-500 font-medium select-none";
+  "flex items-center shrink-0 px-3.5 border border-slate-200 bg-slate-50 text-slate-600 font-medium select-none";
 
 const InputLeftAddon = forwardRef<HTMLDivElement, InputAddonProps>(
   ({ children, size = "md", className, ...props }, ref) => {

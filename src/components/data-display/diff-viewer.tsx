@@ -37,7 +37,7 @@ const DiffViewer = forwardRef<HTMLDivElement, DiffViewerProps>(
         <div className="flex items-center justify-between px-4 py-2 bg-slate-50 border-b border-slate-200">
           <span className="text-sm font-semibold text-secondary">{title}</span>
           {language && (
-            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{language}</span>
+            <span className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider">{language}</span>
           )}
         </div>
       )}
@@ -49,7 +49,7 @@ const DiffViewer = forwardRef<HTMLDivElement, DiffViewerProps>(
               className={cn("flex px-4 py-0.5 min-w-0", lineColors[line.type])}
             >
               {showLineNumbers && (
-                <span className="w-8 shrink-0 text-right pr-3 text-slate-400 select-none text-xs leading-5">
+                <span className="w-8 shrink-0 text-right pr-3 text-slate-600 select-none text-xs leading-5">
                   {line.lineNumber ?? i + 1}
                 </span>
               )}

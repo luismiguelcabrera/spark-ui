@@ -9,6 +9,10 @@ type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, children, error, ...props }, ref) => {
+    const hasAccessibleName =
+      !!props["aria-label"] ||
+      !!props["aria-labelledby"] ||
+      !!props.id;
     return (
       <div className="flex flex-col gap-1.5">
         <div className="relative">
@@ -23,16 +27,17 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             )}
             ref={ref}
             aria-invalid={error ? true : undefined}
+            aria-label={!hasAccessibleName ? "Select" : undefined}
             {...props}
           >
             {children}
           </select>
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
             <Icon name="expand_more" size="sm" />
           </span>
         </div>
         {error && (
-          <p className="text-xs text-red-500 font-medium" role="alert">{error}</p>
+          <p className="text-xs text-red-600 font-medium" role="alert">{error}</p>
         )}
       </div>
     );

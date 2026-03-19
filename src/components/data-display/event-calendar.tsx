@@ -12,6 +12,7 @@ import {
 import { cn } from "../../lib/utils";
 import { Icon } from "./icon";
 import { useControllable } from "../../hooks/use-controllable";
+import { useLocale } from "../../lib/locale";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -163,17 +164,17 @@ function getEventColor(color?: string): {
   const colorMap: Record<string, { bg: string; text: string; border: string }> = {
     red: {
       bg: "bg-red-100",
-      text: "text-red-800",
+      text: "text-red-900",
       border: "border-red-300",
     },
     blue: {
       bg: "bg-blue-100",
-      text: "text-blue-800",
+      text: "text-blue-900",
       border: "border-blue-300",
     },
     green: {
       bg: "bg-green-100",
-      text: "text-green-800",
+      text: "text-green-900",
       border: "border-green-300",
     },
     yellow: {
@@ -183,22 +184,22 @@ function getEventColor(color?: string): {
     },
     purple: {
       bg: "bg-purple-100",
-      text: "text-purple-800",
+      text: "text-purple-900",
       border: "border-purple-300",
     },
     orange: {
       bg: "bg-orange-100",
-      text: "text-orange-800",
+      text: "text-orange-900",
       border: "border-orange-300",
     },
     pink: {
       bg: "bg-pink-100",
-      text: "text-pink-800",
+      text: "text-pink-900",
       border: "border-pink-300",
     },
     teal: {
       bg: "bg-teal-100",
-      text: "text-teal-800",
+      text: "text-teal-900",
       border: "border-teal-300",
     },
   };
@@ -303,12 +304,6 @@ function getEventTopAndHeight(event: CalendarEvent): { top: number; height: numb
 
 // ── Sub-components ──────────────────────────────────────────────────────────
 
-const VIEW_LABELS: Record<CalendarView, { full: string; short: string }> = {
-  month: { full: "month", short: "M" },
-  week: { full: "week", short: "W" },
-  day: { full: "day", short: "D" },
-};
-
 function ViewSwitcher({
   view,
   onViewChange,
@@ -316,9 +311,20 @@ function ViewSwitcher({
   view: CalendarView;
   onViewChange: (v: CalendarView) => void;
 }) {
+  const { t } = useLocale();
+
+  const viewLabels = useMemo(
+    () => ({
+      month: { full: t("eventcalendar.viewMonth", "month"), short: t("eventcalendar.viewMonthShort", "M") },
+      week: { full: t("eventcalendar.viewWeek", "week"), short: t("eventcalendar.viewWeekShort", "W") },
+      day: { full: t("eventcalendar.viewDay", "day"), short: t("eventcalendar.viewDayShort", "D") },
+    }),
+    [t],
+  );
+
   const views: CalendarView[] = ["month", "week", "day"];
   return (
-    <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5" role="group" aria-label="Calendar view">
+    <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5" role="group" aria-label={t("eventcalendar.calendarView", "Calendar view")}>
       {views.map((v) => (
         <button
           key={v}
@@ -329,13 +335,13 @@ function ViewSwitcher({
             "px-2 sm:px-3",
             v === view
               ? "bg-white text-slate-900 shadow-sm ring-1 ring-black/5 font-semibold"
-              : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
+              : "text-slate-600 hover:text-slate-700 hover:bg-slate-200/50"
           )}
           aria-pressed={v === view}
           aria-label={v}
         >
-          <span className="sm:hidden" aria-hidden="true">{VIEW_LABELS[v].short}</span>
-          <span className="hidden sm:inline" aria-hidden="true">{VIEW_LABELS[v].full}</span>
+          <span className="sm:hidden" aria-hidden="true">{viewLabels[v].short}</span>
+          <span className="hidden sm:inline" aria-hidden="true">{viewLabels[v].full}</span>
         </button>
       ))}
     </div>
@@ -353,9 +359,10 @@ function EventPill({
   compact?: boolean;
   locale: string;
 }) {
+  const { t } = useLocale();
   const colors = getEventColor(event.color);
   const timeLabel = event.allDay
-    ? "All day"
+    ? t("eventcalendar.allDay", "All day")
     : `${formatTime(event.start, locale)} \u2013 ${formatTime(event.end, locale)}`;
 
   return (
@@ -381,7 +388,7 @@ function EventPill({
       ) : (
         <span className="truncate">
           {!event.allDay && (
-            <span className="mr-1 opacity-70">{formatTime(event.start, locale)}</span>
+            <span className="mr-1">{formatTime(event.start, locale)}</span>
           )}
           {event.title}
         </span>
@@ -419,6 +426,8 @@ function MonthView({
   onSlotClick?: (start: Date, end: Date) => void;
   onDayClick: (day: Date) => void;
 }) {
+  const { t } = useLocale();
+
   const days = useMemo(
     () => getMonthDays(date, weekStartsOn),
     [date, weekStartsOn]
@@ -441,7 +450,7 @@ function MonthView({
         {dayHeaders.map((label, i) => (
           <div
             key={i}
-            className="py-2 text-center text-[11px] font-semibold text-slate-400 uppercase"
+            className="py-2 text-center text-[11px] font-semibold text-slate-600 uppercase"
             role="columnheader"
           >
             <span className="sm:hidden" aria-hidden="true">{label.narrow}</span>
@@ -494,7 +503,7 @@ function MonthView({
                       "inline-flex items-center justify-center w-6 h-6 text-xs font-medium rounded-full",
                       isToday && "bg-primary text-white",
                       !isToday && isCurrentMonth && "text-slate-700",
-                      !isCurrentMonth && "text-slate-300"
+                      !isCurrentMonth && "text-slate-600"
                     )}
                   >
                     {day.getDate()}
@@ -508,7 +517,7 @@ function MonthView({
                       <EventDot key={ev.id} color={ev.color} />
                     ))}
                     {dayEvents.length > 4 && (
-                      <span className="text-[8px] text-slate-400 leading-none">+</span>
+                      <span className="text-[8px] text-slate-600 leading-none">+</span>
                     )}
                   </div>
                 )}
@@ -525,13 +534,13 @@ function MonthView({
                   {overflow > 0 && (
                     <button
                       type="button"
-                      className="w-full text-left text-[10px] text-slate-500 font-medium px-1.5 hover:text-primary transition-colors"
+                      className="w-full text-left text-[10px] text-slate-600 font-medium px-1.5 hover:text-primary transition-colors"
                       onClick={(e) => {
                         e.stopPropagation();
                         onDayClick(day);
                       }}
                     >
-                      +{overflow} more
+                      +{overflow} {t("eventcalendar.more", "more")}
                     </button>
                   )}
                 </div>
@@ -559,6 +568,8 @@ function TimeGrid({
   onEventClick?: (event: CalendarEvent) => void;
   onSlotClick?: (start: Date, end: Date) => void;
 }) {
+  const { t } = useLocale();
+
   const hours = useMemo(
     () => Array.from({ length: HOURS_END - HOURS_START }, (_, i) => HOURS_START + i),
     []
@@ -604,8 +615,8 @@ function TimeGrid({
             className="grid"
             style={{ gridTemplateColumns: `60px repeat(${cols}, 1fr)` }}
           >
-            <div className="px-2 py-1 text-[10px] font-medium text-slate-400 border-r border-slate-100">
-              All day
+            <div className="px-2 py-1 text-[10px] font-medium text-slate-600 border-r border-slate-100">
+              {t("eventcalendar.allDay", "All day")}
             </div>
             {allDayByDay.map((dayEvents, di) => (
               <div
@@ -641,7 +652,7 @@ function TimeGrid({
                 key={hour}
                 className="h-16 flex items-start justify-end pr-2 -mt-2"
               >
-                <span className="text-[10px] text-slate-400 font-medium">
+                <span className="text-[10px] text-slate-600 font-medium">
                   {formatTime(
                     new Date(2000, 0, 1, hour, 0),
                     locale
@@ -731,7 +742,7 @@ function TimeGrid({
                         }}
                       >
                         <div className="truncate font-semibold">{ev.title}</div>
-                        <div className="truncate opacity-70">
+                        <div className="truncate">
                           {formatTime(ev.start, locale)} &ndash;{" "}
                           {formatTime(ev.end, locale)}
                         </div>
@@ -800,7 +811,7 @@ function WeekView({
                 isToday && "bg-primary/5"
               )}
             >
-              <div className="text-[10px] font-semibold text-slate-400 uppercase">
+              <div className="text-[10px] font-semibold text-slate-600 uppercase">
                 {formatDayLabel(day, locale)}
               </div>
               <div
@@ -892,6 +903,8 @@ const EventCalendar = forwardRef<HTMLDivElement, EventCalendarProps>(
     },
     ref
   ) => {
+    const { t } = useLocale();
+
     const [view, setView] = useControllable<CalendarView>({
       value: viewProp,
       defaultValue: defaultView,
@@ -993,7 +1006,7 @@ const EventCalendar = forwardRef<HTMLDivElement, EventCalendarProps>(
               onClick={goToToday}
               className="px-2 py-1 sm:px-3 sm:py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors"
             >
-              Today
+              {t("eventcalendar.today", "Today")}
             </button>
 
             <div className="flex items-center gap-0.5">
@@ -1001,17 +1014,17 @@ const EventCalendar = forwardRef<HTMLDivElement, EventCalendarProps>(
                 type="button"
                 onClick={goToPrev}
                 className="p-1 sm:p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
-                aria-label="Previous"
+                aria-label={t("eventcalendar.previous", "Previous")}
               >
-                <Icon name="chevron_left" size="sm" className="text-slate-500" />
+                <Icon name="chevron_left" size="sm" className="text-slate-600" />
               </button>
               <button
                 type="button"
                 onClick={goToNext}
                 className="p-1 sm:p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
-                aria-label="Next"
+                aria-label={t("eventcalendar.next", "Next")}
               >
-                <Icon name="chevron_right" size="sm" className="text-slate-500" />
+                <Icon name="chevron_right" size="sm" className="text-slate-600" />
               </button>
             </div>
 

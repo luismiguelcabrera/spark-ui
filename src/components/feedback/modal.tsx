@@ -6,6 +6,7 @@ import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { Icon } from "../data-display/icon";
 import { useControllable } from "../../hooks/use-controllable";
+import { useLocale } from "../../lib/locale";
 
 const modalVariants = cva(s.modalContent, {
   variants: {
@@ -65,6 +66,8 @@ function Modal({
   size,
   className,
 }: ModalProps) {
+  const { t } = useLocale();
+
   const isManaged = open !== undefined || defaultOpen !== undefined;
   const instanceId = useId();
   const titleId = `modal-title-${instanceId}`;
@@ -113,13 +116,13 @@ function Modal({
             <div>
               <h2 id={titleId} className="text-lg font-bold text-secondary">{title}</h2>
               {description && (
-                <p id={descId} className="text-sm text-slate-500 mt-0.5">{description}</p>
+                <p id={descId} className="text-sm text-slate-600 mt-0.5">{description}</p>
               )}
             </div>
             <button
               type="button"
-              aria-label="Close"
-              className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              aria-label={t("modal.close", "Close")}
+              className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <Icon name="close" size="md" />
             </button>
@@ -148,14 +151,14 @@ function Modal({
             <div>
               <h2 id={titleId} className="text-lg font-bold text-secondary">{title}</h2>
               {description && (
-                <p id={descId} className="text-sm text-slate-500 mt-0.5">{description}</p>
+                <p id={descId} className="text-sm text-slate-600 mt-0.5">{description}</p>
               )}
             </div>
             <button
               type="button"
-              aria-label="Close"
+              aria-label={t("modal.close", "Close")}
               onClick={close}
-              className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <Icon name="close" size="md" />
             </button>

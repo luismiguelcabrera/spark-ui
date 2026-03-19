@@ -122,7 +122,7 @@ export const WithCaption: Story = {
         <TableRow>
           <TableCell className="font-medium">Payment from Alice</TableCell>
           <TableCell>Jan 15, 2024</TableCell>
-          <TableCell className="text-right text-green-600">+$250.00</TableCell>
+          <TableCell className="text-right text-green-700">+$250.00</TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="font-medium">Subscription renewal</TableCell>
@@ -132,7 +132,7 @@ export const WithCaption: Story = {
         <TableRow>
           <TableCell className="font-medium">Payment from Bob</TableCell>
           <TableCell>Jan 20, 2024</TableCell>
-          <TableCell className="text-right text-green-600">+$150.00</TableCell>
+          <TableCell className="text-right text-green-700">+$150.00</TableCell>
         </TableRow>
       </TableBody>
     </Table>

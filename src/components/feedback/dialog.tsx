@@ -14,6 +14,7 @@ import { Spinner } from "./spinner";
 import { Overlay } from "./overlay";
 import { useIsomorphicId } from "../../hooks/use-isomorphic-id";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
+import { useLocale } from "../../lib/locale";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                      */
@@ -80,8 +81,8 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
       description,
       children,
       variant = "default",
-      confirmText = "Confirm",
-      cancelText = "Cancel",
+      confirmText,
+      cancelText,
       onConfirm,
       onCancel,
       showCancel = true,
@@ -93,6 +94,11 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
     },
     ref,
   ) => {
+    const { t } = useLocale();
+
+    const resolvedConfirmText = confirmText ?? t("dialog.confirm", "Confirm");
+    const resolvedCancelText = cancelText ?? t("dialog.cancel", "Cancel");
+
     const titleId = useIsomorphicId("dialog-title");
     const descId = useIsomorphicId("dialog-desc");
     const panelRef = useRef<HTMLDivElement>(null);
@@ -167,9 +173,9 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
             {/* Close button */}
             <button
               type="button"
-              aria-label="Close dialog"
+              aria-label={t("dialog.close", "Close dialog")}
               onClick={handleCancel}
-              className="absolute top-4 right-4 p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-400"
+              className="absolute top-4 right-4 p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-600"
             >
               <Icon name="close" size="sm" />
             </button>
@@ -186,7 +192,7 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
             {description && (
               <p
                 id={descId}
-                className="text-sm text-slate-500 mt-2"
+                className="text-sm text-slate-600 mt-2"
               >
                 {description}
               </p>
@@ -205,7 +211,7 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
                   disabled={loading}
                   className="h-9 px-4 rounded-lg border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-slate-400"
                 >
-                  {cancelText}
+                  {resolvedCancelText}
                 </button>
               )}
               <button
@@ -221,10 +227,10 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
                 {loading ? (
                   <span className="inline-flex items-center gap-2">
                     <Spinner size="sm" color="white" />
-                    {loadingText ?? confirmText}
+                    {loadingText ?? resolvedConfirmText}
                   </span>
                 ) : (
-                  confirmText
+                  resolvedConfirmText
                 )}
               </button>
             </div>

@@ -36,14 +36,14 @@ type MetadataItemProps = {
 const MetadataItem = forwardRef<HTMLDivElement, MetadataItemProps>(
   ({ label, value, icon, className, ...props }, ref) => {
     return (
-      <div ref={ref} className={cn("flex items-start gap-2", className)} {...props}>
-        {icon && (
-          <Icon name={icon} size="sm" className="text-slate-400 mt-0.5" />
-        )}
-        <div>
-          <dt className={s.textMuted}>{label}</dt>
-          <dd className={cn(s.textPrimary, "mt-0.5")}>{value}</dd>
-        </div>
+      <div ref={ref} className={cn(className)} {...props}>
+        <dt className={cn(s.textMuted, "flex items-center gap-2")}>
+          {icon && (
+            <Icon name={icon} size="sm" className="text-slate-600 shrink-0" aria-hidden="true" />
+          )}
+          {label}
+        </dt>
+        <dd className={cn(s.textPrimary, "mt-0.5")}>{value}</dd>
       </div>
     );
   }

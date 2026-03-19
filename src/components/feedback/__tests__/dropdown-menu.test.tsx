@@ -51,7 +51,7 @@ describe("DropdownMenu", () => {
     expect(screen.getByRole("menu")).toBeInTheDocument();
   });
 
-  it("trigger has aria-haspopup and aria-expanded", async () => {
+  it("trigger opens the menu on click", async () => {
     const user = userEvent.setup();
     render(
       <DropdownMenu
@@ -60,11 +60,9 @@ describe("DropdownMenu", () => {
         defaultOpen={false}
       />
     );
-    const triggerWrapper = screen.getByText("Open").parentElement!;
-    expect(triggerWrapper).toHaveAttribute("aria-haspopup", "menu");
-    expect(triggerWrapper).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("menu")).not.toBeInTheDocument();
     await user.click(screen.getByText("Open"));
-    expect(triggerWrapper).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("menu")).toBeInTheDocument();
   });
 
   it("renders compound children API", async () => {

@@ -21,7 +21,7 @@ type PopconfirmProps = HTMLAttributes<HTMLDivElement> & {
 
 const typeMap = {
   info: { icon: "info", color: "text-blue-500", confirmBg: "bg-primary hover:bg-primary-dark text-white" },
-  warning: { icon: "alert-triangle", color: "text-amber-500", confirmBg: "bg-amber-500 hover:bg-amber-600 text-white" },
+  warning: { icon: "alert-triangle", color: "text-amber-600", confirmBg: "bg-amber-700 hover:bg-amber-800 text-white" },
   danger: { icon: "alert-circle", color: "text-red-500", confirmBg: "bg-red-600 hover:bg-red-700 text-white" },
 };
 
@@ -74,7 +74,7 @@ const Popconfirm = forwardRef<HTMLDivElement, PopconfirmProps>(
               <Icon name={icon ?? styles.icon} size="md" className={cn("shrink-0 mt-0.5", styles.color)} />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-secondary">{title}</p>
-                {description && <p className="text-xs text-slate-500 mt-1">{description}</p>}
+                {description && <p className="text-xs text-slate-600 mt-1">{description}</p>}
               </div>
             </div>
             <div className="flex justify-end gap-2 mt-3">

@@ -19,17 +19,17 @@ const colorStyles: Record<AlertColor, Record<AlertFillVariant, string>> = {
   success: {
     flat: "bg-green-50 border-green-200 text-green-800",
     tonal: "bg-green-100 border-green-300 text-green-900",
-    outlined: "bg-transparent border-green-400 text-green-700",
+    outlined: "bg-transparent border-green-400 text-green-800",
   },
   warning: {
-    flat: "bg-amber-50 border-amber-200 text-amber-800",
+    flat: "bg-amber-50 border-amber-200 text-amber-900",
     tonal: "bg-amber-100 border-amber-300 text-amber-900",
-    outlined: "bg-transparent border-amber-400 text-amber-800",
+    outlined: "bg-transparent border-amber-400 text-amber-900",
   },
   error: {
     flat: "bg-red-50 border-red-200 text-red-800",
     tonal: "bg-red-100 border-red-300 text-red-900",
-    outlined: "bg-transparent border-red-400 text-red-700",
+    outlined: "bg-transparent border-red-400 text-red-800",
   },
 };
 
@@ -56,7 +56,7 @@ const alertVariants = cva(
       variant: {
         info: "bg-blue-50 border-blue-200 text-blue-800",
         success: "bg-green-50 border-green-200 text-green-800",
-        warning: "bg-amber-50 border-amber-200 text-amber-800",
+        warning: "bg-amber-50 border-amber-200 text-amber-900",
         error: "bg-red-50 border-red-200 text-red-800",
       },
     },
@@ -154,7 +154,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
             <p className={cn("font-semibold", prominent ? "text-base" : "text-sm")}>{title}</p>
           )}
           {children && (
-            <div className={cn(prominent ? "text-sm" : "text-sm", title && "mt-1 opacity-80")}>
+            <div className={cn("text-sm", title && "mt-1")}>
               {children}
             </div>
           )}

@@ -72,7 +72,7 @@ function Drawer({
               type="button"
               aria-label="Close drawer"
               onClick={close}
-              className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-400"
+              className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-600"
             >
               <Icon name="close" size="md" />
             </button>

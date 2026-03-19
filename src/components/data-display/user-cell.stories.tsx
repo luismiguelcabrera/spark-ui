@@ -72,7 +72,7 @@ export const AllSizes: Story = {
     <div className="space-y-4">
       {(["sm", "md", "lg"] as const).map((size) => (
         <div key={size} className="flex items-center gap-4">
-          <span className="w-12 text-xs text-gray-400">{size}</span>
+          <span className="w-12 text-xs text-gray-500">{size}</span>
           <UserCell
             {...args}
             name="Jane Cooper"

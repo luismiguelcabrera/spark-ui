@@ -52,12 +52,12 @@ const NotificationItem = forwardRef<HTMLDivElement, NotificationItemProps>(
             "w-9 h-9 rounded-lg bg-slate-100 shrink-0",
           )}
         >
-          <Icon name={icon} size="sm" className="text-slate-500" />
+          <Icon name={icon} size="sm" className="text-slate-600" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-secondary">{title}</p>
           {description && (
-            <p className="text-xs text-slate-500 mt-0.5">{description}</p>
+            <p className="text-xs text-slate-600 mt-0.5">{description}</p>
           )}
         </div>
         <time className={s.notificationTime}>{timestamp}</time>

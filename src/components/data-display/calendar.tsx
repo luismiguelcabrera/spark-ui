@@ -261,9 +261,9 @@ function MonthGrid({
   return (
     <div>
       {/* Day labels */}
-      <div className={s.calendarGrid} role="row">
+      <div className={s.calendarGrid}>
         {dayLabels.map((label) => (
-          <div key={label} className={s.calendarDayLabel} role="columnheader" aria-label={label}>{label}</div>
+          <div key={label} className={s.calendarDayLabel} aria-hidden="true">{label}</div>
         ))}
       </div>
 
@@ -276,7 +276,7 @@ function MonthGrid({
           slideDir === "left" && "animate-in slide-in-from-right-4 fade-in duration-200",
           slideDir === "right" && "animate-in slide-in-from-left-4 fade-in duration-200",
         )}
-        role="grid"
+        role="group"
         aria-label={`${MONTH_NAMES[monthIndex]} ${year}`}
         onKeyDown={(e) => onGridKeyDown(e, days)}
       >
@@ -294,7 +294,7 @@ function MonthGrid({
               onClick={() => onDayClick(day)}
               onMouseEnter={mode === "range" && rangePickingEnd && !day.muted && !day.disabled ? () => onDayHover(day.date) : undefined}
               onMouseLeave={mode === "range" && rangePickingEnd ? () => onDayHover(null) : undefined}
-              aria-selected={day.selected || undefined}
+              aria-pressed={day.selected || undefined}
               aria-current={day.today ? "date" : undefined}
               aria-disabled={day.disabled || day.muted || undefined}
               className={cn(

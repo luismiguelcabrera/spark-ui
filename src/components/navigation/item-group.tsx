@@ -91,7 +91,7 @@ const ItemGroup = forwardRef<HTMLDivElement, ItemGroupProps>(
 
     return (
       <ItemGroupContext.Provider value={{ selected, toggle }}>
-        <div ref={ref} role="listbox" aria-label="Selection group" className={cn("flex gap-2", className)} {...props}>
+        <div ref={ref} role="group" aria-label="Selection group" className={cn("flex gap-2", className)} {...props}>
           {children}
         </div>
       </ItemGroupContext.Provider>
@@ -136,8 +136,8 @@ const ItemGroupItem = forwardRef<HTMLDivElement, ItemGroupItemProps & Omit<HTMLA
     return (
       <div
         ref={ref}
-        role="option"
-        aria-selected={isSelected}
+        role="button"
+        aria-pressed={isSelected}
         tabIndex={0}
         onClick={onSelect}
         onKeyDown={(e) => {

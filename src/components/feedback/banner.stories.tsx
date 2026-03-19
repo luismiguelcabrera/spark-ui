@@ -87,7 +87,7 @@ export const Dismissible: Story = {
 
 export const Sticky: Story = {
   render: (args) => (
-    <div className="relative h-64 overflow-auto border rounded-lg">
+    <div className="relative h-64 overflow-auto border rounded-lg" tabIndex={0}>
       <Banner
         {...args}
         text="This banner is sticky at the top."

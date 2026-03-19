@@ -4,10 +4,10 @@ import { createRef } from "react";
 import { ItemGroup, ItemGroupItem } from "../item-group";
 
 describe("ItemGroup", () => {
-  it("renders a group container with role=listbox", () => {
+  it("renders a group container with role=group", () => {
     render(<ItemGroup data-testid="group"><span>Child</span></ItemGroup>);
     const el = screen.getByTestId("group");
-    expect(el).toHaveAttribute("role", "listbox");
+    expect(el).toHaveAttribute("role", "group");
   });
 
   it("renders children", () => {
@@ -34,15 +34,15 @@ describe("ItemGroup", () => {
 });
 
 describe("ItemGroupItem", () => {
-  it("renders fallback wrapper with role=option", () => {
+  it("renders fallback wrapper with role=button", () => {
     render(
       <ItemGroup>
         <ItemGroupItem value="a">Alpha</ItemGroupItem>
       </ItemGroup>
     );
-    const option = screen.getByRole("option");
-    expect(option).toHaveTextContent("Alpha");
-    expect(option).toHaveAttribute("aria-selected", "false");
+    const btn = screen.getByRole("button", { name: "Alpha" });
+    expect(btn).toHaveTextContent("Alpha");
+    expect(btn).toHaveAttribute("aria-pressed", "false");
   });
 
   it("toggles selection on click (single mode)", () => {
@@ -65,11 +65,11 @@ describe("ItemGroupItem", () => {
       </ItemGroup>
     );
     const alpha = screen.getByText("Alpha");
-    expect(alpha).toHaveAttribute("aria-selected", "true");
+    expect(alpha).toHaveAttribute("aria-pressed", "true");
 
     fireEvent.click(screen.getByText("Beta"));
-    expect(screen.getByText("Beta")).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByText("Alpha")).toHaveAttribute("aria-selected", "false");
+    expect(screen.getByText("Beta")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Alpha")).toHaveAttribute("aria-pressed", "false");
   });
 
   it("supports multiple selection", () => {
@@ -159,14 +159,14 @@ describe("ItemGroupItem", () => {
         <ItemGroupItem value="b">Beta</ItemGroupItem>
       </ItemGroup>
     );
-    expect(screen.getByText("Alpha")).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByText("Beta")).toHaveAttribute("aria-selected", "false");
+    expect(screen.getByText("Alpha")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Beta")).toHaveAttribute("aria-pressed", "false");
 
     fireEvent.click(screen.getByText("Beta"));
     expect(onChange).toHaveBeenCalledWith("b");
 
     // Value doesn't change without parent updating it
-    expect(screen.getByText("Alpha")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Alpha")).toHaveAttribute("aria-pressed", "true");
 
     // Parent updates value
     rerender(
@@ -175,8 +175,8 @@ describe("ItemGroupItem", () => {
         <ItemGroupItem value="b">Beta</ItemGroupItem>
       </ItemGroup>
     );
-    expect(screen.getByText("Beta")).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByText("Alpha")).toHaveAttribute("aria-selected", "false");
+    expect(screen.getByText("Beta")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Alpha")).toHaveAttribute("aria-pressed", "false");
   });
 
   it("supports defaultValue as array for multiple mode", () => {
@@ -187,8 +187,8 @@ describe("ItemGroupItem", () => {
         <ItemGroupItem value="c">Gamma</ItemGroupItem>
       </ItemGroup>
     );
-    expect(screen.getByText("Alpha")).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByText("Beta")).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByText("Gamma")).toHaveAttribute("aria-selected", "false");
+    expect(screen.getByText("Alpha")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Beta")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Gamma")).toHaveAttribute("aria-pressed", "false");
   });
 });

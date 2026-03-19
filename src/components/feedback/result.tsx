@@ -28,7 +28,7 @@ const statusConfig: Record<
 > = {
   success: {
     icon: "check_circle",
-    colorClass: "text-green-600",
+    colorClass: "text-green-700",
     bgClass: "bg-green-50",
   },
   error: {
@@ -43,7 +43,7 @@ const statusConfig: Record<
   },
   info: {
     icon: "info",
-    colorClass: "text-blue-600",
+    colorClass: "text-blue-700",
     bgClass: "bg-blue-50",
   },
   "403": {
@@ -95,7 +95,7 @@ const Result = forwardRef<HTMLDivElement, ResultProps>(
 
         {/* Subtitle */}
         {subtitle && (
-          <p className="text-sm text-slate-500 max-w-md mb-6">{subtitle}</p>
+          <p className="text-sm text-slate-600 max-w-md mb-6">{subtitle}</p>
         )}
 
         {/* Extra (action buttons) */}

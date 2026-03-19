@@ -47,9 +47,9 @@ export const DateRange: Story = {
 export const MarkedDates: Story = {
   args: {
     markedDates: [
-      { day: 3, color: "bg-red-500 text-white", label: "Deadline" },
-      { day: 10, color: "bg-green-500 text-white", label: "Payday" },
-      { day: 14, color: "bg-pink-500 text-white", label: "Valentine's Day" },
+      { day: 3, color: "bg-red-600 text-white", label: "Deadline" },
+      { day: 10, color: "bg-green-700 text-white", label: "Payday" },
+      { day: 14, color: "bg-pink-600 text-white", label: "Valentine's Day" },
       { day: 7, dotColor: "bg-blue-500" },
       { day: 28, dotColor: "bg-green-500" },
     ],

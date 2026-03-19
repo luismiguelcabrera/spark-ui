@@ -374,7 +374,7 @@ const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
     const renderList = () => {
       if (filtered.length === 0) {
         return (
-          <li className="px-3 py-6 text-center text-sm text-slate-400">
+          <li className="px-3 py-6 text-center text-sm text-slate-600">
             No results found
           </li>
         );
@@ -434,14 +434,14 @@ const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
           role="combobox"
           aria-expanded={open}
           aria-haspopup="listbox"
-          aria-label={ariaLabel}
+          aria-label={ariaLabel ?? placeholder}
           disabled={disabled}
           className={cn(
             s.inputBase,
             "flex items-center justify-between text-left",
             s.inputFocus,
             s.inputDisabled,
-            !displayLabel && "text-slate-400",
+            !displayLabel && "text-slate-600",
             error && "border-red-300 focus:border-red-500 focus:ring-red-500/20"
           )}
           onClick={() => (open ? closeDropdown() : openDropdown())}
@@ -452,13 +452,13 @@ const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
           <Icon
             name={open ? "expand_less" : "expand_more"}
             size="sm"
-            className="text-slate-400 shrink-0 ml-2"
+            className="text-slate-500 shrink-0 ml-2"
           />
         </button>
 
         {/* Error message */}
         {error && (
-          <p className="mt-1.5 text-xs text-red-500 font-medium">{error}</p>
+          <p className="mt-1.5 text-xs text-red-600 font-medium">{error}</p>
         )}
 
         {/* Dropdown */}
@@ -483,7 +483,7 @@ const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
                 }}
                 className={cn(
                   "w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg",
-                  "placeholder:text-slate-400",
+                  "placeholder:text-slate-500",
                   "focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                 )}
               />

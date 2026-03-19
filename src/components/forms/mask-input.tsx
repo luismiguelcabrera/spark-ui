@@ -254,8 +254,8 @@ const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
           )}
           {...props}
         />
-        {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
-        {hint && !error && <p className="text-xs text-slate-400">{hint}</p>}
+        {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
+        {hint && !error && <p className="text-xs text-slate-600">{hint}</p>}
       </div>
     );
   }

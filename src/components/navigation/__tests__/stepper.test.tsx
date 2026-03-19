@@ -90,10 +90,10 @@ describe("Stepper", () => {
     expect(profileLabel).toHaveClass("text-primary");
   });
 
-  it("upcoming step label has text-slate-400 class", () => {
+  it("upcoming step label has text-slate-600 class", () => {
     render(<Stepper steps={steps} activeStep={0} />);
     const reviewLabel = screen.getByText("Review");
-    expect(reviewLabel).toHaveClass("text-slate-400");
+    expect(reviewLabel).toHaveClass("text-slate-600");
   });
 
   it("completed step label has text-secondary class", () => {

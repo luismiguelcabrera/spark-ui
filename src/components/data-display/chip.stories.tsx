@@ -148,7 +148,7 @@ export const FilterGroup: Story = {
       <Chip {...args} filter selected clickable color="success">TypeScript</Chip>
       <Chip {...args} filter clickable color="default">JavaScript</Chip>
       <Chip {...args} filter clickable color="default">Vue</Chip>
-      <Chip {...args} filter selected clickable closable color="warning">Tailwind</Chip>
+      <Chip {...args} filter selected clickable color="warning">Tailwind</Chip>
     </div>
   ),
 };

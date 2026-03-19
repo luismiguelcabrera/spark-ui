@@ -71,7 +71,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
         <div className="flex flex-col items-center justify-center p-8 text-center">
           <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4">
             <svg
-              className="w-6 h-6 text-red-600"
+              className="w-6 h-6 text-red-700"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -85,7 +85,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             </svg>
           </div>
           <h3 className="text-lg font-bold text-secondary mb-1">Something went wrong</h3>
-          <p className="text-sm text-slate-500 mb-4 max-w-sm">
+          <p className="text-sm text-slate-600 mb-4 max-w-sm">
             {this.state.error.message}
           </p>
           <button

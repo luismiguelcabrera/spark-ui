@@ -68,7 +68,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
               <div>
                 <h3 className={s.cardTitle}>{title}</h3>
                 {subtitle && (
-                  <p className="text-sm text-slate-500 mt-0.5">{subtitle}</p>
+                  <p className="text-sm text-slate-600 mt-0.5">{subtitle}</p>
                 )}
               </div>
             </div>

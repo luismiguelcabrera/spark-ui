@@ -11,6 +11,7 @@ const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
     return (
       <div
         ref={ref}
+        role="status"
         aria-busy="true"
         aria-label="Loading"
         className={cn(s.skeletonBase, "h-4 w-full motion-reduce:animate-none", className)}
@@ -31,6 +32,7 @@ const SkeletonText = forwardRef<HTMLDivElement, SkeletonTextProps>(
     return (
       <div
         ref={ref}
+        role="status"
         aria-busy="true"
         aria-label="Loading text"
         className={cn("space-y-2", className)}
@@ -63,6 +65,7 @@ const SkeletonCircle = forwardRef<HTMLDivElement, SkeletonCircleProps>(
     return (
       <div
         ref={ref}
+        role="status"
         aria-busy="true"
         aria-label="Loading"
         className={cn(s.skeletonCircle, sizeMap[size], "motion-reduce:animate-none", className)}

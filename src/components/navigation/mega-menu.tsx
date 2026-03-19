@@ -34,12 +34,14 @@ type MegaMenuSection = {
 type MegaMenuProps = {
   sections: MegaMenuSection[];
   className?: string;
+  /** Accessible label for the navigation landmark */
+  "aria-label"?: string;
 };
 
 // ── Component ───────────────────────────────────────────
 
 const MegaMenu = forwardRef<HTMLElement, MegaMenuProps>(
-  ({ sections, className }, ref) => {
+  ({ sections, className, "aria-label": ariaLabel }, ref) => {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     const navRef = useRef<HTMLElement | null>(null);
     const triggerRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -215,7 +217,7 @@ const MegaMenu = forwardRef<HTMLElement, MegaMenuProps>(
     return (
       <nav
         ref={setNavRef}
-        aria-label="Main navigation"
+        aria-label={ariaLabel ?? "Main navigation"}
         className={cn("relative", className)}
       >
         <ul className="flex items-center gap-1" role="menubar">
@@ -287,7 +289,7 @@ const MegaMenu = forwardRef<HTMLElement, MegaMenuProps>(
                     {section.columns.map((column, colIdx) => (
                       <div key={column.title ?? colIdx}>
                         {column.title && (
-                          <h3 className="px-3 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                          <h3 className="px-3 py-1.5 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
                             {column.title}
                           </h3>
                         )}
@@ -312,7 +314,7 @@ const MegaMenu = forwardRef<HTMLElement, MegaMenuProps>(
                                     <Icon
                                       name={item.icon}
                                       size="sm"
-                                      className="text-slate-400 mt-0.5 shrink-0"
+                                      className="text-slate-500 mt-0.5 shrink-0"
                                     />
                                   )}
                                   <div className="flex-1 min-w-0">
@@ -320,7 +322,7 @@ const MegaMenu = forwardRef<HTMLElement, MegaMenuProps>(
                                       {item.label}
                                     </div>
                                     {item.description && (
-                                      <div className="text-xs text-slate-500 mt-0.5 line-clamp-2">
+                                      <div className="text-xs text-slate-600 mt-0.5 line-clamp-2">
                                         {item.description}
                                       </div>
                                     )}

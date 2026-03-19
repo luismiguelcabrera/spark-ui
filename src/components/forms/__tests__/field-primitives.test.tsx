@@ -72,7 +72,7 @@ describe("FieldDescription", () => {
     render(<FieldDescription>Help</FieldDescription>);
     const el = screen.getByText("Help");
     expect(el.className).toContain("text-xs");
-    expect(el.className).toContain("text-gray-500");
+    expect(el.className).toContain("text-gray-600");
   });
 });
 

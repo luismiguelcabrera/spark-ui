@@ -23,7 +23,7 @@ export const Default: Story = {
           There is hidden text after this sentence.
           <VisuallyHidden>This text is only visible to screen readers.</VisuallyHidden>
         </p>
-        <p className="text-xs text-slate-400 mt-2">
+        <p className="text-xs text-slate-500 mt-2">
           Inspect the DOM to find the hidden span element.
         </p>
       </div>
@@ -97,7 +97,7 @@ export const SkipLink: Story = {
         >
           Skip to main content
         </a>
-        <p className="text-xs text-slate-400">Tab into this area to see the skip link appear.</p>
+        <p className="text-xs text-slate-500">Tab into this area to see the skip link appear.</p>
       </div>
     </div>
   ),

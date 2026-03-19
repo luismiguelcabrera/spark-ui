@@ -51,7 +51,7 @@ export const WithPlaceholder: Story = {
     value: "",
     placeholder: "Enter a value...",
     onSave: (v: string) => alert(`Saved: ${v}`),
-    children: <span className="text-sm text-slate-400 px-2 py-1 italic">Empty - click to add</span>,
+    children: <span className="text-sm text-slate-500 px-2 py-1 italic">Empty - click to add</span>,
   },
 };
 

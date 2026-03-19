@@ -32,7 +32,7 @@ export const Square: Story = {
   render: () => (
     <div className="max-w-xs">
       <AspectRatio ratio={1}>
-        <div className="w-full h-full bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-center text-sm font-mono text-slate-500">
+        <div className="w-full h-full bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-center text-sm font-mono text-slate-700">
           1:1
         </div>
       </AspectRatio>
@@ -52,7 +52,7 @@ export const Ratios: Story = {
         { ratio: 9 / 16, label: "9:16" },
       ].map(({ ratio, label }) => (
         <AspectRatio key={label} ratio={ratio}>
-          <div className="w-full h-full bg-slate-100 border border-slate-200 rounded-lg flex items-center justify-center text-sm font-mono text-slate-500">
+          <div className="w-full h-full bg-slate-100 border border-slate-200 rounded-lg flex items-center justify-center text-sm font-mono text-slate-700">
             {label}
           </div>
         </AspectRatio>

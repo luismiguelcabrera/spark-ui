@@ -49,7 +49,7 @@ export const Default: Story = {
   },
   render: (args) => (
     <ContextMenu {...args}>
-      <div className="flex items-center justify-center h-48 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 text-slate-500 text-sm">
+      <div className="flex items-center justify-center h-48 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 text-slate-600 text-sm">
         Right-click here
       </div>
     </ContextMenu>
@@ -63,12 +63,12 @@ export const FileContextMenu: Story = {
   render: (args) => (
     <ContextMenu {...args}>
       <div className="flex items-center gap-3 p-4 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 cursor-default">
-        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 text-sm font-bold">
+        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-800 text-sm font-bold">
           PDF
         </div>
         <div>
           <p className="text-sm font-medium text-slate-700">Document.pdf</p>
-          <p className="text-xs text-slate-400">2.4 MB - Modified today</p>
+          <p className="text-xs text-slate-600">2.4 MB - Modified today</p>
         </div>
       </div>
     </ContextMenu>
@@ -81,7 +81,7 @@ export const WithDisabledItems: Story = {
   },
   render: (args) => (
     <ContextMenu {...args}>
-      <div className="flex items-center justify-center h-48 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 text-slate-500 text-sm">
+      <div className="flex items-center justify-center h-48 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 text-slate-600 text-sm">
         Right-click here (Undo/Redo disabled)
       </div>
     </ContextMenu>
@@ -95,7 +95,7 @@ export const Disabled: Story = {
   },
   render: (args) => (
     <ContextMenu {...args}>
-      <div className="flex items-center justify-center h-48 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 text-slate-400 text-sm">
+      <div className="flex items-center justify-center h-48 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 text-slate-600 text-sm">
         Context menu disabled
       </div>
     </ContextMenu>

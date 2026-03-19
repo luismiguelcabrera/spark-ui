@@ -178,27 +178,27 @@ export const Gallery: Story = {
   render: (args) => (
     <div className="flex flex-col gap-6 max-w-md">
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-2">SINGLE SELECT</p>
+        <p className="text-xs font-semibold text-slate-500 mb-2">SINGLE SELECT</p>
         <TreeSelect {...args} placeholder="Select a file..." />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-2">MULTIPLE SELECT</p>
+        <p className="text-xs font-semibold text-slate-500 mb-2">MULTIPLE SELECT</p>
         <TreeSelect {...args} multiple expandAll placeholder="Select files..." />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-2">CHECKABLE</p>
+        <p className="text-xs font-semibold text-slate-500 mb-2">CHECKABLE</p>
         <TreeSelect {...args} checkable expandAll placeholder="Check files..." />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-2">SEARCHABLE</p>
+        <p className="text-xs font-semibold text-slate-500 mb-2">SEARCHABLE</p>
         <TreeSelect {...args} searchable expandAll placeholder="Search files..." />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-2">SHOW PATH</p>
+        <p className="text-xs font-semibold text-slate-500 mb-2">SHOW PATH</p>
         <TreeSelect {...args} value="proposal" showPath />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 mb-2">DISABLED</p>
+        <p className="text-xs font-semibold text-slate-500 mb-2">DISABLED</p>
         <TreeSelect {...args} disabled defaultValue="readme" />
       </div>
     </div>

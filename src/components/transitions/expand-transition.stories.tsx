@@ -36,7 +36,7 @@ export const Default: Story = {
         <ExpandTransition show={show} duration={args.duration} unmountOnExit={args.unmountOnExit}>
           <div className="rounded-xl bg-primary/10 border border-primary/20 p-6 space-y-2">
             <p className="text-sm font-medium text-primary">ExpandTransition</p>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-600">
               This content expands and collapses vertically. The height is measured
               from scrollHeight and animated to/from zero.
             </p>
@@ -66,12 +66,12 @@ export const AccordionStyle: Story = {
               className="w-full px-4 py-3 text-left text-sm font-medium text-slate-900 hover:bg-slate-50 transition-colors flex items-center justify-between"
             >
               {item.title}
-              <span className="material-symbols-outlined text-[18px] text-slate-400">
+              <span className="material-symbols-outlined text-[18px] text-slate-600">
                 {open === i ? "expand_less" : "expand_more"}
               </span>
             </button>
             <ExpandTransition show={open === i} duration={250}>
-              <div className="px-4 pb-3 text-sm text-slate-500">
+              <div className="px-4 pb-3 text-sm text-slate-600">
                 {item.body}
               </div>
             </ExpandTransition>
@@ -124,7 +124,7 @@ export const SlowExpand: Story = {
         <ExpandTransition show={show} duration={800}>
           <div className="rounded-xl bg-primary/10 border border-primary/20 p-6">
             <p className="text-sm font-medium text-primary">Slow expand (800ms)</p>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-600 mt-1">
               A longer duration makes the expand/collapse feel more deliberate.
             </p>
           </div>

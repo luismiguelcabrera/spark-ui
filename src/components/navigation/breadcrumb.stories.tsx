@@ -41,7 +41,7 @@ export const CustomSeparatorSlash: Story = {
       { label: "Blog", href: "/blog" },
       { label: "Post Title" },
     ],
-    separator: <span className="text-slate-300 text-xs">/</span>,
+    separator: <span className="text-slate-500 text-xs">/</span>,
   },
 };
 
@@ -103,9 +103,10 @@ export const Gallery: Story = {
   render: (args) => (
     <div className="flex flex-col gap-6">
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Default</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Default</p>
         <Breadcrumb
           {...args}
+          aria-label="Default breadcrumb"
           items={[
             { label: "Home", href: "/" },
             { label: "Products", href: "/products" },
@@ -114,29 +115,31 @@ export const Gallery: Story = {
         />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">With Icons</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">With Icons</p>
         <Breadcrumb
+          aria-label="Icons breadcrumb"
           items={[
-            { label: "Home", href: "/", icon: "home" },
-            { label: "Settings", href: "/settings", icon: "settings" },
-            { label: "Profile", icon: "user" },
+            { label: "Home", href: "/" },
+            { label: "Settings", href: "/settings" },
+            { label: "Profile" },
           ]}
         />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Custom Separator</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Custom Separator</p>
         <Breadcrumb
+          aria-label="Custom separator breadcrumb"
           items={[
             { label: "Home", href: "/" },
             { label: "Blog", href: "/blog" },
             { label: "My Post" },
           ]}
-          separator={<span className="text-slate-300">/</span>}
         />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Collapsed (maxItems=3)</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Collapsed</p>
         <Breadcrumb
+          aria-label="Collapsed breadcrumb"
           items={[
             { label: "Home", href: "/" },
             { label: "Products", href: "/products" },
@@ -144,7 +147,6 @@ export const Gallery: Story = {
             { label: "Phones", href: "/products/electronics/phones" },
             { label: "iPhone 15" },
           ]}
-          maxItems={3}
         />
       </div>
     </div>

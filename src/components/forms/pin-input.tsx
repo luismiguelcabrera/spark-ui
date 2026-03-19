@@ -152,7 +152,7 @@ const PinInput = forwardRef<HTMLDivElement, PinInputProps>(
                 "text-center font-semibold rounded-xl border bg-slate-50 transition-all",
                 "focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary",
                 "disabled:opacity-50 disabled:cursor-not-allowed",
-                "placeholder:text-slate-300",
+                "placeholder:text-slate-500",
                 error ? "border-red-300 focus:ring-red-500 focus:border-red-500" : "border-slate-200",
                 sizeMap[size]
               )}
@@ -160,7 +160,7 @@ const PinInput = forwardRef<HTMLDivElement, PinInputProps>(
             />
           ))}
         </div>
-        {errorMessage && <p className="text-xs text-red-500 font-medium">{errorMessage}</p>}
+        {errorMessage && <p className="text-xs text-red-600 font-medium">{errorMessage}</p>}
       </div>
     );
   }

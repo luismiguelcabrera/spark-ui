@@ -104,15 +104,15 @@ export const Gallery: Story = {
   render: (args) => (
     <div className="flex flex-col gap-10">
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Horizontal (default)</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">Horizontal (default)</p>
         <Stepper steps={steps} activeStep={1} {...args} />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Alt Labels</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">Alt Labels</p>
         <Stepper steps={steps} activeStep={1} altLabels />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">With Error</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">With Error</p>
         <Stepper
           steps={[
             { label: "Account" },
@@ -123,7 +123,7 @@ export const Gallery: Story = {
         />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Vertical</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">Vertical</p>
         <Stepper steps={steps} activeStep={1} orientation="vertical" />
       </div>
     </div>

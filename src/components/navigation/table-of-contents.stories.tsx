@@ -114,6 +114,7 @@ export const Gallery: Story = {
           items={nestedItems}
           activeId="configuration"
           variant="default"
+          aria-label="Default table of contents"
         />
       </div>
       <div>
@@ -123,6 +124,7 @@ export const Gallery: Story = {
           items={nestedItems}
           activeId="configuration"
           variant="minimal"
+          aria-label="Minimal table of contents"
         />
       </div>
       <div>
@@ -132,6 +134,7 @@ export const Gallery: Story = {
           items={nestedItems}
           activeId="configuration"
           variant="bordered"
+          aria-label="Bordered table of contents"
         />
       </div>
     </div>

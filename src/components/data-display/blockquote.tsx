@@ -36,7 +36,7 @@ const Blockquote = forwardRef<HTMLQuoteElement, BlockquoteProps>(
         {children}
       </blockquote>
       {author && (
-        <figcaption className="mt-2 pl-4 text-sm font-medium text-slate-500">
+        <figcaption className="mt-2 pl-4 text-sm font-medium text-slate-600">
           — {author}
         </figcaption>
       )}

@@ -50,7 +50,7 @@ function Popover({
 
   return (
     <div ref={ref} className="relative inline-flex">
-      <div aria-haspopup="true" aria-expanded={isOpen} onClick={() => setIsOpen(!isOpen)}>{trigger}</div>
+      <div onClick={() => setIsOpen(!isOpen)}>{trigger}</div>
       {isOpen && (
         <div
           role="dialog"

@@ -87,7 +87,7 @@ export const GapScale: Story = {
     <div className="space-y-6">
       {(["1", "2", "4", "6", "8"] as const).map((gap) => (
         <div key={gap}>
-          <p className="text-xs text-slate-400 mb-2 font-mono">gap=&quot;{gap}&quot;</p>
+          <p className="text-xs text-slate-500 mb-2 font-mono">gap=&quot;{gap}&quot;</p>
           <HStack gap={gap}>
             <Box>A</Box>
             <Box>B</Box>

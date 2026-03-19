@@ -24,6 +24,6 @@ export const LongText: Story = {
 export const WithCustomClass: Story = {
   args: {
     children: "Custom styled description",
-    className: "text-blue-500 font-medium",
+    className: "text-blue-700 font-medium",
   },
 };

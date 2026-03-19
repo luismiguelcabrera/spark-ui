@@ -12,6 +12,7 @@ import {
 import { cn } from "../../lib/utils";
 import { useControllable } from "../../hooks/use-controllable";
 import { Icon } from "../data-display/icon";
+import { useLocale } from "../../lib/locale";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                      */
@@ -225,6 +226,7 @@ function TreeNodeItem({
   data: TreeSelectNode[];
   showPath: boolean;
 }) {
+  const { t } = useLocale();
   const hasChildren = node.children && node.children.length > 0;
   const isExpanded = expanded.has(node.value);
   const isFocused = focusedValue === node.value;
@@ -261,9 +263,9 @@ function TreeNodeItem({
               e.stopPropagation();
               onToggleExpand(node.value);
             }}
-            className="shrink-0 text-slate-400 hover:text-slate-600 transition-colors"
+            className="shrink-0 text-slate-500 hover:text-slate-600 transition-colors"
             tabIndex={-1}
-            aria-label={isExpanded ? "Collapse" : "Expand"}
+            aria-label={isExpanded ? t("treeselect.collapse", "Collapse") : t("treeselect.expand", "Expand")}
           >
             <Icon
               name={isExpanded ? "expand_more" : "chevron_right"}
@@ -348,7 +350,7 @@ const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(
       onChange,
       multiple = false,
       checkable = false,
-      placeholder = "Select...",
+      placeholder,
       disabled = false,
       size = "md",
       searchable = false,
@@ -359,6 +361,9 @@ const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(
     },
     ref,
   ) => {
+    const { t } = useLocale();
+    const resolvedPlaceholder = placeholder ?? t("treeselect.placeholder", "Select...");
+
     // Normalize value to always be string[] internally
     const normalizeValue = useCallback(
       (val?: string | string[]): string[] => {
@@ -611,7 +616,7 @@ const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(
             aria-expanded={isOpen}
             aria-haspopup="tree"
             aria-disabled={disabled}
-            aria-label={ariaLabel ?? placeholder}
+            aria-label={ariaLabel ?? resolvedPlaceholder}
             tabIndex={disabled ? -1 : 0}
             className={cn(
               "flex flex-wrap items-center gap-1.5 rounded-xl border bg-slate-50 py-2 transition-colors cursor-pointer",
@@ -650,7 +655,7 @@ const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(
                         removeValue(val);
                       }}
                       className="hover:text-red-500 transition-colors"
-                      aria-label={`Remove ${getDisplayLabel(val)}`}
+                      aria-label={`${t("treeselect.remove", "Remove")} ${getDisplayLabel(val)}`}
                     >
                       <Icon name="close" size="sm" />
                     </button>
@@ -669,24 +674,24 @@ const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(
                 }}
                 placeholder={
                   displayValues.length > 0
-                    ? "Search..."
-                    : placeholder
+                    ? t("treeselect.search", "Search...")
+                    : resolvedPlaceholder
                 }
-                className="flex-1 bg-transparent outline-none placeholder:text-slate-400 text-inherit min-w-[80px]"
-                aria-label="Search tree"
+                className="flex-1 bg-transparent outline-none placeholder:text-slate-500 text-inherit min-w-[80px]"
+                aria-label={t("treeselect.searchTree", "Search tree")}
                 onClick={(e) => e.stopPropagation()}
               />
             ) : !isMultiMode || displayValues.length === 0 ? (
               <span
                 className={cn(
                   "flex-1 truncate",
-                  displayValues.length === 0 && "text-slate-400",
+                  displayValues.length === 0 && "text-slate-600",
                 )}
               >
                 {!isMultiMode && displayValues.length > 0
                   ? getDisplayLabel(displayValues[0])
                   : displayValues.length === 0
-                    ? placeholder
+                    ? resolvedPlaceholder
                     : null}
               </span>
             ) : null}
@@ -696,7 +701,7 @@ const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(
               name="expand_more"
               size="sm"
               className={cn(
-                "text-slate-400 transition-transform shrink-0 ml-auto",
+                "text-slate-500 transition-transform shrink-0 ml-auto",
                 isOpen && "rotate-180",
               )}
             />
@@ -711,11 +716,11 @@ const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(
               {visibleNodes.length === 0 && (
                 <p
                   className={cn(
-                    "px-4 py-3 text-slate-500",
+                    "px-4 py-3 text-slate-600",
                     dropdownTextSize[size],
                   )}
                 >
-                  {query ? "No results found." : "No options available."}
+                  {query ? t("treeselect.noResults", "No results found.") : t("treeselect.noOptions", "No options available.")}
                 </p>
               )}
               <ul role="group">

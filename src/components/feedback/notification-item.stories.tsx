@@ -134,7 +134,7 @@ export const AllStates: Story = {
   },
   render: (args) => (
     <div className="max-w-md space-y-2">
-      <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Unread</p>
+      <p className="text-xs font-semibold text-slate-600 uppercase mb-1">Unread</p>
       <NotificationItem
         {...args}
         title="New feature available"
@@ -142,7 +142,7 @@ export const AllStates: Story = {
         timestamp="5 min ago"
         state="unread"
       />
-      <p className="text-xs font-semibold text-slate-500 uppercase mt-4 mb-1">Read</p>
+      <p className="text-xs font-semibold text-slate-600 uppercase mt-4 mb-1">Read</p>
       <NotificationItem
         {...args}
         title="New feature available"

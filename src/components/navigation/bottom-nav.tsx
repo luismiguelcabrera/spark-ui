@@ -63,15 +63,16 @@ const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-lg",
                 item.active
                   ? "text-primary"
-                  : "text-slate-400 hover:text-slate-600",
+                  : "text-slate-600 hover:text-slate-700",
                 item.disabled && "opacity-50 pointer-events-none"
               )}
               aria-current={item.active ? "page" : undefined}
+              aria-label={!showLabels ? item.label : undefined}
             >
               <div className="relative">
                 <Icon name={item.icon} size="md" />
                 {item.badge !== undefined && item.badge > 0 && (
-                  <span className="absolute -top-1 -right-1.5 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-bold">
+                  <span className="absolute -top-1 -right-1.5 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-red-600 text-white text-[10px] font-bold">
                     {item.badge > 99 ? "99+" : item.badge}
                   </span>
                 )}

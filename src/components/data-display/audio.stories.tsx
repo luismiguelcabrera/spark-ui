@@ -318,22 +318,22 @@ export const Sizes: Story = {
   render: (args) => (
     <div className="flex flex-col gap-6 max-w-lg">
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
           Small
         </p>
-        <Audio {...args} src={nativeSrc} size="sm" />
+        <Audio {...args} src={nativeSrc} size="sm" title="Small size" />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
           Medium (default)
         </p>
-        <Audio {...args} src={nativeSrc} size="md" />
+        <Audio {...args} src={nativeSrc} size="md" title="Medium size" />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
           Large
         </p>
-        <Audio {...args} src={nativeSrc} size="lg" />
+        <Audio {...args} src={nativeSrc} size="lg" title="Large size" />
       </div>
     </div>
   ),
@@ -357,10 +357,10 @@ export const Colors: Story = {
         ] as const
       ).map((c) => (
         <div key={c}>
-          <p className="text-xs font-semibold text-slate-400 uppercase mb-1">
+          <p className="text-xs font-semibold text-slate-500 uppercase mb-1">
             {c}
           </p>
-          <Audio {...args} src={nativeSrc} color={c} />
+          <Audio {...args} src={nativeSrc} color={c} title={`${c} color`} />
         </div>
       ))}
     </div>
@@ -376,10 +376,10 @@ export const Rounded: Story = {
     <div className="flex flex-col gap-4 max-w-lg">
       {(["none", "sm", "md", "lg", "xl"] as const).map((r) => (
         <div key={r}>
-          <p className="text-xs font-semibold text-slate-400 uppercase mb-1">
+          <p className="text-xs font-semibold text-slate-500 uppercase mb-1">
             rounded={r}
           </p>
-          <Audio {...args} src={nativeSrc} rounded={r} />
+          <Audio {...args} src={nativeSrc} rounded={r} title={`Rounded ${r}`} />
         </div>
       ))}
     </div>
@@ -394,21 +394,21 @@ export const Gallery: Story = {
   render: (args) => (
     <div className="flex flex-col gap-8 max-w-xl">
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
           Minimal
         </p>
-        <Audio {...args} src={nativeSrc} variant="minimal" />
+        <Audio {...args} src={nativeSrc} variant="minimal" title="Minimal variant" />
       </div>
 
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
           Standard (default)
         </p>
-        <Audio {...args} src={nativeSrc} variant="standard" />
+        <Audio {...args} src={nativeSrc} variant="standard" title="Standard variant" />
       </div>
 
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
           Card
         </p>
         <Audio
@@ -422,28 +422,28 @@ export const Gallery: Story = {
       </div>
 
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
           Waveform
         </p>
         <Audio
           {...args}
           src={nativeSrc}
           variant="waveform"
-          title="SoundHelix Song 1"
+          title="SoundHelix Song 1 (Waveform)"
           artist="T. Schürger"
           color="accent"
         />
       </div>
 
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
           SoundCloud Embed
         </p>
         <Audio {...args} src={soundcloudSrc} />
       </div>
 
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
           Spotify Track Embed
         </p>
         <Audio {...args} src={spotifyTrackSrc} />
@@ -451,16 +451,16 @@ export const Gallery: Story = {
 
       <div className="flex gap-4">
         <div className="flex-1">
-          <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+          <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
             Success Color
           </p>
-          <Audio src={nativeSrc} variant="minimal" color="success" />
+          <Audio src={nativeSrc} variant="minimal" color="success" title="Success color" />
         </div>
         <div className="flex-1">
-          <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+          <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
             Destructive Color
           </p>
-          <Audio src={nativeSrc} variant="minimal" color="destructive" />
+          <Audio src={nativeSrc} variant="minimal" color="destructive" title="Destructive color" />
         </div>
       </div>
     </div>

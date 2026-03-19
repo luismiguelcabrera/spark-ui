@@ -46,8 +46,8 @@ type SnackbarProps = HTMLAttributes<HTMLDivElement> & {
 
 const typeStyles: Record<string, { bg: string; icon: string; iconColor: string }> = {
   default: { bg: "bg-slate-900 text-white", icon: "", iconColor: "" },
-  success: { bg: "bg-green-600 text-white", icon: "check-circle", iconColor: "text-green-200" },
-  error: { bg: "bg-red-600 text-white", icon: "alert-circle", iconColor: "text-red-200" },
+  success: { bg: "bg-green-800 text-white", icon: "check-circle", iconColor: "text-green-100" },
+  error: { bg: "bg-red-700 text-white", icon: "alert-circle", iconColor: "text-red-100" },
   warning: { bg: "bg-amber-500 text-amber-950", icon: "alert-triangle", iconColor: "text-amber-800" },
   info: { bg: "bg-blue-600 text-white", icon: "info", iconColor: "text-blue-200" },
 };
@@ -130,7 +130,7 @@ const Snackbar = forwardRef<HTMLDivElement, SnackbarProps>(
           )}
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold">{message}</p>
-            {description && <p className="text-xs opacity-80 mt-0.5">{description}</p>}
+            {description && <p className="text-xs mt-0.5">{description}</p>}
           </div>
           {!multiLine && action && (
             <button

@@ -345,7 +345,7 @@ describe("Chip", () => {
 
   it("handles disabled state", () => {
     const { container } = render(<Chip disabled>Disabled</Chip>);
-    expect(container.firstChild).toHaveClass("opacity-50");
+    expect(container.firstChild).toHaveClass("cursor-not-allowed");
   });
 });
 

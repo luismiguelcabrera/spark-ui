@@ -58,7 +58,7 @@ describe("Spinner", () => {
 
   it("applies muted color class", () => {
     render(<Spinner color="muted" />);
-    expect(screen.getByRole("status")).toHaveClass("text-slate-400");
+    expect(screen.getByRole("status")).toHaveClass("text-slate-600");
   });
 
   // ── Spinner base classes ──

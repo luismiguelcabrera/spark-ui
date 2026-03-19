@@ -178,7 +178,7 @@ const Dock = forwardRef<HTMLDivElement, DockProps>(
                     className={cn(
                       "absolute -top-1 -right-1 min-w-[18px] h-[18px]",
                       "flex items-center justify-center",
-                      "bg-red-500 text-white text-[10px] font-bold",
+                      "bg-red-600 text-white text-[10px] font-bold",
                       "rounded-full px-1 leading-none"
                     )}
                     aria-label={`${item.label}: ${item.badge}`}

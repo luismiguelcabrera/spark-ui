@@ -2,6 +2,7 @@ import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Icon } from "./icon";
+import { useLocale } from "../../lib/locale";
 
 const chipVariants = cva(
   "inline-flex items-center gap-1 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
@@ -53,19 +54,19 @@ const colorMap: Record<ChipColor, Record<string, string>> = {
     soft: "bg-secondary/10 text-secondary",
   },
   success: {
-    solid: "bg-green-600 text-white",
-    outline: "border-green-300 text-green-700",
-    soft: "bg-green-100 text-green-700",
+    solid: "bg-green-700 text-white",
+    outline: "border-green-300 text-green-800",
+    soft: "bg-green-100 text-green-800",
   },
   warning: {
     solid: "bg-amber-500 text-amber-950",
-    outline: "border-amber-300 text-amber-700",
-    soft: "bg-amber-100 text-amber-700",
+    outline: "border-amber-300 text-amber-900",
+    soft: "bg-amber-100 text-amber-900",
   },
   destructive: {
     solid: "bg-red-600 text-white",
-    outline: "border-red-300 text-red-600",
-    soft: "bg-red-100 text-red-600",
+    outline: "border-red-300 text-red-700",
+    soft: "bg-red-100 text-red-700",
   },
 };
 
@@ -122,66 +123,70 @@ const Chip = forwardRef<HTMLDivElement, ChipProps>(
       ...props
     },
     ref
-  ) => (
-    <div
-      ref={ref}
-      className={cn(
-        chipVariants({ variant, size }),
-        colorMap[color][variant ?? "soft"],
-        clickable && !disabled && "cursor-pointer hover:opacity-80",
-        disabled && "opacity-50 cursor-not-allowed",
-        label && "!rounded-sm",
-        selected && "ring-2 ring-primary ring-offset-1",
-        className
-      )}
-      role={clickable ? "button" : undefined}
-      tabIndex={clickable && !disabled ? 0 : undefined}
-      aria-selected={selected != null ? selected : undefined}
-      {...props}
-    >
-      {filter && selected && (
-        <span data-testid="chip-filter-check">
-          <Icon name="check" size="sm" />
-        </span>
-      )}
-      {dot && (
-        <span
-          className="w-1.5 h-1.5 rounded-full"
-          style={dotColor ? { backgroundColor: dotColor } : undefined}
-        />
-      )}
-      {icon && !filter && <Icon name={icon} size="sm" />}
-      {icon && filter && !selected && <Icon name={icon} size="sm" />}
-      {children}
-      {dismissible && !disabled && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDismiss?.();
-          }}
-          className="ml-0.5 rounded-full hover:bg-black/10 p-0.5 transition-colors"
-          aria-label="Remove"
-        >
-          <Icon name="close" size="sm" />
-        </button>
-      )}
-      {closable && !disabled && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onClose?.();
-          }}
-          className="ml-0.5 rounded-full hover:bg-black/10 p-0.5 transition-colors"
-          aria-label="Close"
-          data-testid="chip-close-button"
-        >
-          <Icon name="close" size="sm" />
-        </button>
-      )}
-    </div>
-  )
+  ) => {
+    const { t } = useLocale();
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          chipVariants({ variant, size }),
+          colorMap[color][variant ?? "soft"],
+          clickable && !disabled && "cursor-pointer hover:opacity-80",
+          disabled && "cursor-not-allowed",
+          label && "!rounded-sm",
+          selected && "ring-2 ring-primary ring-offset-1",
+          className
+        )}
+        role={clickable ? "button" : undefined}
+        tabIndex={clickable && !disabled ? 0 : undefined}
+        aria-pressed={clickable && selected != null ? selected : undefined}
+        {...props}
+      >
+        {filter && selected && (
+          <span data-testid="chip-filter-check">
+            <Icon name="check" size="sm" />
+          </span>
+        )}
+        {dot && (
+          <span
+            className="w-1.5 h-1.5 rounded-full"
+            style={dotColor ? { backgroundColor: dotColor } : undefined}
+          />
+        )}
+        {icon && !filter && <Icon name={icon} size="sm" />}
+        {icon && filter && !selected && <Icon name={icon} size="sm" />}
+        {children}
+        {dismissible && !disabled && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDismiss?.();
+            }}
+            className="ml-0.5 rounded-full hover:bg-black/10 p-0.5 transition-colors"
+            aria-label={t("chip.remove", "Remove")}
+          >
+            <Icon name="close" size="sm" />
+          </button>
+        )}
+        {closable && !disabled && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose?.();
+            }}
+            className="ml-0.5 rounded-full hover:bg-black/10 p-0.5 transition-colors"
+            aria-label={t("chip.close", "Close")}
+            data-testid="chip-close-button"
+          >
+            <Icon name="close" size="sm" />
+          </button>
+        )}
+      </div>
+    );
+  }
 );
 Chip.displayName = "Chip";
 

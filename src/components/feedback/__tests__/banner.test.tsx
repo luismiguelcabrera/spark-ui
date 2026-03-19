@@ -44,7 +44,7 @@ describe("Banner", () => {
   it("applies success color styles", () => {
     render(<Banner text="Success" color="success" />);
     const banner = screen.getByRole("status");
-    expect(banner).toHaveClass("bg-green-600");
+    expect(banner).toHaveClass("bg-green-700");
   });
 
   it("renders actions", () => {

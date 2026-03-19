@@ -66,12 +66,12 @@ export const Disabled: Story = {
   render: (args) => (
     <Collapsible {...args} disabled>
       {({ isOpen, toggle }: { isOpen: boolean; toggle: () => void }) => (
-        <div className="w-80 rounded-xl border border-slate-200 bg-white opacity-50">
+        <div className="w-80 rounded-xl border border-slate-300 bg-slate-50">
           <CollapsibleTrigger
             onClick={toggle}
             className="w-full flex items-center justify-between px-4 py-3 cursor-not-allowed rounded-t-xl"
           >
-            <span className="font-medium text-sm text-slate-800">Disabled Section</span>
+            <span className="font-medium text-sm text-slate-600">Disabled Section</span>
             <Icon name="chevron-down" size="sm" className="text-slate-500" />
           </CollapsibleTrigger>
           <CollapsibleContent open={isOpen}>

@@ -32,16 +32,18 @@ function LoginForm() {
       </div>
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+          <label htmlFor="login-email" className="block text-sm font-medium text-slate-700 mb-1">Email</label>
           <input
+            id="login-email"
             type="email"
             placeholder="you@example.com"
             className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+          <label htmlFor="login-pw" className="block text-sm font-medium text-slate-700 mb-1">Password</label>
           <input
+            id="login-pw"
             type="password"
             placeholder="Enter password"
             className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
@@ -91,7 +93,7 @@ export const WithFooter: Story = {
       <AuthLayout
         leftPanel={<BrandPanel />}
         footer={
-          <div className="mt-auto pt-8 text-center text-xs text-slate-400">
+          <div className="mt-auto pt-8 text-center text-xs text-slate-500">
             By signing in, you agree to our{" "}
             <a href="#" className="text-primary hover:underline">Terms</a> and{" "}
             <a href="#" className="text-primary hover:underline">Privacy Policy</a>.
@@ -130,21 +132,21 @@ export const SignUpPage: Story = {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">First name</label>
-                <input className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
+                <label htmlFor="signup-first" className="block text-sm font-medium text-slate-700 mb-1">First name</label>
+                <input id="signup-first" className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Last name</label>
-                <input className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
+                <label htmlFor="signup-last" className="block text-sm font-medium text-slate-700 mb-1">Last name</label>
+                <input id="signup-last" className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-              <input type="email" className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
+              <label htmlFor="signup-email" className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+              <input id="signup-email" type="email" className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
-              <input type="password" className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
+              <label htmlFor="signup-pw" className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+              <input id="signup-pw" type="password" className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
             </div>
             <button
               type="button"

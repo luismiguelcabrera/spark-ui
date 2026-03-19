@@ -37,7 +37,7 @@ export const Gallery: Story = {
     <div className="space-y-3">
       <FieldLabel {...args}>Regular label</FieldLabel>
       <FieldLabel {...args} required>Required label</FieldLabel>
-      <FieldLabel {...args} className="text-xs text-slate-400">Small muted label</FieldLabel>
+      <FieldLabel {...args} className="text-xs text-slate-500">Small muted label</FieldLabel>
     </div>
   ),
 };

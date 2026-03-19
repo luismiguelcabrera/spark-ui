@@ -123,7 +123,7 @@ describe("Statistic", () => {
       <Statistic title="Revenue" value={1000} trend={{ value: 10 }} />,
     );
     const trendEl = screen.getByLabelText("Trend: +10%");
-    expect(trendEl).toHaveClass("text-green-600");
+    expect(trendEl).toHaveClass("text-green-700");
   });
 
   it("applies red color for negative trend when isUpGood is true (default)", () => {
@@ -156,7 +156,7 @@ describe("Statistic", () => {
       />,
     );
     const trendEl = screen.getByLabelText("Trend: -10%");
-    expect(trendEl).toHaveClass("text-green-600");
+    expect(trendEl).toHaveClass("text-green-700");
   });
 
   it("applies gray color for zero trend", () => {

@@ -364,7 +364,7 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
               >
                 <div className="w-0.5 h-1.5 bg-slate-400 rounded-full" />
                 {tickLabels && tickLabels[i] !== undefined && (
-                  <span className="text-[10px] text-slate-500 mt-0.5 whitespace-nowrap">
+                  <span className="text-[10px] text-slate-600 mt-0.5 whitespace-nowrap">
                     {tickLabels[i]}
                   </span>
                 )}
@@ -375,8 +375,8 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
 
         {showLabels && (
           <div className={cn("flex justify-between", ticks ? "mt-0.5" : "mt-1")}>
-            <span className="text-xs text-slate-400">{formatValue(min)}</span>
-            <span className="text-xs text-slate-400">{formatValue(max)}</span>
+            <span className="text-xs text-slate-600">{formatValue(min)}</span>
+            <span className="text-xs text-slate-600">{formatValue(max)}</span>
           </div>
         )}
       </div>

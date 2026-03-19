@@ -136,7 +136,7 @@ const ToggleGroupItem = forwardRef<HTMLButtonElement, ToggleGroupItemProps>(
           sizeMap[size],
           isSelected
             ? "bg-white text-slate-900 shadow-sm"
-            : "text-slate-500 hover:text-slate-700 hover:bg-slate-100/50",
+            : "text-slate-600 hover:text-slate-700 hover:bg-slate-100/50",
           className
         )}
         {...props}

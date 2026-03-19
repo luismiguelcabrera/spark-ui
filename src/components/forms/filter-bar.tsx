@@ -88,7 +88,7 @@ const FilterBar = forwardRef<HTMLDivElement, FilterBarProps>(
           <button
             type="button"
             onClick={clearAll}
-            className="text-xs text-slate-400 hover:text-slate-600 transition-colors ml-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:outline-none rounded"
+            className="text-xs text-slate-500 hover:text-slate-600 transition-colors ml-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary focus-visible:outline-none rounded"
           >
             Clear all
           </button>

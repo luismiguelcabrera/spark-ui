@@ -95,7 +95,7 @@ const ConfirmEdit = forwardRef<HTMLDivElement, ConfirmEditProps>(
           className={cn(
             "inline-flex items-center gap-2 group",
             !disabled && "cursor-pointer",
-            disabled && "opacity-50 cursor-not-allowed",
+            disabled && "cursor-not-allowed",
             className
           )}
           onClick={startEditing}
@@ -142,7 +142,7 @@ const ConfirmEdit = forwardRef<HTMLDivElement, ConfirmEditProps>(
             className={cn(
               "px-3 h-9 bg-slate-50 border border-slate-200 rounded-xl text-sm",
               "focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary",
-              "placeholder:text-slate-400 transition-colors"
+              "placeholder:text-slate-500 transition-colors"
             )}
           />
         )}

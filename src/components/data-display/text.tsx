@@ -19,13 +19,13 @@ const textVariants = cva("", {
     },
     color: {
       default: "text-slate-700",
-      muted: "text-slate-500",
-      subtle: "text-slate-400",
+      muted: "text-slate-600",
+      subtle: "text-slate-600",
       primary: "text-primary",
       secondary: "text-secondary",
       success: "text-green-700",
       warning: "text-amber-700",
-      destructive: "text-red-600",
+      destructive: "text-red-700",
     },
     align: {
       left: "text-left",

@@ -157,19 +157,19 @@ export const Gallery: Story = {
   render: (args) => (
     <div className="flex flex-col gap-8 max-w-2xl">
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
           Native Video
         </p>
         <Video {...args} src={nativeSrc} width="100%" aspectRatio={16 / 9} />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
           YouTube (lite embed)
         </p>
         <Video {...args} src={youtubeSrc} width="100%" aspectRatio={16 / 9} />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
           Vimeo (lite embed)
         </p>
         <Video
@@ -182,7 +182,7 @@ export const Gallery: Story = {
       </div>
       <div className="flex gap-4">
         <div className="flex-1">
-          <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+          <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
             No Rounding
           </p>
           <Video
@@ -193,7 +193,7 @@ export const Gallery: Story = {
           />
         </div>
         <div className="flex-1">
-          <p className="text-xs font-semibold text-slate-400 uppercase mb-2">
+          <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
             XL Rounding
           </p>
           <Video

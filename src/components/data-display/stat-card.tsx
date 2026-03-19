@@ -23,7 +23,7 @@ const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
       label,
       value,
       change,
-      changeColor = "text-green-600",
+      changeColor = "text-green-700",
       className,
       ...props
     },

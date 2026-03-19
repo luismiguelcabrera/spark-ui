@@ -85,7 +85,7 @@ const RadarChart = forwardRef<HTMLDivElement, RadarChartProps>(
       return (
         <div
           ref={ref}
-          className={cn("flex items-center justify-center text-gray-400", className)}
+          className={cn("flex items-center justify-center text-gray-500", className)}
           style={{ width: size, height: size }}
           {...props}
         >

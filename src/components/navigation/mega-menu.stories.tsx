@@ -248,15 +248,15 @@ export const Gallery: Story = {
     <div className="space-y-12">
       <div>
         <h3 className="text-sm font-semibold text-slate-500 mb-4">Default</h3>
-        <MegaMenu {...args} sections={defaultSections} />
+        <MegaMenu {...args} sections={defaultSections} aria-label="Default navigation" />
       </div>
       <div>
         <h3 className="text-sm font-semibold text-slate-500 mb-4">With Icons</h3>
-        <MegaMenu {...args} sections={withIconsSections} />
+        <MegaMenu {...args} sections={withIconsSections} aria-label="Icons navigation" />
       </div>
       <div>
         <h3 className="text-sm font-semibold text-slate-500 mb-4">With Footer</h3>
-        <MegaMenu {...args} sections={withFooterSections} />
+        <MegaMenu {...args} sections={withFooterSections} aria-label="Footer navigation" />
       </div>
     </div>
   ),

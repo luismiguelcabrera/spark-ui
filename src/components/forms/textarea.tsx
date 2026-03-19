@@ -8,6 +8,11 @@ type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, error, ...props }, ref) => {
+    const hasAccessibleName =
+      !!props["aria-label"] ||
+      !!props["aria-labelledby"] ||
+      !!props.placeholder ||
+      !!props.id;
     return (
       <div className="flex flex-col gap-1.5">
         <textarea
@@ -20,11 +25,12 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             className
           )}
           ref={ref}
+          aria-label={!hasAccessibleName ? "Text area" : undefined}
           aria-invalid={error ? true : undefined}
           {...props}
         />
         {error && (
-          <p className="text-xs text-red-500 font-medium" role="alert">{error}</p>
+          <p className="text-xs text-red-600 font-medium" role="alert">{error}</p>
         )}
       </div>
     );

@@ -124,7 +124,7 @@ const ContextMenu = forwardRef<HTMLDivElement, ContextMenuProps>(
                   {menuItem.icon && <Icon name={menuItem.icon} size="sm" className="shrink-0" />}
                   <span className="flex-1 text-left">{menuItem.label}</span>
                   {menuItem.shortcut && (
-                    <span className="text-[11px] font-mono text-slate-400 ml-4">
+                    <span className="text-[11px] font-mono text-slate-600 ml-4">
                       {menuItem.shortcut}
                     </span>
                   )}

@@ -48,11 +48,11 @@ describe("OrganizationChart", () => {
     expect(screen.getByText("Chief Financial Officer")).toBeInTheDocument();
   });
 
-  it("has figure role with aria-label on the root container", () => {
+  it("has tree role with aria-label on the root container", () => {
     render(<OrganizationChart data={sampleData} />);
-    const figure = screen.getByRole("figure");
-    expect(figure).toBeInTheDocument();
-    expect(figure).toHaveAttribute("aria-label", "Organization chart");
+    const tree = screen.getByRole("tree");
+    expect(tree).toBeInTheDocument();
+    expect(tree).toHaveAttribute("aria-label", "Organization chart");
   });
 
   it("renders aria-labels on node cards", () => {

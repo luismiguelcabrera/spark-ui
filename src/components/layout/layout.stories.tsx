@@ -115,7 +115,7 @@ export const GridSpanning = {
 export const CenterContent = {
   render: () => (
     <Center className="h-48 bg-slate-50 rounded-xl border border-dashed border-slate-300">
-      <div className="text-sm text-slate-500">Centered content</div>
+      <div className="text-sm text-slate-700">Centered content</div>
     </Center>
   ),
 };
@@ -157,7 +157,7 @@ export const AspectRatioVariants = {
         { ratio: 16 / 9, label: "16:9" },
       ].map(({ ratio, label }) => (
         <AspectRatio key={label} ratio={ratio}>
-          <div className="w-full h-full bg-slate-100 border border-slate-200 rounded-lg flex items-center justify-center text-sm font-mono text-slate-500">
+          <div className="w-full h-full bg-slate-100 border border-slate-200 rounded-lg flex items-center justify-center text-sm font-mono text-slate-700">
             {label}
           </div>
         </AspectRatio>
@@ -193,7 +193,7 @@ export const WrapWithGap = {
     <div className="space-y-6">
       {(["1", "2", "4", "6"] as const).map((gap) => (
         <div key={gap}>
-          <p className="text-xs text-slate-400 mb-2 font-mono">gap=&quot;{gap}&quot;</p>
+          <p className="text-xs text-slate-500 mb-2 font-mono">gap=&quot;{gap}&quot;</p>
           <Wrap gap={gap}>
             {Array.from({ length: 8 }, (_, i) => (
               <Box key={i} className="px-4">

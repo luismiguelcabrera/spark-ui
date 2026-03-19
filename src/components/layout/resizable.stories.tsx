@@ -31,8 +31,8 @@ export const Default: Story = {
     <div className="border border-slate-200 rounded-xl overflow-hidden h-64">
       <Resizable {...args}>
         <div className="h-full bg-slate-50 p-4">
-          <p className="text-sm text-slate-600">Resizable panel</p>
-          <p className="text-xs text-slate-400 mt-1">Drag the handle to resize</p>
+          <p className="text-sm text-slate-700">Resizable panel</p>
+          <p className="text-xs text-slate-700 mt-1">Drag the handle to resize</p>
         </div>
       </Resizable>
     </div>
@@ -44,12 +44,12 @@ export const Vertical: Story = {
     <div className="border border-slate-200 rounded-xl overflow-hidden w-full max-w-md">
       <Resizable direction="vertical" defaultSize={150} minSize={80} maxSize={300}>
         <div className="w-full bg-slate-50 p-4">
-          <p className="text-sm text-slate-600">Vertical resizable panel</p>
-          <p className="text-xs text-slate-400 mt-1">Drag the handle below to resize vertically</p>
+          <p className="text-sm text-slate-700">Vertical resizable panel</p>
+          <p className="text-xs text-slate-700 mt-1">Drag the handle below to resize vertically</p>
         </div>
       </Resizable>
       <div className="p-4 bg-white">
-        <p className="text-sm text-slate-500">Content below the resizable area</p>
+        <p className="text-sm text-slate-700">Content below the resizable area</p>
       </div>
     </div>
   ),
@@ -70,7 +70,7 @@ export const SidebarLayout: Story = {
       </Resizable>
       <div className="flex-1 p-6 bg-white">
         <h2 className="text-base font-semibold text-slate-900 mb-2">Main Content</h2>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-700">
           Drag the handle between the sidebar and content to resize.
         </p>
       </div>
@@ -83,8 +83,8 @@ export const Disabled: Story = {
     <div className="border border-slate-200 rounded-xl overflow-hidden h-48">
       <Resizable direction="horizontal" defaultSize={250} disabled>
         <div className="h-full bg-slate-100 p-4">
-          <p className="text-sm text-slate-500">Disabled resizable panel</p>
-          <p className="text-xs text-slate-400 mt-1">The handle is not interactive</p>
+          <p className="text-sm text-slate-700">Disabled resizable panel</p>
+          <p className="text-xs text-slate-700 mt-1">The handle is not interactive</p>
         </div>
       </Resizable>
     </div>
@@ -94,8 +94,8 @@ export const Disabled: Story = {
 export const WithCallback: Story = {
   render: () => (
     <div className="space-y-4">
-      <p className="text-sm text-slate-500">
-        Check the browser console to see the <code className="text-xs bg-slate-100 px-1 py-0.5 rounded">onResize</code> callback firing.
+      <p className="text-sm text-slate-700">
+        Check the browser console to see the <code className="text-xs bg-slate-100 text-slate-800 px-1 py-0.5 rounded">onResize</code> callback firing.
       </p>
       <div className="border border-slate-200 rounded-xl overflow-hidden h-48">
         <Resizable

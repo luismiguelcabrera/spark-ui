@@ -74,7 +74,7 @@ const NavigationMenu = forwardRef<HTMLElement, NavigationMenuProps>(
                   <Icon
                     name="chevron-down"
                     size="sm"
-                    className={cn("transition-transform text-slate-400", isOpen && "rotate-180")}
+                    className={cn("transition-transform text-slate-500", isOpen && "rotate-180")}
                   />
                 </button>
               ) : (
@@ -119,7 +119,7 @@ const NavigationMenu = forwardRef<HTMLElement, NavigationMenuProps>(
                     >
                       {child.icon && (
                         <div className="mt-0.5 shrink-0">
-                          <Icon name={child.icon} size="sm" className="text-slate-400" />
+                          <Icon name={child.icon} size="sm" className="text-slate-500" />
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
@@ -127,7 +127,7 @@ const NavigationMenu = forwardRef<HTMLElement, NavigationMenuProps>(
                           {child.label}
                         </div>
                         {child.description && (
-                          <div className="text-xs text-slate-500 mt-0.5 line-clamp-2">
+                          <div className="text-xs text-slate-600 mt-0.5 line-clamp-2">
                             {child.description}
                           </div>
                         )}

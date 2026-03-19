@@ -36,7 +36,7 @@ export const Disabled: Story = {
 export const WithOnChange: Story = {
   render: (args) => (
     <div className="space-y-4">
-      <p className="text-xs text-slate-400">Click the text to edit, then Save or Cancel.</p>
+      <p className="text-xs text-slate-500">Click the text to edit, then Save or Cancel.</p>
       <ConfirmEdit
         {...args}
         value="Edit me"

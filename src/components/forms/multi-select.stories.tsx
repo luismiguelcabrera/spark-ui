@@ -139,31 +139,31 @@ export const Gallery: Story = {
   render: (args) => (
     <div className="flex flex-col gap-8 max-w-md">
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Default</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Default</p>
         <MultiSelect {...args} />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">With selections</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">With selections</p>
         <MultiSelect {...args} defaultValue={["react", "vue", "next"]} />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Max 2 selections</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Max 2 selections</p>
         <MultiSelect {...args} maxSelections={2} defaultValue={["react"]} />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">With error</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">With error</p>
         <MultiSelect {...args} error="At least one is required" />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Disabled</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Disabled</p>
         <MultiSelect {...args} disabled defaultValue={["react", "svelte"]} />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Small</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Small</p>
         <MultiSelect {...args} size="sm" defaultValue={["angular"]} />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Large</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Large</p>
         <MultiSelect {...args} size="lg" defaultValue={["solid"]} />
       </div>
     </div>

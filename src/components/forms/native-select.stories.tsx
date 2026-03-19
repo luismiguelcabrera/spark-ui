@@ -28,7 +28,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: { placeholder: "Select a framework" },
+  args: { label: "Framework", placeholder: "Select a framework" },
 };
 
 export const WithLabel: Story = {

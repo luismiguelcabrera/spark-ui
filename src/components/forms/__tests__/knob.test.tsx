@@ -126,7 +126,7 @@ describe("Knob", () => {
   it("applies disabled styling", () => {
     const { container } = render(<Knob disabled label="Volume" />);
     const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper.className).toContain("opacity-50");
+    expect(wrapper.className).toContain("cursor-not-allowed");
   });
 
   it("works in controlled mode", () => {

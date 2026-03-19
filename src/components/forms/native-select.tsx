@@ -53,12 +53,12 @@ const sizeStyles: Record<NativeSelectSize, string> = {
 
 const variantStyles: Record<NativeSelectVariant, string> = {
   outline: cn(
-    "w-full bg-slate-50 border border-slate-200 rounded-xl placeholder:text-slate-400 transition-colors appearance-none text-gray-900",
+    "w-full bg-slate-50 border border-slate-200 rounded-xl placeholder:text-slate-500 transition-colors appearance-none text-gray-900",
     s.inputFocus,
     s.inputDisabled
   ),
   filled: cn(
-    "w-full bg-slate-100 border-0 rounded-xl placeholder:text-slate-400 transition-colors appearance-none text-gray-900",
+    "w-full bg-slate-100 border-0 rounded-xl placeholder:text-slate-500 transition-colors appearance-none text-gray-900",
     "focus:outline-none focus:ring-2 focus:ring-primary focus:bg-slate-50",
     s.inputDisabled
   ),
@@ -159,12 +159,12 @@ const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
               </option>
             ))}
           </select>
-          <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
+          <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500">
             <Icon name="chevron_down" size={iconSizeMap[size]} />
           </div>
         </div>
         {error && (
-          <p id={errorId} className="text-xs text-red-500 font-medium" role="alert">
+          <p id={errorId} className="text-xs text-red-600 font-medium" role="alert">
             {error}
           </p>
         )}

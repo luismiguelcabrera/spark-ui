@@ -102,7 +102,7 @@ const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(
     <th
       ref={ref}
       className={cn(
-        "h-10 px-4 text-left align-middle font-semibold text-slate-500",
+        "h-10 px-4 text-left align-middle font-semibold text-slate-600",
         "text-[11px] uppercase tracking-wider",
         "[&:has([role=checkbox])]:pr-0",
         className
@@ -140,7 +140,7 @@ const TableCaption = forwardRef<HTMLTableCaptionElement, TableCaptionProps>(
   ({ className, ...props }, ref) => (
     <caption
       ref={ref}
-      className={cn("mt-4 text-sm text-slate-500", className)}
+      className={cn("mt-4 text-sm text-slate-600", className)}
       {...props}
     />
   )

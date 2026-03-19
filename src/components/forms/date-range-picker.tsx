@@ -1,9 +1,10 @@
 "use client";
 
-import { forwardRef, useState, useRef, type HTMLAttributes } from "react";
+import { forwardRef, useState, useRef, useMemo, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { Icon } from "../data-display/icon";
 import { useClickOutside } from "../../hooks/use-click-outside";
+import { useLocale } from "../../lib/locale";
 
 type DateRange = {
   start: Date | null;
@@ -31,12 +32,6 @@ type DateRangePickerProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> & {
   formatDate?: (date: Date) => string;
 };
 
-const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
-
 function isSameDay(a: Date, b: Date) {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }
@@ -55,7 +50,7 @@ const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
       className,
       value,
       onChange,
-      placeholder = "Select date range",
+      placeholder,
       label,
       error,
       disabled = false,
@@ -66,6 +61,41 @@ const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
     },
     ref
   ) => {
+    const { t } = useLocale();
+
+    const days = useMemo(
+      () => [
+        t("datepicker.dayShortSu", "Su"),
+        t("datepicker.dayShortMo", "Mo"),
+        t("datepicker.dayShortTu", "Tu"),
+        t("datepicker.dayShortWe", "We"),
+        t("datepicker.dayShortTh", "Th"),
+        t("datepicker.dayShortFr", "Fr"),
+        t("datepicker.dayShortSa", "Sa"),
+      ],
+      [t],
+    );
+
+    const months = useMemo(
+      () => [
+        t("calendar.monthJanuary", "January"),
+        t("calendar.monthFebruary", "February"),
+        t("calendar.monthMarch", "March"),
+        t("calendar.monthApril", "April"),
+        t("calendar.monthMay", "May"),
+        t("calendar.monthJune", "June"),
+        t("calendar.monthJuly", "July"),
+        t("calendar.monthAugust", "August"),
+        t("calendar.monthSeptember", "September"),
+        t("calendar.monthOctober", "October"),
+        t("calendar.monthNovember", "November"),
+        t("calendar.monthDecember", "December"),
+      ],
+      [t],
+    );
+
+    const resolvedPlaceholder = placeholder ?? t("daterange.placeholder", "Select date range");
+
     const [open, setOpen] = useState(false);
     const [viewMonth, setViewMonth] = useState(new Date());
     const [selecting, setSelecting] = useState<"start" | "end">("start");
@@ -131,13 +161,13 @@ const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
             error ? "border-red-300" : "border-slate-200"
           )}
         >
-          <Icon name="calendar" size="sm" className="text-slate-400 shrink-0" />
-          <span className={cn("flex-1 truncate", !displayValue && "text-slate-400")}>
-            {displayValue || placeholder}
+          <Icon name="calendar" size="sm" className="text-slate-500 shrink-0" />
+          <span className={cn("flex-1 truncate", !displayValue && "text-slate-600")}>
+            {displayValue || resolvedPlaceholder}
           </span>
-          <Icon name="chevron-down" size="sm" className="text-slate-400 shrink-0" />
+          <Icon name="chevron-down" size="sm" className="text-slate-500 shrink-0" />
         </button>
-        {error && <p className="mt-1 text-xs text-red-500 font-medium">{error}</p>}
+        {error && <p className="mt-1 text-xs text-red-600 font-medium">{error}</p>}
 
         {open && (
           <div
@@ -150,17 +180,17 @@ const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
               <button
                 type="button"
                 onClick={prevMonth}
-                className="p-1 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
+                className="p-1 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
               >
                 <Icon name="chevron-left" size="sm" />
               </button>
               <span className="text-sm font-semibold text-secondary">
-                {MONTHS[month]} {year}
+                {months[month]} {year}
               </span>
               <button
                 type="button"
                 onClick={nextMonth}
-                className="p-1 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
+                className="p-1 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
               >
                 <Icon name="chevron-right" size="sm" />
               </button>
@@ -168,8 +198,8 @@ const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
 
             {/* Day labels */}
             <div className="grid grid-cols-7 mb-1">
-              {DAYS.map((d) => (
-                <div key={d} className="text-center text-[11px] font-semibold text-slate-400 py-1">
+              {days.map((d) => (
+                <div key={d} className="text-center text-[11px] font-semibold text-slate-600 py-1">
                   {d}
                 </div>
               ))}
@@ -214,8 +244,8 @@ const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
             </div>
 
             {/* Quick select hint */}
-            <div className="mt-3 pt-3 border-t border-slate-100 text-xs text-slate-400 text-center">
-              {selecting === "start" ? "Select start date" : "Select end date"}
+            <div className="mt-3 pt-3 border-t border-slate-100 text-xs text-slate-600 text-center">
+              {selecting === "start" ? t("daterange.selectStart", "Select start date") : t("daterange.selectEnd", "Select end date")}
             </div>
           </div>
         )}

@@ -19,13 +19,15 @@ const chatBubbleVariants = cva("max-w-[75%] px-4 py-2.5 text-sm", {
 type ChatBubbleProps = {
   message: string;
   avatar?: string;
+  /** Accessible label for the avatar image */
+  avatarAlt?: string;
   initials?: string;
   timestamp?: string;
   className?: string;
 } & VariantProps<typeof chatBubbleVariants>;
 
 const ChatBubble = forwardRef<HTMLDivElement, ChatBubbleProps>(
-  ({ message, avatar, initials, timestamp, variant = "received", className }, ref) => {
+  ({ message, avatar, avatarAlt, initials, timestamp, variant = "received", className }, ref) => {
     const isSent = variant === "sent";
 
     return (
@@ -38,14 +40,14 @@ const ChatBubble = forwardRef<HTMLDivElement, ChatBubbleProps>(
         )}
       >
         {(avatar || initials) && (
-          <Avatar src={avatar} initials={initials} size="sm" className="shrink-0" />
+          <Avatar src={avatar} alt={avatarAlt ?? (avatar ? "User" : undefined)} initials={initials} size="sm" className="shrink-0" />
         )}
         <div className={cn("flex flex-col", isSent ? "items-end" : "items-start")}>
           <div className={cn(chatBubbleVariants({ variant }))}>
             {message}
           </div>
           {timestamp && (
-            <span className="text-[11px] text-slate-400 mt-1" aria-label={`Sent at ${timestamp}`}>
+            <span className="text-[11px] text-slate-600 mt-1" aria-label={`Sent at ${timestamp}`}>
               {timestamp}
             </span>
           )}

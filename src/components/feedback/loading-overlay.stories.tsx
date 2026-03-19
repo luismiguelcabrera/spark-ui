@@ -159,12 +159,12 @@ export const OnCard: Story = {
         <div className="p-5 space-y-3">
           <h4 className="font-bold text-secondary">Edit Profile</h4>
           <div>
-            <label className="text-sm text-slate-600">Name</label>
-            <input className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm" defaultValue="John Doe" />
+            <label htmlFor="overlay-name" className="text-sm text-slate-600">Name</label>
+            <input id="overlay-name" className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm" defaultValue="John Doe" />
           </div>
           <div>
-            <label className="text-sm text-slate-600">Email</label>
-            <input className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm" defaultValue="john@example.com" />
+            <label htmlFor="overlay-email" className="text-sm text-slate-600">Email</label>
+            <input id="overlay-email" className="w-full mt-1 px-3 py-2 border border-slate-200 rounded-lg text-sm" defaultValue="john@example.com" />
           </div>
           <button type="button" className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium">
             Save

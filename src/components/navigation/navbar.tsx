@@ -86,7 +86,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(
             {showMobileToggle && (
               <button
                 type="button"
-                className="md:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
+                className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 aria-label="Toggle navigation menu"
                 aria-expanded={mobileOpen}

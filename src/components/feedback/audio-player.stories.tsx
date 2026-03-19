@@ -97,10 +97,11 @@ export const Interactive: Story = {
           onPlayPause={() => setPlaying(!playing)}
         />
         <div className="mt-4">
-          <label className="text-xs text-slate-500 block mb-1">
+          <label htmlFor="progress-sim" className="text-xs text-slate-500 block mb-1">
             Simulate progress
           </label>
           <input
+            id="progress-sim"
             type="range"
             min={0}
             max={100}
@@ -118,10 +119,10 @@ export const Gallery: Story = {
   args: {},
   render: (args) => (
     <div className="space-y-4 max-w-sm">
-      <AudioPlayer {...args} currentTime="0:00" duration="2:30" progress={0} showWaveform />
-      <AudioPlayer {...args} currentTime="1:15" duration="2:30" progress={50} playing showWaveform />
-      <AudioPlayer {...args} currentTime="0:45" duration="3:00" progress={25} showWaveform={false} />
-      <AudioPlayer {...args} currentTime="2:30" duration="2:30" progress={100} showWaveform />
+      <AudioPlayer {...args} label="Audio player 1" currentTime="0:00" duration="2:30" progress={0} showWaveform />
+      <AudioPlayer {...args} label="Audio player 2" currentTime="1:15" duration="2:30" progress={50} playing showWaveform />
+      <AudioPlayer {...args} label="Audio player 3" currentTime="0:45" duration="3:00" progress={25} showWaveform={false} />
+      <AudioPlayer {...args} label="Audio player 4" currentTime="2:30" duration="2:30" progress={100} showWaveform />
     </div>
   ),
 };

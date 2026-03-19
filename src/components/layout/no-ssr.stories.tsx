@@ -26,7 +26,7 @@ export const WithFallback: Story = {
   args: {
     fallback: (
       <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg animate-pulse">
-        <p className="text-sm text-slate-400">Loading...</p>
+        <p className="text-sm text-slate-500">Loading...</p>
       </div>
     ),
     children: (

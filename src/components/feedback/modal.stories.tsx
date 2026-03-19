@@ -83,7 +83,7 @@ export const FullSize: Story = {
           This modal takes up most of the screen. Great for complex workflows.
         </p>
         <div className="h-64 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-center">
-          <span className="text-sm text-slate-400">Content area</span>
+          <span className="text-sm text-slate-500">Content area</span>
         </div>
       </div>
     </ModalDemo>

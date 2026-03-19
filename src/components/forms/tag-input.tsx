@@ -116,7 +116,7 @@ const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
             "flex flex-wrap items-center gap-1.5 rounded-xl border bg-slate-50 px-3 py-2 transition-colors cursor-text",
             "focus-within:ring-2 focus-within:ring-primary focus-within:border-primary",
             error ? "border-red-300" : "border-slate-200",
-            disabled && "opacity-50 cursor-not-allowed",
+            disabled && "cursor-not-allowed",
             sizeMap[size],
             className
           )}
@@ -154,22 +154,23 @@ const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
               else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = el;
             }}
             type="text"
+            aria-label={placeholder}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             onPaste={handlePaste}
             placeholder={tags.length === 0 ? placeholder : ""}
             disabled={disabled || (maxTags !== undefined && tags.length >= maxTags)}
-            className="flex-1 min-w-[80px] bg-transparent outline-none text-sm placeholder:text-slate-400"
+            className="flex-1 min-w-[80px] bg-transparent outline-none text-sm placeholder:text-slate-500"
             {...props}
           />
         </div>
         {maxTags && (
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-600">
             {tags.length}/{maxTags} tags
           </p>
         )}
-        {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
+        {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
       </div>
     );
   }

@@ -51,17 +51,19 @@ describe("SpeedDial", () => {
     );
   });
 
-  it("has aria-haspopup='menu'", () => {
+  it("has aria-controls pointing to actions group", () => {
     render(<SpeedDial actions={actions} />);
     expect(screen.getByRole("button", { name: "Open menu" })).toHaveAttribute(
-      "aria-haspopup",
-      "menu"
+      "aria-controls",
+      "speed-dial-actions"
     );
   });
 
-  it("renders action buttons as menuitems", () => {
+  it("renders action buttons as accessible buttons", () => {
     render(<SpeedDial actions={actions} />);
-    expect(screen.getAllByRole("menuitem")).toHaveLength(2);
+    // Actions are aria-label'd buttons, not menuitems
+    expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Delete" })).toBeInTheDocument();
   });
 
   it("calls action onClick and closes menu", async () => {
@@ -70,7 +72,7 @@ describe("SpeedDial", () => {
     const testActions = [{ icon: "edit", label: "Edit", onClick }];
     render(<SpeedDial actions={testActions} />);
     await user.click(screen.getByRole("button", { name: "Open menu" }));
-    await user.click(screen.getByRole("menuitem", { name: "Edit" }));
+    await user.click(screen.getByRole("button", { name: "Edit" }));
     expect(onClick).toHaveBeenCalledTimes(1);
     // Menu should close
     expect(screen.getByRole("button", { name: "Open menu" })).toHaveAttribute(

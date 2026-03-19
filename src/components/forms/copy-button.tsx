@@ -34,7 +34,7 @@ const sizeWithLabelMap = {
 
 const variantMap = {
   default: "bg-slate-100 hover:bg-slate-200 text-slate-600",
-  ghost: "hover:bg-slate-100 text-slate-500",
+  ghost: "hover:bg-slate-100 text-slate-600",
   outline: "border border-slate-200 hover:bg-slate-50 text-slate-600",
 };
 
@@ -69,7 +69,7 @@ const CopyButton = forwardRef<HTMLButtonElement, CopyButtonProps>(
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
           variantMap[variant],
           label ? sizeWithLabelMap[size] : sizeMap[size],
-          copied && "text-green-600",
+          copied && "text-green-700",
           className
         )}
         aria-label={copied ? "Copied!" : "Copy to clipboard"}

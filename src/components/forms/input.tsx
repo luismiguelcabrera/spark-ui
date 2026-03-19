@@ -56,7 +56,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 name={icon}
                 size="md"
                 className={cn(
-                  "text-slate-400 group-focus-within:text-primary transition-colors",
+                  "text-slate-500 group-focus-within:text-primary transition-colors",
                   error && "text-red-400 group-focus-within:text-red-500"
                 )}
               />
@@ -85,7 +85,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 name={icon}
                 size="md"
                 className={cn(
-                  "text-slate-400 group-focus-within:text-primary transition-colors",
+                  "text-slate-500 group-focus-within:text-primary transition-colors",
                   error && "text-red-400 group-focus-within:text-red-500"
                 )}
               />
@@ -93,10 +93,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
         {error && (
-          <p id={errorId} className="text-xs text-red-500 font-medium" role="alert">{error}</p>
+          <p id={errorId} className="text-xs text-red-600 font-medium" role="alert">{error}</p>
         )}
         {hint && !error && (
-          <p id={hintId} className="text-xs text-slate-400">{hint}</p>
+          <p id={hintId} className="text-xs text-slate-600">{hint}</p>
         )}
       </div>
     );

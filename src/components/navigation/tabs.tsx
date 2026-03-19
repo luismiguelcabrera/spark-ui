@@ -131,7 +131,6 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
                 role="tab"
                 id={`${baseId}-tab-${i}`}
                 aria-selected={!!isActive}
-                aria-controls={`${baseId}-panel-${i}`}
                 tabIndex={isActive ? 0 : -1}
                 href={tab.href}
                 {...(!tab.href && { type: "button" as const })}

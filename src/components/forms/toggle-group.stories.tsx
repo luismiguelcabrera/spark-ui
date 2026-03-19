@@ -19,9 +19,9 @@ export const Single: Story = {
   args: { type: "single", defaultValue: "center" },
   render: (args) => (
     <ToggleGroup {...args}>
-      <ToggleGroupItem value="left"><Icon name="align-left" size="sm" /></ToggleGroupItem>
-      <ToggleGroupItem value="center"><Icon name="align-center" size="sm" /></ToggleGroupItem>
-      <ToggleGroupItem value="right"><Icon name="align-right" size="sm" /></ToggleGroupItem>
+      <ToggleGroupItem value="left" aria-label="Align left"><Icon name="align-left" size="sm" /></ToggleGroupItem>
+      <ToggleGroupItem value="center" aria-label="Align center"><Icon name="align-center" size="sm" /></ToggleGroupItem>
+      <ToggleGroupItem value="right" aria-label="Align right"><Icon name="align-right" size="sm" /></ToggleGroupItem>
     </ToggleGroup>
   ),
 };

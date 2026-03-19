@@ -39,7 +39,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             aria-label={visible ? "Hide password" : "Show password"}
             onClick={() => setVisible((v) => !v)}
             className={cn(
-              "absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600",
+              "absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-700",
               "transition-colors duration-150",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
             )}
@@ -48,7 +48,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
           </button>
         </div>
         {error && (
-          <p id={id ? `${id}-error` : undefined} className="text-xs text-red-500 font-medium" role="alert">{error}</p>
+          <p id={id ? `${id}-error` : undefined} className="text-xs text-red-600 font-medium" role="alert">{error}</p>
         )}
       </div>
     );

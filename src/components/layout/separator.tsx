@@ -28,7 +28,7 @@ const Separator = forwardRef<HTMLDivElement, SeparatorProps>(
           {...props}
         >
           <div className={cn(isHorizontal ? "h-px flex-1 bg-slate-200" : "w-px flex-1 bg-slate-200")} />
-          <span className="text-xs font-medium text-slate-400 shrink-0">{label}</span>
+          <span className="text-xs font-medium text-slate-500 shrink-0">{label}</span>
           <div className={cn(isHorizontal ? "h-px flex-1 bg-slate-200" : "w-px flex-1 bg-slate-200")} />
         </div>
       );

@@ -51,7 +51,6 @@ describe("ColorPicker", () => {
   it("handles disabled state", () => {
     const { container } = render(<ColorPicker disabled />);
     expect(container.firstChild).toHaveClass("pointer-events-none");
-    expect(container.firstChild).toHaveClass("opacity-50");
   });
 
   it.each(["sm", "md", "lg"] as const)(

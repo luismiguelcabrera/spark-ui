@@ -22,10 +22,10 @@ function ThemeDisplay() {
   return (
     <div className="space-y-4 p-4 bg-white border border-slate-200 rounded-xl">
       <div className="space-y-2">
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-700">
           <strong>Theme:</strong> {theme}
         </p>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-700">
           <strong>Resolved:</strong> {resolvedTheme}
         </p>
       </div>
@@ -37,8 +37,8 @@ function ThemeDisplay() {
             onClick={() => setTheme(t)}
             className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
               theme === t
-                ? "bg-primary text-white"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                ? "ring-2 ring-inset ring-primary text-slate-900 bg-slate-100"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
             }`}
           >
             {t}
@@ -81,14 +81,14 @@ export const CustomColors: Story = {
       colors={{ primary: "#7c3aed", accent: "#f59e0b" }}
     >
       <div className="space-y-4 p-4 bg-white border border-slate-200 rounded-xl">
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-700">
           Custom primary (purple) and accent (amber) colors via the <code className="text-xs bg-slate-100 px-1 py-0.5 rounded">colors</code> prop.
         </p>
         <div className="flex gap-3">
           <div className="w-16 h-16 rounded-lg bg-primary flex items-center justify-center text-white text-xs font-medium">
             Primary
           </div>
-          <div className="w-16 h-16 rounded-lg bg-accent flex items-center justify-center text-white text-xs font-medium">
+          <div className="w-16 h-16 rounded-lg bg-accent flex items-center justify-center text-amber-950 text-xs font-medium">
             Accent
           </div>
         </div>
@@ -105,7 +105,7 @@ export const CustomRadius: Story = {
       radius="1rem"
     >
       <div className="space-y-4 p-4 bg-white border border-slate-200 rounded-xl">
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-700">
           Custom border-radius override via the <code className="text-xs bg-slate-100 px-1 py-0.5 rounded">radius</code> prop.
         </p>
         <div className="flex gap-3">
@@ -131,12 +131,13 @@ export const RuntimeColorChange: Story = {
 
       return (
         <div className="space-y-4 p-4 bg-white border border-slate-200 rounded-xl">
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-slate-700">
             Use <code className="text-xs bg-slate-100 px-1 py-0.5 rounded">setColors</code> to change theme colors at runtime.
           </p>
           <div>
-            <label className="text-sm text-slate-600 block mb-1">Primary Hue: {hue}</label>
+            <label htmlFor="theme-hue-range" className="text-sm text-slate-700 block mb-1">Primary Hue: {hue}</label>
             <input
+              id="theme-hue-range"
               type="range"
               min="0"
               max="360"

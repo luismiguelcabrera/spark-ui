@@ -75,7 +75,7 @@ export const WarningType: Story = {
       <Popconfirm {...args}>
         <button
           type="button"
-          className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium"
+          className="px-4 py-2 bg-amber-700 text-white rounded-lg text-sm font-medium"
         >
           Discard
         </button>
@@ -177,7 +177,7 @@ export const Disabled: Story = {
       <Popconfirm {...args}>
         <button
           type="button"
-          className="px-4 py-2 bg-slate-300 text-slate-500 rounded-lg text-sm font-medium cursor-not-allowed"
+          className="px-4 py-2 bg-slate-300 text-slate-700 rounded-lg text-sm font-medium cursor-not-allowed"
         >
           Disabled Trigger
         </button>

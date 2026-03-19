@@ -122,7 +122,7 @@ export const Gallery: Story = {
           onRefresh={() => new Promise((r) => setTimeout(r, 1000))}
         >
           <div className="bg-white p-4 min-h-[200px]">
-            <p className="text-sm text-slate-400">Disabled - pull gesture has no effect</p>
+            <p className="text-sm text-slate-500">Disabled - pull gesture has no effect</p>
           </div>
         </PullToRefresh>
       </div>

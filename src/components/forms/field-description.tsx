@@ -13,7 +13,7 @@ const FieldDescription = forwardRef<HTMLParagraphElement, FieldDescriptionProps>
     return (
       <p
         ref={ref}
-        className={cn("text-xs text-gray-500 mt-1", className)}
+        className={cn("text-xs text-gray-600 mt-1", className)}
         {...props}
       >
         {children}

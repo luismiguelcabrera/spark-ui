@@ -77,6 +77,7 @@ const CommandPaletteBase = forwardRef<HTMLDivElement, CommandPaletteProps>(
         role="combobox"
         aria-expanded="true"
         aria-haspopup="listbox"
+        aria-controls="command-palette-listbox"
         onKeyDown={handleKeyDown}
       >
         <div className="px-4 pt-4 pb-2">
@@ -84,6 +85,7 @@ const CommandPaletteBase = forwardRef<HTMLDivElement, CommandPaletteProps>(
         </div>
         <div
           ref={listRef}
+          id="command-palette-listbox"
           role="listbox"
           className="max-h-80 overflow-y-auto custom-scrollbar pb-2"
         >
@@ -103,7 +105,7 @@ const CommandPaletteBase = forwardRef<HTMLDivElement, CommandPaletteProps>(
                         <Icon
                           name={item.icon}
                           size="sm"
-                          className="text-slate-400"
+                          className="text-slate-600"
                         />
                       )}
                       <span>{item.label}</span>
@@ -168,7 +170,7 @@ function CommandPaletteItem({
       }}
     >
       {icon && (
-        <Icon name={icon} size="sm" className="text-slate-400" />
+        <Icon name={icon} size="sm" className="text-slate-600" />
       )}
       <span>{children}</span>
       {shortcut && <span className={s.commandShortcut}>{shortcut}</span>}

@@ -9,7 +9,7 @@ const linkVariants = cva(
       variant: {
         default: "text-primary hover:text-primary-dark underline underline-offset-4",
         subtle: "text-slate-600 hover:text-slate-900 no-underline hover:underline underline-offset-4",
-        muted: "text-slate-500 hover:text-slate-700",
+        muted: "text-slate-600 hover:text-slate-800",
         nav: "text-slate-600 hover:text-slate-900 font-medium no-underline",
         unstyled: "",
       },

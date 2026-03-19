@@ -254,17 +254,18 @@ describe("Popover", () => {
     expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 
-  it("sets aria-expanded on trigger wrapper", async () => {
+  it("opens and closes dialog on trigger click", async () => {
     const user = userEvent.setup();
     render(
       <Popover trigger={<button>Open</button>}>
         <p>Content</p>
       </Popover>
     );
-    const triggerWrapper = screen.getByText("Open").parentElement!;
-    expect(triggerWrapper).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     await user.click(screen.getByText("Open"));
-    expect(triggerWrapper).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    await user.click(screen.getByText("Open"));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   it("is not visible initially", () => {

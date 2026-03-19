@@ -35,7 +35,7 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
     return (
       <div className={cn("flex items-center gap-2", className)}>
         {label && (
-          <span className={cn(s.textSecondary, disabled && "opacity-50")}>
+          <span className={s.textSecondary}>
             {label}
           </span>
         )}
@@ -44,7 +44,7 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
           type="button"
           role="switch"
           aria-checked={isChecked}
-          aria-label={label || undefined}
+          aria-label={label || "Toggle"}
           disabled={disabled}
           onClick={() => setIsChecked(!isChecked)}
           className={cn(

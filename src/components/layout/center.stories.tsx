@@ -65,7 +65,7 @@ export const NestedCenters: Story = {
     <Center className="h-64 bg-slate-100 rounded-xl">
       <Center className="h-40 w-40 bg-primary/10 rounded-xl border border-primary/20">
         <Center className="h-20 w-20 bg-primary/20 rounded-lg">
-          <span className="text-xs font-bold text-primary">Hi</span>
+          <span className="text-xs font-bold text-indigo-900">Hi</span>
         </Center>
       </Center>
     </Center>

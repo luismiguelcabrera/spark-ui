@@ -24,6 +24,8 @@ type TableOfContentsProps = {
   smooth?: boolean;
   variant?: TableOfContentsVariant;
   className?: string;
+  /** Accessible label for the navigation landmark */
+  "aria-label"?: string;
 };
 
 // ── Helpers ─────────────────────────────────────────────
@@ -53,6 +55,7 @@ const TableOfContents = forwardRef<HTMLElement, TableOfContentsProps>(
       smooth = true,
       variant = "default",
       className,
+      "aria-label": ariaLabel,
     },
     ref
   ) => {
@@ -144,7 +147,7 @@ const TableOfContents = forwardRef<HTMLElement, TableOfContentsProps>(
     return (
       <nav
         ref={ref}
-        aria-label="Table of contents"
+        aria-label={ariaLabel ?? "Table of contents"}
         className={cn(variantStyles[variant], className)}
       >
         <TocList

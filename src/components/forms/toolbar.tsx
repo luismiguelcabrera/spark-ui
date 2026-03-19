@@ -48,7 +48,7 @@ const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
         "disabled:opacity-50 disabled:cursor-not-allowed",
         active
           ? "bg-slate-100 text-slate-900"
-          : "text-slate-500 hover:text-slate-700 hover:bg-slate-50",
+          : "text-slate-600 hover:text-slate-700 hover:bg-slate-50",
         className
       )}
       {...props}

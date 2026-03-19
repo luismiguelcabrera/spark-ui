@@ -53,6 +53,8 @@ type MultiSelectProps = {
   disabled?: boolean;
   /** Additional class names */
   className?: string;
+  /** Accessible label for the combobox */
+  "aria-label"?: string;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -98,6 +100,7 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
       size = "md",
       disabled = false,
       className,
+      "aria-label": ariaLabel,
     },
     ref,
   ) => {
@@ -245,6 +248,7 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
             aria-expanded={isOpen}
             aria-haspopup="listbox"
             aria-disabled={disabled}
+            aria-label={ariaLabel ?? label ?? placeholder}
             tabIndex={disabled ? -1 : 0}
             className={cn(
               "flex flex-wrap items-center gap-1.5 rounded-xl border bg-slate-50 px-3 py-2 transition-colors cursor-text",
@@ -252,7 +256,7 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
               error
                 ? "border-red-300 focus-within:border-red-500 focus-within:ring-red-500/20"
                 : "border-slate-200",
-              disabled && "opacity-50 cursor-not-allowed",
+              disabled && "cursor-not-allowed",
               sizeMap[size],
             )}
             onClick={() => {
@@ -302,14 +306,14 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
                 }}
                 onFocus={() => setIsOpen(true)}
                 placeholder={selected.length === 0 ? placeholder : searchPlaceholder}
-                className="flex-1 min-w-[80px] bg-transparent outline-none placeholder:text-slate-400 text-inherit"
+                className="flex-1 min-w-[80px] bg-transparent outline-none placeholder:text-slate-500 text-inherit"
                 aria-label="Search options"
               />
             )}
 
             {/* Placeholder when not searchable and nothing selected */}
             {(!searchable || disabled || atLimit) && selected.length === 0 && (
-              <span className="text-slate-400">{placeholder}</span>
+              <span className="text-slate-600">{placeholder}</span>
             )}
 
             {/* Right side: clear + chevron */}
@@ -321,7 +325,7 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
                     e.stopPropagation();
                     clearAll();
                   }}
-                  className="text-slate-400 hover:text-slate-600 transition-colors"
+                  className="text-slate-600 hover:text-slate-700 transition-colors"
                   aria-label="Clear all selections"
                 >
                   <Icon name="close" size="sm" />
@@ -331,7 +335,7 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
                 name="chevron-down"
                 size="sm"
                 className={cn(
-                  "text-slate-400 transition-transform",
+                  "text-slate-500 transition-transform",
                   isOpen && "rotate-180",
                 )}
               />
@@ -347,7 +351,7 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
               className="absolute z-50 mt-1 w-full max-h-60 overflow-auto rounded-xl border border-slate-200 bg-white py-1 shadow-float"
             >
               {filteredOptions.length === 0 && (
-                <li className="px-4 py-3 text-sm text-slate-500">
+                <li className="px-4 py-3 text-sm text-slate-600">
                   {query ? "No results found." : "No options available."}
                 </li>
               )}
@@ -394,11 +398,11 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
 
         {/* Meta info */}
         {maxSelections && (
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-600">
             {selected.length}/{maxSelections} selected
           </p>
         )}
-        {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
+        {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
       </div>
     );
   },

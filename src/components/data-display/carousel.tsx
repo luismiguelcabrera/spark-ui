@@ -12,6 +12,7 @@ import {
 import { cn } from "../../lib/utils";
 import { Icon } from "./icon";
 import { usePrefersReducedMotion } from "../../hooks/use-prefers-reduced-motion";
+import { useLocale } from "../../lib/locale";
 
 type CarouselProps = HTMLAttributes<HTMLDivElement> & {
   /** Carousel items */
@@ -63,6 +64,8 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
     },
     ref
   ) => {
+    const { t } = useLocale();
+
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const trackRef = useRef<HTMLDivElement>(null);
@@ -144,7 +147,7 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
         onTouchEnd={handleTouchEnd}
         role="region"
         aria-roledescription="carousel"
-        aria-label="Carousel"
+        aria-label={t("carousel.carousel", "Carousel")}
         {...props}
       >
         {/* Track */}
@@ -191,7 +194,7 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
                 "disabled:opacity-0 disabled:pointer-events-none",
                 "opacity-0 group-hover:opacity-100"
               )}
-              aria-label="Previous slide"
+              aria-label={t("carousel.previous", "Previous slide")}
             >
               <Icon name="chevron-left" size="sm" />
             </button>
@@ -207,7 +210,7 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
                 "disabled:opacity-0 disabled:pointer-events-none",
                 "opacity-0 group-hover:opacity-100"
               )}
-              aria-label="Next slide"
+              aria-label={t("carousel.next", "Next slide")}
             >
               <Icon name="chevron-right" size="sm" />
             </button>
@@ -223,7 +226,7 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
                 type="button"
                 role="tab"
                 aria-selected={i === currentIndex}
-                aria-label={`Go to slide ${i + 1}`}
+                aria-label={`${t("carousel.goToSlide", "Go to slide")} ${i + 1}`}
                 onClick={() => goTo(i)}
                 className={cn(
                   "rounded-full transition-all",
@@ -244,7 +247,7 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
             aria-valuenow={Math.round(progressPercent)}
             aria-valuemin={0}
             aria-valuemax={100}
-            aria-label="Carousel progress"
+            aria-label={t("carousel.progress", "Carousel progress")}
           >
             <div
               className={cn(

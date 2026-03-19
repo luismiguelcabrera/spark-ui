@@ -78,7 +78,7 @@ export const SmallInline: Story = {
     <div className="flex items-center gap-2 text-sm text-gray-700">
       Revenue
       <Sparkline {...args} data={upTrend} width={80} height={20} color="#10b981" />
-      <span className="text-green-600 font-medium">+12%</span>
+      <span className="text-green-700 font-medium">+12%</span>
     </div>
   ),
 };

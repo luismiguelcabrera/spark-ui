@@ -44,7 +44,7 @@ const UserCell = forwardRef<HTMLDivElement, UserCellProps>(
         <div className="flex flex-col min-w-0">
           <span className={cn("text-slate-900 truncate", sz.name)}>{name}</span>
           {subtitle && (
-            <span className={cn(s.textMuted, "text-slate-500 truncate", sz.subtitle)}>
+            <span className={cn(s.textMuted, "text-slate-600 truncate", sz.subtitle)}>
               {subtitle}
             </span>
           )}

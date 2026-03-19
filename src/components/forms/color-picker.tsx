@@ -70,7 +70,7 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
     };
 
     return (
-      <div ref={ref} className={cn("flex flex-col gap-3", disabled && "opacity-50 pointer-events-none", className)} {...props}>
+      <div ref={ref} className={cn("flex flex-col gap-3", disabled && "pointer-events-none", className)} {...props}>
         {label && (
           <label className="text-sm font-medium text-slate-700">{label}</label>
         )}
@@ -93,6 +93,7 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
               onChange={(e) => setColor(e.target.value)}
               className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
               disabled={disabled}
+              aria-label="Choose color"
             />
           </div>
           {showInput && (

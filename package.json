@@ -50,7 +50,8 @@
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm build",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test:a11y": "vitest run --project storybook"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -86,6 +87,7 @@
     "@types/jest-axe": "^3.5.9",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@vitest/browser": "^4.1.0",
     "@vitest/browser-playwright": "4.1.0",
     "@vitest/coverage-v8": "4.1.0",
     "eslint": "^10.0.3",

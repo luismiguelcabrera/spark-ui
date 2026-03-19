@@ -413,7 +413,7 @@ const SplitButton = forwardRef<HTMLDivElement, SplitButtonProps>(
                     <Icon
                       name={action.icon}
                       size="sm"
-                      className="text-slate-500"
+                      className="text-slate-600"
                     />
                   )}
                   <span className="text-slate-700">{action.label}</span>

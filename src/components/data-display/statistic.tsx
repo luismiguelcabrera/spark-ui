@@ -69,7 +69,7 @@ const Statistic = forwardRef<HTMLDivElement, StatisticProps>(
     let trendColorClass = "text-gray-500";
     if (trend && trend.value !== 0) {
       const isGood = isUpGood ? trendIsPositive : trendIsNegative;
-      trendColorClass = isGood ? "text-green-600" : "text-red-600";
+      trendColorClass = isGood ? "text-green-700" : "text-red-600";
     }
 
     const trendArrow = trendIsPositive ? "\u2191" : trendIsNegative ? "\u2193" : "";

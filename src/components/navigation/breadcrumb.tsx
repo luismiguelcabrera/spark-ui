@@ -11,14 +11,16 @@ type BreadcrumbItem = {
 type BreadcrumbProps = {
   items: BreadcrumbItem[];
   className?: string;
+  /** Accessible label for the nav landmark */
+  "aria-label"?: string;
 };
 
 const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(
-  ({ items, className }, ref) => {
+  ({ items, className, "aria-label": ariaLabel = "Breadcrumb" }, ref) => {
     return (
       <nav
         ref={ref}
-        aria-label="Breadcrumb"
+        aria-label={ariaLabel}
         className={cn("flex items-center text-sm", className)}
       >
         <ol className="flex items-center gap-2">

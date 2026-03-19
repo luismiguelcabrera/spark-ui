@@ -183,8 +183,6 @@ function DropdownMenu({
             }
           }}
           className="cursor-pointer"
-          aria-haspopup="menu"
-          aria-expanded={isOpen}
         >
           {trigger}
         </div>

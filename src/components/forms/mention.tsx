@@ -317,7 +317,7 @@ const Mention = forwardRef<
                 <Spinner size="sm" />
               </li>
             ) : filteredOptions.length === 0 ? (
-              <li className="px-4 py-3 text-slate-400 text-center">
+              <li className="px-4 py-3 text-slate-600 text-center">
                 {notFoundContent ?? "No results found"}
               </li>
             ) : (
@@ -350,7 +350,7 @@ const Mention = forwardRef<
                       {option.label}
                     </span>
                     {option.description && (
-                      <span className="text-xs text-slate-400 truncate">
+                      <span className="text-xs text-slate-600 truncate">
                         {option.description}
                       </span>
                     )}

@@ -184,7 +184,9 @@ const SpeedDial = forwardRef<HTMLDivElement, SpeedDialProps>(
               "absolute flex gap-2",
               directionMap[direction]
             )}
-            role="menu"
+            id="speed-dial-actions"
+            role="group"
+            aria-label="Speed dial actions"
           >
             {actions.map((action, index) => (
               <div
@@ -218,7 +220,6 @@ const SpeedDial = forwardRef<HTMLDivElement, SpeedDialProps>(
                 </span>
                 <button
                   type="button"
-                  role="menuitem"
                   onClick={() => handleActionClick(action)}
                   disabled={action.disabled}
                   className={cn(
@@ -253,7 +254,7 @@ const SpeedDial = forwardRef<HTMLDivElement, SpeedDialProps>(
             )}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
-            aria-haspopup="menu"
+            aria-controls="speed-dial-actions"
           >
             <Icon
               name={icon}

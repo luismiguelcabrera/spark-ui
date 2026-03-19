@@ -255,7 +255,7 @@ const RadioCardGroup = forwardRef<HTMLDivElement, RadioCardGroupProps>(
                     </span>
                   </div>
                   {opt.description && (
-                    <p className={cn(sizes.desc, "text-slate-500 mt-1")}>
+                    <p className={cn(sizes.desc, "text-slate-600 mt-1")}>
                       {opt.description}
                     </p>
                   )}

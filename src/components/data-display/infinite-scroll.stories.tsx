@@ -39,6 +39,7 @@ export const Default: Story = {
         loading={loading}
         onLoadMore={loadMore}
         className="max-h-96 overflow-auto border border-slate-200 rounded-xl"
+        tabIndex={0}
       >
         {items.map((item) => (
           <div key={item} className="px-4 py-3 border-b border-slate-100 text-sm text-slate-700">
@@ -74,6 +75,7 @@ export const WithEndMessage: Story = {
         onLoadMore={loadMore}
         endMessage="You have reached the end."
         className="max-h-96 overflow-auto border border-slate-200 rounded-xl"
+        tabIndex={0}
       >
         {items.map((item) => (
           <div key={item} className="px-4 py-3 border-b border-slate-100 text-sm text-slate-700">

@@ -28,7 +28,7 @@ function ToastDemo() {
       <button
         type="button"
         onClick={() => toast.success("File saved successfully")}
-        className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium"
+        className="px-4 py-2 bg-green-700 text-white rounded-lg text-sm font-medium"
       >
         Success Toast
       </button>
@@ -42,7 +42,7 @@ function ToastDemo() {
       <button
         type="button"
         onClick={() => toast.warning("Please check your input")}
-        className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium"
+        className="px-4 py-2 bg-amber-700 text-white rounded-lg text-sm font-medium"
       >
         Warning Toast
       </button>
@@ -118,7 +118,7 @@ function NotificationDemo() {
             variant: "success",
           })
         }
-        className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium"
+        className="px-4 py-2 bg-green-700 text-white rounded-lg text-sm font-medium"
       >
         Success Notification
       </button>

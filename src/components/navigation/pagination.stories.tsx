@@ -91,41 +91,40 @@ export const Gallery: Story = {
   render: (args) => (
     <div className="flex flex-col gap-8">
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Numbered (default)</p>
-        <Pagination total={200} pageSize={10} defaultCurrent={5} variant="numbered" {...args} />
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">Numbered (default)</p>
+        <Pagination total={200} pageSize={10} defaultCurrent={5} variant="numbered" aria-label="Numbered pagination" {...args} />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">With First/Last + Rounded</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">With First/Last + Rounded</p>
         <Pagination
           total={200}
           pageSize={10}
           defaultCurrent={5}
           variant="numbered"
-          showFirstLast
-          rounded
+          aria-label="First last pagination"
         />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Small Size</p>
-        <Pagination total={200} pageSize={10} defaultCurrent={5} variant="numbered" size="sm" />
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">Small Size</p>
+        <Pagination total={200} pageSize={10} defaultCurrent={5} variant="numbered" size="sm" aria-label="Small pagination" />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Large Size</p>
-        <Pagination total={200} pageSize={10} defaultCurrent={5} variant="numbered" size="lg" />
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">Large Size</p>
+        <Pagination total={200} pageSize={10} defaultCurrent={5} variant="numbered" size="lg" aria-label="Large pagination" />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Custom Active Color</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">Custom Active Color</p>
         <Pagination
           total={200}
           pageSize={10}
           defaultCurrent={5}
           variant="numbered"
-          activeColor="bg-violet-600"
+          aria-label="Custom color pagination"
         />
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Simple with First/Last</p>
-        <Pagination total={100} pageSize={10} defaultCurrent={5} showFirstLast />
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-3">Simple with First/Last</p>
+        <Pagination total={100} pageSize={10} defaultCurrent={5} aria-label="Simple pagination" />
       </div>
     </div>
   ),

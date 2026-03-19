@@ -47,7 +47,7 @@ const ListItem = forwardRef<HTMLLIElement, ListItemProps>(
     {
       icon,
       iconBg = "bg-slate-100",
-      iconColor = "text-slate-500",
+      iconColor = "text-slate-600",
       title,
       description,
       timestamp,
@@ -77,7 +77,7 @@ const ListItem = forwardRef<HTMLLIElement, ListItemProps>(
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {timestamp && (
-            <span className="text-xs text-slate-400">{timestamp}</span>
+            <span className="text-xs text-slate-600">{timestamp}</span>
           )}
           {actions}
         </div>

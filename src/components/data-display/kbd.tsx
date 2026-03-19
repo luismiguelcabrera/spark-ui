@@ -122,7 +122,7 @@ const Kbd = forwardRef<HTMLElement, KbdProps>(
           {resolved.map((key, i) => (
             <span key={`${key}-${i}`} className="inline-flex items-center gap-0.5">
               {i > 0 && sep && (
-                <span className="text-[10px] text-slate-400 font-mono select-none">
+                <span className="text-[10px] text-slate-600 font-mono select-none">
                   {sep}
                 </span>
               )}

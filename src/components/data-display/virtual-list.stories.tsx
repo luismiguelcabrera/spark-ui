@@ -55,7 +55,7 @@ export const TenThousandItems: Story = {
   name: "10,000 Items",
   render: () => (
     <div className="max-w-md">
-      <p className="text-xs text-slate-400 mb-2">10,000 items — only visible ones render</p>
+      <p className="text-xs text-slate-500 mb-2">10,000 items — only visible ones render</p>
       <VirtualList
         items={simpleItems}
         itemHeight={36}
@@ -64,7 +64,7 @@ export const TenThousandItems: Story = {
         renderItem={(item, index) => (
           <div className="px-4 h-full flex items-center justify-between text-sm border-b border-slate-50">
             <span className="text-slate-700">{item.label}</span>
-            <span className="text-xs text-slate-400">#{index + 1}</span>
+            <span className="text-xs text-slate-500">#{index + 1}</span>
           </div>
         )}
         getKey={(item) => item.id}
@@ -87,7 +87,7 @@ export const UserList: Story = {
             <Avatar initials={user.name.slice(0, 2)} size="sm" />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-slate-800 truncate">{user.name}</p>
-              <p className="text-xs text-slate-400 truncate">{user.email}</p>
+              <p className="text-xs text-slate-500 truncate">{user.email}</p>
             </div>
             <Badge
               variant={user.status === "active" ? "success" : "secondary"}
@@ -144,7 +144,7 @@ export const WithSelection: Story = {
     const [selectedId, setSelectedId] = useState<string | null>(null);
     return (
       <div className="max-w-md">
-        <p className="text-xs text-slate-400 mb-2">
+        <p className="text-xs text-slate-500 mb-2">
           Click to select. Selected: {selectedId ?? "none"}
         </p>
         <VirtualList

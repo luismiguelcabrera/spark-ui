@@ -110,7 +110,7 @@ const Stepper = forwardRef<HTMLDivElement, StepperProps>(
                       ? "text-primary"
                       : state === "complete"
                         ? "text-secondary"
-                        : "text-slate-400",
+                        : "text-slate-600",
                   )}
                 >
                   {step.label}
@@ -123,7 +123,7 @@ const Stepper = forwardRef<HTMLDivElement, StepperProps>(
                   </span>
                 </p>
                 {step.description && (
-                  <p className="text-[11px] text-slate-400 mt-0.5">
+                  <p className="text-[11px] text-slate-600 mt-0.5">
                     {step.description}
                   </p>
                 )}

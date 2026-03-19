@@ -49,10 +49,10 @@ const iconSizeMap = {
 const dotColorMap: Record<string, string> = {
   primary: "bg-primary text-white",
   secondary: "bg-secondary text-white",
-  success: "bg-green-600 text-white",
+  success: "bg-green-700 text-white",
   warning: "bg-amber-500 text-amber-950",
   destructive: "bg-red-600 text-white",
-  default: "bg-slate-200 text-slate-500",
+  default: "bg-slate-200 text-slate-600",
 };
 
 const lineStyleMap = {
@@ -100,9 +100,9 @@ const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
               <div className={cn("w-[calc(50%-1.5rem)] text-right", !isRight && "order-first", isRight && "order-last opacity-0")}>
                 {!isRight && (
                   <>
-                    {item.date && <p className="text-xs font-medium text-slate-400 mb-1">{item.date}</p>}
+                    {item.date && <p className="text-xs font-medium text-slate-600 mb-1">{item.date}</p>}
                     <h3 className={cn("text-sm font-semibold text-secondary", item.active && "text-primary")}>{item.title}</h3>
-                    {item.description && <p className="text-sm text-slate-500 mt-1">{item.description}</p>}
+                    {item.description && <p className="text-sm text-slate-600 mt-1">{item.description}</p>}
                     {item.content && <div className="mt-2">{item.content}</div>}
                   </>
                 )}
@@ -132,9 +132,9 @@ const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
             )}>
               {(variant !== "alternating" || isRight) && (
                 <>
-                  {item.date && <p className="text-xs font-medium text-slate-400 mb-1">{item.date}</p>}
+                  {item.date && <p className="text-xs font-medium text-slate-600 mb-1">{item.date}</p>}
                   <h3 className={cn("text-sm font-semibold text-secondary", item.active && "text-primary")}>{item.title}</h3>
-                  {item.description && <p className="text-sm text-slate-500 mt-1">{item.description}</p>}
+                  {item.description && <p className="text-sm text-slate-600 mt-1">{item.description}</p>}
                   {item.content && <div className="mt-2">{item.content}</div>}
                 </>
               )}

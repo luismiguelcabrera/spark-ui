@@ -125,7 +125,7 @@ export const WithFilter: Story = {
     >
       {({ items, totalItems }) => (
         <div className="space-y-2">
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             Showing {items.length} of {totalItems} (Engineering only)
           </p>
           <ul className="space-y-1">
@@ -163,7 +163,7 @@ export const CombinedExample: Story = {
         setSortBy,
       }) => (
         <div className="space-y-4">
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             {totalItems} results (age &ge; 25), sorted by {sortBy} ({sortDirection})
           </p>
           <div className="flex gap-2">

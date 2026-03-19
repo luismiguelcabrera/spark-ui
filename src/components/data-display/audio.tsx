@@ -159,7 +159,7 @@ const progressColorMap: Record<AudioColor, string> = {
 
 const buttonColorMap: Record<AudioColor, string> = {
   primary: "text-primary",
-  secondary: "text-slate-600 dark:text-slate-400",
+  secondary: "text-slate-600 dark:text-slate-500",
   accent: "text-amber-600",
   success: "text-emerald-600",
   warning: "text-amber-600",
@@ -809,7 +809,7 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
     const timeDisplay = (
       <span
         className={cn(
-          "tabular-nums text-slate-500 dark:text-slate-400 shrink-0 select-none",
+          "tabular-nums text-slate-600 dark:text-slate-400 shrink-0 select-none",
           s.timeText,
         )}
       >
@@ -828,7 +828,7 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
             "motion-safe:transition-colors",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
             focusColorMap[color],
-            "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
+            "text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200",
           )}
         >
           {isMuted ? (
@@ -867,7 +867,7 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
           {seekBar}
           <span
             className={cn(
-              "tabular-nums text-slate-500 dark:text-slate-400 shrink-0 select-none",
+              "tabular-nums text-slate-600 dark:text-slate-400 shrink-0 select-none",
               s.timeText,
             )}
           >
@@ -905,7 +905,7 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <MusicNoteIcon className="w-6 h-6 text-slate-400 dark:text-slate-500" />
+                <MusicNoteIcon className="w-6 h-6 text-slate-600 dark:text-slate-400" />
               )}
             </div>
 
@@ -926,7 +926,7 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
                   {artist && (
                     <p
                       className={cn(
-                        "text-slate-500 dark:text-slate-400 truncate",
+                        "text-slate-600 dark:text-slate-400 truncate",
                         s.timeText,
                       )}
                     >

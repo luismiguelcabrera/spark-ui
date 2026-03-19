@@ -85,7 +85,7 @@ export const ResponsiveGaps: Story = {
     <div className="space-y-6">
       {(["2", "4", "6", "8"] as const).map((gap) => (
         <div key={gap}>
-          <p className="text-xs text-slate-400 mb-2 font-mono">gap=&quot;{gap}&quot;</p>
+          <p className="text-xs text-slate-500 mb-2 font-mono">gap=&quot;{gap}&quot;</p>
           <Grid cols={4} gap={gap}>
             {Array.from({ length: 4 }, (_, i) => (
               <Box key={i}>{i + 1}</Box>

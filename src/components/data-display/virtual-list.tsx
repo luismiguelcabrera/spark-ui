@@ -99,6 +99,7 @@ function VirtualListInner<T>(
       }}
       role="list"
       aria-label="Virtual list"
+      tabIndex={0}
       className={cn(
         "relative",
         "[&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300",

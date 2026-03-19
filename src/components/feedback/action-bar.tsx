@@ -70,7 +70,7 @@ const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
           )}
         >
           {count != null && (
-            <span className="text-sm font-medium text-slate-600 dark:text-slate-300 whitespace-nowrap">
+            <span className="text-sm font-medium text-slate-600 dark:text-slate-500 whitespace-nowrap">
               {count} selected
             </span>
           )}
@@ -94,7 +94,7 @@ const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
                 type="button"
                 aria-label="Close action bar"
                 onClick={onClose}
-                className="rounded-lg p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:hover:bg-slate-800 dark:hover:text-slate-300"
+                className="rounded-lg p-1 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:hover:bg-slate-800 dark:hover:text-slate-400"
               >
                 <Icon name="close" size="sm" />
               </button>

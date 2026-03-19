@@ -34,7 +34,7 @@ const colorMap: Record<KnobColor, { arc: string; text: string; ring: string }> =
   },
   success: {
     arc: "stroke-green-500",
-    text: "text-green-600",
+    text: "text-green-700",
     ring: "focus-visible:ring-green-500",
   },
   warning: {
@@ -253,7 +253,7 @@ const Knob = forwardRef<HTMLDivElement, KnobProps>(
         ref={ref}
         className={cn(
           "inline-flex flex-col items-center gap-1",
-          disabled && "opacity-50 cursor-not-allowed",
+          disabled && "cursor-not-allowed",
           className,
         )}
       >
@@ -272,6 +272,7 @@ const Knob = forwardRef<HTMLDivElement, KnobProps>(
             "focus-visible:ring-2 focus-visible:ring-offset-2",
             colors.ring,
             !disabled && "cursor-pointer",
+            disabled && "opacity-50",
           )}
           role="slider"
           tabIndex={disabled ? -1 : 0}

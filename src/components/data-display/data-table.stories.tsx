@@ -103,15 +103,15 @@ export const WithRowExpansion: Story = {
             </p>
             <div className="grid grid-cols-3 gap-4 text-sm">
               <div>
-                <span className="text-slate-400">Email:</span>{" "}
+                <span className="text-slate-500">Email:</span>{" "}
                 <span className="text-slate-700">{row.email}</span>
               </div>
               <div>
-                <span className="text-slate-400">Department:</span>{" "}
+                <span className="text-slate-500">Department:</span>{" "}
                 <span className="text-slate-700">{row.department}</span>
               </div>
               <div>
-                <span className="text-slate-400">Annual Salary:</span>{" "}
+                <span className="text-slate-500">Annual Salary:</span>{" "}
                 <span className="text-slate-700 font-semibold">
                   ${row.salary.toLocaleString()}
                 </span>
@@ -147,7 +147,7 @@ export const WithCellEditing: Story = {
 
     return (
       <div className="flex flex-col gap-3">
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-slate-500">
           Double-click editable cells (Name, Email, Role) to edit. Enter to
           save, Escape to cancel.
         </p>
@@ -228,7 +228,7 @@ export const AllFeatures: Story = {
 
     return (
       <div className="flex flex-col gap-3">
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-slate-500">
           Expandable rows, inline editing (Name, Email), sorting, filtering,
           selection, and resizable columns.
         </p>

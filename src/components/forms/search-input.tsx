@@ -2,6 +2,7 @@ import { forwardRef, type InputHTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { Icon } from "../data-display/icon";
+import { useLocale } from "../../lib/locale";
 
 type SearchInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
   icon?: string;
@@ -10,6 +11,7 @@ type SearchInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
 
 const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
   ({ className, icon = "search", onClear, value, ...props }, ref) => {
+    const { t } = useLocale();
     const showClear = onClear && typeof value === "string" && value.length > 0;
 
     return (
@@ -18,7 +20,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           <Icon
             name={icon}
             size="md"
-            className="text-slate-400 group-focus-within:text-primary transition-colors"
+            className="text-slate-500 group-focus-within:text-primary transition-colors"
           />
         </div>
         <input
@@ -31,9 +33,9 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         {showClear && (
           <button
             type="button"
-            aria-label="Clear search"
+            aria-label={t("searchinput.clear", "Clear search")}
             onClick={onClear}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-600 hover:text-slate-700 transition-colors cursor-pointer"
           >
             <Icon name="close" size="sm" />
           </button>

@@ -33,7 +33,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             <span className={s.textBody}>{label}</span>
           </label>
           {error && (
-            <p id={errorId} className="text-xs text-red-500 font-medium" role="alert">{error}</p>
+            <p id={errorId} className="text-xs text-red-600 font-medium" role="alert">{error}</p>
           )}
         </div>
       );
@@ -44,6 +44,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         <input
           id={id}
           type="checkbox"
+          aria-label="Checkbox"
           className={cn(
             "rounded border-slate-300 text-primary focus:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary size-4 cursor-pointer transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed",
             error && "border-red-300",
@@ -55,7 +56,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           {...props}
         />
         {error && (
-          <p id={errorId} className="text-xs text-red-500 font-medium" role="alert">{error}</p>
+          <p id={errorId} className="text-xs text-red-600 font-medium" role="alert">{error}</p>
         )}
       </div>
     );

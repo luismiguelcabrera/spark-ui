@@ -81,7 +81,7 @@ function DefaultNodeCard({
         {node.label}
       </span>
       {node.title && (
-        <span className="text-xs text-slate-500 dark:text-slate-400">
+        <span className="text-xs text-slate-500 dark:text-slate-500">
           {node.title}
         </span>
       )}
@@ -112,6 +112,8 @@ function VerticalSubtree({
 
   return (
     <li
+      role="treeitem"
+      aria-label={node.label}
       className="flex flex-col items-center"
     >
       {/* Vertical line from parent connector to this node */}
@@ -125,9 +127,7 @@ function VerticalSubtree({
 
       {/* Node card */}
       {renderNode ? (
-        <div role="treeitem" aria-label={node.label}>
-          {renderNode(node)}
-        </div>
+        renderNode(node)
       ) : (
         <DefaultNodeCard
           node={node}
@@ -162,7 +162,7 @@ function VerticalSubtree({
             />
           )}
 
-          <ul className="flex gap-0">
+          <ul role="group" className="flex gap-0">
             {node.children!.map((child) => (
               <VerticalSubtree
                 key={child.id}
@@ -204,6 +204,8 @@ function HorizontalSubtree({
 
   return (
     <li
+      role="treeitem"
+      aria-label={node.label}
       className="flex items-center"
     >
       {/* Horizontal line from parent connector to this node */}
@@ -217,9 +219,7 @@ function HorizontalSubtree({
 
       {/* Node card */}
       {renderNode ? (
-        <div role="treeitem" aria-label={node.label}>
-          {renderNode(node)}
-        </div>
+        renderNode(node)
       ) : (
         <DefaultNodeCard
           node={node}
@@ -240,6 +240,7 @@ function HorizontalSubtree({
 
           {/* Vertical connector bar + children stack */}
           <ul
+            role="group"
             className={cn(
               "flex flex-col gap-0",
               node.children!.length > 1 && cn("border-l", `border-${lineColor}`),
@@ -291,10 +292,11 @@ const OrganizationChart = forwardRef<HTMLDivElement, OrganizationChartProps>(
           direction === "vertical" ? "flex-col items-center" : "flex-row items-center",
           className,
         )}
-        role="figure"
+        role="tree"
         aria-label="Organization chart"
       >
         <ul
+          role="group"
           className={cn(
             "flex list-none p-0 m-0",
             direction === "vertical" ? "flex-col items-center" : "flex-row items-center",

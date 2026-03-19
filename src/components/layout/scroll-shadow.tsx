@@ -153,6 +153,7 @@ const ScrollShadow = forwardRef<HTMLDivElement, ScrollShadowProps>(
         <div
           ref={innerRef}
           onScroll={updateScrollState}
+          tabIndex={0}
           className={cn(
             "h-full w-full",
             overflowClass,

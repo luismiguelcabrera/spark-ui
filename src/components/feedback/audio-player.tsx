@@ -12,6 +12,8 @@ type AudioPlayerProps = {
   showWaveform?: boolean;
   onPlayPause?: () => void;
   className?: string;
+  /** Accessible label for the audio player region (use unique labels when multiple players are on the same page) */
+  label?: string;
 };
 
 const AudioPlayer = forwardRef<HTMLDivElement, AudioPlayerProps>(
@@ -24,6 +26,7 @@ const AudioPlayer = forwardRef<HTMLDivElement, AudioPlayerProps>(
       showWaveform = true,
       onPlayPause,
       className,
+      label = "Audio player",
     },
     ref
   ) => {
@@ -35,7 +38,7 @@ const AudioPlayer = forwardRef<HTMLDivElement, AudioPlayerProps>(
         ref={ref}
         className={cn(s.audioContainer, "px-4 py-3", className)}
         role="region"
-        aria-label="Audio player"
+        aria-label={label}
       >
         {/* Play button */}
         <button

@@ -116,8 +116,9 @@ export const Interactive: Story = {
         <div className="space-y-4">
           <Rating {...args} value={value} />
           <div className="flex items-center gap-2">
-            <label className="text-sm text-slate-600">Select rating:</label>
+            <label htmlFor="rating-range" className="text-sm text-slate-600">Select rating:</label>
             <input
+              id="rating-range"
               type="range"
               min={0}
               max={5}

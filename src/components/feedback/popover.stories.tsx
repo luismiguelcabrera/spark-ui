@@ -192,7 +192,7 @@ export const WithActions: Story = {
     ),
     children: (
       <div className="space-y-2 min-w-[180px]">
-        <p className="text-xs font-semibold text-slate-400 uppercase">Quick Settings</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase">Quick Settings</p>
         <button
           type="button"
           className="w-full text-left px-2 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-slate-50"

@@ -127,7 +127,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
               onClick={decrement}
               disabled={disabled || value <= min}
               className={cn(
-                "flex items-center justify-center border-r border-slate-200 text-slate-500 hover:bg-slate-100 transition-colors",
+                "flex items-center justify-center border-r border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors",
                 "disabled:opacity-30 disabled:cursor-not-allowed",
                 buttonSizeMap[size],
                 sizeMap[size]
@@ -145,6 +145,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
             aria-valuemin={min === -Infinity ? undefined : min}
             aria-valuemax={max === Infinity ? undefined : max}
             aria-valuenow={value}
+            aria-label={label ?? "Number input"}
             value={displayValue}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
@@ -163,7 +164,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
               onClick={increment}
               disabled={disabled || value >= max}
               className={cn(
-                "flex items-center justify-center border-l border-slate-200 text-slate-500 hover:bg-slate-100 transition-colors",
+                "flex items-center justify-center border-l border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors",
                 "disabled:opacity-30 disabled:cursor-not-allowed",
                 buttonSizeMap[size],
                 sizeMap[size]
@@ -174,7 +175,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
             </button>
           )}
         </div>
-        {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
+        {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
       </div>
     );
   }

@@ -37,6 +37,7 @@ const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
   ) => (
     <div
       ref={ref}
+      tabIndex={0}
       className={cn(
         "relative",
         scrollbarMap[scrollbar],

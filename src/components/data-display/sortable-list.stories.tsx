@@ -117,7 +117,7 @@ export const CardStyle: Story = {
               {handle}
               <div className="flex-1">
                 <p className="text-sm font-semibold text-slate-800">{item.title}</p>
-                <p className="text-xs text-slate-400">Task #{item.id}</p>
+                <p className="text-xs text-slate-500">Task #{item.id}</p>
               </div>
             </div>
           )}
@@ -166,13 +166,13 @@ export const CustomHandle: Story = {
           showHandle={false}
           renderItem={(item, _handle, index) => (
             <div className="flex items-center gap-3 p-3 flex-1 bg-white border border-slate-200 rounded-lg">
-              <div className="w-7 h-7 rounded-md bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-400 shrink-0 cursor-grab">
+              <div className="w-7 h-7 rounded-md bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 cursor-grab">
                 {index + 1}
               </div>
               <span className="text-sm font-medium text-slate-700 flex-1">
                 {item.title}
               </span>
-              <Icon name="move" size="sm" className="text-slate-300" />
+              <Icon name="move" size="sm" className="text-slate-500" />
             </div>
           )}
         />

@@ -73,7 +73,7 @@ export const Floating: Story = {
       </Badge>
       <Badge {...args} floating content="99+" variant="primary" bordered>
         <div className="w-10 h-10 rounded-lg bg-slate-200 flex items-center justify-center">
-          <Icon name="mail" size="md" className="text-slate-500" />
+          <Icon name="mail" size="md" className="text-slate-600" />
         </div>
       </Badge>
       <Badge {...args} floating dot variant="success" bordered>
@@ -90,7 +90,7 @@ export const FloatingWithMax: Story = {
     <div className="flex items-center gap-8">
       <Badge {...args} floating max={99} content="150" variant="danger" bordered>
         <div className="w-10 h-10 rounded-lg bg-slate-200 flex items-center justify-center">
-          <Icon name="bell" size="md" className="text-slate-500" />
+          <Icon name="bell" size="md" className="text-slate-600" />
         </div>
       </Badge>
     </div>

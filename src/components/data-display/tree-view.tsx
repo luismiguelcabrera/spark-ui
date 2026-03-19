@@ -236,7 +236,11 @@ function TreeNodeComponent({
   }, [isIndeterminate]);
 
   return (
-    <div>
+    <div
+      role="treeitem"
+      aria-expanded={hasChildren ? isExpanded : undefined}
+      aria-selected={isSelected}
+    >
       <div className="flex items-center">
         {selectable && (
           <input
@@ -268,9 +272,6 @@ function TreeNodeComponent({
             isSelected && "bg-primary/10 text-primary font-medium"
           )}
           style={selectable ? undefined : { paddingLeft: `${level * indentMap[size] + 8}px` }}
-          role="treeitem"
-          aria-expanded={hasChildren ? isExpanded : undefined}
-          aria-selected={isSelected}
         >
           {/* Expand/collapse chevron */}
           {hasChildren ? (
@@ -278,7 +279,7 @@ function TreeNodeComponent({
               name="chevron-right"
               size="sm"
               className={cn(
-                "shrink-0 transition-transform text-slate-400",
+                "shrink-0 transition-transform text-slate-500",
                 isExpanded && "rotate-90"
               )}
             />
@@ -440,8 +441,8 @@ const TreeView = forwardRef<HTMLDivElement, TreeViewProps>(
     }, [nodes, searchValue, expandedIds]);
 
     return (
-      <div ref={ref} role="tree" className={cn("w-full", className)} {...props}>
-        {/* Search input */}
+      <div ref={ref} className={cn("w-full", className)} {...props}>
+        {/* Search input — outside role="tree" since inputs are not allowed in tree */}
         {searchable && (
           <div className="mb-2 px-1">
             <input
@@ -451,7 +452,7 @@ const TreeView = forwardRef<HTMLDivElement, TreeViewProps>(
               placeholder="Search..."
               className={cn(
                 "w-full px-3 py-1.5 text-sm rounded-lg border border-slate-200",
-                "bg-white placeholder:text-slate-400",
+                "bg-white placeholder:text-slate-500",
                 "focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               )}
               aria-label="Search tree"
@@ -459,26 +460,28 @@ const TreeView = forwardRef<HTMLDivElement, TreeViewProps>(
           </div>
         )}
 
-        {filteredNodes.map((node) => (
-          <TreeNodeComponent
-            key={node.id}
-            node={node}
-            level={0}
-            selectedId={selectedId}
-            expandedIds={searchExpandedIds}
-            onSelect={onSelect}
-            onToggle={handleToggle}
-            showLines={showLines}
-            size={size}
-            selectable={selectable}
-            selectedIds={checkedSet}
-            onCheckToggle={handleCheckToggle}
-          />
-        ))}
+        <div role="tree">
+          {filteredNodes.map((node) => (
+            <TreeNodeComponent
+              key={node.id}
+              node={node}
+              level={0}
+              selectedId={selectedId}
+              expandedIds={searchExpandedIds}
+              onSelect={onSelect}
+              onToggle={handleToggle}
+              showLines={showLines}
+              size={size}
+              selectable={selectable}
+              selectedIds={checkedSet}
+              onCheckToggle={handleCheckToggle}
+            />
+          ))}
 
-        {searchValue && filteredNodes.length === 0 && (
-          <p className="px-2 py-4 text-sm text-slate-400 text-center">No results found</p>
-        )}
+          {searchValue && filteredNodes.length === 0 && (
+            <p className="px-2 py-4 text-sm text-slate-600 text-center">No results found</p>
+          )}
+        </div>
       </div>
     );
   }

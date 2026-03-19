@@ -20,7 +20,7 @@ const FieldLabel = forwardRef<HTMLLabelElement, FieldLabelProps>(
       >
         {children}
         {required && (
-          <span className="text-red-500 ml-0.5" aria-hidden="true">
+          <span className="text-red-600 ml-0.5" aria-hidden="true">
             *
           </span>
         )}

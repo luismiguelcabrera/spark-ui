@@ -52,7 +52,7 @@ export const WithStaticFallback: Story = {
           <p className="text-sm font-semibold text-red-800">
             Oops! Something went wrong.
           </p>
-          <p className="text-xs text-red-600 mt-1">
+          <p className="text-xs text-red-800 mt-1">
             Please try refreshing the page.
           </p>
         </div>
@@ -72,7 +72,7 @@ export const WithFunctionFallback: Story = {
       fallback={(error, reset) => (
         <div className="p-6 border border-red-200 bg-red-50 rounded-xl text-center">
           <p className="text-sm font-semibold text-red-800">Error caught!</p>
-          <p className="text-xs text-red-600 mt-1 font-mono">{error.message}</p>
+          <p className="text-xs text-red-800 mt-1 font-mono">{error.message}</p>
           <button
             type="button"
             onClick={reset}

@@ -113,17 +113,17 @@ export const OnIcons: Story = {
   render: () => (
     <div className="p-16 flex gap-4 justify-center">
       <Tooltip content="Settings">
-        <button type="button" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+        <button type="button" aria-label="Settings" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
           <Icon name="settings" size="md" className="text-slate-600" />
         </button>
       </Tooltip>
       <Tooltip content="Notifications">
-        <button type="button" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+        <button type="button" aria-label="Notifications" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
           <Icon name="bell" size="md" className="text-slate-600" />
         </button>
       </Tooltip>
       <Tooltip content="Help">
-        <button type="button" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+        <button type="button" aria-label="Help" className="p-2 rounded-lg hover:bg-slate-100 transition-colors">
           <Icon name="help-circle" size="md" className="text-slate-600" />
         </button>
       </Tooltip>

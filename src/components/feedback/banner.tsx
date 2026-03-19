@@ -37,7 +37,7 @@ const colorStyles: Record<BannerColor, string> = {
   info: "bg-blue-600 text-white",
   warning: "bg-amber-500 text-amber-950",
   danger: "bg-red-600 text-white",
-  success: "bg-green-600 text-white",
+  success: "bg-green-700 text-white",
 };
 
 const defaultIcons: Record<BannerColor, string> = {

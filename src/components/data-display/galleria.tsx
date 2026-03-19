@@ -11,6 +11,7 @@ import {
 import { cn } from "../../lib/utils";
 import { Icon } from "./icon";
 import { useControllable } from "../../hooks/use-controllable";
+import { useLocale } from "../../lib/locale";
 
 type GalleriaImage = {
   src: string;
@@ -69,6 +70,8 @@ const Galleria = forwardRef<HTMLDivElement, GalleriaProps>(
     },
     ref
   ) => {
+    const { t } = useLocale();
+
     const [activeIndex, setActiveIndex] = useControllable<number>({
       value: valueProp,
       defaultValue,
@@ -141,12 +144,12 @@ const Galleria = forwardRef<HTMLDivElement, GalleriaProps>(
         <div
           ref={ref}
           className={cn(
-            "flex items-center justify-center h-64 bg-slate-100 rounded-xl text-slate-400",
+            "flex items-center justify-center h-64 bg-slate-100 rounded-xl text-slate-600",
             className
           )}
           {...props}
         >
-          No images
+          {t("galleria.noImages", "No images")}
         </div>
       );
     }
@@ -175,7 +178,7 @@ const Galleria = forwardRef<HTMLDivElement, GalleriaProps>(
               "focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:outline-none",
               "disabled:opacity-30 disabled:cursor-not-allowed"
             )}
-            aria-label="Previous image"
+            aria-label={t("galleria.previous", "Previous image")}
           >
             <Icon name="chevron_left" size="md" />
           </button>
@@ -194,7 +197,7 @@ const Galleria = forwardRef<HTMLDivElement, GalleriaProps>(
               "focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:outline-none",
               "disabled:opacity-30 disabled:cursor-not-allowed"
             )}
-            aria-label="Next image"
+            aria-label={t("galleria.next", "Next image")}
           >
             <Icon name="chevron_right" size="md" />
           </button>
@@ -217,7 +220,7 @@ const Galleria = forwardRef<HTMLDivElement, GalleriaProps>(
                   ? "w-6 h-2 bg-white"
                   : "w-2 h-2 bg-white/50 hover:bg-white/70"
               )}
-              aria-label={`Go to image ${idx + 1}`}
+              aria-label={`${t("galleria.goToImage", "Go to image")} ${idx + 1}`}
             />
           ))}
         </div>
@@ -243,7 +246,7 @@ const Galleria = forwardRef<HTMLDivElement, GalleriaProps>(
               type="button"
               role="tab"
               aria-selected={idx === activeIndex}
-              aria-label={`Thumbnail: ${img.alt || `Image ${idx + 1}`}`}
+              aria-label={`${t("galleria.thumbnail", "Thumbnail")}: ${img.alt || `${t("galleria.image", "Image")} ${idx + 1}`}`}
               onClick={() => goTo(idx)}
               className={cn(
                 "shrink-0 rounded-lg overflow-hidden transition-all border-2",
@@ -327,7 +330,7 @@ const Galleria = forwardRef<HTMLDivElement, GalleriaProps>(
             )}
             tabIndex={0}
             role="dialog"
-            aria-label="Image gallery fullscreen"
+            aria-label={t("galleria.fullscreen", "Image gallery fullscreen")}
             {...props}
           >
             <div ref={containerRef} className="flex-1 min-h-0 flex flex-col">
@@ -344,7 +347,7 @@ const Galleria = forwardRef<HTMLDivElement, GalleriaProps>(
                     "hover:bg-white/20 transition-colors",
                     "focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
                   )}
-                  aria-label="Exit fullscreen"
+                  aria-label={t("galleria.exitFullscreen", "Exit fullscreen")}
                 >
                   <Icon name="close" size="md" />
                 </button>
@@ -362,7 +365,7 @@ const Galleria = forwardRef<HTMLDivElement, GalleriaProps>(
         className={cn("bg-white rounded-xl overflow-hidden", className)}
         tabIndex={0}
         role="region"
-        aria-label="Image gallery"
+        aria-label={t("galleria.gallery", "Image gallery")}
         aria-roledescription="gallery"
         {...props}
       >

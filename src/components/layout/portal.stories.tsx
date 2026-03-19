@@ -77,7 +77,7 @@ export const CustomContainer: Story = {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
-            <p className="text-xs font-medium text-slate-400 mb-2">Source (parent component)</p>
+            <p className="text-xs font-medium text-slate-600 mb-2">Source (parent component)</p>
             <p className="text-sm text-slate-600">The Portal component lives here in the code.</p>
           </div>
 
@@ -85,7 +85,7 @@ export const CustomContainer: Story = {
             ref={containerRef}
             className="p-4 bg-primary/5 border border-primary/20 rounded-xl min-h-[100px]"
           >
-            <p className="text-xs font-medium text-primary/60 mb-2">Target container</p>
+            <p className="text-xs font-medium text-primary mb-2">Target container</p>
             {/* Portal will render content here */}
           </div>
         </div>
@@ -110,14 +110,14 @@ export const NestedOverflow: Story = {
 
     return (
       <div className="space-y-4">
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-600">
           Portal escapes parent overflow constraints. The button is inside an
           <code className="text-xs bg-slate-100 px-1 py-0.5 rounded mx-1">overflow-hidden</code> container,
           but the portaled tooltip appears above it.
         </p>
 
         <div className="overflow-hidden border border-slate-200 rounded-xl p-4 bg-slate-50 max-w-xs">
-          <p className="text-xs text-slate-400 mb-2">overflow-hidden container</p>
+          <p className="text-xs text-slate-600 mb-2">overflow-hidden container</p>
           <button
             type="button"
             onClick={() => setVisible(!visible)}

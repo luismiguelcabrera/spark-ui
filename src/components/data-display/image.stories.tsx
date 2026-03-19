@@ -85,7 +85,7 @@ export const CustomFallback: Story = {
     fallback: (
       <div className="text-center">
         <p className="text-sm font-medium text-slate-500">Image not available</p>
-        <p className="text-xs text-slate-400 mt-1">Please try again later</p>
+        <p className="text-xs text-slate-500 mt-1">Please try again later</p>
       </div>
     ),
   },
@@ -181,7 +181,7 @@ export const HoverEffectsGallery: Story = {
     <div className="grid grid-cols-3 gap-6">
       {(["zoom", "shine", "grayscale", "blur", "kenburns"] as const).map((effect) => (
         <div key={effect}>
-          <p className="text-xs font-semibold text-slate-400 uppercase mb-2">{effect}</p>
+          <p className="text-xs font-semibold text-slate-500 uppercase mb-2">{effect}</p>
           <Image
             {...args}
             src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&h=300&fit=crop"
@@ -213,7 +213,7 @@ export const Gallery: Story = {
   render: (args) => (
     <div className="flex flex-col gap-8">
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Landscape (16:9)</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Landscape (16:9)</p>
         <Image
           {...args}
           src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&h=400&fit=crop"
@@ -225,7 +225,7 @@ export const Gallery: Story = {
       </div>
       <div className="flex gap-4">
         <div>
-          <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Square</p>
+          <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Square</p>
           <Image
             src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop"
             alt="Profile"
@@ -235,7 +235,7 @@ export const Gallery: Story = {
           />
         </div>
         <div>
-          <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Circle</p>
+          <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Circle</p>
           <Image
             src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop"
             alt="Profile circle"
@@ -245,7 +245,7 @@ export const Gallery: Story = {
           />
         </div>
         <div>
-          <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Fallback</p>
+          <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Fallback</p>
           <Image
             alt="Missing"
             width={150}
@@ -255,7 +255,7 @@ export const Gallery: Story = {
         </div>
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Contain fit</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Contain fit</p>
         <Image
           src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop"
           alt="Contained"

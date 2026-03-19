@@ -129,7 +129,7 @@ export const FilterExample: Story = {
   args: { children: null },
   render: (args) => (
     <div className="space-y-2">
-      <p className="text-xs font-semibold uppercase text-slate-400">Category</p>
+      <p className="text-xs font-semibold uppercase text-slate-500">Category</p>
       <ChipGroup {...args} multiple defaultValue={["all"]}>
         <StoryChip value="all">All</StoryChip>
         <StoryChip value="design">Design</StoryChip>

@@ -66,7 +66,7 @@ export const WithLeftIcon: Story = {
     <InputGroup {...args}>
       <div className="relative flex-1">
         <InputLeftElement>
-          <Icon name="search" size="md" className="text-slate-400" />
+          <Icon name="search" size="md" className="text-slate-500" />
         </InputLeftElement>
         <Input placeholder="Search..." className="pl-11" />
       </div>
@@ -97,7 +97,7 @@ export const WithClickableElement: Story = {
         <InputRightElement clickable>
           <button
             type="button"
-            className="text-slate-400 hover:text-slate-600 transition-colors"
+            className="text-slate-500 hover:text-slate-600 transition-colors"
             aria-label="Toggle visibility"
           >
             <Icon name="eye" size="md" />
@@ -144,21 +144,21 @@ export const Gallery: Story = {
   render: (args) => (
     <div className="flex flex-col gap-6 max-w-md">
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">URL Input</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">URL Input</p>
         <InputGroup {...args}>
           <InputLeftAddon>https://</InputLeftAddon>
           <Input placeholder="example.com" />
         </InputGroup>
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Email</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Email</p>
         <InputGroup {...args}>
           <Input placeholder="username" />
           <InputRightAddon>@company.com</InputRightAddon>
         </InputGroup>
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Currency</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Currency</p>
         <InputGroup {...args}>
           <InputLeftAddon>$</InputLeftAddon>
           <Input placeholder="0.00" type="number" />
@@ -166,16 +166,16 @@ export const Gallery: Story = {
         </InputGroup>
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Search with Icon</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Search with Icon</p>
         <div className="relative">
           <InputLeftElement>
-            <Icon name="search" size="md" className="text-slate-400" />
+            <Icon name="search" size="md" className="text-slate-500" />
           </InputLeftElement>
           <Input placeholder="Search anything..." className="pl-11" />
         </div>
       </div>
       <div>
-        <p className="text-xs font-semibold text-slate-400 uppercase mb-2">With Button</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase mb-2">With Button</p>
         <InputGroup {...args}>
           <Input placeholder="Enter code" />
           <Button variant="solid" color="primary" className="rounded-l-none">

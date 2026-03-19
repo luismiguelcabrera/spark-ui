@@ -20,7 +20,7 @@ export const Default: Story = {
 };
 
 export const WithError: Story = {
-  args: { placeholder: "Enter password", error: "Password must be at least 8 characters", id: "pw" },
+  args: { placeholder: "Enter password", error: "Password must be at least 8 characters", id: "pw", "aria-label": "Password" },
 };
 
 export const Disabled: Story = {
@@ -28,7 +28,7 @@ export const Disabled: Story = {
 };
 
 export const WithValue: Story = {
-  args: { defaultValue: "supersecret123", id: "pw-val" },
+  args: { defaultValue: "supersecret123", id: "pw-val", "aria-label": "Password" },
 };
 
 export const WithLabel: Story = {

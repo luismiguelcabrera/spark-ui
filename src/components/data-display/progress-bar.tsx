@@ -2,7 +2,7 @@ import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 
 type ProgressBarProps = {
-  value: number;
+  value?: number;
   /** Maximum value (default 100) */
   max?: number;
   trackColor?: string;
@@ -27,16 +27,17 @@ const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
     },
     ref
   ) => {
-    const clamped = Math.min(max, Math.max(0, value));
+    const isIndeterminate = value === undefined || Number.isNaN(value);
+    const clamped = isIndeterminate ? 0 : Math.min(max, Math.max(0, value));
     const percent = max > 0 ? (clamped / max) * 100 : 0;
     return (
       <div
         ref={ref}
         role="progressbar"
-        aria-valuenow={clamped}
+        aria-valuenow={isIndeterminate ? undefined : clamped}
         aria-valuemin={0}
         aria-valuemax={max}
-        aria-label={label}
+        aria-label={label ?? "Progress"}
         className={cn(
           "w-full rounded-full overflow-hidden",
           size === "sm" ? "h-1.5" : "h-2.5",

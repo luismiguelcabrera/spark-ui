@@ -3,6 +3,7 @@
 import { forwardRef, useState, useRef, useEffect, useCallback, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { useClickOutside } from "../../hooks/use-click-outside";
+import { useLocale } from "../../lib/locale";
 
 type PopupEditMode = "input" | "textarea";
 
@@ -40,6 +41,7 @@ const PopupEdit = forwardRef<HTMLDivElement, PopupEditProps>(
     },
     ref
   ) => {
+    const { t } = useLocale();
     const [editing, setEditing] = useState(false);
     const [editValue, setEditValue] = useState(value);
     const popoverRef = useRef<HTMLDivElement>(null);
@@ -93,7 +95,7 @@ const PopupEdit = forwardRef<HTMLDivElement, PopupEditProps>(
     const inputClassName = cn(
       "w-full px-3 py-2 text-sm border border-slate-200 rounded-lg bg-white",
       "focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary",
-      "placeholder:text-slate-400 transition-colors"
+      "placeholder:text-slate-500 transition-colors"
     );
 
     return (
@@ -107,7 +109,7 @@ const PopupEdit = forwardRef<HTMLDivElement, PopupEditProps>(
           role="button"
           tabIndex={disabled ? -1 : 0}
           aria-disabled={disabled || undefined}
-          aria-label="Click to edit"
+          aria-label={t("popupedit.clickToEdit", "Click to edit")}
           onClick={handleOpen}
           onKeyDown={(e) => {
             if ((e.key === "Enter" || e.key === " ") && !disabled) {
@@ -129,7 +131,7 @@ const PopupEdit = forwardRef<HTMLDivElement, PopupEditProps>(
           <div
             ref={popoverRef}
             role="dialog"
-            aria-label="Edit value"
+            aria-label={t("popupedit.editValue", "Edit value")}
             className={cn(
               "absolute z-50 top-full left-0 mt-1 p-3 bg-white border border-slate-200 rounded-xl shadow-lg",
               "min-w-[240px]"
@@ -166,7 +168,7 @@ const PopupEdit = forwardRef<HTMLDivElement, PopupEditProps>(
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary"
                 )}
               >
-                Cancel
+                {t("common.cancel", "Cancel")}
               </button>
               <button
                 type="button"
@@ -177,7 +179,7 @@ const PopupEdit = forwardRef<HTMLDivElement, PopupEditProps>(
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary"
                 )}
               >
-                Save
+                {t("common.save", "Save")}
               </button>
             </div>
           </div>

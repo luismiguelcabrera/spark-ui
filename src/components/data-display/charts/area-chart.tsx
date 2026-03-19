@@ -77,7 +77,7 @@ const AreaChart = forwardRef<HTMLDivElement, AreaChartProps>(
       return (
         <div
           ref={ref}
-          className={cn("w-full flex items-center justify-center text-gray-400", className)}
+          className={cn("w-full flex items-center justify-center text-gray-500", className)}
           style={{ height }}
           {...props}
         >

@@ -87,12 +87,12 @@ export const NestedProviders: Story = {
     <div className="space-y-4">
       <DefaultsProvider defaults={{ Button: { variant: "solid", size: "lg" } }}>
         <div className="flex gap-4 items-center">
-          <span className="text-xs text-slate-400 font-mono w-24">Outer:</span>
+          <span className="text-xs text-slate-500 font-mono w-24">Outer:</span>
           <DemoButton>Outer Button</DemoButton>
         </div>
         <DefaultsProvider defaults={{ Button: { variant: "outline", size: "sm" } }}>
           <div className="flex gap-4 items-center mt-3">
-            <span className="text-xs text-slate-400 font-mono w-24">Inner:</span>
+            <span className="text-xs text-slate-500 font-mono w-24">Inner:</span>
             <DemoButton>Inner Button</DemoButton>
           </div>
         </DefaultsProvider>
