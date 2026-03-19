@@ -1,8 +1,8 @@
 // ── Individual icon components ──
 export * from "./icons";
 
-// ── Animated icon components ──
-export * from "./animated-icons";
+// ── Animated icon registry (used internally by Icon component) ──
+export { animatedSvgRegistry, getDefaultIconAnimation } from "./animated-icons";
 
 // ── Factory ──
 export { createIcon } from "./create-icon";

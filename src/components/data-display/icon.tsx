@@ -4,6 +4,7 @@ import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { useIconResolver } from "../../icons/icon-provider";
 import { builtInIcons } from "../../icons/registry";
+import { animatedSvgRegistry, getDefaultIconAnimation } from "../../icons/animated-icons";
 
 const svgSizeMap = {
   sm: 16,
@@ -92,10 +93,17 @@ type IconProps = Omit<HTMLAttributes<HTMLElement>, "children"> & {
   name: string;
   filled?: boolean;
   size?: IconSize;
-  /** Animation preset. CSS-only, GPU-accelerated, respects prefers-reduced-motion. */
+  /** Explicit animation preset. Overrides auto-animation from `animated`. */
   animation?: IconAnimation;
-  /** When to trigger the animation. @default "always" */
+  /** When to trigger the animation. @default "always" for `animation`, "hover" for `animated`. */
   animationTrigger?: IconAnimationTrigger;
+  /**
+   * Enable per-icon animated SVG variant. Icons with custom animations (bell, heart, star, etc.)
+   * render unique SVG part animations. All other icons get a smart default animation based on type.
+   * Pure CSS, GPU-accelerated, respects prefers-reduced-motion.
+   * @default false
+   */
+  animated?: boolean;
 };
 
 function getAnimationClass(animation?: IconAnimation, trigger?: IconAnimationTrigger): string {
@@ -104,16 +112,67 @@ function getAnimationClass(animation?: IconAnimation, trigger?: IconAnimationTri
 }
 
 /**
- * Icon component with 3-tier resolution:
- * 1. Consumer's IconProvider resolver (custom icon sets)
- * 2. Built-in SVG icons from the registry
- * 3. Material Symbols font fallback
+ * Icon component with 3-tier resolution + animation system.
  *
- * Supports CSS-only animations via `animation` + `animationTrigger` props.
+ * Resolution: IconProvider → built-in SVGs → Material Symbols font fallback.
+ *
+ * Animation modes:
+ * - `animation="spin"` — explicit generic animation preset
+ * - `animated` — per-icon SVG animation (20 custom) or smart default (425 auto)
+ * - Both respect `animationTrigger` and `prefers-reduced-motion`
  */
 const Icon = forwardRef<SVGSVGElement | HTMLSpanElement, IconProps>(
-  ({ name, filled = false, size = "md", animation, animationTrigger, className, "aria-hidden": ariaHidden, ...props }, ref) => {
-    const animClass = getAnimationClass(animation, animationTrigger);
+  ({ name, filled = false, size = "md", animation, animationTrigger, animated = false, className, "aria-hidden": ariaHidden, ...props }, ref) => {
+    const pxSize = svgSizeMap[size];
+
+    // Determine animation class
+    let animClass = "";
+    if (animation) {
+      animClass = getAnimationClass(animation, animationTrigger ?? "always");
+    }
+
+    // If `animated` is set and no explicit animation, check for per-icon animated SVG
+    if (animated && !animation) {
+      const trigger = animationTrigger ?? "hover";
+      const triggerClass = trigger === "always" ? "spark-anim-active" : "spark-anim-hover";
+      const animatedEntry = animatedSvgRegistry[name];
+
+      if (animatedEntry) {
+        // Render custom per-part animated SVG
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars -- strip HTML-only props
+        const { onCopy: _, onCut: _2, onPaste: _3, ...svgSafeProps } = props;
+        return (
+          <svg
+            ref={ref as React.Ref<SVGSVGElement>}
+            xmlns="http://www.w3.org/2000/svg"
+            width={pxSize}
+            height={pxSize}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={cn("shrink-0", triggerClass, className)}
+            aria-hidden={ariaHidden ?? true}
+            {...(svgSafeProps as React.SVGAttributes<SVGSVGElement>)}
+          >
+            {animatedEntry.children}
+          </svg>
+        );
+      }
+
+      // No custom animated SVG — apply smart default animation
+      const defaultAnim = getDefaultIconAnimation(name);
+      if (trigger === "hover") {
+        // Convert "spark-icon-xxx" to "spark-icon-hover-xxx"
+        animClass = defaultAnim.replace("spark-icon-", "spark-icon-hover-");
+      } else if (trigger === "group-hover") {
+        animClass = defaultAnim.replace("spark-icon-", "spark-icon-group-hover-");
+      } else {
+        animClass = defaultAnim;
+      }
+    }
 
     // Tier 1: Check consumer's custom resolver
     const resolver = useIconResolver();
@@ -124,7 +183,7 @@ const Icon = forwardRef<SVGSVGElement | HTMLSpanElement, IconProps>(
           // eslint-disable-next-line react-hooks/static-components -- dynamic icon resolution from consumer IconProvider
           <CustomIcon
             ref={ref as React.Ref<SVGSVGElement>}
-            size={svgSizeMap[size]}
+            size={pxSize}
             className={cn("shrink-0", animClass, className)}
             aria-hidden={ariaHidden ?? true}
             {...props}
@@ -139,7 +198,7 @@ const Icon = forwardRef<SVGSVGElement | HTMLSpanElement, IconProps>(
       return (
         <BuiltInIcon
           ref={ref as React.Ref<SVGSVGElement>}
-          size={svgSizeMap[size]}
+          size={pxSize}
           className={cn("shrink-0", animClass, className)}
           aria-hidden={ariaHidden ?? true}
           {...props}

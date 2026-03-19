@@ -1,282 +1,311 @@
 "use client";
 
-import { forwardRef, type SVGProps } from "react";
-import { cn } from "../lib/utils";
+/**
+ * Animated icon SVG registry.
+ *
+ * Maps icon names to JSX with named CSS classes on child elements.
+ * Used by the Icon component when `animated` prop is set.
+ * Each entry produces unique per-part animation (bell clapper swings, heart fills, etc.)
+ *
+ * For icons NOT in this map, the Icon component applies a smart default
+ * animation based on the icon's category.
+ */
 
-type AnimatedIconProps = Omit<SVGProps<SVGSVGElement>, "children"> & {
-  size?: number;
-  /** @default "hover" */
-  trigger?: "hover" | "always";
+import type { ReactNode } from "react";
+
+type AnimatedSvgEntry = {
+  children: ReactNode;
 };
 
-const base = (className?: string, trigger: "hover" | "always" = "hover") =>
-  cn("shrink-0", trigger === "always" ? "spark-anim-active" : "spark-anim-hover", className);
+export const animatedSvgRegistry: Record<string, AnimatedSvgEntry> = {
+  // ── Bell — clapper swings ──
+  "bell": {
+    children: (
+      <>
+        <path className="spark-anim-bell-body" d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+        <path className="spark-anim-bell-clapper" d="M13.73 21a2 2 0 0 1-3.46 0" />
+      </>
+    ),
+  },
 
-// ── 1. Bell — clapper swings ───────────────────────────────────────────
-
-export const AnimatedBellIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
-      <path className="spark-anim-bell-body" d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-      <path className="spark-anim-bell-clapper" d="M13.73 21a2 2 0 0 1-3.46 0" />
-    </svg>
-  ),
-);
-AnimatedBellIcon.displayName = "AnimatedBellIcon";
-
-// ── 2. Heart — fills up ────────────────────────────────────────────────
-
-export const AnimatedHeartIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
+  // ── Heart — fills up ──
+  "heart": {
+    children: (
       <path className="spark-anim-heart-fill" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-    </svg>
-  ),
-);
-AnimatedHeartIcon.displayName = "AnimatedHeartIcon";
+    ),
+  },
 
-// ── 3. Mail — flap opens ──────────────────────────────────────────────
+  // ── Mail — flap opens ──
+  "mail": {
+    children: (
+      <>
+        <rect className="spark-anim-mail-body" x="2" y="4" width="20" height="16" rx="2" />
+        <path className="spark-anim-mail-flap" d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+      </>
+    ),
+  },
 
-export const AnimatedMailIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
-      <rect className="spark-anim-mail-body" x="2" y="4" width="20" height="16" rx="2" />
-      <path className="spark-anim-mail-flap" d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-    </svg>
-  ),
-);
-AnimatedMailIcon.displayName = "AnimatedMailIcon";
+  // ── Check Circle — check draws in ──
+  "check-circle": {
+    children: (
+      <>
+        <circle className="spark-anim-check-circle" cx="12" cy="12" r="10" />
+        <path className="spark-anim-check-mark" d="m9 12 2 2 4-4" />
+      </>
+    ),
+  },
 
-// ── 4. Check Circle — check draws in ──────────────────────────────────
-
-export const AnimatedCheckCircleIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
-      <circle className="spark-anim-check-circle" cx="12" cy="12" r="10" />
-      <path className="spark-anim-check-mark" d="m9 12 2 2 4-4" />
-    </svg>
-  ),
-);
-AnimatedCheckCircleIcon.displayName = "AnimatedCheckCircleIcon";
-
-// ── 5. Star — fills with scale ─────────────────────────────────────────
-
-export const AnimatedStarIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
+  // ── Star — pops and fills ──
+  "star": {
+    children: (
       <polygon className="spark-anim-star-shape" points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
-  ),
-);
-AnimatedStarIcon.displayName = "AnimatedStarIcon";
+    ),
+  },
 
-// ── 6. Eye — blinks ───────────────────────────────────────────────────
+  // ── Eye — blinks ──
+  "eye": {
+    children: (
+      <>
+        <path className="spark-anim-eye-outline" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+        <circle className="spark-anim-eye-pupil" cx="12" cy="12" r="3" />
+      </>
+    ),
+  },
 
-export const AnimatedEyeIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
-      <path className="spark-anim-eye-outline" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-      <circle className="spark-anim-eye-pupil" cx="12" cy="12" r="3" />
-    </svg>
-  ),
-);
-AnimatedEyeIcon.displayName = "AnimatedEyeIcon";
+  // ── Lock — shackle lifts ──
+  "lock": {
+    children: (
+      <>
+        <rect className="spark-anim-lock-body" x="3" y="11" width="18" height="11" rx="2" ry="2" />
+        <path className="spark-anim-lock-shackle" d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </>
+    ),
+  },
 
-// ── 7. Lock — shackle lifts ───────────────────────────────────────────
+  // ── Trash — lid lifts ──
+  "trash": {
+    children: (
+      <>
+        <path className="spark-anim-trash-can" d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+        <path className="spark-anim-trash-lid" d="M3 6h18" />
+        <path className="spark-anim-trash-handle" d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+        <line className="spark-anim-trash-line" x1="10" y1="11" x2="10" y2="17" />
+        <line className="spark-anim-trash-line" x1="14" y1="11" x2="14" y2="17" />
+      </>
+    ),
+  },
 
-export const AnimatedLockIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
-      <rect className="spark-anim-lock-body" x="3" y="11" width="18" height="11" rx="2" ry="2" />
-      <path className="spark-anim-lock-shackle" d="M7 11V7a5 5 0 0 1 10 0v4" />
-    </svg>
-  ),
-);
-AnimatedLockIcon.displayName = "AnimatedLockIcon";
+  // ── Download — arrow pulses down ──
+  "download": {
+    children: (
+      <>
+        <path className="spark-anim-dl-tray" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <g className="spark-anim-dl-arrow">
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </g>
+      </>
+    ),
+  },
 
-// ── 8. Trash — lid lifts ──────────────────────────────────────────────
+  // ── Upload — arrow pulses up ──
+  "upload": {
+    children: (
+      <>
+        <path className="spark-anim-ul-tray" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <g className="spark-anim-ul-arrow">
+          <polyline points="17 8 12 3 7 8" />
+          <line x1="12" y1="3" x2="12" y2="15" />
+        </g>
+      </>
+    ),
+  },
 
-export const AnimatedTrashIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
-      <path className="spark-anim-trash-can" d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-      <path className="spark-anim-trash-lid" d="M3 6h18" />
-      <path className="spark-anim-trash-handle" d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-      <line className="spark-anim-trash-line" x1="10" y1="11" x2="10" y2="17" />
-      <line className="spark-anim-trash-line" x1="14" y1="11" x2="14" y2="17" />
-    </svg>
-  ),
-);
-AnimatedTrashIcon.displayName = "AnimatedTrashIcon";
-
-// ── 9. Download — arrow pulses down ───────────────────────────────────
-
-export const AnimatedDownloadIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
-      <path className="spark-anim-dl-tray" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <g className="spark-anim-dl-arrow">
-        <polyline points="7 10 12 15 17 10" />
-        <line x1="12" y1="15" x2="12" y2="3" />
-      </g>
-    </svg>
-  ),
-);
-AnimatedDownloadIcon.displayName = "AnimatedDownloadIcon";
-
-// ── 10. Upload — arrow pulses up ──────────────────────────────────────
-
-export const AnimatedUploadIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
-      <path className="spark-anim-ul-tray" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <g className="spark-anim-ul-arrow">
-        <polyline points="17 8 12 3 7 8" />
-        <line x1="12" y1="3" x2="12" y2="15" />
-      </g>
-    </svg>
-  ),
-);
-AnimatedUploadIcon.displayName = "AnimatedUploadIcon";
-
-// ── 11. Settings/Gear — rotates ───────────────────────────────────────
-
-export const AnimatedSettingsIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
+  // ── Settings — gear rotates ──
+  "settings": {
+    children: (
       <g className="spark-anim-gear">
         <circle cx="12" cy="12" r="3" />
         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
       </g>
-    </svg>
-  ),
-);
-AnimatedSettingsIcon.displayName = "AnimatedSettingsIcon";
+    ),
+  },
 
-// ── 12. Rocket — lifts off ────────────────────────────────────────────
-
-export const AnimatedRocketIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
+  // ── Rocket — lifts off ──
+  "rocket": {
+    children: (
       <g className="spark-anim-rocket-body">
         <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
         <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
         <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
         <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
       </g>
-    </svg>
-  ),
-);
-AnimatedRocketIcon.displayName = "AnimatedRocketIcon";
+    ),
+  },
 
-// ── 13. Wifi — signal arcs pulse in ───────────────────────────────────
+  // ── Wifi — arcs pulse in sequence ──
+  "wifi": {
+    children: (
+      <>
+        <path className="spark-anim-wifi-3" d="M1.42 9a16 16 0 0 1 21.16 0" />
+        <path className="spark-anim-wifi-2" d="M5 12.55a11 11 0 0 1 14.08 0" />
+        <path className="spark-anim-wifi-1" d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+        <line className="spark-anim-wifi-dot" x1="12" y1="20" x2="12.01" y2="20" />
+      </>
+    ),
+  },
 
-export const AnimatedWifiIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
-      <path className="spark-anim-wifi-3" d="M1.42 9a16 16 0 0 1 21.16 0" />
-      <path className="spark-anim-wifi-2" d="M5 12.55a11 11 0 0 1 14.08 0" />
-      <path className="spark-anim-wifi-1" d="M8.53 16.11a6 6 0 0 1 6.95 0" />
-      <line className="spark-anim-wifi-dot" x1="12" y1="20" x2="12.01" y2="20" />
-    </svg>
-  ),
-);
-AnimatedWifiIcon.displayName = "AnimatedWifiIcon";
+  // ── Volume — waves pulse ──
+  "volume-2": {
+    children: (
+      <>
+        <polygon className="spark-anim-vol-speaker" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+        <path className="spark-anim-vol-wave-1" d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+        <path className="spark-anim-vol-wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+      </>
+    ),
+  },
 
-// ── 14. Volume — waves pulse ──────────────────────────────────────────
+  // ── Sun — rays rotate ──
+  "sun": {
+    children: (
+      <>
+        <circle className="spark-anim-sun-core" cx="12" cy="12" r="5" />
+        <g className="spark-anim-sun-rays">
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </g>
+      </>
+    ),
+  },
 
-export const AnimatedVolumeIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
-      <polygon className="spark-anim-vol-speaker" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-      <path className="spark-anim-vol-wave-1" d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-      <path className="spark-anim-vol-wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-    </svg>
-  ),
-);
-AnimatedVolumeIcon.displayName = "AnimatedVolumeIcon";
-
-// ── 15. Sun — rays rotate ─────────────────────────────────────────────
-
-export const AnimatedSunIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
-      <circle className="spark-anim-sun-core" cx="12" cy="12" r="5" />
-      <g className="spark-anim-sun-rays">
-        <line x1="12" y1="1" x2="12" y2="3" />
-        <line x1="12" y1="21" x2="12" y2="23" />
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-        <line x1="1" y1="12" x2="3" y2="12" />
-        <line x1="21" y1="12" x2="23" y2="12" />
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-      </g>
-    </svg>
-  ),
-);
-AnimatedSunIcon.displayName = "AnimatedSunIcon";
-
-// ── 16. Search — magnifier bounces ────────────────────────────────────
-
-export const AnimatedSearchIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
+  // ── Search — lens zooms ──
+  "search": {
+    children: (
       <g className="spark-anim-search-lens">
         <circle cx="11" cy="11" r="8" />
         <line x1="21" y1="21" x2="16.65" y2="16.65" />
       </g>
-    </svg>
-  ),
-);
-AnimatedSearchIcon.displayName = "AnimatedSearchIcon";
+    ),
+  },
 
-// ── 17. Copy — pages shift ────────────────────────────────────────────
+  // ── Copy — pages shift ──
+  "copy": {
+    children: (
+      <>
+        <rect className="spark-anim-copy-front" x="9" y="9" width="13" height="13" rx="2" ry="2" />
+        <path className="spark-anim-copy-back" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+      </>
+    ),
+  },
 
-export const AnimatedCopyIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
-      <rect className="spark-anim-copy-front" x="9" y="9" width="13" height="13" rx="2" ry="2" />
-      <path className="spark-anim-copy-back" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-    </svg>
-  ),
-);
-AnimatedCopyIcon.displayName = "AnimatedCopyIcon";
-
-// ── 18. Bookmark — folds in ───────────────────────────────────────────
-
-export const AnimatedBookmarkIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
+  // ── Bookmark — fills in ──
+  "bookmark": {
+    children: (
       <path className="spark-anim-bookmark-shape" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-    </svg>
-  ),
-);
-AnimatedBookmarkIcon.displayName = "AnimatedBookmarkIcon";
+    ),
+  },
 
-// ── 19. Sparkles — twinkle ────────────────────────────────────────────
+  // ── Sparkles — twinkle staggered ──
+  "sparkles": {
+    children: (
+      <>
+        <path className="spark-anim-sparkle-1" d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
+        <path className="spark-anim-sparkle-2" d="M19 13l.75 2.25L22 16l-2.25.75L19 19l-.75-2.25L16 16l2.25-.75L19 13z" />
+        <path className="spark-anim-sparkle-3" d="M6 17l.5 1.5L8 19l-1.5.5L6 21l-.5-1.5L4 19l1.5-.5L6 17z" />
+      </>
+    ),
+  },
 
-export const AnimatedSparklesIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
-      <path className="spark-anim-sparkle-1" d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
-      <path className="spark-anim-sparkle-2" d="M19 13l.75 2.25L22 16l-2.25.75L19 19l-.75-2.25L16 16l2.25-.75L19 13z" />
-      <path className="spark-anim-sparkle-3" d="M6 17l.5 1.5L8 19l-1.5.5L6 21l-.5-1.5L4 19l1.5-.5L6 17z" />
-    </svg>
-  ),
-);
-AnimatedSparklesIcon.displayName = "AnimatedSparklesIcon";
-
-// ── 20. Send — paper plane flies ──────────────────────────────────────
-
-export const AnimatedSendIcon = forwardRef<SVGSVGElement, AnimatedIconProps>(
-  ({ size = 24, trigger = "hover", className, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={base(className, trigger)} aria-hidden="true" {...props}>
+  // ── Send — plane flies ──
+  "send": {
+    children: (
       <g className="spark-anim-send-plane">
         <line x1="22" y1="2" x2="11" y2="13" />
         <polygon points="22 2 15 22 11 13 2 9 22 2" />
       </g>
-    </svg>
-  ),
-);
-AnimatedSendIcon.displayName = "AnimatedSendIcon";
+    ),
+  },
+};
+
+/**
+ * Default animation class for icons without custom per-part animation.
+ * Maps icon name patterns to generic animation classes.
+ */
+export function getDefaultIconAnimation(name: string): string {
+  // Loaders & refresh
+  if (/loader|refresh|rotate|spinner/i.test(name)) return "spark-icon-spin";
+
+  // Hearts, stars, likes
+  if (/heart|star|thumbs-up|like/i.test(name)) return "spark-icon-pulse";
+
+  // Bells & notifications
+  if (/bell|notification|megaphone/i.test(name)) return "spark-icon-wiggle";
+
+  // Alerts & errors
+  if (/alert|warning|error|x-circle|ban|octagon-alert/i.test(name)) return "spark-icon-shake";
+
+  // Check & success
+  if (/check|circle-check|badge-check/i.test(name)) return "spark-icon-scale-in";
+
+  // Arrows - bounce in their direction
+  if (/arrow-down|download|chevron-down/i.test(name)) return "spark-icon-bounce";
+  if (/arrow-up|upload|chevron-up|trending-up/i.test(name)) return "spark-icon-bounce";
+  if (/arrow|chevron|corner/i.test(name)) return "spark-icon-bounce";
+
+  // Settings & gears
+  if (/settings|gear|cog/i.test(name)) return "spark-icon-spin";
+
+  // Sparkles, magic, rocket
+  if (/sparkle|magic|wand|crown|gem|trophy|award|medal/i.test(name)) return "spark-icon-tada";
+  if (/rocket|plane|send/i.test(name)) return "spark-icon-tada";
+
+  // Eyes
+  if (/eye/i.test(name)) return "spark-icon-pulse";
+
+  // Locks & security
+  if (/lock|unlock|shield|key|fingerprint/i.test(name)) return "spark-icon-shake";
+
+  // Weather
+  if (/sun|moon|cloud|rain|snow|wind|tornado|wave/i.test(name)) return "spark-icon-float";
+
+  // Nature & animals
+  if (/leaf|tree|flower|bird|feather|mountain/i.test(name)) return "spark-icon-float";
+
+  // Communication
+  if (/mail|message|phone|inbox|chat/i.test(name)) return "spark-icon-bounce";
+
+  // Files & folders
+  if (/file|folder|clipboard|archive|package/i.test(name)) return "spark-icon-slide-up";
+
+  // Maps & transport
+  if (/car|truck|plane|bike|ship|bus|train|rocket|fuel/i.test(name)) return "spark-icon-shake";
+  if (/map|globe|compass|locate/i.test(name)) return "spark-icon-pulse";
+
+  // Devices
+  if (/monitor|laptop|phone|tablet|tv|cpu|keyboard|mouse/i.test(name)) return "spark-icon-pulse";
+
+  // Music & media
+  if (/play|pause|music|video|camera|mic|headphone|volume|speaker/i.test(name)) return "spark-icon-pulse";
+
+  // Commerce
+  if (/cart|bag|wallet|coin|dollar|credit|receipt|store/i.test(name)) return "spark-icon-bounce";
+
+  // Info, help
+  if (/info|help|question/i.test(name)) return "spark-icon-pulse";
+
+  // Code & dev
+  if (/code|terminal|git|bug|braces|bracket|webhook/i.test(name)) return "spark-icon-fade-in";
+
+  // Shapes
+  if (/circle|square|triangle|diamond|hexagon|octagon|pentagon/i.test(name)) return "spark-icon-scale-in";
+
+  // Default fallback
+  return "spark-icon-fade-in";
+}
