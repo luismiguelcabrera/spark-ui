@@ -245,6 +245,43 @@ const builtInIcons: Record<string, ComponentType<IconComponentProps>> = {
   "bluetooth": icons.BluetoothIcon,
   "power": icons.PowerIcon,
   "globe": icons.GlobeIcon,
+
+  // ── Additional Actions ──
+  "undo": icons.UndoIcon,
+  "redo": icons.RedoIcon,
+  "cut": icons.ScissorsIcon,
+  "zoom-in": icons.ZoomInIcon,
+  "zoom_in": icons.ZoomInIcon,
+  "zoom-out": icons.ZoomOutIcon,
+  "zoom_out": icons.ZoomOutIcon,
+  "move": icons.MoveIcon,
+  "cursor": icons.CursorIcon,
+  "mouse-pointer": icons.CursorIcon,
+  "list-ordered": icons.ListOrderedIcon,
+  "format_list_numbered": icons.ListOrderedIcon,
+  "print": icons.PrinterIcon,
+
+  // ── Material Symbols Formatting Aliases ──
+  "format-bold": icons.BoldIcon,
+  "format_bold": icons.BoldIcon,
+  "format-italic": icons.ItalicIcon,
+  "format_italic": icons.ItalicIcon,
+  "format-underline": icons.UnderlineIcon,
+  "format_underline": icons.UnderlineIcon,
+  "format-align-left": icons.AlignLeftIcon,
+  "format_align_left": icons.AlignLeftIcon,
+  "format-align-center": icons.AlignCenterIcon,
+  "format_align_center": icons.AlignCenterIcon,
+  "format-align-right": icons.AlignRightIcon,
+  "format_align_right": icons.AlignRightIcon,
+
+  // ── Material Symbols Misc Aliases ──
+  "drafts": icons.FileTextIcon,
+  "publish": icons.SendIcon,
+  "schedule": icons.ClockIcon,
+  "delete_forever": icons.TrashIcon,
+  "picture_as_pdf": icons.FileTextIcon,
+  "table_chart": icons.GridIcon,
 };
 
 export { builtInIcons };
