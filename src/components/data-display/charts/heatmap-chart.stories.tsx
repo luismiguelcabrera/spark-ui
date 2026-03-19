@@ -1,27 +1,42 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { HeatmapChart } from "./heatmap-chart";
 
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const hours = ["9am", "10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm"];
+// ─── Sample Data ─────────────────────────────────────────────────────────────
 
-const weeklyActivity = days.flatMap((day) =>
-  hours.map((hour) => ({
+const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const hours = [
+  "9am",
+  "10am",
+  "11am",
+  "12pm",
+  "1pm",
+  "2pm",
+  "3pm",
+  "4pm",
+  "5pm",
+];
+
+// Use deterministic data instead of Math.random() so Storybook snapshots are stable
+const weeklyActivity = days.flatMap((day, di) =>
+  hours.map((hour, hi) => ({
     x: day,
     y: hour,
-    value: Math.floor(Math.random() * 50) + 1,
+    value: ((di * 7 + hi * 13 + 5) % 50) + 1,
   }))
 );
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
 const categories = ["Sales", "Marketing", "Support", "Engineering"];
 
-const departmentData = months.flatMap((month) =>
-  categories.map((cat) => ({
+const departmentData = months.flatMap((month, mi) =>
+  categories.map((cat, ci) => ({
     x: month,
     y: cat,
-    value: Math.floor(Math.random() * 100) + 10,
+    value: ((mi * 11 + ci * 17 + 3) % 90) + 10,
   }))
 );
+
+// ─── Meta ────────────────────────────────────────────────────────────────────
 
 const meta = {
   title: "Data Display/Charts/HeatmapChart",
@@ -37,6 +52,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// ─── Stories ─────────────────────────────────────────────────────────────────
+
 export const Default: Story = {
   args: {
     data: weeklyActivity,
@@ -51,7 +68,7 @@ export const DepartmentPerformance: Story = {
     data: departmentData,
     showValues: true,
     showLegend: true,
-    colorRange: ["#fef3c7", "#d97706"] as [string, string],
+    colorScale: ["#fef3c7", "#d97706"] as [string, string],
     height: 250,
   },
 };
@@ -64,32 +81,50 @@ export const NoValues: Story = {
   },
 };
 
-export const GreenColorRange: Story = {
+export const GreenColorScale: Story = {
+  name: "Green Color Scale",
   args: {
     data: weeklyActivity,
     showValues: false,
     showLegend: true,
-    colorRange: ["#ecfdf5", "#059669"] as [string, string],
+    colorScale: ["#ecfdf5", "#059669"] as [string, string],
     height: 350,
   },
 };
 
-export const RedColorRange: Story = {
+export const RedColorScale: Story = {
+  name: "Red Color Scale",
   args: {
     data: departmentData,
     showValues: true,
     showLegend: true,
-    colorRange: ["#fef2f2", "#dc2626"] as [string, string],
+    colorScale: ["#fef2f2", "#dc2626"] as [string, string],
     height: 250,
   },
 };
 
-export const PurpleColorRange: Story = {
+export const PurpleColorScale: Story = {
+  name: "Purple Color Scale",
   args: {
     data: weeklyActivity,
     showValues: false,
     showLegend: true,
-    colorRange: ["#faf5ff", "#7c3aed"] as [string, string],
+    colorScale: ["#faf5ff", "#7c3aed"] as [string, string],
+    height: 350,
+  },
+};
+
+export const DivergingColorScale: Story = {
+  name: "Diverging (3-stop) Color Scale",
+  args: {
+    data: weeklyActivity,
+    showValues: false,
+    showLegend: true,
+    colorScale: ["#3b82f6", "#f5f5f4", "#ef4444"] as [
+      string,
+      string,
+      string,
+    ],
     height: 350,
   },
 };
@@ -105,15 +140,25 @@ export const NoLegend: Story = {
 
 export const CompactGrid: Story = {
   args: {
-    data: days.flatMap((day) =>
-      ["Morning", "Afternoon", "Evening"].map((period) => ({
+    data: days.flatMap((day, di) =>
+      ["Morning", "Afternoon", "Evening"].map((period, pi) => ({
         x: day,
         y: period,
-        value: Math.floor(Math.random() * 100),
+        value: ((di * 5 + pi * 11 + 7) % 100),
       }))
     ),
     showValues: true,
     showLegend: true,
     height: 200,
+  },
+};
+
+export const WithValueFormatter: Story = {
+  args: {
+    data: departmentData,
+    showValues: true,
+    showLegend: true,
+    valueFormatter: (v: number) => `${v}%`,
+    height: 250,
   },
 };

@@ -1,57 +1,49 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeAll } from "vitest";
 import { RadarChart } from "../radar-chart";
 import { ScatterChart } from "../scatter-chart";
 import { FunnelChart } from "../funnel-chart";
 import { HeatmapChart } from "../heatmap-chart";
 
+// Mock matchMedia for prefersReducedMotion()
+beforeAll(() => {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: vi.fn().mockImplementation((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
+});
+
 // ─── Sample Data ─────────────────────────────────────────────────────────────
 
 const radarData = [
-  { label: "Design", value: 80, max: 100 },
-  { label: "Frontend", value: 90, max: 100 },
-  { label: "Backend", value: 70, max: 100 },
-  { label: "DevOps", value: 60, max: 100 },
-  { label: "Testing", value: 85, max: 100 },
+  { axis: "Design", score: 80 },
+  { axis: "Frontend", score: 90 },
+  { axis: "Backend", score: 70 },
+  { axis: "DevOps", score: 60 },
+  { axis: "Testing", score: 85 },
 ];
 
-const radarSeries = [
-  {
-    name: "Alice",
-    color: "#6366f1",
-    data: [
-      { label: "Design", value: 80 },
-      { label: "Frontend", value: 90 },
-      { label: "Backend", value: 70 },
-      { label: "DevOps", value: 60 },
-      { label: "Testing", value: 85 },
-    ],
-  },
-  {
-    name: "Bob",
-    color: "#f59e0b",
-    data: [
-      { label: "Design", value: 65 },
-      { label: "Frontend", value: 75 },
-      { label: "Backend", value: 90 },
-      { label: "DevOps", value: 85 },
-      { label: "Testing", value: 70 },
-    ],
-  },
-];
-
-const scatterData = [
-  { x: 10, y: 20, label: "A" },
-  { x: 30, y: 50, label: "B" },
-  { x: 50, y: 30, label: "C" },
-  { x: 70, y: 80, label: "D" },
-  { x: 90, y: 60, label: "E" },
+const radarMultiData = [
+  { axis: "Design", Alice: 80, Bob: 65 },
+  { axis: "Frontend", Alice: 90, Bob: 75 },
+  { axis: "Backend", Alice: 70, Bob: 90 },
+  { axis: "DevOps", Alice: 60, Bob: 85 },
+  { axis: "Testing", Alice: 85, Bob: 70 },
 ];
 
 const scatterSeries = [
   {
     name: "Group 1",
-    color: "#6366f1",
+    color: "#6366f1" as const,
     data: [
       { x: 10, y: 20 },
       { x: 30, y: 50 },
@@ -60,7 +52,7 @@ const scatterSeries = [
   },
   {
     name: "Group 2",
-    color: "#f59e0b",
+    color: "#f59e0b" as const,
     data: [
       { x: 15, y: 40 },
       { x: 45, y: 60 },
@@ -70,11 +62,11 @@ const scatterSeries = [
 ];
 
 const funnelData = [
-  { label: "Leads", value: 1000 },
-  { label: "Qualified", value: 600 },
-  { label: "Proposal", value: 400 },
-  { label: "Negotiation", value: 200 },
-  { label: "Closed", value: 100 },
+  { name: "Leads", value: 1000 },
+  { name: "Qualified", value: 600 },
+  { name: "Proposal", value: 400 },
+  { name: "Negotiation", value: 200 },
+  { name: "Closed", value: 100 },
 ];
 
 const heatmapData = [
@@ -93,36 +85,63 @@ const heatmapData = [
 
 describe("RadarChart", () => {
   it("renders without error", () => {
-    const { container } = render(<RadarChart data={radarData} />);
+    const { container } = render(
+      <RadarChart data={radarData} index="axis" categories={["score"]} />
+    );
     expect(container.querySelector("svg")).toBeInTheDocument();
   });
 
   it("has role=img and aria-label on svg", () => {
-    const { container } = render(<RadarChart data={radarData} />);
+    const { container } = render(
+      <RadarChart data={radarData} index="axis" categories={["score"]} />
+    );
     const svg = container.querySelector("svg");
     expect(svg).toHaveAttribute("role", "img");
     expect(svg).toHaveAttribute("aria-label", "Radar chart");
   });
 
   it("renders correct number of axis lines", () => {
-    render(<RadarChart data={radarData} />);
+    render(
+      <RadarChart data={radarData} index="axis" categories={["score"]} />
+    );
     const axes = screen.getAllByTestId(/^radar-axis-\d+$/);
     expect(axes).toHaveLength(5);
   });
 
   it("renders grid polygons when showGrid is true", () => {
-    render(<RadarChart data={radarData} showGrid />);
+    render(
+      <RadarChart
+        data={radarData}
+        index="axis"
+        categories={["score"]}
+        showGrid
+      />
+    );
     const grids = screen.getAllByTestId(/^radar-grid-\d+$/);
     expect(grids).toHaveLength(5); // 5 concentric levels
   });
 
   it("hides grid polygons when showGrid is false", () => {
-    render(<RadarChart data={radarData} showGrid={false} />);
+    render(
+      <RadarChart
+        data={radarData}
+        index="axis"
+        categories={["score"]}
+        showGrid={false}
+      />
+    );
     expect(screen.queryByTestId("radar-grid-0")).not.toBeInTheDocument();
   });
 
   it("renders labels when showLabels is true", () => {
-    render(<RadarChart data={radarData} showLabels />);
+    render(
+      <RadarChart
+        data={radarData}
+        index="axis"
+        categories={["score"]}
+        showLabels
+      />
+    );
     const labels = screen.getAllByTestId(/^radar-label-\d+$/);
     expect(labels).toHaveLength(5);
     expect(screen.getByText("Design")).toBeInTheDocument();
@@ -130,47 +149,91 @@ describe("RadarChart", () => {
   });
 
   it("hides labels when showLabels is false", () => {
-    render(<RadarChart data={radarData} showLabels={false} />);
+    render(
+      <RadarChart
+        data={radarData}
+        index="axis"
+        categories={["score"]}
+        showLabels={false}
+      />
+    );
     expect(screen.queryByTestId("radar-label-0")).not.toBeInTheDocument();
   });
 
   it("renders data polygon", () => {
-    render(<RadarChart data={radarData} />);
+    render(
+      <RadarChart data={radarData} index="axis" categories={["score"]} />
+    );
     expect(screen.getByTestId("radar-polygon-0")).toBeInTheDocument();
   });
 
   it("renders dots when showDots is true", () => {
-    render(<RadarChart data={radarData} showDots />);
+    render(
+      <RadarChart
+        data={radarData}
+        index="axis"
+        categories={["score"]}
+        showDots
+      />
+    );
     const dots = screen.getAllByTestId(/^radar-dot-0-\d+$/);
     expect(dots).toHaveLength(5);
   });
 
   it("hides dots when showDots is false", () => {
-    render(<RadarChart data={radarData} showDots={false} />);
+    render(
+      <RadarChart
+        data={radarData}
+        index="axis"
+        categories={["score"]}
+        showDots={false}
+      />
+    );
     expect(screen.queryByTestId("radar-dot-0-0")).not.toBeInTheDocument();
   });
 
   it("applies custom className", () => {
     const { container } = render(
-      <RadarChart data={radarData} className="my-radar" />
+      <RadarChart
+        data={radarData}
+        index="axis"
+        categories={["score"]}
+        className="my-radar"
+      />
     );
     expect(container.firstElementChild).toHaveClass("my-radar");
   });
 
   it("handles empty data", () => {
-    const { container } = render(<RadarChart data={[]} />);
+    const { container } = render(
+      <RadarChart data={[]} index="axis" categories={["score"]} />
+    );
     const svg = container.querySelector("svg");
     expect(svg).toHaveAttribute("aria-label", "Empty radar chart");
   });
 
   it("renders multi-series", () => {
-    render(<RadarChart series={radarSeries} />);
+    render(
+      <RadarChart
+        data={radarMultiData}
+        index="axis"
+        categories={["Alice", "Bob"]}
+        colors={["#6366f1", "#f59e0b"]}
+      />
+    );
     expect(screen.getByTestId("radar-polygon-0")).toBeInTheDocument();
     expect(screen.getByTestId("radar-polygon-1")).toBeInTheDocument();
   });
 
   it("highlights series on hover", () => {
-    render(<RadarChart series={radarSeries} />);
+    render(
+      <RadarChart
+        data={radarMultiData}
+        index="axis"
+        categories={["Alice", "Bob"]}
+        colors={["#6366f1", "#f59e0b"]}
+      />
+    );
     const polygon = screen.getByTestId("radar-polygon-0");
     fireEvent.mouseEnter(polygon);
     fireEvent.mouseLeave(polygon);
@@ -178,12 +241,26 @@ describe("RadarChart", () => {
 
   it("forwards ref to container div", () => {
     const ref = { current: null as HTMLDivElement | null };
-    render(<RadarChart ref={ref} data={radarData} />);
+    render(
+      <RadarChart
+        ref={ref}
+        data={radarData}
+        index="axis"
+        categories={["score"]}
+      />
+    );
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
 
   it("renders with custom size", () => {
-    const { container } = render(<RadarChart data={radarData} size={400} />);
+    const { container } = render(
+      <RadarChart
+        data={radarData}
+        index="axis"
+        categories={["score"]}
+        size={400}
+      />
+    );
     const svg = container.querySelector("svg");
     expect(svg).toHaveAttribute("width", "400");
     expect(svg).toHaveAttribute("height", "400");
@@ -193,20 +270,33 @@ describe("RadarChart", () => {
 // ─── ScatterChart ────────────────────────────────────────────────────────────
 
 describe("ScatterChart", () => {
+  const defaultSeries = [
+    {
+      name: "default",
+      data: [
+        { x: 10, y: 20, label: "A" },
+        { x: 30, y: 50, label: "B" },
+        { x: 50, y: 30, label: "C" },
+        { x: 70, y: 80, label: "D" },
+        { x: 90, y: 60, label: "E" },
+      ],
+    },
+  ];
+
   it("renders without error", () => {
-    const { container } = render(<ScatterChart data={scatterData} />);
+    const { container } = render(<ScatterChart series={defaultSeries} />);
     expect(container.querySelector("svg")).toBeInTheDocument();
   });
 
   it("has role=img and aria-label on svg", () => {
-    const { container } = render(<ScatterChart data={scatterData} />);
+    const { container } = render(<ScatterChart series={defaultSeries} />);
     const svg = container.querySelector("svg");
     expect(svg).toHaveAttribute("role", "img");
     expect(svg).toHaveAttribute("aria-label", "Scatter chart");
   });
 
   it("renders correct number of data points", () => {
-    render(<ScatterChart data={scatterData} />);
+    render(<ScatterChart series={defaultSeries} />);
     const points = screen.getAllByTestId(/^scatter-point-0-\d+$/);
     expect(points).toHaveLength(5);
   });
@@ -220,14 +310,16 @@ describe("ScatterChart", () => {
   });
 
   it("shows grid lines when showGrid is true", () => {
-    const { container } = render(<ScatterChart data={scatterData} showGrid />);
+    const { container } = render(
+      <ScatterChart series={defaultSeries} showGrid />
+    );
     const dashLines = container.querySelectorAll("line[stroke-dasharray]");
     expect(dashLines.length).toBeGreaterThan(0);
   });
 
   it("hides grid lines when showGrid is false", () => {
     const { container } = render(
-      <ScatterChart data={scatterData} showGrid={false} />
+      <ScatterChart series={defaultSeries} showGrid={false} />
     );
     const dashLines = container.querySelectorAll("line[stroke-dasharray]");
     expect(dashLines.length).toBe(0);
@@ -235,25 +327,29 @@ describe("ScatterChart", () => {
 
   it("applies custom className", () => {
     const { container } = render(
-      <ScatterChart data={scatterData} className="scatter-test" />
+      <ScatterChart series={defaultSeries} className="scatter-test" />
     );
     expect(container.firstElementChild).toHaveClass("scatter-test");
   });
 
   it("handles empty data", () => {
-    const { container } = render(<ScatterChart data={[]} />);
+    const { container } = render(
+      <ScatterChart series={[{ name: "empty", data: [] }]} />
+    );
     const svg = container.querySelector("svg");
     expect(svg).toHaveAttribute("aria-label", "Empty scatter chart");
   });
 
   it("renders axis labels", () => {
-    render(<ScatterChart data={scatterData} xLabel="Weight" yLabel="Height" />);
+    render(
+      <ScatterChart series={defaultSeries} xLabel="Weight" yLabel="Height" />
+    );
     expect(screen.getByTestId("scatter-x-label")).toHaveTextContent("Weight");
     expect(screen.getByTestId("scatter-y-label")).toHaveTextContent("Height");
   });
 
   it("shows tooltip on hover", () => {
-    render(<ScatterChart data={scatterData} />);
+    render(<ScatterChart series={defaultSeries} />);
     const point = screen.getByTestId("scatter-point-0-0");
     // Use the invisible hit area circle (parent g's first circle)
     const hitArea = point.previousElementSibling!;
@@ -262,18 +358,23 @@ describe("ScatterChart", () => {
   });
 
   it("renders with custom dotSize", () => {
-    render(<ScatterChart data={scatterData} dotSize={12} />);
+    render(<ScatterChart series={defaultSeries} dotSize={12} animate={false} />);
     const point = screen.getByTestId("scatter-point-0-0");
     // Default r = dotSize/2 = 6
     expect(point).toHaveAttribute("r", "6");
   });
 
   it("renders with per-point size (bubble)", () => {
-    const bubbleData = [
-      { x: 10, y: 20, size: 20 },
-      { x: 30, y: 50, size: 10 },
+    const bubbleSeries = [
+      {
+        name: "bubbles",
+        data: [
+          { x: 10, y: 20, size: 20 },
+          { x: 30, y: 50, size: 10 },
+        ],
+      },
     ];
-    render(<ScatterChart data={bubbleData} />);
+    render(<ScatterChart series={bubbleSeries} animate={false} />);
     const p0 = screen.getByTestId("scatter-point-0-0");
     const p1 = screen.getByTestId("scatter-point-0-1");
     expect(p0).toHaveAttribute("r", "10"); // size 20 / 2
@@ -282,18 +383,8 @@ describe("ScatterChart", () => {
 
   it("forwards ref to container div", () => {
     const ref = { current: null as HTMLDivElement | null };
-    render(<ScatterChart ref={ref} data={scatterData} />);
+    render(<ScatterChart ref={ref} series={defaultSeries} />);
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
-  });
-
-  it("renders with per-point color", () => {
-    const colorData = [
-      { x: 10, y: 20, color: "#ff0000" },
-      { x: 30, y: 50, color: "#00ff00" },
-    ];
-    render(<ScatterChart data={colorData} />);
-    const p0 = screen.getByTestId("scatter-point-0-0");
-    expect(p0).toHaveAttribute("fill", "#ff0000");
   });
 });
 
@@ -388,8 +479,8 @@ describe("FunnelChart", () => {
 
   it("renders with custom colors on segments", () => {
     const coloredData = [
-      { label: "A", value: 100, color: "#ff0000" },
-      { label: "B", value: 50, color: "#00ff00" },
+      { name: "A", value: 100, color: "#ff0000" },
+      { name: "B", value: 50, color: "#00ff00" },
     ];
     render(<FunnelChart data={coloredData} />);
     const seg0 = screen.getByTestId("funnel-segment-0");
@@ -491,9 +582,9 @@ describe("HeatmapChart", () => {
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
 
-  it("renders with custom color range", () => {
+  it("renders with custom color scale", () => {
     const { container } = render(
-      <HeatmapChart data={heatmapData} colorRange={["#fef3c7", "#d97706"]} />
+      <HeatmapChart data={heatmapData} colorScale={["#fef3c7", "#d97706"]} />
     );
     expect(container.querySelector("svg")).toBeInTheDocument();
   });

@@ -2,69 +2,46 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BarChart } from "./bar-chart";
 import { LineChart } from "./line-chart";
 import { AreaChart } from "./area-chart";
-import { DonutChart } from "./donut-chart";
+import { PieChart } from "./pie-chart";
 
 // ─── Sample Data ─────────────────────────────────────────────────────────────
 
-const monthlySales = [
-  { label: "Jan", value: 4200 },
-  { label: "Feb", value: 3800 },
-  { label: "Mar", value: 5100 },
-  { label: "Apr", value: 4600 },
-  { label: "May", value: 5800 },
-  { label: "Jun", value: 6200 },
-  { label: "Jul", value: 5400 },
-  { label: "Aug", value: 4900 },
+const monthlySalesData = [
+  { month: "Jan", Sales: 4200 },
+  { month: "Feb", Sales: 3800 },
+  { month: "Mar", Sales: 5100 },
+  { month: "Apr", Sales: 4600 },
+  { month: "May", Sales: 5800 },
+  { month: "Jun", Sales: 6200 },
+  { month: "Jul", Sales: 5400 },
+  { month: "Aug", Sales: 4900 },
+];
+
+const multiSeriesData = [
+  { month: "Jan", Revenue: 4200, Expenses: 3200 },
+  { month: "Feb", Revenue: 3800, Expenses: 2900 },
+  { month: "Mar", Revenue: 5100, Expenses: 3500 },
+  { month: "Apr", Revenue: 4600, Expenses: 3100 },
+  { month: "May", Revenue: 5800, Expenses: 3800 },
+  { month: "Jun", Revenue: 6200, Expenses: 4000 },
 ];
 
 const browserShare = [
-  { label: "Chrome", value: 65, color: "#4285F4" },
-  { label: "Safari", value: 19, color: "#5AC8FA" },
-  { label: "Firefox", value: 8, color: "#FF7139" },
-  { label: "Edge", value: 5, color: "#0078D7" },
-  { label: "Other", value: 3, color: "#9ca3af" },
+  { name: "Chrome", value: 65, color: "#4285F4" },
+  { name: "Safari", value: 19, color: "#5AC8FA" },
+  { name: "Firefox", value: 8, color: "#FF7139" },
+  { name: "Edge", value: 5, color: "#0078D7" },
+  { name: "Other", value: 3, color: "#9ca3af" },
 ];
 
-const trafficSeries = [
-  {
-    name: "Organic",
-    color: "#6366f1",
-    data: [
-      { label: "Mon", value: 120 },
-      { label: "Tue", value: 180 },
-      { label: "Wed", value: 150 },
-      { label: "Thu", value: 210 },
-      { label: "Fri", value: 190 },
-      { label: "Sat", value: 80 },
-      { label: "Sun", value: 60 },
-    ],
-  },
-  {
-    name: "Direct",
-    color: "#10b981",
-    data: [
-      { label: "Mon", value: 80 },
-      { label: "Tue", value: 90 },
-      { label: "Wed", value: 110 },
-      { label: "Thu", value: 100 },
-      { label: "Fri", value: 120 },
-      { label: "Sat", value: 50 },
-      { label: "Sun", value: 40 },
-    ],
-  },
-  {
-    name: "Referral",
-    color: "#f59e0b",
-    data: [
-      { label: "Mon", value: 30 },
-      { label: "Tue", value: 50 },
-      { label: "Wed", value: 40 },
-      { label: "Thu", value: 60 },
-      { label: "Fri", value: 45 },
-      { label: "Sat", value: 20 },
-      { label: "Sun", value: 15 },
-    ],
-  },
+const trafficData = [
+  { day: "Mon", Organic: 120, Direct: 80, Referral: 30 },
+  { day: "Tue", Organic: 180, Direct: 90, Referral: 50 },
+  { day: "Wed", Organic: 150, Direct: 110, Referral: 40 },
+  { day: "Thu", Organic: 210, Direct: 100, Referral: 60 },
+  { day: "Fri", Organic: 190, Direct: 120, Referral: 45 },
+  { day: "Sat", Organic: 80, Direct: 50, Referral: 20 },
+  { day: "Sun", Organic: 60, Direct: 40, Referral: 15 },
 ];
 
 // ─── Meta ────────────────────────────────────────────────────────────────────
@@ -75,11 +52,9 @@ const meta = {
   tags: ["autodocs"],
   argTypes: {
     showGrid: { control: "boolean" },
-    showValues: { control: "boolean" },
+    showLegend: { control: "boolean" },
     animate: { control: "boolean" },
-    orientation: { control: "select", options: ["vertical", "horizontal"] },
     height: { control: { type: "range", min: 200, max: 600, step: 50 } },
-    color: { control: "color" },
   },
 } satisfies Meta<typeof BarChart>;
 
@@ -91,37 +66,45 @@ type Story = StoryObj<typeof meta>;
 export const BarDefault: Story = {
   name: "Bar - Default",
   args: {
-    data: monthlySales,
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
     showGrid: true,
-    showValues: false,
     animate: true,
   },
 };
 
-export const BarWithValues: Story = {
-  name: "Bar - With Values",
+export const BarMultiSeries: Story = {
+  name: "Bar - Multi-Series",
   args: {
-    data: monthlySales,
-    showValues: true,
-    animate: false,
+    data: multiSeriesData,
+    index: "month",
+    categories: ["Revenue", "Expenses"],
+    colors: ["indigo", "emerald"],
+    showLegend: true,
+  },
+};
+
+export const BarStacked: Story = {
+  name: "Bar - Stacked",
+  args: {
+    data: multiSeriesData,
+    index: "month",
+    categories: ["Revenue", "Expenses"],
+    colors: ["indigo", "emerald"],
+    type: "stacked",
+    showLegend: true,
   },
 };
 
 export const BarHorizontal: Story = {
   name: "Bar - Horizontal",
   args: {
-    data: monthlySales.slice(0, 5),
-    orientation: "horizontal",
-    showValues: true,
-  },
-};
-
-export const BarCustomColors: Story = {
-  name: "Bar - Custom Colors",
-  args: {
-    data: browserShare,
-    showValues: true,
-    animate: false,
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+    layout: "horizontal",
+    showDataLabels: true,
   },
 };
 
@@ -129,43 +112,59 @@ export const BarCustomColors: Story = {
 
 export const LineDefault: Story = {
   name: "Line - Default",
-  args: { data: monthlySales },
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+  },
   render: (args) => (
     <LineChart
-      data={args.data}
+      data={monthlySalesData}
+      index="month"
+      categories={["Sales"]}
       showGrid={args.showGrid}
-      showDots
       height={args.height}
-      color={args.color}
+    />
+  ),
+};
+
+export const LineMultiSeries: Story = {
+  name: "Line - Multi-Series",
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+  },
+  render: (args) => (
+    <LineChart
+      data={multiSeriesData}
+      index="month"
+      categories={["Revenue", "Expenses"]}
+      colors={["indigo", "emerald"]}
+      curveType="monotone"
+      showLegend
+      showGrid={args.showGrid}
+      height={args.height}
     />
   ),
 };
 
 export const LineSmooth: Story = {
   name: "Line - Smooth",
-  args: { data: monthlySales },
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+  },
   render: (args) => (
     <LineChart
-      data={args.data}
-      smooth
-      showDots
-      color="#10b981"
+      data={monthlySalesData}
+      index="month"
+      categories={["Sales"]}
+      curveType="monotone"
+      colors={["emerald"]}
       strokeWidth={3}
-      height={args.height}
-    />
-  ),
-};
-
-export const LineWithArea: Story = {
-  name: "Line - With Area Fill",
-  args: { data: monthlySales },
-  render: (args) => (
-    <LineChart
-      data={args.data}
-      showArea
-      smooth
-      showDots
-      color="#8b5cf6"
+      showGrid={args.showGrid}
       height={args.height}
     />
   ),
@@ -173,14 +172,21 @@ export const LineWithArea: Story = {
 
 export const LineNoDots: Story = {
   name: "Line - No Dots",
-  args: { data: monthlySales },
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+  },
   render: (args) => (
     <LineChart
-      data={args.data}
+      data={monthlySalesData}
+      index="month"
+      categories={["Sales"]}
       showDots={false}
-      smooth
-      color="#ef4444"
+      curveType="monotone"
+      colors={["red"]}
       strokeWidth={3}
+      showGrid={args.showGrid}
       height={args.height}
     />
   ),
@@ -190,23 +196,39 @@ export const LineNoDots: Story = {
 
 export const AreaDefault: Story = {
   name: "Area - Default",
-  args: { data: monthlySales },
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+  },
   render: (args) => (
     <AreaChart
-      data={args.data}
-      gradient
+      data={monthlySalesData}
+      index="month"
+      categories={["Sales"]}
+      fill="gradient"
+      showGrid={args.showGrid}
       height={args.height}
     />
   ),
 };
 
 export const AreaMultiSeries: Story = {
-  name: "Area - Multi Series",
-  args: { data: monthlySales },
+  name: "Area - Multi-Series",
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+  },
   render: (args) => (
     <AreaChart
-      series={trafficSeries}
-      gradient
+      data={trafficData}
+      index="day"
+      categories={["Organic", "Direct", "Referral"]}
+      colors={["indigo", "emerald", "amber"]}
+      fill="gradient"
+      showLegend
+      showGrid={args.showGrid}
       height={args.height}
     />
   ),
@@ -214,12 +236,21 @@ export const AreaMultiSeries: Story = {
 
 export const AreaStacked: Story = {
   name: "Area - Stacked",
-  args: { data: monthlySales },
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+  },
   render: (args) => (
     <AreaChart
-      series={trafficSeries}
-      stacked
-      gradient
+      data={trafficData}
+      index="day"
+      categories={["Organic", "Direct", "Referral"]}
+      colors={["indigo", "emerald", "amber"]}
+      type="stacked"
+      fill="gradient"
+      showLegend
+      showGrid={args.showGrid}
       height={args.height}
     />
   ),
@@ -227,34 +258,48 @@ export const AreaStacked: Story = {
 
 export const AreaSolid: Story = {
   name: "Area - Solid Fill",
-  args: { data: monthlySales },
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+  },
   render: (args) => (
     <AreaChart
-      data={args.data}
-      gradient={false}
-      color="#f59e0b"
+      data={monthlySalesData}
+      index="month"
+      categories={["Sales"]}
+      fill="solid"
+      colors={["amber"]}
+      showGrid={args.showGrid}
       height={args.height}
     />
   ),
 };
 
-// ─── DonutChart Stories ─────────────────────────────────────────────────────
+// ─── PieChart Stories ─────────────────────────────────────────────────────────
 
 export const DonutDefault: Story = {
   name: "Donut - Default",
-  args: { data: browserShare },
-  render: () => (
-    <DonutChart data={browserShare} />
-  ),
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+  },
+  render: () => <PieChart data={browserShare} variant="donut" />,
 };
 
 export const DonutWithCenter: Story = {
   name: "Donut - Center Label",
-  args: { data: browserShare },
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+  },
   render: () => (
-    <DonutChart
+    <PieChart
       data={browserShare}
-      centerLabel={
+      variant="donut"
+      label={
         <div className="text-center">
           <div className="text-2xl font-bold text-gray-900">65%</div>
           <div className="text-xs text-gray-500">Chrome</div>
@@ -266,28 +311,29 @@ export const DonutWithCenter: Story = {
 
 export const DonutWithLegend: Story = {
   name: "Donut - With Legend",
-  args: { data: browserShare },
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+  },
   render: () => (
-    <DonutChart
-      data={browserShare}
-      showLegend
-      showLabels
-    />
+    <PieChart data={browserShare} variant="donut" showLegend showLabel />
   ),
 };
 
-export const DonutLarge: Story = {
-  name: "Donut - Large",
-  args: { data: browserShare },
+export const PieDefault: Story = {
+  name: "Pie - Default",
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+  },
   render: () => (
-    <DonutChart
+    <PieChart
       data={browserShare}
-      size={300}
-      thickness={50}
+      variant="pie"
       showLegend
-      centerLabel={
-        <span className="text-lg font-semibold text-gray-700">Browsers</span>
-      }
+      showLabel
     />
   ),
 };
@@ -296,27 +342,65 @@ export const DonutLarge: Story = {
 
 export const Gallery: Story = {
   name: "Gallery - All Charts",
-  args: { data: monthlySales },
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+  },
   render: () => (
     <div className="grid grid-cols-2 gap-8 p-4">
       <div>
-        <h3 className="text-sm font-semibold mb-2 text-gray-700">Bar Chart</h3>
-        <BarChart data={monthlySales} showValues height={250} />
+        <h3 className="text-sm font-semibold mb-2 text-gray-700">
+          Bar Chart (Multi-Series)
+        </h3>
+        <BarChart
+          data={multiSeriesData}
+          index="month"
+          categories={["Revenue", "Expenses"]}
+          colors={["indigo", "emerald"]}
+          showLegend
+          showDataLabels
+          height={250}
+        />
       </div>
       <div>
-        <h3 className="text-sm font-semibold mb-2 text-gray-700">Line Chart</h3>
-        <LineChart data={monthlySales} smooth showDots showArea color="#10b981" height={250} />
+        <h3 className="text-sm font-semibold mb-2 text-gray-700">
+          Line Chart (Smooth)
+        </h3>
+        <LineChart
+          data={multiSeriesData}
+          index="month"
+          categories={["Revenue", "Expenses"]}
+          colors={["indigo", "emerald"]}
+          curveType="monotone"
+          showLegend
+          height={250}
+        />
       </div>
       <div>
-        <h3 className="text-sm font-semibold mb-2 text-gray-700">Area Chart (Stacked)</h3>
-        <AreaChart series={trafficSeries} stacked gradient height={250} />
+        <h3 className="text-sm font-semibold mb-2 text-gray-700">
+          Area Chart (Stacked)
+        </h3>
+        <AreaChart
+          data={trafficData}
+          index="day"
+          categories={["Organic", "Direct", "Referral"]}
+          colors={["indigo", "emerald", "amber"]}
+          type="stacked"
+          fill="gradient"
+          showLegend
+          height={250}
+        />
       </div>
       <div className="flex flex-col items-center">
-        <h3 className="text-sm font-semibold mb-2 text-gray-700">Donut Chart</h3>
-        <DonutChart
+        <h3 className="text-sm font-semibold mb-2 text-gray-700">
+          Pie Chart (Donut)
+        </h3>
+        <PieChart
           data={browserShare}
+          variant="donut"
           showLegend
-          centerLabel={
+          label={
             <span className="text-lg font-bold text-gray-800">100%</span>
           }
         />

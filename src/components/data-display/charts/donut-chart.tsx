@@ -8,17 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { cn } from "../../../lib/utils";
-
-const DEFAULT_COLORS = [
-  "#6366f1",
-  "#f59e0b",
-  "#10b981",
-  "#ef4444",
-  "#8b5cf6",
-  "#ec4899",
-  "#14b8a6",
-  "#f97316",
-];
+import { DEFAULT_CHART_COLORS as DEFAULT_COLORS } from "./chart-utils";
 
 type DonutChartDataPoint = {
   label: string;

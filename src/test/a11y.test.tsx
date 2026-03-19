@@ -43,7 +43,7 @@ import { SplitButton } from "../components/forms/split-button";
 import { BarChart } from "../components/data-display/charts/bar-chart";
 import { LineChart } from "../components/data-display/charts/line-chart";
 import { AreaChart } from "../components/data-display/charts/area-chart";
-import { DonutChart } from "../components/data-display/charts/donut-chart";
+import { PieChart } from "../components/data-display/charts/pie-chart";
 import { Result } from "../components/feedback/result";
 import { NavigationProgress } from "../components/feedback/navigation-progress";
 import { Tour } from "../components/feedback/tour";
@@ -720,45 +720,45 @@ describe("Accessibility (axe)", () => {
 
   it("BarChart (vertical)", async () => {
     const { container } = render(
-      <BarChart data={[{ label: "Jan", value: 100 }, { label: "Feb", value: 200 }]} animate={false} />,
+      <BarChart data={[{ month: "Jan", value: 100 }, { month: "Feb", value: 200 }]} index="month" categories={["value"]} animate={false} />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it("BarChart (horizontal)", async () => {
     const { container } = render(
-      <BarChart data={[{ label: "Jan", value: 100 }, { label: "Feb", value: 200 }]} orientation="horizontal" animate={false} />,
+      <BarChart data={[{ month: "Jan", value: 100 }, { month: "Feb", value: 200 }]} index="month" categories={["value"]} layout="horizontal" animate={false} />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it("BarChart (empty)", async () => {
-    const { container } = render(<BarChart data={[]} />);
+    const { container } = render(<BarChart data={[]} index="month" categories={["value"]} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it("LineChart (default)", async () => {
     const { container } = render(
-      <LineChart data={[{ label: "Jan", value: 100 }, { label: "Feb", value: 200 }]} />,
+      <LineChart data={[{ month: "Jan", value: 100 }, { month: "Feb", value: 200 }]} index="month" categories={["value"]} />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("LineChart (with area)", async () => {
+  it("LineChart (with smooth curve)", async () => {
     const { container } = render(
-      <LineChart data={[{ label: "Jan", value: 100 }, { label: "Feb", value: 200 }]} showArea smooth />,
+      <LineChart data={[{ month: "Jan", value: 100 }, { month: "Feb", value: 200 }]} index="month" categories={["value"]} curveType="monotone" />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it("LineChart (empty)", async () => {
-    const { container } = render(<LineChart data={[]} />);
+    const { container } = render(<LineChart data={[]} index="month" categories={["value"]} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it("AreaChart (single series)", async () => {
     const { container } = render(
-      <AreaChart data={[{ label: "Jan", value: 100 }, { label: "Feb", value: 200 }]} />,
+      <AreaChart data={[{ month: "Jan", value: 100 }, { month: "Feb", value: 200 }]} index="month" categories={["value"]} />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -766,51 +766,51 @@ describe("Accessibility (axe)", () => {
   it("AreaChart (multi series)", async () => {
     const { container } = render(
       <AreaChart
-        series={[
-          { data: [{ label: "Jan", value: 100 }], name: "A", color: "#6366f1" },
-          { data: [{ label: "Jan", value: 80 }], name: "B", color: "#10b981" },
-        ]}
+        data={[{ month: "Jan", A: 100, B: 80 }]}
+        index="month"
+        categories={["A", "B"]}
+        colors={["#6366f1", "#10b981"]}
       />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it("AreaChart (empty)", async () => {
-    const { container } = render(<AreaChart data={[]} />);
+    const { container } = render(<AreaChart data={[]} index="month" categories={["value"]} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("DonutChart (default)", async () => {
-    const donutData = [
-      { label: "React", value: 45, color: "#6366f1" },
-      { label: "Vue", value: 25, color: "#10b981" },
+  it("PieChart (default)", async () => {
+    const pieData = [
+      { name: "React", value: 45, color: "#6366f1" },
+      { name: "Vue", value: 25, color: "#10b981" },
     ];
-    const { container } = render(<DonutChart data={donutData} animate={false} />);
+    const { container } = render(<PieChart data={pieData} animate={false} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("DonutChart (with legend)", async () => {
-    const donutData = [
-      { label: "React", value: 45, color: "#6366f1" },
-      { label: "Vue", value: 25, color: "#10b981" },
+  it("PieChart (with legend)", async () => {
+    const pieData = [
+      { name: "React", value: 45, color: "#6366f1" },
+      { name: "Vue", value: 25, color: "#10b981" },
     ];
-    const { container } = render(<DonutChart data={donutData} showLegend animate={false} />);
+    const { container } = render(<PieChart data={pieData} showLegend animate={false} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("DonutChart (with center label)", async () => {
-    const donutData = [
-      { label: "React", value: 45, color: "#6366f1" },
-      { label: "Vue", value: 25, color: "#10b981" },
+  it("PieChart (with center label)", async () => {
+    const pieData = [
+      { name: "React", value: 45, color: "#6366f1" },
+      { name: "Vue", value: 25, color: "#10b981" },
     ];
     const { container } = render(
-      <DonutChart data={donutData} centerLabel={<span>Total</span>} animate={false} />,
+      <PieChart data={pieData} label={<span>Total</span>} animate={false} />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("DonutChart (empty)", async () => {
-    const { container } = render(<DonutChart data={[]} />);
+  it("PieChart (empty)", async () => {
+    const { container } = render(<PieChart data={[]} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
@@ -963,35 +963,35 @@ describe("Accessibility (axe)", () => {
 
   it("RadarChart (default)", async () => {
     const data = [
-      { label: "Design", value: 80, max: 100 },
-      { label: "Frontend", value: 90, max: 100 },
-      { label: "Backend", value: 70, max: 100 },
+      { axis: "Design", score: 80 },
+      { axis: "Frontend", score: 90 },
+      { axis: "Backend", score: 70 },
     ];
-    const { container } = render(<RadarChart data={data} />);
+    const { container } = render(<RadarChart data={data} index="axis" categories={["score"]} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it("RadarChart (empty)", async () => {
-    const { container } = render(<RadarChart data={[]} />);
+    const { container } = render(<RadarChart data={[]} index="axis" categories={["score"]} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it("ScatterChart (default)", async () => {
-    const data = [{ x: 10, y: 20 }, { x: 30, y: 50 }];
-    const { container } = render(<ScatterChart data={data} />);
+    const series = [{ name: "default", data: [{ x: 10, y: 20 }, { x: 30, y: 50 }] }];
+    const { container } = render(<ScatterChart series={series} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it("ScatterChart (empty)", async () => {
-    const { container } = render(<ScatterChart data={[]} />);
+    const { container } = render(<ScatterChart series={[{ name: "empty", data: [] }]} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 
   it("FunnelChart (default)", async () => {
     const data = [
-      { label: "Leads", value: 1000 },
-      { label: "Qualified", value: 600 },
-      { label: "Proposal", value: 400 },
+      { name: "Leads", value: 1000 },
+      { name: "Qualified", value: 600 },
+      { name: "Proposal", value: 400 },
     ];
     const { container } = render(<FunnelChart data={data} />);
     expect(await axe(container)).toHaveNoViolations();

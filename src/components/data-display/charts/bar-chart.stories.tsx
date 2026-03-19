@@ -1,22 +1,34 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BarChart } from "./bar-chart";
 
-const monthlySales = [
-  { label: "Jan", value: 4200 },
-  { label: "Feb", value: 3800 },
-  { label: "Mar", value: 5100 },
-  { label: "Apr", value: 4600 },
-  { label: "May", value: 5800 },
-  { label: "Jun", value: 6200 },
+// ─── Sample Data ─────────────────────────────────────────────────────────────
+
+const monthlySalesData = [
+  { month: "Jan", Sales: 4200 },
+  { month: "Feb", Sales: 3800 },
+  { month: "Mar", Sales: 5100 },
+  { month: "Apr", Sales: 4600 },
+  { month: "May", Sales: 5800 },
+  { month: "Jun", Sales: 6200 },
 ];
 
-const browserShare = [
-  { label: "Chrome", value: 65, color: "#4285F4" },
-  { label: "Safari", value: 19, color: "#5AC8FA" },
-  { label: "Firefox", value: 8, color: "#FF7139" },
-  { label: "Edge", value: 5, color: "#0078D7" },
-  { label: "Other", value: 3, color: "#9ca3af" },
+const multiSeriesData = [
+  { month: "Jan", Revenue: 4200, Expenses: 3200, Profit: 1000 },
+  { month: "Feb", Revenue: 3800, Expenses: 2900, Profit: 900 },
+  { month: "Mar", Revenue: 5100, Expenses: 3500, Profit: 1600 },
+  { month: "Apr", Revenue: 4600, Expenses: 3100, Profit: 1500 },
+  { month: "May", Revenue: 5800, Expenses: 3800, Profit: 2000 },
+  { month: "Jun", Revenue: 6200, Expenses: 4000, Profit: 2200 },
 ];
+
+const quarterlyData = [
+  { quarter: "Q1", North: 120, South: 90, East: 70, West: 80 },
+  { quarter: "Q2", North: 180, South: 110, East: 95, West: 100 },
+  { quarter: "Q3", North: 150, South: 130, East: 110, West: 120 },
+  { quarter: "Q4", North: 210, South: 150, East: 125, West: 140 },
+];
+
+// ─── Meta ────────────────────────────────────────────────────────────────────
 
 const meta = {
   title: "Data Display/Charts/BarChart",
@@ -24,91 +36,173 @@ const meta = {
   tags: ["autodocs"],
   argTypes: {
     height: { control: { type: "range", min: 200, max: 600, step: 50 } },
+    type: { control: "select", options: ["default", "stacked", "percent"] },
+    layout: { control: "select", options: ["vertical", "horizontal"] },
     showGrid: { control: "boolean" },
-    showValues: { control: "boolean" },
+    showLegend: { control: "boolean" },
+    showDataLabels: { control: "boolean" },
+    showXAxis: { control: "boolean" },
+    showYAxis: { control: "boolean" },
     animate: { control: "boolean" },
-    orientation: { control: "select", options: ["vertical", "horizontal"] },
-    color: { control: "color" },
   },
 } satisfies Meta<typeof BarChart>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// ─── Stories ─────────────────────────────────────────────────────────────────
+
 export const Default: Story = {
   args: {
-    data: monthlySales,
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
   },
 };
 
-export const WithValues: Story = {
+export const MultiSeries: Story = {
   args: {
-    data: monthlySales,
-    showValues: true,
-    animate: false,
+    data: multiSeriesData,
+    index: "month",
+    categories: ["Revenue", "Expenses", "Profit"],
+    colors: ["indigo", "emerald", "amber"],
+    showLegend: true,
+  },
+};
+
+export const Stacked: Story = {
+  args: {
+    data: quarterlyData,
+    index: "quarter",
+    categories: ["North", "South", "East", "West"],
+    type: "stacked",
+    showLegend: true,
+    colors: ["indigo", "emerald", "amber", "rose"],
+  },
+};
+
+export const Percent: Story = {
+  args: {
+    data: quarterlyData,
+    index: "quarter",
+    categories: ["North", "South", "East", "West"],
+    type: "percent",
+    showLegend: true,
+    colors: ["indigo", "emerald", "amber", "rose"],
   },
 };
 
 export const Horizontal: Story = {
   args: {
-    data: monthlySales,
-    orientation: "horizontal",
-    showValues: true,
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+    layout: "horizontal",
+  },
+};
+
+export const WithDataLabels: Story = {
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+    showDataLabels: true,
+    animate: false,
+  },
+};
+
+export const WithValueFormatter: Story = {
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+    valueFormatter: (v: number) => `$${(v / 1000).toFixed(1)}K`,
+    showLegend: true,
+  },
+};
+
+export const WithReferenceLines: Story = {
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+    referenceLines: [
+      { y: 5000, label: "Target", color: "#ef4444" },
+    ],
+  },
+};
+
+export const WithAxisLabels: Story = {
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+    xAxisLabel: "Month",
+    yAxisLabel: "Revenue ($)",
   },
 };
 
 export const CustomColors: Story = {
   args: {
-    data: browserShare,
-    showValues: true,
-    animate: false,
+    data: multiSeriesData,
+    index: "month",
+    categories: ["Revenue", "Expenses", "Profit"],
+    colors: ["#4285F4", "#FF7139", "#10b981"],
+    showLegend: true,
   },
 };
 
 export const NoGrid: Story = {
   args: {
-    data: monthlySales,
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
     showGrid: false,
   },
 };
 
 export const NoAnimation: Story = {
   args: {
-    data: monthlySales,
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
     animate: false,
-    showValues: true,
-  },
-};
-
-export const CustomDefaultColor: Story = {
-  args: {
-    data: [
-      { label: "Q1", value: 120 },
-      { label: "Q2", value: 180 },
-      { label: "Q3", value: 150 },
-      { label: "Q4", value: 210 },
-    ],
-    color: "#10b981",
-    showValues: true,
+    showDataLabels: true,
   },
 };
 
 export const ManyBars: Story = {
   args: {
     data: [
-      { label: "Jan", value: 30 },
-      { label: "Feb", value: 45 },
-      { label: "Mar", value: 60 },
-      { label: "Apr", value: 38 },
-      { label: "May", value: 72 },
-      { label: "Jun", value: 55 },
-      { label: "Jul", value: 88 },
-      { label: "Aug", value: 64 },
-      { label: "Sep", value: 42 },
-      { label: "Oct", value: 76 },
-      { label: "Nov", value: 50 },
-      { label: "Dec", value: 90 },
+      { month: "Jan", Sales: 30 },
+      { month: "Feb", Sales: 45 },
+      { month: "Mar", Sales: 60 },
+      { month: "Apr", Sales: 38 },
+      { month: "May", Sales: 72 },
+      { month: "Jun", Sales: 55 },
+      { month: "Jul", Sales: 88 },
+      { month: "Aug", Sales: 64 },
+      { month: "Sep", Sales: 42 },
+      { month: "Oct", Sales: 76 },
+      { month: "Nov", Sales: 50 },
+      { month: "Dec", Sales: 90 },
     ],
+    index: "month",
+    categories: ["Sales"],
     height: 350,
+  },
+};
+
+export const StackedHorizontal: Story = {
+  name: "Stacked + Horizontal",
+  args: {
+    data: quarterlyData,
+    index: "quarter",
+    categories: ["North", "South", "East", "West"],
+    type: "stacked",
+    layout: "horizontal",
+    showLegend: true,
+    colors: ["indigo", "emerald", "amber", "rose"],
+    height: 300,
   },
 };

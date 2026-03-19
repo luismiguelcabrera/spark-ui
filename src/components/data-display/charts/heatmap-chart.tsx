@@ -1,7 +1,10 @@
 "use client";
 
-import { forwardRef, useState, useMemo, type HTMLAttributes } from "react";
+import { forwardRef, useState, useMemo, useCallback, useId, type HTMLAttributes } from "react";
 import { cn } from "../../../lib/utils";
+import type { ChartEventProps, TooltipProps } from "./chart-types";
+import { ChartTooltip } from "./chart-tooltip";
+import { formatValue } from "./chart-utils";
 
 type HeatmapDataPoint = {
   x: string;
@@ -18,18 +21,59 @@ type HeatmapChartProps = Omit<HTMLAttributes<HTMLDivElement>, "color"> & {
   yLabels?: string[];
   /** Chart height in pixels */
   height?: number;
-  /** Color range [min color, max color] */
-  colorRange?: [string, string];
+  /** Color scale: [min, max] or diverging [min, mid, max] */
+  colorScale?: [string, string] | [string, string, string];
   /** Show values in cells */
   showValues?: boolean;
   /** Show color legend bar */
   showLegend?: boolean;
+  /** Show tooltip on hover */
+  showTooltip?: boolean;
+  /** Custom value formatter */
+  valueFormatter?: (value: number) => string;
+  /** Custom tooltip component */
+  customTooltip?: React.ComponentType<TooltipProps>;
+  /** Click handler */
+  onValueChange?: (value: ChartEventProps | null) => void;
+  /** Accessible label for the chart */
+  ariaLabel?: string;
   /** Additional CSS classes */
   className?: string;
 };
 
+const SVG_WIDTH = 500;
 const PADDING = { top: 10, right: 20, bottom: 40, left: 70 };
 const LEGEND_HEIGHT = 30;
+
+/** Parse a hex color into [r, g, b] */
+function parseHex(hex: string): [number, number, number] {
+  const h = hex.startsWith("#") ? hex.slice(1) : hex;
+  return [
+    parseInt(h.slice(0, 2), 16),
+    parseInt(h.slice(2, 4), 16),
+    parseInt(h.slice(4, 6), 16),
+  ];
+}
+
+/** Linearly interpolate between two colors */
+function lerpColor(
+  c1: [number, number, number],
+  c2: [number, number, number],
+  t: number
+): string {
+  const r = Math.round(c1[0] + (c2[0] - c1[0]) * t);
+  const g = Math.round(c1[1] + (c2[1] - c1[1]) * t);
+  const b = Math.round(c1[2] + (c2[2] - c1[2]) * t);
+  return `rgb(${r},${g},${b})`;
+}
+
+/** Get relative luminance for contrast-based text color */
+function getLuminance(r: number, g: number, b: number): number {
+  const [rs, gs, bs] = [r / 255, g / 255, b / 255].map((c) =>
+    c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
+  );
+  return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+}
 
 const HeatmapChart = forwardRef<HTMLDivElement, HeatmapChartProps>(
   (
@@ -38,15 +82,23 @@ const HeatmapChart = forwardRef<HTMLDivElement, HeatmapChartProps>(
       xLabels: xLabelsProp,
       yLabels: yLabelsProp,
       height = 300,
-      colorRange = ["#eff6ff", "#1d4ed8"],
+      colorScale = ["#eff6ff", "#1d4ed8"],
       showValues = false,
       showLegend = false,
+      showTooltip = true,
+      valueFormatter,
+      customTooltip,
+      onValueChange,
+      ariaLabel,
       className,
       ...props
     },
     ref
   ) => {
-    const [hoveredCell, setHoveredCell] = useState<{ x: string; y: string } | null>(null);
+    const [hoveredCell, setHoveredCell] = useState<{ x: string; y: string; xi: number; yi: number } | null>(null);
+    const gradientId = `heatmap-legend-${useId().replace(/:/g, "")}`;
+
+    const fmt = valueFormatter || formatValue;
 
     // Auto-derive labels from data if not provided
     const xLabels = useMemo(() => {
@@ -70,6 +122,24 @@ const HeatmapChart = forwardRef<HTMLDivElement, HeatmapChartProps>(
       return map;
     }, [data]);
 
+    // Parse color scale stops
+    const colorStops = useMemo(() => colorScale.map(parseHex), [colorScale]);
+    const isDiverging = colorScale.length === 3;
+
+    const handleClick = useCallback(
+      (xLabel: string, yLabel: string, value: number) => {
+        if (!onValueChange) return;
+        onValueChange({
+          eventType: "cell",
+          categoryClicked: `${xLabel} / ${yLabel}`,
+          x: xLabel,
+          y: yLabel,
+          value,
+        });
+      },
+      [onValueChange]
+    );
+
     if (!data || data.length === 0) {
       return (
         <div
@@ -80,13 +150,13 @@ const HeatmapChart = forwardRef<HTMLDivElement, HeatmapChartProps>(
         >
           <svg
             role="img"
-            aria-label="Empty heatmap chart"
+            aria-label={ariaLabel || "Empty heatmap chart"}
             width="100%"
             height={height}
-            viewBox={`0 0 500 ${height}`}
+            viewBox={`0 0 ${SVG_WIDTH} ${height}`}
             preserveAspectRatio="xMidYMid meet"
           >
-            <text x="250" y={height / 2} textAnchor="middle" fill="currentColor" fontSize="14">
+            <text x={SVG_WIDTH / 2} y={height / 2} textAnchor="middle" fill="currentColor" fontSize="14">
               No data available
             </text>
           </svg>
@@ -99,43 +169,64 @@ const HeatmapChart = forwardRef<HTMLDivElement, HeatmapChartProps>(
     const maxValue = Math.max(...values);
     const valueRange = maxValue - minValue || 1;
 
-    const svgWidth = 500;
+    /** Interpolate color for a normalized value [0, 1] */
+    function interpolateColor(normalized: number): string {
+      if (isDiverging) {
+        // 3-stop: [min, mid, max]
+        if (normalized <= 0.5) {
+          return lerpColor(colorStops[0] as [number, number, number], colorStops[1] as [number, number, number], normalized * 2);
+        }
+        return lerpColor(colorStops[1] as [number, number, number], colorStops[2] as [number, number, number], (normalized - 0.5) * 2);
+      }
+      // 2-stop: [min, max]
+      return lerpColor(colorStops[0] as [number, number, number], colorStops[1] as [number, number, number], normalized);
+    }
+
+    /** Get text color for contrast */
+    function getTextColor(normalized: number): string {
+      const hex = interpolateColor(normalized);
+      // Parse rgb() format
+      const match = hex.match(/rgb\((\d+),(\d+),(\d+)\)/);
+      if (!match) return "#374151";
+      const lum = getLuminance(+match[1], +match[2], +match[3]);
+      return lum > 0.4 ? "#1f2937" : "#ffffff";
+    }
+
     const totalHeight = showLegend ? height + LEGEND_HEIGHT + 10 : height;
-    const chartWidth = svgWidth - PADDING.left - PADDING.right;
+    const chartWidth = SVG_WIDTH - PADDING.left - PADDING.right;
     const chartHeight = height - PADDING.top - PADDING.bottom;
 
     const cellWidth = xLabels.length > 0 ? chartWidth / xLabels.length : 0;
     const cellHeight = yLabels.length > 0 ? chartHeight / yLabels.length : 0;
     const cellGap = 1;
 
-    function interpolateColor(normalized: number): string {
-      const r1 = parseInt(colorRange[0].slice(1, 3), 16);
-      const g1 = parseInt(colorRange[0].slice(3, 5), 16);
-      const b1 = parseInt(colorRange[0].slice(5, 7), 16);
-      const r2 = parseInt(colorRange[1].slice(1, 3), 16);
-      const g2 = parseInt(colorRange[1].slice(3, 5), 16);
-      const b2 = parseInt(colorRange[1].slice(5, 7), 16);
+    // Build tooltip payload
+    const tooltipPayload =
+      hoveredCell !== null
+        ? [
+            {
+              name: `${hoveredCell.x} / ${hoveredCell.y}`,
+              value: valueMap.get(`${hoveredCell.x}|${hoveredCell.y}`) ?? 0,
+              color: interpolateColor(
+                ((valueMap.get(`${hoveredCell.x}|${hoveredCell.y}`) ?? minValue) - minValue) / valueRange
+              ),
+            },
+          ]
+        : [];
 
-      const r = Math.round(r1 + (r2 - r1) * normalized);
-      const g = Math.round(g1 + (g2 - g1) * normalized);
-      const b = Math.round(b1 + (b2 - b1) * normalized);
-
-      return `rgb(${r},${g},${b})`;
-    }
-
-    // Determine text color (dark text on light bg, white text on dark bg)
-    function getTextColor(normalized: number): string {
-      return normalized > 0.5 ? "#fff" : "#374151";
-    }
+    const tooltipX =
+      hoveredCell !== null ? PADDING.left + hoveredCell.xi * cellWidth + cellWidth : 0;
+    const tooltipY =
+      hoveredCell !== null ? PADDING.top + hoveredCell.yi * cellHeight + cellHeight / 2 : 0;
 
     return (
       <div ref={ref} className={cn("w-full", className)} {...props}>
         <svg
           role="img"
-          aria-label="Heatmap chart"
+          aria-label={ariaLabel || "Heatmap chart"}
           width="100%"
           height={totalHeight}
-          viewBox={`0 0 ${svgWidth} ${totalHeight}`}
+          viewBox={`0 0 ${SVG_WIDTH} ${totalHeight}`}
           preserveAspectRatio="xMidYMid meet"
         >
           {/* Y-axis labels */}
@@ -194,8 +285,12 @@ const HeatmapChart = forwardRef<HTMLDivElement, HeatmapChartProps>(
                     stroke={isHovered ? "#374151" : "none"}
                     strokeWidth={isHovered ? 1.5 : 0}
                     style={{ transition: "opacity 0.2s" }}
-                    onMouseEnter={() => setHoveredCell({ x: xLabel, y: yLabel })}
+                    onMouseEnter={() =>
+                      setHoveredCell({ x: xLabel, y: yLabel, xi, yi })
+                    }
                     onMouseLeave={() => setHoveredCell(null)}
+                    onClick={() => handleClick(xLabel, yLabel, value)}
+                    className={onValueChange ? "cursor-pointer" : undefined}
                   />
 
                   {/* Value text inside cell */}
@@ -207,33 +302,10 @@ const HeatmapChart = forwardRef<HTMLDivElement, HeatmapChartProps>(
                       fill={getTextColor(normalized)}
                       fontSize={Math.min(10, h * 0.4)}
                       fontWeight="500"
+                      style={{ pointerEvents: "none" }}
                     >
-                      {formatValue(value)}
+                      {fmt(value)}
                     </text>
-                  )}
-
-                  {/* Hover tooltip */}
-                  {isHovered && (
-                    <g>
-                      <rect
-                        x={x + w / 2 - 35}
-                        y={y - 28}
-                        width={70}
-                        height={22}
-                        rx={4}
-                        fill="#1f2937"
-                      />
-                      <text
-                        x={x + w / 2}
-                        y={y - 13}
-                        textAnchor="middle"
-                        fill="#fff"
-                        fontSize="10"
-                        fontWeight="500"
-                      >
-                        {formatValue(value)}
-                      </text>
-                    </g>
                   )}
                 </g>
               );
@@ -244,9 +316,10 @@ const HeatmapChart = forwardRef<HTMLDivElement, HeatmapChartProps>(
           {showLegend && (
             <g>
               <defs>
-                <linearGradient id="heatmap-legend-gradient" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor={colorRange[0]} />
-                  <stop offset="100%" stopColor={colorRange[1]} />
+                <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor={colorScale[0]} />
+                  {isDiverging && <stop offset="50%" stopColor={colorScale[1]} />}
+                  <stop offset="100%" stopColor={colorScale[colorScale.length - 1]} />
                 </linearGradient>
               </defs>
               <rect
@@ -256,17 +329,22 @@ const HeatmapChart = forwardRef<HTMLDivElement, HeatmapChartProps>(
                 width={chartWidth}
                 height={12}
                 rx={2}
-                fill="url(#heatmap-legend-gradient)"
+                fill={`url(#${gradientId})`}
               />
-              <text
-                x={PADDING.left}
-                y={height + 30}
-                textAnchor="start"
-                fill="#9ca3af"
-                fontSize="10"
-              >
-                {formatValue(minValue)}
+              <text x={PADDING.left} y={height + 30} textAnchor="start" fill="#9ca3af" fontSize="10">
+                {fmt(minValue)}
               </text>
+              {isDiverging && (
+                <text
+                  x={PADDING.left + chartWidth / 2}
+                  y={height + 30}
+                  textAnchor="middle"
+                  fill="#9ca3af"
+                  fontSize="10"
+                >
+                  {fmt((minValue + maxValue) / 2)}
+                </text>
+              )}
               <text
                 x={PADDING.left + chartWidth}
                 y={height + 30}
@@ -274,9 +352,23 @@ const HeatmapChart = forwardRef<HTMLDivElement, HeatmapChartProps>(
                 fill="#9ca3af"
                 fontSize="10"
               >
-                {formatValue(maxValue)}
+                {fmt(maxValue)}
               </text>
             </g>
+          )}
+
+          {/* Tooltip */}
+          {showTooltip && hoveredCell !== null && (
+            <ChartTooltip
+              active
+              payload={tooltipPayload}
+              label={`${hoveredCell.x} / ${hoveredCell.y}`}
+              x={tooltipX}
+              y={tooltipY}
+              viewBoxWidth={SVG_WIDTH}
+              valueFormatter={valueFormatter}
+              customTooltip={customTooltip}
+            />
           )}
         </svg>
       </div>
@@ -284,13 +376,6 @@ const HeatmapChart = forwardRef<HTMLDivElement, HeatmapChartProps>(
   }
 );
 HeatmapChart.displayName = "HeatmapChart";
-
-function formatValue(value: number): string {
-  if (Math.abs(value) >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
-  if (Math.abs(value) >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
-  if (Number.isInteger(value)) return String(value);
-  return value.toFixed(1);
-}
 
 export { HeatmapChart };
 export type { HeatmapChartProps, HeatmapDataPoint };

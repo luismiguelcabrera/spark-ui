@@ -1,71 +1,200 @@
 "use client";
 
-import { forwardRef, useState, type HTMLAttributes } from "react";
+import {
+  forwardRef,
+  useState,
+  useEffect,
+  useCallback,
+  useId,
+  useMemo,
+  type HTMLAttributes,
+} from "react";
 import { cn } from "../../../lib/utils";
+import type {
+  ChartColor,
+  TooltipProps,
+  ChartEventProps,
+  ReferenceLine,
+  CurveType,
+} from "./chart-types";
+import { resolveColors } from "./chart-colors";
+import {
+  CHART_PADDING as PADDING,
+  getNiceMax,
+  getGridLines,
+  formatValue,
+  getPathForCurve,
+  prefersReducedMotion,
+} from "./chart-utils";
+import { ChartTooltip } from "./chart-tooltip";
+import { ChartLegend } from "./chart-legend";
 
-type LineChartDataPoint = {
-  label: string;
-  value: number;
-};
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
-type LineChartProps = Omit<HTMLAttributes<HTMLDivElement>, "color"> & {
-  /** Array of data points */
-  data: LineChartDataPoint[];
-  /** Chart height in pixels */
+type LineChartProps = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "onAnimationEnd"
+> & {
+  /** Array of data objects */
+  data: Record<string, unknown>[];
+  /** Key used for the categorical (x) axis */
+  index: string;
+  /** Keys whose values are plotted as lines */
+  categories: string[];
+  /** Named or hex colors per category */
+  colors?: ChartColor[];
+  /** Chart height in viewBox units (default 300) */
   height?: number;
-  /** Show grid lines */
-  showGrid?: boolean;
-  /** Show data point dots */
+  /** Path interpolation type (default "linear") */
+  curveType?: CurveType;
+  /** Connect through null/undefined values (default false) */
+  connectNulls?: boolean;
+  /** Show data point dots (default true) */
   showDots?: boolean;
-  /** Fill area under the line */
-  showArea?: boolean;
-  /** Use smooth bezier curves instead of straight lines */
-  smooth?: boolean;
-  /** Line color (CSS color string) */
-  color?: string;
-  /** Line stroke width */
+  /** Line stroke width (default 2) */
   strokeWidth?: number;
+  /** Show grid lines (default true) */
+  showGrid?: boolean;
+  /** Show x-axis (default true) */
+  showXAxis?: boolean;
+  /** Show y-axis (default true) */
+  showYAxis?: boolean;
+  /** Show legend below chart (default false) */
+  showLegend?: boolean;
+  /** Show tooltip on hover (default true) */
+  showTooltip?: boolean;
+  /** Custom value formatter */
+  valueFormatter?: (value: number) => string;
+  /** Custom tooltip component */
+  customTooltip?: React.ComponentType<TooltipProps>;
+  /** Click handler for data points */
+  onValueChange?: (value: ChartEventProps | null) => void;
+  /** Horizontal / vertical reference lines */
+  referenceLines?: ReferenceLine[];
+  /** Animate line draw on mount (default true) */
+  animate?: boolean;
+  /** Label below x-axis */
+  xAxisLabel?: string;
+  /** Label beside y-axis */
+  yAxisLabel?: string;
+  /** Accessible label for the SVG */
+  ariaLabel?: string;
   /** Additional CSS classes */
   className?: string;
 };
 
-const PADDING = { top: 20, right: 20, bottom: 40, left: 50 };
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+const VIEW_BOX_W = 500;
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+type Point = { x: number; y: number };
+
+function truncateLabel(label: string, max = 8): string {
+  const s = String(label ?? "");
+  return s.length > max ? `${s.slice(0, max - 1)}\u2026` : s;
+}
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 const LineChart = forwardRef<HTMLDivElement, LineChartProps>(
   (
     {
       data,
+      index,
+      categories,
+      colors,
       height = 300,
-      showGrid = true,
+      curveType = "linear",
+      connectNulls = false,
       showDots = true,
-      showArea = false,
-      smooth = false,
-      color = "#6366f1",
       strokeWidth = 2,
+      showGrid = true,
+      showXAxis = true,
+      showYAxis = true,
+      showLegend = false,
+      showTooltip = true,
+      valueFormatter,
+      customTooltip,
+      onValueChange,
+      referenceLines,
+      animate = true,
+      xAxisLabel,
+      yAxisLabel,
+      ariaLabel,
       className,
       ...props
     },
     ref
   ) => {
-    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+    const uid = useId();
 
+    // ---- State ----
+    const [mounted, setMounted] = useState(!animate);
+    const [hiddenSeries, setHiddenSeries] = useState<Set<string>>(new Set());
+    const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+
+    // ---- Mount animation ----
+    useEffect(() => {
+      if (animate && !prefersReducedMotion()) {
+        const timer = setTimeout(() => setMounted(true), 50);
+        return () => clearTimeout(timer);
+      }
+      setMounted(true);
+    }, [animate]);
+
+    // ---- Legend toggle ----
+    const handleLegendToggle = useCallback((name: string) => {
+      setHiddenSeries((prev) => {
+        const next = new Set(prev);
+        if (next.has(name)) next.delete(name);
+        else next.add(name);
+        return next;
+      });
+    }, []);
+
+    // ---- Derived ----
+    const resolvedColors = resolveColors(colors, categories.length);
+    const visibleCategories = categories.filter((c) => !hiddenSeries.has(c));
+    const fmt = valueFormatter ?? formatValue;
+    const noMotion = prefersReducedMotion();
+
+    // ---- Empty state ----
     if (!data || data.length === 0) {
       return (
         <div
           ref={ref}
-          className={cn("w-full flex items-center justify-center text-gray-500", className)}
+          className={cn(
+            "w-full flex items-center justify-center text-gray-500",
+            className
+          )}
           style={{ height }}
           {...props}
         >
           <svg
             role="img"
-            aria-label="Empty line chart"
+            aria-label={ariaLabel ?? "Empty line chart"}
             width="100%"
             height={height}
-            viewBox={`0 0 500 ${height}`}
+            viewBox={`0 0 ${VIEW_BOX_W} ${height}`}
             preserveAspectRatio="xMidYMid meet"
           >
-            <text x="250" y={height / 2} textAnchor="middle" fill="currentColor" fontSize="14">
+            <text
+              x={VIEW_BOX_W / 2}
+              y={height / 2}
+              textAnchor="middle"
+              fill="currentColor"
+              fontSize="14"
+            >
               No data available
             </text>
           </svg>
@@ -73,248 +202,440 @@ const LineChart = forwardRef<HTMLDivElement, LineChartProps>(
       );
     }
 
-    const maxValue = Math.max(...data.map((d) => d.value), 1);
-    const niceMax = getNiceMax(maxValue);
+    // ---- Layout ----
+    const chartWidth = VIEW_BOX_W - PADDING.left - PADDING.right;
+    const chartHeight = height - PADDING.top - PADDING.bottom;
+    const baseline = PADDING.top + chartHeight;
+
+    // ---- Compute per-category values ----
+    const labels = data.map((d) => String(d[index] ?? ""));
+
+    // Max value across visible series (ignoring nulls)
+    const maxVal = useMemo(() => {
+      let m = 0;
+      for (const d of data) {
+        for (const cat of visibleCategories) {
+          const v = d[cat];
+          if (v != null && typeof v === "number" && v > m) m = v;
+        }
+      }
+      return Math.max(m, 1);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data, visibleCategories.join(",")]);
+
+    const niceMax = getNiceMax(maxVal);
     const gridLines = getGridLines(niceMax);
 
-    const chartWidth = 500 - PADDING.left - PADDING.right;
-    const chartHeight = height - PADDING.top - PADDING.bottom;
+    // X positions per data point
+    const xPositions = data.map(
+      (_, i) =>
+        PADDING.left + (i / Math.max(data.length - 1, 1)) * chartWidth
+    );
 
-    // Calculate data point positions
-    const points = data.map((d, i) => ({
-      x: PADDING.left + (i / Math.max(data.length - 1, 1)) * chartWidth,
-      y: PADDING.top + chartHeight - (d.value / niceMax) * chartHeight,
-      value: d.value,
-      label: d.label,
+    // ---- Build paths and points per visible category ----
+    type SeriesData = {
+      cat: string;
+      colorIdx: number;
+      color: string;
+      path: string;
+      points: (Point & { value: number | null; dataIdx: number })[];
+    };
+
+    const seriesData: SeriesData[] = visibleCategories.map((cat) => {
+      const colorIdx = categories.indexOf(cat);
+      const color = resolvedColors[colorIdx];
+
+      // Build all points, handling nulls
+      const allPoints: (Point & { value: number | null; dataIdx: number })[] =
+        data.map((d, i) => {
+          const raw = d[cat];
+          const isNull = raw == null || typeof raw !== "number";
+          const val = isNull ? null : (raw as number);
+          return {
+            x: xPositions[i],
+            y: val != null ? PADDING.top + chartHeight - (val / niceMax) * chartHeight : baseline,
+            value: val,
+            dataIdx: i,
+          };
+        });
+
+      // Build path segments
+      let path = "";
+      if (connectNulls) {
+        // Filter out null points, draw one continuous path
+        const validPts = allPoints.filter((p) => p.value != null);
+        path = getPathForCurve(
+          curveType,
+          validPts.map((p) => ({ x: p.x, y: p.y }))
+        );
+      } else {
+        // Split into segments at nulls
+        const segments: Point[][] = [];
+        let current: Point[] = [];
+        for (const p of allPoints) {
+          if (p.value != null) {
+            current.push({ x: p.x, y: p.y });
+          } else {
+            if (current.length > 0) {
+              segments.push(current);
+              current = [];
+            }
+          }
+        }
+        if (current.length > 0) segments.push(current);
+
+        path = segments
+          .map((seg) => getPathForCurve(curveType, seg))
+          .join(" ");
+      }
+
+      return { cat, colorIdx, color, path, points: allPoints };
+    });
+
+    // ---- Reference lines ----
+    function renderReferenceLines() {
+      if (!referenceLines || referenceLines.length === 0) return null;
+      return referenceLines.map((rl, ri) => {
+        if (rl.y != null) {
+          const yPos =
+            PADDING.top + chartHeight - (rl.y / niceMax) * chartHeight;
+          return (
+            <g key={`ref-${ri}`}>
+              <line
+                x1={PADDING.left}
+                y1={yPos}
+                x2={VIEW_BOX_W - PADDING.right}
+                y2={yPos}
+                stroke={rl.color ?? "#ef4444"}
+                strokeDasharray={rl.strokeDasharray ?? "6 3"}
+                strokeWidth={1.5}
+              />
+              {rl.label && (
+                <text
+                  x={VIEW_BOX_W - PADDING.right + 4}
+                  y={yPos + 4}
+                  fill={rl.color ?? "#ef4444"}
+                  fontSize="10"
+                  fontWeight="500"
+                >
+                  {rl.label}
+                </text>
+              )}
+            </g>
+          );
+        }
+        if (rl.x != null) {
+          const gIdx = labels.indexOf(String(rl.x));
+          if (gIdx === -1) return null;
+          const xPos = xPositions[gIdx];
+          return (
+            <g key={`ref-${ri}`}>
+              <line
+                x1={xPos}
+                y1={PADDING.top}
+                x2={xPos}
+                y2={baseline}
+                stroke={rl.color ?? "#ef4444"}
+                strokeDasharray={rl.strokeDasharray ?? "6 3"}
+                strokeWidth={1.5}
+              />
+              {rl.label && (
+                <text
+                  x={xPos}
+                  y={PADDING.top - 6}
+                  textAnchor="middle"
+                  fill={rl.color ?? "#ef4444"}
+                  fontSize="10"
+                  fontWeight="500"
+                >
+                  {rl.label}
+                </text>
+              )}
+            </g>
+          );
+        }
+        return null;
+      });
+    }
+
+    // ---- Tooltip payload for a given data index ----
+    function getTooltipPayload(dataIdx: number) {
+      return visibleCategories
+        .map((cat) => {
+          const colorIdx = categories.indexOf(cat);
+          const raw = data[dataIdx][cat];
+          const val = typeof raw === "number" ? raw : 0;
+          return {
+            name: cat,
+            value: val,
+            color: resolvedColors[colorIdx],
+          };
+        })
+        .filter((e) => data[dataIdx][e.name] != null);
+    }
+
+    // ---- Click handler ----
+    function handlePointClick(dataIdx: number, cat: string) {
+      if (!onValueChange) return;
+      onValueChange({
+        eventType: "dot",
+        categoryClicked: cat,
+        ...data[dataIdx],
+      });
+    }
+
+    // ---- Animation: stroke-dashoffset technique ----
+    // We estimate a generous path length for the animation
+    const estimatedPathLength = chartWidth + chartHeight;
+
+    // Legend entries
+    const legendEntries = categories.map((cat, i) => ({
+      name: cat,
+      color: resolvedColors[i],
     }));
 
-    const linePath = smooth ? getSmoothPath(points) : getStraightPath(points);
-    const areaPath = smooth
-      ? getSmoothAreaPath(points, PADDING.top + chartHeight)
-      : getStraightAreaPath(points, PADDING.top + chartHeight);
-
+    // ---- Render ----
     return (
       <div ref={ref} className={cn("w-full", className)} {...props}>
         <svg
           role="img"
-          aria-label="Line chart"
+          aria-label={ariaLabel ?? "Line chart"}
           width="100%"
           height={height}
-          viewBox={`0 0 500 ${height}`}
+          viewBox={`0 0 ${VIEW_BOX_W} ${height}`}
           preserveAspectRatio="xMidYMid meet"
         >
-          <defs>
-            <linearGradient id="line-area-gradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity="0.3" />
-              <stop offset="100%" stopColor={color} stopOpacity="0.02" />
-            </linearGradient>
-          </defs>
-
-          {/* Grid */}
+          {/* ---- Grid ---- */}
           {showGrid &&
             gridLines.map((val, i) => {
-              const y = PADDING.top + chartHeight - (val / niceMax) * chartHeight;
+              const y =
+                PADDING.top + chartHeight - (val / niceMax) * chartHeight;
               return (
-                <g key={`grid-${i}`}>
-                  <line
-                    x1={PADDING.left}
-                    y1={y}
-                    x2={500 - PADDING.right}
-                    y2={y}
-                    stroke="#e5e7eb"
-                    strokeDasharray="4,4"
-                  />
+                <line
+                  key={`grid-${i}`}
+                  x1={PADDING.left}
+                  y1={y}
+                  x2={VIEW_BOX_W - PADDING.right}
+                  y2={y}
+                  stroke="#e5e7eb"
+                  strokeDasharray="4 4"
+                />
+              );
+            })}
+
+          {/* ---- Y axis ---- */}
+          {showYAxis && (
+            <>
+              <line
+                x1={PADDING.left}
+                y1={PADDING.top}
+                x2={PADDING.left}
+                y2={baseline}
+                stroke="#d1d5db"
+              />
+              {gridLines.map((val, i) => {
+                const y =
+                  PADDING.top + chartHeight - (val / niceMax) * chartHeight;
+                return (
                   <text
+                    key={`ylabel-${i}`}
                     x={PADDING.left - 8}
                     y={y + 4}
                     textAnchor="end"
                     fill="#9ca3af"
                     fontSize="11"
                   >
-                    {formatValue(val)}
+                    {fmt(val)}
                   </text>
-                </g>
-              );
-            })}
+                );
+              })}
+              {yAxisLabel && (
+                <text
+                  x={12}
+                  y={PADDING.top + chartHeight / 2}
+                  textAnchor="middle"
+                  fill="#6b7280"
+                  fontSize="11"
+                  transform={`rotate(-90, 12, ${PADDING.top + chartHeight / 2})`}
+                >
+                  {yAxisLabel}
+                </text>
+              )}
+            </>
+          )}
 
-          {/* Y axis */}
-          <line
-            x1={PADDING.left}
-            y1={PADDING.top}
-            x2={PADDING.left}
-            y2={PADDING.top + chartHeight}
-            stroke="#d1d5db"
-          />
+          {/* ---- X axis ---- */}
+          {showXAxis && (
+            <>
+              <line
+                x1={PADDING.left}
+                y1={baseline}
+                x2={VIEW_BOX_W - PADDING.right}
+                y2={baseline}
+                stroke="#d1d5db"
+              />
+              {labels.map((lbl, i) => (
+                <text
+                  key={`xlabel-${i}`}
+                  x={xPositions[i]}
+                  y={baseline + 16}
+                  textAnchor="middle"
+                  fill="#6b7280"
+                  fontSize="11"
+                >
+                  {truncateLabel(lbl)}
+                </text>
+              ))}
+              {xAxisLabel && (
+                <text
+                  x={PADDING.left + chartWidth / 2}
+                  y={baseline + 32}
+                  textAnchor="middle"
+                  fill="#6b7280"
+                  fontSize="11"
+                >
+                  {xAxisLabel}
+                </text>
+              )}
+            </>
+          )}
 
-          {/* X axis */}
-          <line
-            x1={PADDING.left}
-            y1={PADDING.top + chartHeight}
-            x2={500 - PADDING.right}
-            y2={PADDING.top + chartHeight}
-            stroke="#d1d5db"
-          />
+          {/* ---- Reference lines ---- */}
+          {renderReferenceLines()}
 
-          {/* X-axis labels */}
-          {points.map((p, i) => (
-            <text
-              key={`label-${i}`}
-              x={p.x}
-              y={PADDING.top + chartHeight + 16}
-              textAnchor="middle"
-              fill="#6b7280"
-              fontSize="11"
-            >
-              {data[i].label.length > 8 ? `${data[i].label.slice(0, 7)}...` : data[i].label}
-            </text>
+          {/* ---- Lines ---- */}
+          {seriesData.map((s) => (
+            <path
+              key={`line-${s.cat}`}
+              data-testid={`line-${s.cat}`}
+              d={s.path}
+              fill="none"
+              stroke={s.color}
+              strokeWidth={strokeWidth}
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              style={
+                !noMotion && animate
+                  ? {
+                      strokeDasharray: estimatedPathLength,
+                      strokeDashoffset: mounted ? 0 : estimatedPathLength,
+                      transition: "stroke-dashoffset 1s ease-out",
+                    }
+                  : undefined
+              }
+            />
           ))}
 
-          {/* Area fill */}
-          {showArea && (
-            <path
-              d={areaPath}
-              fill="url(#line-area-gradient)"
-              data-testid="line-area"
+          {/* ---- Crosshair on hover ---- */}
+          {hoveredIdx != null && showTooltip && (
+            <line
+              x1={xPositions[hoveredIdx]}
+              y1={PADDING.top}
+              x2={xPositions[hoveredIdx]}
+              y2={baseline}
+              stroke="#9ca3af"
+              strokeWidth={1}
+              strokeDasharray="4 3"
+              style={{ pointerEvents: "none" }}
             />
           )}
 
-          {/* Line */}
-          <path
-            d={linePath}
-            fill="none"
-            stroke={color}
-            strokeWidth={strokeWidth}
-            strokeLinejoin="round"
-            strokeLinecap="round"
-            data-testid="line-path"
-          />
-
-          {/* Data points */}
-          {showDots &&
-            points.map((p, i) => {
-              const isHovered = hoveredIndex === i;
+          {/* ---- Data point dots ---- */}
+          {seriesData.map((s) =>
+            s.points.map((p) => {
+              if (p.value == null) return null;
+              const isHoveredCol = hoveredIdx === p.dataIdx;
               return (
-                <g key={`dot-${i}`}>
-                  {/* Invisible larger hit area */}
+                <g key={`dot-${s.cat}-${p.dataIdx}`}>
+                  {/* Larger invisible hit area */}
                   <circle
                     cx={p.x}
                     cy={p.y}
                     r={12}
                     fill="transparent"
-                    onMouseEnter={() => setHoveredIndex(i)}
-                    onMouseLeave={() => setHoveredIndex(null)}
+                    style={{ cursor: onValueChange ? "pointer" : undefined }}
+                    onMouseEnter={() => setHoveredIdx(p.dataIdx)}
+                    onMouseLeave={() => setHoveredIdx(null)}
+                    onClick={() => handlePointClick(p.dataIdx, s.cat)}
                   />
-                  <circle
-                    data-testid={`dot-${i}`}
-                    cx={p.x}
-                    cy={p.y}
-                    r={isHovered ? 5 : 3.5}
-                    fill={isHovered ? color : "#fff"}
-                    stroke={color}
-                    strokeWidth={2}
-                    style={{ transition: "r 0.15s ease" }}
-                  />
-                  {/* Tooltip on hover */}
-                  {isHovered && (
-                    <g>
-                      <rect
-                        x={p.x - 30}
-                        y={p.y - 32}
-                        width={60}
-                        height={22}
-                        rx={4}
-                        fill="#1f2937"
-                      />
-                      <text
-                        x={p.x}
-                        y={p.y - 17}
-                        textAnchor="middle"
-                        fill="#fff"
-                        fontSize="11"
-                        fontWeight="500"
-                      >
-                        {formatValue(p.value)}
-                      </text>
-                    </g>
+                  {showDots && (
+                    <circle
+                      data-testid={`dot-${s.cat}-${p.dataIdx}`}
+                      cx={p.x}
+                      cy={p.y}
+                      r={isHoveredCol ? 5 : 3.5}
+                      fill={isHoveredCol ? s.color : "#fff"}
+                      stroke={s.color}
+                      strokeWidth={2}
+                      style={{
+                        transition: noMotion ? undefined : "r 0.15s ease",
+                        pointerEvents: "none",
+                      }}
+                    />
                   )}
                 </g>
               );
+            })
+          )}
+
+          {/* ---- Invisible hover columns for axis tooltip ---- */}
+          {showTooltip &&
+            data.map((_, i) => {
+              const colWidth =
+                data.length > 1
+                  ? chartWidth / (data.length - 1)
+                  : chartWidth;
+              const x =
+                data.length > 1
+                  ? xPositions[i] - colWidth / 2
+                  : PADDING.left;
+              return (
+                <rect
+                  key={`hover-col-${i}`}
+                  x={Math.max(PADDING.left, x)}
+                  y={PADDING.top}
+                  width={Math.min(
+                    colWidth,
+                    VIEW_BOX_W - PADDING.right - Math.max(PADDING.left, x)
+                  )}
+                  height={chartHeight}
+                  fill="transparent"
+                  onMouseEnter={() => setHoveredIdx(i)}
+                  onMouseLeave={() => setHoveredIdx(null)}
+                  style={{ pointerEvents: "all" }}
+                />
+              );
             })}
+
+          {/* ---- Tooltip ---- */}
+          {showTooltip && hoveredIdx != null && (
+            <ChartTooltip
+              active
+              payload={getTooltipPayload(hoveredIdx)}
+              label={labels[hoveredIdx]}
+              x={xPositions[hoveredIdx]}
+              y={PADDING.top + chartHeight / 3}
+              viewBoxWidth={VIEW_BOX_W}
+              valueFormatter={valueFormatter}
+              customTooltip={customTooltip}
+            />
+          )}
         </svg>
+
+        {/* ---- Legend ---- */}
+        {showLegend && (
+          <ChartLegend
+            entries={legendEntries}
+            onToggle={handleLegendToggle}
+            hiddenSeries={hiddenSeries}
+          />
+        )}
       </div>
     );
   }
 );
+
 LineChart.displayName = "LineChart";
 
-function getNiceMax(max: number): number {
-  const magnitude = Math.pow(10, Math.floor(Math.log10(max)));
-  const normalized = max / magnitude;
-  if (normalized <= 1) return magnitude;
-  if (normalized <= 2) return 2 * magnitude;
-  if (normalized <= 5) return 5 * magnitude;
-  return 10 * magnitude;
-}
-
-function getGridLines(max: number, count = 5): number[] {
-  const step = max / count;
-  return Array.from({ length: count + 1 }, (_, i) => i * step);
-}
-
-function getStraightPath(points: { x: number; y: number }[]): string {
-  if (points.length === 0) return "";
-  return points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
-}
-
-function getSmoothPath(points: { x: number; y: number }[]): string {
-  if (points.length < 2) return points.length === 1 ? `M ${points[0].x} ${points[0].y}` : "";
-
-  let path = `M ${points[0].x} ${points[0].y}`;
-
-  for (let i = 0; i < points.length - 1; i++) {
-    const p0 = points[Math.max(0, i - 1)];
-    const p1 = points[i];
-    const p2 = points[i + 1];
-    const p3 = points[Math.min(points.length - 1, i + 2)];
-
-    const cp1x = p1.x + (p2.x - p0.x) / 6;
-    const cp1y = p1.y + (p2.y - p0.y) / 6;
-    const cp2x = p2.x - (p3.x - p1.x) / 6;
-    const cp2y = p2.y - (p3.y - p1.y) / 6;
-
-    path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
-  }
-
-  return path;
-}
-
-function getStraightAreaPath(
-  points: { x: number; y: number }[],
-  baseline: number
-): string {
-  if (points.length === 0) return "";
-  const linePath = getStraightPath(points);
-  const last = points[points.length - 1];
-  const first = points[0];
-  return `${linePath} L ${last.x} ${baseline} L ${first.x} ${baseline} Z`;
-}
-
-function getSmoothAreaPath(
-  points: { x: number; y: number }[],
-  baseline: number
-): string {
-  if (points.length === 0) return "";
-  const linePath = getSmoothPath(points);
-  const last = points[points.length - 1];
-  const first = points[0];
-  return `${linePath} L ${last.x} ${baseline} L ${first.x} ${baseline} Z`;
-}
-
-function formatValue(value: number): string {
-  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
-  if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
-  return String(Math.round(value));
-}
-
 export { LineChart };
-export type { LineChartProps, LineChartDataPoint };
+export type { LineChartProps };

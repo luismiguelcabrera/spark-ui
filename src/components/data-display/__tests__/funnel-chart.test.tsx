@@ -3,9 +3,9 @@ import { describe, it, expect } from "vitest";
 import { FunnelChart } from "../charts/funnel-chart";
 
 const sampleData = [
-  { label: "Visitors", value: 1000 },
-  { label: "Leads", value: 600 },
-  { label: "Customers", value: 200 },
+  { name: "Visitors", value: 1000 },
+  { name: "Leads", value: 600 },
+  { name: "Customers", value: 200 },
 ];
 
 describe("FunnelChart", () => {

@@ -1,102 +1,140 @@
 "use client";
 
-import { forwardRef, useState, type HTMLAttributes } from "react";
+import {
+  forwardRef,
+  useState,
+  useEffect,
+  useId,
+  type HTMLAttributes,
+} from "react";
 import { cn } from "../../../lib/utils";
+import type { ChartColor, ChartEventProps, TooltipProps } from "./chart-types";
+import { resolveColors } from "./chart-colors";
+import { ChartTooltip } from "./chart-tooltip";
+import { ChartLegend } from "./chart-legend";
+import { prefersReducedMotion } from "./chart-utils";
 
-const DEFAULT_COLORS = [
-  "#6366f1",
-  "#f59e0b",
-  "#10b981",
-  "#ef4444",
-  "#8b5cf6",
-  "#ec4899",
-  "#14b8a6",
-  "#f97316",
-];
+/* -------------------------------------------------------------------------- */
+/*                                   Types                                    */
+/* -------------------------------------------------------------------------- */
 
-type RadarChartDataPoint = {
-  label: string;
-  value: number;
-  max?: number;
-};
-
-type RadarChartSeries = {
-  data: { label: string; value: number }[];
-  color?: string;
-  name?: string;
-};
-
-type RadarChartProps = Omit<HTMLAttributes<HTMLDivElement>, "color"> & {
-  /** Single-series data */
-  data?: RadarChartDataPoint[];
-  /** Multi-series data */
-  series?: RadarChartSeries[];
-  /** Chart size in pixels */
+type RadarChartProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
+  /** Array of data records — each record is one axis */
+  data: Record<string, unknown>[];
+  /** Key within each data record for the axis label */
+  index: string;
+  /** Numeric keys to plot as series */
+  categories: string[];
+  /** Named or hex colors for each category */
+  colors?: ChartColor[];
+  /** Overall SVG size in pixels */
   size?: number;
-  /** Show concentric grid lines */
+  /** Show concentric grid polygons */
   showGrid?: boolean;
   /** Show axis labels */
   showLabels?: boolean;
-  /** Show data point dots */
+  /** Show data-point dots */
   showDots?: boolean;
-  /** Fill opacity 0-1 */
+  /** Fill opacity for polygons (0–1) */
   fillOpacity?: number;
-  /** Default color for single-series */
-  color?: string;
+  /** Show a legend */
+  showLegend?: boolean;
+  /** Legend placement */
+  legendPosition?: "top" | "bottom" | "left" | "right";
+  /** Show tooltip on hover */
+  showTooltip?: boolean;
+  /** Format values in tooltip */
+  valueFormatter?: (value: number) => string;
+  /** Custom tooltip component */
+  customTooltip?: React.ComponentType<TooltipProps>;
+  /** Callback when a series is clicked */
+  onValueChange?: (value: ChartEventProps | null) => void;
+  /** Animate on mount */
+  animate?: boolean;
+  /** Accessible label for the SVG */
+  ariaLabel?: string;
   /** Additional CSS classes */
   className?: string;
 };
+
+/* -------------------------------------------------------------------------- */
+/*                                 Component                                  */
+/* -------------------------------------------------------------------------- */
 
 const RadarChart = forwardRef<HTMLDivElement, RadarChartProps>(
   (
     {
       data,
-      series,
+      index,
+      categories,
+      colors,
       size = 300,
       showGrid = true,
       showLabels = true,
       showDots = true,
       fillOpacity = 0.2,
-      color = "#6366f1",
+      showLegend = false,
+      legendPosition = "bottom",
+      showTooltip = true,
+      valueFormatter,
+      customTooltip,
+      onValueChange,
+      animate = true,
+      ariaLabel,
       className,
       ...props
     },
     ref
   ) => {
+    const instanceId = useId();
+    const shouldAnimate = animate && !prefersReducedMotion();
+    const [mounted, setMounted] = useState(!shouldAnimate);
     const [hoveredSeries, setHoveredSeries] = useState<number | null>(null);
+    const [hoveredAxis, setHoveredAxis] = useState<number | null>(null);
+    const [hiddenSeries, setHiddenSeries] = useState<Set<string>>(new Set());
 
-    // Normalize into multi-series format
-    const allSeries: RadarChartSeries[] = series
-      ? series
-      : data && data.length > 0
-        ? [{ data: data.map((d) => ({ label: d.label, value: d.value })), color, name: "default" }]
-        : [];
+    useEffect(() => {
+      if (shouldAnimate) {
+        const timer = setTimeout(() => setMounted(true), 50);
+        return () => clearTimeout(timer);
+      }
+    }, [shouldAnimate]);
 
-    // Derive max values per axis from data or explicit max
-    const axisLabels =
-      allSeries.length > 0
-        ? allSeries[0].data.map((d) => d.label)
-        : data
-          ? data.map((d) => d.label)
-          : [];
-    const axisCount = axisLabels.length;
+    const resolvedColors = resolveColors(colors, categories.length);
 
-    if (axisCount === 0 || allSeries.length === 0) {
+    /* ----------------------------- empty state ----------------------------- */
+
+    if (
+      !data ||
+      data.length === 0 ||
+      !categories ||
+      categories.length === 0
+    ) {
       return (
         <div
           ref={ref}
-          className={cn("flex items-center justify-center text-gray-500", className)}
+          className={cn(
+            "inline-flex items-center justify-center text-gray-500",
+            className
+          )}
           style={{ width: size, height: size }}
           {...props}
         >
           <svg
             role="img"
-            aria-label="Empty radar chart"
+            aria-label={ariaLabel || "Empty radar chart"}
             width={size}
             height={size}
             viewBox={`0 0 ${size} ${size}`}
           >
-            <text x={size / 2} y={size / 2} textAnchor="middle" fill="currentColor" fontSize="14">
+            <text
+              x={size / 2}
+              y={size / 2}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fill="currentColor"
+              fontSize="14"
+            >
               No data available
             </text>
           </svg>
@@ -104,71 +142,165 @@ const RadarChart = forwardRef<HTMLDivElement, RadarChartProps>(
       );
     }
 
-    // Compute max for each axis
-    const axisMaxValues = axisLabels.map((_, axisIndex) => {
-      let max = 0;
-      for (const s of allSeries) {
-        if (s.data[axisIndex]) {
-          max = Math.max(max, s.data[axisIndex].value);
-        }
-      }
-      // If original data had per-point max, use it
-      if (data && data[axisIndex]?.max !== undefined) {
-        max = data[axisIndex].max!;
-      }
-      return max || 1;
-    });
+    /* ------------------------------ geometry ------------------------------- */
 
-    const _globalMax = Math.max(...axisMaxValues);
+    const axisCount = data.length;
     const cx = size / 2;
     const cy = size / 2;
-    const radius = (size - 80) / 2; // Leave room for labels
+    const radius = (size - 80) / 2; // room for labels
     const gridLevels = 5;
 
-    // Get point on the radar for a given axis index and normalized value (0-1)
-    function getPoint(axisIndex: number, normalizedValue: number): { x: number; y: number } {
-      const angle = (Math.PI * 2 * axisIndex) / axisCount - Math.PI / 2;
+    const axisLabels = data.map((d) => String(d[index] ?? ""));
+
+    // Determine the global max across all visible categories and all axes
+    const visibleCategories = categories.filter(
+      (cat) => !hiddenSeries.has(cat)
+    );
+    let globalMax = 0;
+    for (const record of data) {
+      for (const cat of visibleCategories) {
+        const val = Number(record[cat]) || 0;
+        if (val > globalMax) globalMax = val;
+      }
+    }
+    if (globalMax === 0) globalMax = 1;
+
+    /** Get SVG point for axis index at a given 0–1 normalised value */
+    function getPoint(
+      axisIndex: number,
+      normalized: number
+    ): { x: number; y: number } {
+      const angle =
+        (Math.PI * 2 * axisIndex) / axisCount - Math.PI / 2;
       return {
-        x: cx + Math.cos(angle) * radius * normalizedValue,
-        y: cy + Math.sin(angle) * radius * normalizedValue,
+        x: cx + Math.cos(angle) * radius * normalized,
+        y: cy + Math.sin(angle) * radius * normalized,
       };
     }
 
-    // Build polygon points for a grid level
+    /** Polygon string for a concentric grid ring */
     function getGridPolygon(level: number): string {
-      const normalized = level / gridLevels;
-      return Array.from({ length: axisCount })
-        .map((_, i) => {
+      const n = level / gridLevels;
+      return Array.from({ length: axisCount }, (_, i) => {
+        const p = getPoint(i, n);
+        return `${p.x},${p.y}`;
+      }).join(" ");
+    }
+
+    /** Polygon string for a category series */
+    function getCategoryPolygon(category: string): string {
+      return data
+        .map((record, i) => {
+          const val = Number(record[category]) || 0;
+          const normalized = Math.min(1, Math.max(0, val / globalMax));
           const p = getPoint(i, normalized);
           return `${p.x},${p.y}`;
         })
         .join(" ");
     }
 
-    // Build polygon points for a data series
-    function getSeriesPolygon(s: RadarChartSeries): string {
-      return s.data
-        .map((d, i) => {
-          const normalized = d.value / (axisMaxValues[i] || 1);
-          const clamped = Math.min(1, Math.max(0, normalized));
-          const p = getPoint(i, clamped);
-          return `${p.x},${p.y}`;
-        })
-        .join(" ");
+    /* -------------------- interaction handlers -------------------- */
+
+    function handleSeriesClick(category: string) {
+      onValueChange?.({
+        eventType: "series",
+        categoryClicked: category,
+      });
     }
 
+    function handleLegendToggle(name: string) {
+      setHiddenSeries((prev) => {
+        const next = new Set(prev);
+        if (next.has(name)) {
+          next.delete(name);
+        } else {
+          if (next.size < categories.length - 1) {
+            next.add(name);
+          }
+        }
+        return next;
+      });
+    }
+
+    /* ----------------------- tooltip state ----------------------- */
+
+    const tooltipActive = hoveredSeries !== null && hoveredAxis !== null;
+    const tooltipPayload: { name: string; value: number; color: string }[] = [];
+    let tooltipLabel = "";
+    let tooltipX = 0;
+    let tooltipY = 0;
+
+    if (tooltipActive) {
+      const axisIdx = hoveredAxis!;
+      tooltipLabel = axisLabels[axisIdx];
+
+      // Show all visible categories for the hovered axis
+      for (let ci = 0; ci < categories.length; ci++) {
+        const cat = categories[ci];
+        if (hiddenSeries.has(cat)) continue;
+        const val = Number(data[axisIdx][cat]) || 0;
+        tooltipPayload.push({
+          name: cat,
+          value: val,
+          color: resolvedColors[ci],
+        });
+      }
+
+      // Position tooltip near the hovered dot
+      const hoveredCat = categories[hoveredSeries!];
+      const hoveredVal = Number(data[axisIdx][hoveredCat]) || 0;
+      const norm = Math.min(1, Math.max(0, hoveredVal / globalMax));
+      const pt = getPoint(axisIdx, norm);
+      tooltipX = pt.x;
+      tooltipY = pt.y;
+    }
+
+    /* ----------------------------- layout ------------------------------ */
+
+    const isVerticalLegend =
+      legendPosition === "left" || legendPosition === "right";
+    const wrapperClass = cn(
+      "inline-flex items-center gap-3",
+      isVerticalLegend
+        ? legendPosition === "left"
+          ? "flex-row-reverse"
+          : "flex-row"
+        : legendPosition === "top"
+          ? "flex-col-reverse"
+          : "flex-col",
+      className
+    );
+
+    const animId = instanceId.replace(/:/g, "");
+
+    /* ----------------------------- render ------------------------------ */
+
     return (
-      <div ref={ref} className={cn("inline-block", className)} {...props}>
+      <div ref={ref} className={wrapperClass} {...props}>
         <svg
           role="img"
-          aria-label="Radar chart"
+          aria-label={ariaLabel || "Radar chart"}
           width={size}
           height={size}
           viewBox={`0 0 ${size} ${size}`}
         >
+          {/* Animation keyframes */}
+          {shouldAnimate && (
+            <defs>
+              <style>
+                {`
+                  @keyframes radar-grow-${animId} {
+                    from { opacity: 0; transform: scale(0); transform-origin: ${cx}px ${cy}px; }
+                    to   { opacity: 1; transform: scale(1); transform-origin: ${cx}px ${cy}px; }
+                  }
+                `}
+              </style>
+            </defs>
+          )}
+
           {/* Concentric grid polygons */}
           {showGrid &&
-            Array.from({ length: gridLevels }).map((_, level) => (
+            Array.from({ length: gridLevels }, (_, level) => (
               <polygon
                 key={`grid-${level}`}
                 data-testid={`radar-grid-${level}`}
@@ -180,7 +312,7 @@ const RadarChart = forwardRef<HTMLDivElement, RadarChartProps>(
             ))}
 
           {/* Axis lines from center to each vertex */}
-          {Array.from({ length: axisCount }).map((_, i) => {
+          {Array.from({ length: axisCount }, (_, i) => {
             const p = getPoint(i, 1);
             return (
               <line
@@ -196,44 +328,83 @@ const RadarChart = forwardRef<HTMLDivElement, RadarChartProps>(
             );
           })}
 
-          {/* Data series polygons */}
-          {allSeries.map((s, seriesIndex) => {
-            const seriesColor = s.color || DEFAULT_COLORS[seriesIndex % DEFAULT_COLORS.length];
-            const isHovered = hoveredSeries === seriesIndex;
-            const opacity = hoveredSeries !== null && !isHovered ? fillOpacity * 0.3 : fillOpacity;
+          {/* Category polygons */}
+          {categories.map((cat, ci) => {
+            if (hiddenSeries.has(cat)) return null;
+            const color = resolvedColors[ci];
+            const isHovered = hoveredSeries === ci;
+            const dimmed =
+              hoveredSeries !== null && !isHovered;
+            const opacity = dimmed
+              ? fillOpacity * 0.3
+              : fillOpacity;
 
             return (
-              <g key={`series-${seriesIndex}`}>
+              <g key={`series-${ci}`}>
                 <polygon
-                  data-testid={`radar-polygon-${seriesIndex}`}
-                  points={getSeriesPolygon(s)}
-                  fill={seriesColor}
-                  fillOpacity={opacity}
-                  stroke={seriesColor}
+                  data-testid={`radar-polygon-${ci}`}
+                  points={getCategoryPolygon(cat)}
+                  fill={color}
+                  fillOpacity={mounted ? opacity : 0}
+                  stroke={color}
                   strokeWidth={isHovered ? 2.5 : 1.5}
-                  style={{ transition: "fill-opacity 0.2s, stroke-width 0.2s" }}
-                  onMouseEnter={() => setHoveredSeries(seriesIndex)}
-                  onMouseLeave={() => setHoveredSeries(null)}
+                  strokeOpacity={mounted ? 1 : 0}
+                  style={{
+                    transition: shouldAnimate
+                      ? "fill-opacity 0.2s, stroke-width 0.2s, stroke-opacity 0.6s ease-out"
+                      : "fill-opacity 0.2s, stroke-width 0.2s",
+                    cursor: "pointer",
+                    ...(shouldAnimate
+                      ? {
+                          animation: `radar-grow-${animId} 0.6s ease-out ${ci * 0.1}s both`,
+                        }
+                      : {}),
+                  }}
+                  onMouseEnter={() => setHoveredSeries(ci)}
+                  onMouseLeave={() => {
+                    setHoveredSeries(null);
+                    setHoveredAxis(null);
+                  }}
+                  onClick={() => handleSeriesClick(cat)}
                 />
 
-                {/* Data point dots */}
+                {/* Data-point dots */}
                 {showDots &&
-                  s.data.map((d, i) => {
-                    const normalized = d.value / (axisMaxValues[i] || 1);
-                    const clamped = Math.min(1, Math.max(0, normalized));
-                    const p = getPoint(i, clamped);
+                  data.map((record, ai) => {
+                    const val = Number(record[cat]) || 0;
+                    const norm = Math.min(
+                      1,
+                      Math.max(0, val / globalMax)
+                    );
+                    const p = getPoint(ai, norm);
+                    const isDotHovered =
+                      hoveredSeries === ci && hoveredAxis === ai;
                     return (
                       <circle
-                        key={`dot-${seriesIndex}-${i}`}
-                        data-testid={`radar-dot-${seriesIndex}-${i}`}
+                        key={`dot-${ci}-${ai}`}
+                        data-testid={`radar-dot-${ci}-${ai}`}
                         cx={p.x}
                         cy={p.y}
-                        r={3}
-                        fill={seriesColor}
+                        r={isDotHovered ? 4.5 : 3}
+                        fill={color}
                         stroke="#fff"
                         strokeWidth={1.5}
-                        onMouseEnter={() => setHoveredSeries(seriesIndex)}
-                        onMouseLeave={() => setHoveredSeries(null)}
+                        opacity={mounted ? 1 : 0}
+                        style={{
+                          transition: shouldAnimate
+                            ? "r 0.15s ease, opacity 0.6s ease-out"
+                            : "r 0.15s ease",
+                          cursor: "pointer",
+                        }}
+                        onMouseEnter={() => {
+                          setHoveredSeries(ci);
+                          setHoveredAxis(ai);
+                        }}
+                        onMouseLeave={() => {
+                          setHoveredSeries(null);
+                          setHoveredAxis(null);
+                        }}
+                        onClick={() => handleSeriesClick(cat)}
                       />
                     );
                   })}
@@ -241,11 +412,12 @@ const RadarChart = forwardRef<HTMLDivElement, RadarChartProps>(
             );
           })}
 
-          {/* Labels at each vertex */}
+          {/* Axis labels */}
           {showLabels &&
-            axisLabels.map((label, i) => {
+            axisLabels.map((lbl, i) => {
               const p = getPoint(i, 1.15);
-              const angle = (Math.PI * 2 * i) / axisCount - Math.PI / 2;
+              const angle =
+                (Math.PI * 2 * i) / axisCount - Math.PI / 2;
               const anchor =
                 Math.abs(Math.cos(angle)) < 0.1
                   ? "middle"
@@ -263,16 +435,43 @@ const RadarChart = forwardRef<HTMLDivElement, RadarChartProps>(
                   fill="#6b7280"
                   fontSize="11"
                 >
-                  {label}
+                  {lbl}
                 </text>
               );
             })}
+
+          {/* Tooltip */}
+          {showTooltip && (
+            <ChartTooltip
+              active={tooltipActive}
+              payload={tooltipPayload}
+              label={tooltipLabel}
+              x={tooltipX}
+              y={tooltipY}
+              viewBoxWidth={size}
+              valueFormatter={valueFormatter}
+              customTooltip={customTooltip}
+            />
+          )}
         </svg>
+
+        {/* Legend */}
+        {showLegend && (
+          <ChartLegend
+            entries={categories.map((cat, ci) => ({
+              name: cat,
+              color: resolvedColors[ci],
+            }))}
+            position={legendPosition}
+            onToggle={handleLegendToggle}
+            hiddenSeries={hiddenSeries}
+          />
+        )}
       </div>
     );
   }
 );
 RadarChart.displayName = "RadarChart";
 
-export { RadarChart, DEFAULT_COLORS };
-export type { RadarChartProps, RadarChartDataPoint, RadarChartSeries };
+export { RadarChart };
+export type { RadarChartProps };

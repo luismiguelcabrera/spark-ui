@@ -1,28 +1,43 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { LineChart } from "./line-chart";
 
-const monthlySales = [
-  { label: "Jan", value: 4200 },
-  { label: "Feb", value: 3800 },
-  { label: "Mar", value: 5100 },
-  { label: "Apr", value: 4600 },
-  { label: "May", value: 5800 },
-  { label: "Jun", value: 6200 },
-  { label: "Jul", value: 5400 },
-  { label: "Aug", value: 4900 },
+// ─── Sample Data ─────────────────────────────────────────────────────────────
+
+const monthlySalesData = [
+  { month: "Jan", Sales: 4200 },
+  { month: "Feb", Sales: 3800 },
+  { month: "Mar", Sales: 5100 },
+  { month: "Apr", Sales: 4600 },
+  { month: "May", Sales: 5800 },
+  { month: "Jun", Sales: 6200 },
+  { month: "Jul", Sales: 5400 },
+  { month: "Aug", Sales: 4900 },
 ];
 
 const temperatureData = [
-  { label: "6am", value: 12 },
-  { label: "8am", value: 15 },
-  { label: "10am", value: 20 },
-  { label: "12pm", value: 25 },
-  { label: "2pm", value: 28 },
-  { label: "4pm", value: 26 },
-  { label: "6pm", value: 22 },
-  { label: "8pm", value: 18 },
-  { label: "10pm", value: 14 },
+  { time: "6am", Indoor: 20, Outdoor: 12 },
+  { time: "8am", Indoor: 21, Outdoor: 15 },
+  { time: "10am", Indoor: 22, Outdoor: 20 },
+  { time: "12pm", Indoor: 23, Outdoor: 25 },
+  { time: "2pm", Indoor: 23, Outdoor: 28 },
+  { time: "4pm", Indoor: 22, Outdoor: 26 },
+  { time: "6pm", Indoor: 21, Outdoor: 22 },
+  { time: "8pm", Indoor: 20, Outdoor: 18 },
+  { time: "10pm", Indoor: 19, Outdoor: 14 },
 ];
+
+const dataWithNulls = [
+  { month: "Jan", Revenue: 4200 },
+  { month: "Feb", Revenue: 3800 },
+  { month: "Mar", Revenue: null },
+  { month: "Apr", Revenue: null },
+  { month: "May", Revenue: 5800 },
+  { month: "Jun", Revenue: 6200 },
+  { month: "Jul", Revenue: 5400 },
+  { month: "Aug", Revenue: 4900 },
+];
+
+// ─── Meta ────────────────────────────────────────────────────────────────────
 
 const meta = {
   title: "Data Display/Charts/LineChart",
@@ -30,85 +45,173 @@ const meta = {
   tags: ["autodocs"],
   argTypes: {
     height: { control: { type: "range", min: 200, max: 600, step: 50 } },
+    curveType: {
+      control: "select",
+      options: ["linear", "monotone", "step", "natural", "bump"],
+    },
     showGrid: { control: "boolean" },
     showDots: { control: "boolean" },
-    showArea: { control: "boolean" },
-    smooth: { control: "boolean" },
+    showLegend: { control: "boolean" },
+    connectNulls: { control: "boolean" },
     strokeWidth: { control: { type: "range", min: 1, max: 5, step: 0.5 } },
-    color: { control: "color" },
+    animate: { control: "boolean" },
   },
 } satisfies Meta<typeof LineChart>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// ─── Stories ─────────────────────────────────────────────────────────────────
+
 export const Default: Story = {
   args: {
-    data: monthlySales,
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
   },
 };
 
-export const Smooth: Story = {
+export const MultiSeries: Story = {
   args: {
-    data: monthlySales,
-    smooth: true,
-    color: "#10b981",
+    data: temperatureData,
+    index: "time",
+    categories: ["Indoor", "Outdoor"],
+    colors: ["indigo", "emerald"],
+    showLegend: true,
+  },
+};
+
+export const MonotoneCurve: Story = {
+  name: "Smooth (Monotone)",
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+    curveType: "monotone",
+    colors: ["emerald"],
     strokeWidth: 3,
   },
 };
 
-export const WithAreaFill: Story = {
+export const NaturalCurve: Story = {
+  name: "Natural Curve",
   args: {
-    data: monthlySales,
-    showArea: true,
-    smooth: true,
-    color: "#8b5cf6",
+    data: temperatureData,
+    index: "time",
+    categories: ["Indoor", "Outdoor"],
+    curveType: "natural",
+    colors: ["violet", "amber"],
+    showLegend: true,
+  },
+};
+
+export const StepCurve: Story = {
+  name: "Step Curve",
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+    curveType: "step",
+    colors: ["indigo"],
   },
 };
 
 export const NoDots: Story = {
   args: {
     data: temperatureData,
+    index: "time",
+    categories: ["Outdoor"],
     showDots: false,
-    smooth: true,
-    color: "#ef4444",
+    curveType: "monotone",
+    colors: ["red"],
     strokeWidth: 3,
+  },
+};
+
+export const WithReferenceLines: Story = {
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+    referenceLines: [
+      { y: 5000, label: "Target", color: "#ef4444" },
+      { x: "Mar", label: "Q1 End", color: "#3b82f6" },
+    ],
+  },
+};
+
+export const WithAxisLabels: Story = {
+  args: {
+    data: temperatureData,
+    index: "time",
+    categories: ["Indoor", "Outdoor"],
+    colors: ["indigo", "rose"],
+    showLegend: true,
+    xAxisLabel: "Time of Day",
+    yAxisLabel: "Temperature (C)",
+  },
+};
+
+export const WithValueFormatter: Story = {
+  args: {
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
+    valueFormatter: (v: number) => `$${(v / 1000).toFixed(1)}K`,
+  },
+};
+
+export const ConnectNulls: Story = {
+  name: "Connect Through Nulls",
+  args: {
+    data: dataWithNulls as Record<string, unknown>[],
+    index: "month",
+    categories: ["Revenue"],
+    connectNulls: true,
+    curveType: "monotone",
+    colors: ["indigo"],
+  },
+};
+
+export const DisconnectedNulls: Story = {
+  name: "Disconnected at Nulls",
+  args: {
+    data: dataWithNulls as Record<string, unknown>[],
+    index: "month",
+    categories: ["Revenue"],
+    connectNulls: false,
+    curveType: "monotone",
+    colors: ["indigo"],
   },
 };
 
 export const NoGrid: Story = {
   args: {
-    data: monthlySales,
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
     showGrid: false,
-    smooth: true,
+    curveType: "monotone",
   },
 };
 
 export const ThickLine: Story = {
   args: {
     data: temperatureData,
+    index: "time",
+    categories: ["Outdoor"],
     strokeWidth: 4,
-    smooth: true,
-    color: "#f59e0b",
-    showArea: true,
-  },
-};
-
-export const StraightLines: Story = {
-  args: {
-    data: monthlySales,
-    smooth: false,
-    showDots: true,
-    showArea: false,
-    color: "#6366f1",
+    curveType: "monotone",
+    colors: ["amber"],
   },
 };
 
 export const CompactChart: Story = {
   args: {
-    data: monthlySales,
+    data: monthlySalesData,
+    index: "month",
+    categories: ["Sales"],
     height: 200,
-    smooth: true,
-    showArea: true,
+    curveType: "monotone",
   },
 };

@@ -1,21 +1,25 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FunnelChart } from "./funnel-chart";
 
+// ─── Sample Data ─────────────────────────────────────────────────────────────
+
 const salesPipeline = [
-  { label: "Leads", value: 5000 },
-  { label: "Qualified", value: 3200 },
-  { label: "Proposal", value: 1800 },
-  { label: "Negotiation", value: 900 },
-  { label: "Closed", value: 450 },
+  { name: "Leads", value: 5000 },
+  { name: "Qualified", value: 3200 },
+  { name: "Proposal", value: 1800 },
+  { name: "Negotiation", value: 900 },
+  { name: "Closed", value: 450 },
 ];
 
 const signupFunnel = [
-  { label: "Visitors", value: 10000, color: "#3b82f6" },
-  { label: "Sign ups", value: 5000, color: "#6366f1" },
-  { label: "Trials", value: 2500, color: "#8b5cf6" },
-  { label: "Paid", value: 1200, color: "#a855f7" },
-  { label: "Enterprise", value: 400, color: "#c084fc" },
+  { name: "Visitors", value: 10000, color: "#3b82f6" },
+  { name: "Sign ups", value: 5000, color: "#6366f1" },
+  { name: "Trials", value: 2500, color: "#8b5cf6" },
+  { name: "Paid", value: 1200, color: "#a855f7" },
+  { name: "Enterprise", value: 400, color: "#c084fc" },
 ];
+
+// ─── Meta ────────────────────────────────────────────────────────────────────
 
 const meta = {
   title: "Data Display/Charts/FunnelChart",
@@ -27,11 +31,14 @@ const meta = {
     showValues: { control: "boolean" },
     showPercentage: { control: "boolean" },
     orientation: { control: "select", options: ["vertical", "horizontal"] },
+    animate: { control: "boolean" },
   },
 } satisfies Meta<typeof FunnelChart>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+// ─── Stories ─────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
   args: {
@@ -66,6 +73,17 @@ export const CustomColors: Story = {
   },
 };
 
+export const WithNamedColors: Story = {
+  name: "Named Color Palette",
+  args: {
+    data: salesPipeline,
+    colors: ["indigo", "violet", "purple", "pink", "rose"],
+    showValues: true,
+    showPercentage: true,
+    height: 350,
+  },
+};
+
 export const NoLabels: Story = {
   args: {
     data: salesPipeline,
@@ -90,15 +108,32 @@ export const PercentageOnly: Story = {
   },
 };
 
+export const WithValueFormatter: Story = {
+  args: {
+    data: salesPipeline,
+    showValues: true,
+    valueFormatter: (v: number) => `${(v / 1000).toFixed(1)}K`,
+  },
+};
+
 export const ThreeStages: Story = {
   args: {
     data: [
-      { label: "Awareness", value: 8000 },
-      { label: "Interest", value: 3500 },
-      { label: "Purchase", value: 1200 },
+      { name: "Awareness", value: 8000 },
+      { name: "Interest", value: 3500 },
+      { name: "Purchase", value: 1200 },
     ],
     showValues: true,
     showPercentage: true,
     height: 250,
+  },
+};
+
+export const NoAnimation: Story = {
+  args: {
+    data: salesPipeline,
+    animate: false,
+    showValues: true,
+    showPercentage: true,
   },
 };
