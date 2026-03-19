@@ -321,8 +321,8 @@ function MonthGrid({
               title={day.mark?.label}
             >
               {day.day}
-              {/* Today underline — visible in all contexts */}
-              {showToday && day.today && (day.selected || day.inRange || day.inHoverRange) && (
+              {/* Today underline bar — consistent in all contexts */}
+              {showToday && day.today && !day.muted && (
                 <span className={cn(
                   "absolute bottom-0.5 left-1/2 -translate-x-1/2 w-3.5 h-0.5 rounded-full",
                   day.selected ? "bg-white/70" : "bg-primary"
