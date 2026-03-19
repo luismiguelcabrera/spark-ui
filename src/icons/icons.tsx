@@ -1454,3 +1454,757 @@ export const CursorIcon = createIcon(
   "CursorIcon",
   <path d="M5 3l14 7-6.5 2.5L10 19z" />,
 );
+
+// ── Extended Arrows & Navigation ───────────────────────────────────────
+
+export const ArrowUpLeftIcon = createIcon(
+  "ArrowUpLeftIcon",
+  <>
+    <line x1="17" y1="17" x2="7" y2="7" />
+    <polyline points="7 17 7 7 17 7" />
+  </>,
+);
+
+export const ArrowUpRightIcon = createIcon(
+  "ArrowUpRightIcon",
+  <>
+    <line x1="7" y1="17" x2="17" y2="7" />
+    <polyline points="7 7 17 7 17 17" />
+  </>,
+);
+
+export const ArrowDownLeftIcon = createIcon(
+  "ArrowDownLeftIcon",
+  <>
+    <line x1="17" y1="7" x2="7" y2="17" />
+    <polyline points="17 17 7 17 7 7" />
+  </>,
+);
+
+export const ArrowDownRightIcon = createIcon(
+  "ArrowDownRightIcon",
+  <>
+    <line x1="7" y1="7" x2="17" y2="17" />
+    <polyline points="17 7 17 17 7 17" />
+  </>,
+);
+
+export const ArrowLeftRightIcon = createIcon(
+  "ArrowLeftRightIcon",
+  <>
+    <polyline points="7 17 2 12 7 7" />
+    <line x1="2" y1="12" x2="22" y2="12" />
+    <polyline points="17 7 22 12 17 17" />
+  </>,
+);
+
+export const ArrowUpDownIcon = createIcon(
+  "ArrowUpDownIcon",
+  <>
+    <polyline points="7 7 12 2 17 7" />
+    <line x1="12" y1="2" x2="12" y2="22" />
+    <polyline points="17 17 12 22 7 17" />
+  </>,
+);
+
+export const CornerDownLeftIcon = createIcon(
+  "CornerDownLeftIcon",
+  <>
+    <polyline points="9 10 4 15 9 20" />
+    <path d="M20 4v7a4 4 0 0 1-4 4H4" />
+  </>,
+);
+
+export const CornerDownRightIcon = createIcon(
+  "CornerDownRightIcon",
+  <>
+    <polyline points="15 10 20 15 15 20" />
+    <path d="M4 4v7a4 4 0 0 0 4 4h12" />
+  </>,
+);
+
+export const CornerUpLeftIcon = createIcon(
+  "CornerUpLeftIcon",
+  <>
+    <polyline points="9 14 4 9 9 4" />
+    <path d="M20 20v-7a4 4 0 0 0-4-4H4" />
+  </>,
+);
+
+export const CornerUpRightIcon = createIcon(
+  "CornerUpRightIcon",
+  <>
+    <polyline points="15 14 20 9 15 4" />
+    <path d="M4 20v-7a4 4 0 0 1 4-4h12" />
+  </>,
+);
+
+export const ChevronsDownIcon = createIcon(
+  "ChevronsDownIcon",
+  <>
+    <polyline points="7 13 12 18 17 13" />
+    <polyline points="7 6 12 11 17 6" />
+  </>,
+);
+
+export const ChevronsUpIcon = createIcon(
+  "ChevronsUpIcon",
+  <>
+    <polyline points="17 11 12 6 7 11" />
+    <polyline points="17 18 12 13 7 18" />
+  </>,
+);
+
+export const ArrowBigUpIcon = createIcon(
+  "ArrowBigUpIcon",
+  <path d="M9 18v-6H5l7-7 7 7h-4v6H9z" />,
+);
+
+export const ArrowBigDownIcon = createIcon(
+  "ArrowBigDownIcon",
+  <path d="M15 6v6h4l-7 7-7-7h4V6h6z" />,
+);
+
+export const ArrowBigLeftIcon = createIcon(
+  "ArrowBigLeftIcon",
+  <path d="M18 15h-6v4l-7-7 7-7v4h6v6z" />,
+);
+
+export const ArrowBigRightIcon = createIcon(
+  "ArrowBigRightIcon",
+  <path d="M6 9h6V5l7 7-7 7v-4H6V9z" />,
+);
+
+export const MoveHorizontalIcon = createIcon(
+  "MoveHorizontalIcon",
+  <>
+    <polyline points="18 8 22 12 18 16" />
+    <polyline points="6 8 2 12 6 16" />
+    <line x1="2" y1="12" x2="22" y2="12" />
+  </>,
+);
+
+export const MoveVerticalIcon = createIcon(
+  "MoveVerticalIcon",
+  <>
+    <polyline points="8 18 12 22 16 18" />
+    <polyline points="8 6 12 2 16 6" />
+    <line x1="12" y1="2" x2="12" y2="22" />
+  </>,
+);
+
+export const MoveDiagonalIcon = createIcon(
+  "MoveDiagonalIcon",
+  <>
+    <polyline points="13 5 19 5 19 11" />
+    <polyline points="11 19 5 19 5 13" />
+    <line x1="19" y1="5" x2="5" y2="19" />
+  </>,
+);
+
+export const RepeatIcon = createIcon(
+  "RepeatIcon",
+  <>
+    <polyline points="17 1 21 5 17 9" />
+    <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+    <polyline points="7 23 3 19 7 15" />
+    <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+  </>,
+);
+
+export const Repeat1Icon = createIcon(
+  "Repeat1Icon",
+  <>
+    <polyline points="17 1 21 5 17 9" />
+    <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+    <polyline points="7 23 3 19 7 15" />
+    <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+    <path d="M11 10h1v4" />
+  </>,
+);
+
+// ── Extended Actions & Editing ─────────────────────────────────────────
+
+export const PasteIcon = createIcon(
+  "PasteIcon",
+  <>
+    <path d="M15 2H9a1 1 0 0 0-1 1v2c0 .6.4 1 1 1h6c.6 0 1-.4 1-1V3c0-.6-.4-1-1-1z" />
+    <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2M16 4h2a2 2 0 0 1 2 2v2" />
+    <path d="M21 14H11" />
+    <path d="m15 10-4 4 4 4" />
+  </>,
+);
+
+export const ClipboardCheckIcon = createIcon(
+  "ClipboardCheckIcon",
+  <>
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+    <path d="m9 14 2 2 4-4" />
+  </>,
+);
+
+export const ClipboardCopyIcon = createIcon(
+  "ClipboardCopyIcon",
+  <>
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+    <line x1="8" y1="12" x2="16" y2="12" />
+    <line x1="8" y1="16" x2="16" y2="16" />
+  </>,
+);
+
+export const ClipboardListIcon = createIcon(
+  "ClipboardListIcon",
+  <>
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+    <line x1="10" y1="11" x2="16" y2="11" />
+    <line x1="10" y1="15" x2="16" y2="15" />
+    <line x1="10" y1="19" x2="14" y2="19" />
+    <circle cx="7" cy="11" r="0.5" fill="currentColor" stroke="none" />
+    <circle cx="7" cy="15" r="0.5" fill="currentColor" stroke="none" />
+    <circle cx="7" cy="19" r="0.5" fill="currentColor" stroke="none" />
+  </>,
+);
+
+export const ClipboardXIcon = createIcon(
+  "ClipboardXIcon",
+  <>
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+    <line x1="10" y1="12" x2="14" y2="16" />
+    <line x1="14" y1="12" x2="10" y2="16" />
+  </>,
+);
+
+export const Trash2Icon = createIcon(
+  "Trash2Icon",
+  <>
+    <path d="M3 6h18" />
+    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+  </>,
+);
+
+export const ArchiveRestoreIcon = createIcon(
+  "ArchiveRestoreIcon",
+  <>
+    <rect x="2" y="3" width="20" height="5" rx="1" />
+    <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" />
+    <path d="m9.5 17 2.5-2.5 2.5 2.5" />
+    <path d="M12 14.5V10" />
+  </>,
+);
+
+export const EraserIcon = createIcon(
+  "EraserIcon",
+  <>
+    <path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21" />
+    <path d="M22 21H7" />
+    <path d="m5 11 9 9" />
+  </>,
+);
+
+export const WandIcon = createIcon(
+  "WandIcon",
+  <>
+    <path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.21 1.21 0 0 0 1.72 0L21.64 5.36a1.21 1.21 0 0 0 0-1.72z" />
+    <path d="m14 7 3 3" />
+  </>,
+);
+
+export const PinIcon = createIcon(
+  "PinIcon",
+  <>
+    <line x1="12" y1="17" x2="12" y2="22" />
+    <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1V2H8v4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17z" />
+  </>,
+);
+
+export const PinOffIcon = createIcon(
+  "PinOffIcon",
+  <>
+    <line x1="2" y1="2" x2="22" y2="22" />
+    <line x1="12" y1="17" x2="12" y2="22" />
+    <path d="M9 9v1.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1V2H8v4h1" />
+  </>,
+);
+
+export const SortAscIcon = createIcon(
+  "SortAscIcon",
+  <>
+    <path d="m3 8 4-4 4 4" />
+    <path d="M7 4v16" />
+    <line x1="13" y1="12" x2="21" y2="12" />
+    <line x1="13" y1="16" x2="19" y2="16" />
+    <line x1="13" y1="20" x2="17" y2="20" />
+    <line x1="13" y1="8" x2="15" y2="8" />
+  </>,
+);
+
+export const SortDescIcon = createIcon(
+  "SortDescIcon",
+  <>
+    <path d="m3 16 4 4 4-4" />
+    <path d="M7 20V4" />
+    <line x1="13" y1="8" x2="21" y2="8" />
+    <line x1="13" y1="12" x2="19" y2="12" />
+    <line x1="13" y1="16" x2="17" y2="16" />
+    <line x1="13" y1="4" x2="15" y2="4" />
+  </>,
+);
+
+export const ArrowDownAZIcon = createIcon(
+  "ArrowDownAZIcon",
+  <>
+    <path d="m3 16 4 4 4-4" />
+    <path d="M7 20V4" />
+    <path d="M20 8h-5" />
+    <path d="M15 10V6.5a2.5 2.5 0 0 1 5 0V10" />
+    <path d="M15 14h5l-5 6h5" />
+  </>,
+);
+
+export const ArrowUpAZIcon = createIcon(
+  "ArrowUpAZIcon",
+  <>
+    <path d="m3 8 4-4 4 4" />
+    <path d="M7 4v16" />
+    <path d="M20 8h-5" />
+    <path d="M15 10V6.5a2.5 2.5 0 0 1 5 0V10" />
+    <path d="M15 14h5l-5 6h5" />
+  </>,
+);
+
+// ── Extended Status & Feedback ─────────────────────────────────────────
+
+export const BanIcon = createIcon(
+  "BanIcon",
+  <>
+    <circle cx="12" cy="12" r="10" />
+    <path d="m4.9 4.9 14.2 14.2" />
+  </>,
+);
+
+export const CircleAlertIcon = createIcon(
+  "CircleAlertIcon",
+  <>
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
+  </>,
+);
+
+export const CircleCheckIcon = createIcon(
+  "CircleCheckIcon",
+  <>
+    <circle cx="12" cy="12" r="10" />
+    <path d="m9 12 2 2 4-4" />
+  </>,
+);
+
+export const OctagonAlertIcon = createIcon(
+  "OctagonAlertIcon",
+  <>
+    <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
+  </>,
+);
+
+export const ShieldAlertIcon = createIcon(
+  "ShieldAlertIcon",
+  <>
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
+  </>,
+);
+
+export const ShieldXIcon = createIcon(
+  "ShieldXIcon",
+  <>
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    <line x1="9.5" y1="9" x2="14.5" y2="14" />
+    <line x1="14.5" y1="9" x2="9.5" y2="14" />
+  </>,
+);
+
+export const CheckCheckIcon = createIcon(
+  "CheckCheckIcon",
+  <>
+    <path d="M18 6 7 17l-5-5" />
+    <path d="m22 10-7.5 7.5L13 16" />
+  </>,
+);
+
+export const CircleDotIcon = createIcon(
+  "CircleDotIcon",
+  <>
+    <circle cx="12" cy="12" r="10" />
+    <circle cx="12" cy="12" r="1" fill="currentColor" />
+  </>,
+);
+
+export const CircleDashedIcon = createIcon(
+  "CircleDashedIcon",
+  <>
+    <path d="M10.1 2.18a9.93 9.93 0 0 1 3.8 0" />
+    <path d="M17.6 3.71a9.95 9.95 0 0 1 2.69 2.7" />
+    <path d="M21.82 10.1a9.93 9.93 0 0 1 0 3.8" />
+    <path d="M20.29 17.6a9.95 9.95 0 0 1-2.7 2.69" />
+    <path d="M13.9 21.82a9.94 9.94 0 0 1-3.8 0" />
+    <path d="M6.4 20.29a9.95 9.95 0 0 1-2.69-2.7" />
+    <path d="M2.18 13.9a9.93 9.93 0 0 1 0-3.8" />
+    <path d="M3.71 6.4a9.95 9.95 0 0 1 2.7-2.69" />
+  </>,
+);
+
+export const BadgeCheckIcon = createIcon(
+  "BadgeCheckIcon",
+  <>
+    <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76z" />
+    <path d="m9 12 2 2 4-4" />
+  </>,
+);
+
+// ── Bell Variants ──────────────────────────────────────────────────────
+
+export const BellOffIcon = createIcon(
+  "BellOffIcon",
+  <>
+    <path d="M8.7 3A6 6 0 0 1 18 8c0 7-3 9-3 9H8.3" />
+    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    <line x1="1" y1="1" x2="23" y2="23" />
+  </>,
+);
+
+export const BellRingIcon = createIcon(
+  "BellRingIcon",
+  <>
+    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    <path d="M2 2c1.5 1.5 3 2.5 5 2.5" />
+    <path d="M22 2c-1.5 1.5-3 2.5-5 2.5" />
+  </>,
+);
+
+export const BellDotIcon = createIcon(
+  "BellDotIcon",
+  <>
+    <path d="M19.4 14.9C20.2 16.4 21 17 21 17H3s3-2 3-9c0-3.3 2.7-6 6-6 .7 0 1.3.1 1.9.3" />
+    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    <circle cx="18" cy="8" r="3" fill="currentColor" />
+  </>,
+);
+
+export const BellPlusIcon = createIcon(
+  "BellPlusIcon",
+  <>
+    <path d="M19.3 14.8C20.1 16.4 21 17 21 17H3s3-2 3-9c0-3.3 2.7-6 6-6 1 0 1.9.2 2.8.7" />
+    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    <line x1="19" y1="2" x2="19" y2="8" />
+    <line x1="22" y1="5" x2="16" y2="5" />
+  </>,
+);
+
+export const BellMinusIcon = createIcon(
+  "BellMinusIcon",
+  <>
+    <path d="M18.4 12c.8 3.8 2.6 5 2.6 5H3s3-2 3-9c0-3.3 2.7-6 6-6 1.8 0 3.4.8 4.5 2.1" />
+    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    <line x1="22" y1="5" x2="16" y2="5" />
+  </>,
+);
+
+// ── Layout & Panels ────────────────────────────────────────────────────
+
+export const PanelLeftIcon = createIcon(
+  "PanelLeftIcon",
+  <>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <line x1="9" y1="3" x2="9" y2="21" />
+  </>,
+);
+
+export const PanelLeftOpenIcon = createIcon(
+  "PanelLeftOpenIcon",
+  <>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <line x1="9" y1="3" x2="9" y2="21" />
+    <path d="m14 9 3 3-3 3" />
+  </>,
+);
+
+export const PanelLeftCloseIcon = createIcon(
+  "PanelLeftCloseIcon",
+  <>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <line x1="9" y1="3" x2="9" y2="21" />
+    <path d="m16 15-3-3 3-3" />
+  </>,
+);
+
+export const PanelRightIcon = createIcon(
+  "PanelRightIcon",
+  <>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <line x1="15" y1="3" x2="15" y2="21" />
+  </>,
+);
+
+export const PanelRightOpenIcon = createIcon(
+  "PanelRightOpenIcon",
+  <>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <line x1="15" y1="3" x2="15" y2="21" />
+    <path d="m10 15-3-3 3-3" />
+  </>,
+);
+
+export const PanelRightCloseIcon = createIcon(
+  "PanelRightCloseIcon",
+  <>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <line x1="15" y1="3" x2="15" y2="21" />
+    <path d="m8 9 3 3-3 3" />
+  </>,
+);
+
+export const PanelTopIcon = createIcon(
+  "PanelTopIcon",
+  <>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <line x1="3" y1="9" x2="21" y2="9" />
+  </>,
+);
+
+export const PanelBottomIcon = createIcon(
+  "PanelBottomIcon",
+  <>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <line x1="3" y1="15" x2="21" y2="15" />
+  </>,
+);
+
+export const LayoutDashboardIcon = createIcon(
+  "LayoutDashboardIcon",
+  <>
+    <rect x="3" y="3" width="7" height="9" />
+    <rect x="14" y="3" width="7" height="5" />
+    <rect x="14" y="12" width="7" height="9" />
+    <rect x="3" y="16" width="7" height="5" />
+  </>,
+);
+
+export const LayoutGridIcon = createIcon(
+  "LayoutGridIcon",
+  <>
+    <rect x="3" y="3" width="7" height="7" rx="1" />
+    <rect x="14" y="3" width="7" height="7" rx="1" />
+    <rect x="14" y="14" width="7" height="7" rx="1" />
+    <rect x="3" y="14" width="7" height="7" rx="1" />
+  </>,
+);
+
+export const LayoutListIcon = createIcon(
+  "LayoutListIcon",
+  <>
+    <rect x="3" y="3" width="7" height="7" rx="1" />
+    <rect x="3" y="14" width="7" height="7" rx="1" />
+    <line x1="14" y1="4" x2="21" y2="4" />
+    <line x1="14" y1="9" x2="21" y2="9" />
+    <line x1="14" y1="15" x2="21" y2="15" />
+    <line x1="14" y1="20" x2="21" y2="20" />
+  </>,
+);
+
+export const LayoutTemplateIcon = createIcon(
+  "LayoutTemplateIcon",
+  <>
+    <rect x="3" y="3" width="18" height="7" rx="1" />
+    <rect x="3" y="14" width="9" height="7" rx="1" />
+    <rect x="16" y="14" width="5" height="7" rx="1" />
+  </>,
+);
+
+export const KanbanIcon = createIcon(
+  "KanbanIcon",
+  <>
+    <path d="M6 5v11" />
+    <path d="M12 5v6" />
+    <path d="M18 5v14" />
+  </>,
+);
+
+export const TableIcon = createIcon(
+  "TableIcon",
+  <>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <line x1="3" y1="9" x2="21" y2="9" />
+    <line x1="3" y1="15" x2="21" y2="15" />
+    <line x1="9" y1="3" x2="9" y2="21" />
+    <line x1="15" y1="3" x2="15" y2="21" />
+  </>,
+);
+
+export const StickyNoteIcon = createIcon(
+  "StickyNoteIcon",
+  <>
+    <path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3z" />
+    <path d="M14 3v4a2 2 0 0 0 2 2h4" />
+  </>,
+);
+
+export const GripHorizontalIcon = createIcon(
+  "GripHorizontalIcon",
+  <>
+    <circle cx="5" cy="9" r="1" fill="currentColor" stroke="none" />
+    <circle cx="12" cy="9" r="1" fill="currentColor" stroke="none" />
+    <circle cx="19" cy="9" r="1" fill="currentColor" stroke="none" />
+    <circle cx="5" cy="15" r="1" fill="currentColor" stroke="none" />
+    <circle cx="12" cy="15" r="1" fill="currentColor" stroke="none" />
+    <circle cx="19" cy="15" r="1" fill="currentColor" stroke="none" />
+  </>,
+);
+
+export const SeparatorHorizontalIcon = createIcon(
+  "SeparatorHorizontalIcon",
+  <>
+    <line x1="3" y1="12" x2="21" y2="12" />
+    <polyline points="8 8 12 4 16 8" />
+    <polyline points="16 16 12 20 8 16" />
+  </>,
+);
+
+export const SeparatorVerticalIcon = createIcon(
+  "SeparatorVerticalIcon",
+  <>
+    <line x1="12" y1="3" x2="12" y2="21" />
+    <polyline points="8 8 4 12 8 16" />
+    <polyline points="16 16 20 12 16 8" />
+  </>,
+);
+
+export const ResizeIcon = createIcon(
+  "ResizeIcon",
+  <>
+    <path d="M11 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
+    <path d="M15 3h4a2 2 0 0 1 2 2v4" />
+    <polyline points="14 15 21 15 21 21 14 21 14 15" />
+  </>,
+);
+
+export const SplitIcon = createIcon(
+  "SplitIcon",
+  <>
+    <path d="M16 3h5v5" />
+    <path d="M8 3H3v5" />
+    <path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3" />
+    <path d="m15 9 6-6" />
+  </>,
+);
+
+export const AppWindowIcon = createIcon(
+  "AppWindowIcon",
+  <>
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <path d="M10 4v4" />
+    <path d="M2 8h20" />
+    <path d="M6 4v4" />
+  </>,
+);
+
+export const PictureInPictureIcon = createIcon(
+  "PictureInPictureIcon",
+  <>
+    <path d="M8 4.5v5H3m-1-6 6 6m13 0v-3c0-1.16-.84-2-2-2h-7m-6 10 .7-.7a1.98 1.98 0 0 1 2.82.03L10 15l2.13-2.5c.32-.38.78-.6 1.27-.6s.95.22 1.27.6L18 17" />
+    <rect x="12" y="13.5" width="10" height="7.5" rx="1" />
+  </>,
+);
+
+// ── Form Controls ──────────────────────────────────────────────────────
+
+export const ToggleLeftIcon = createIcon(
+  "ToggleLeftIcon",
+  <>
+    <rect x="1" y="5" width="22" height="14" rx="7" ry="7" />
+    <circle cx="8" cy="12" r="3" />
+  </>,
+);
+
+export const ToggleRightIcon = createIcon(
+  "ToggleRightIcon",
+  <>
+    <rect x="1" y="5" width="22" height="14" rx="7" ry="7" />
+    <circle cx="16" cy="12" r="3" />
+  </>,
+);
+
+export const SlidersHorizontalIcon = createIcon(
+  "SlidersHorizontalIcon",
+  <>
+    <line x1="21" y1="4" x2="14" y2="4" />
+    <line x1="10" y1="4" x2="3" y2="4" />
+    <line x1="21" y1="12" x2="12" y2="12" />
+    <line x1="8" y1="12" x2="3" y2="12" />
+    <line x1="21" y1="20" x2="16" y2="20" />
+    <line x1="12" y1="20" x2="3" y2="20" />
+    <line x1="14" y1="2" x2="14" y2="6" />
+    <line x1="8" y1="10" x2="8" y2="14" />
+    <line x1="16" y1="18" x2="16" y2="22" />
+  </>,
+);
+
+export const SlidersVerticalIcon = createIcon(
+  "SlidersVerticalIcon",
+  <>
+    <line x1="4" y1="21" x2="4" y2="14" />
+    <line x1="4" y1="10" x2="4" y2="3" />
+    <line x1="12" y1="21" x2="12" y2="12" />
+    <line x1="12" y1="8" x2="12" y2="3" />
+    <line x1="20" y1="21" x2="20" y2="16" />
+    <line x1="20" y1="12" x2="20" y2="3" />
+    <line x1="2" y1="14" x2="6" y2="14" />
+    <line x1="10" y1="8" x2="14" y2="8" />
+    <line x1="18" y1="16" x2="22" y2="16" />
+  </>,
+);
+
+export const TextCursorIcon = createIcon(
+  "TextCursorIcon",
+  <>
+    <path d="M17 22h-1a4 4 0 0 1-4-4V6a4 4 0 0 1 4-4h1" />
+    <path d="M7 22h1a4 4 0 0 0 4-4V6a4 4 0 0 0-4-4H7" />
+    <line x1="8" y1="12" x2="16" y2="12" />
+  </>,
+);
+
+export const TextCursorInputIcon = createIcon(
+  "TextCursorInputIcon",
+  <>
+    <path d="M5 4h1a3 3 0 0 1 3 3 3 3 0 0 1 3-3h1" />
+    <path d="M13 20h-1a3 3 0 0 1-3-3 3 3 0 0 1-3 3H5" />
+    <path d="M5 16H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h1" />
+    <path d="M13 8h7a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-7" />
+    <path d="M9 7v10" />
+  </>,
+);
+
+export const SquareCheckIcon = createIcon(
+  "SquareCheckIcon",
+  <>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="m9 12 2 2 4-4" />
+  </>,
+);
+
+export const ListFilterIcon = createIcon(
+  "ListFilterIcon",
+  <>
+    <path d="M3 6h18" />
+    <path d="M7 12h10" />
+    <path d="M10 18h4" />
+  </>,
+);
