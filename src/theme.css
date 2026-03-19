@@ -253,6 +253,112 @@
   to { transform: translateX(200%) skewX(-20deg); }
 }
 
+/* ── Icon Animations ── */
+
+/* Continuous */
+@keyframes spark-icon-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes spark-icon-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+@keyframes spark-icon-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-25%); }
+}
+@keyframes spark-icon-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  15% { transform: rotate(15deg); }
+  30% { transform: rotate(-12deg); }
+  45% { transform: rotate(8deg); }
+  60% { transform: rotate(-5deg); }
+  75% { transform: rotate(2deg); }
+}
+@keyframes spark-icon-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 50%, 90% { transform: translateX(-3px); }
+  30%, 70% { transform: translateX(3px); }
+}
+@keyframes spark-icon-ping {
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+@keyframes spark-icon-tada {
+  0% { transform: scale(1) rotate(0); }
+  10%, 20% { transform: scale(0.9) rotate(-3deg); }
+  30%, 50%, 70% { transform: scale(1.15) rotate(3deg); }
+  40%, 60% { transform: scale(1.15) rotate(-3deg); }
+  80% { transform: scale(1.05) rotate(1deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+@keyframes spark-icon-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes spark-icon-rubber-band {
+  0% { transform: scaleX(1) scaleY(1); }
+  30% { transform: scaleX(1.25) scaleY(0.75); }
+  40% { transform: scaleX(0.75) scaleY(1.25); }
+  50% { transform: scaleX(1.15) scaleY(0.85); }
+  65% { transform: scaleX(0.95) scaleY(1.05); }
+  75% { transform: scaleX(1.05) scaleY(0.95); }
+  100% { transform: scaleX(1) scaleY(1); }
+}
+
+/* Entry animations */
+@keyframes spark-icon-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes spark-icon-scale-in {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes spark-icon-slide-up {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes spark-icon-draw {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* Utility classes — always-on */
+.spark-icon-spin { animation: spark-icon-spin 1s linear infinite; }
+.spark-icon-pulse { animation: spark-icon-pulse 1.5s ease-in-out infinite; }
+.spark-icon-bounce { animation: spark-icon-bounce 1s ease infinite; }
+.spark-icon-wiggle { animation: spark-icon-wiggle 0.8s ease; }
+.spark-icon-shake { animation: spark-icon-shake 0.5s ease; }
+.spark-icon-ping { animation: spark-icon-ping 1s cubic-bezier(0,0,0.2,1) infinite; }
+.spark-icon-tada { animation: spark-icon-tada 0.8s ease; }
+.spark-icon-float { animation: spark-icon-float 3s ease-in-out infinite; }
+.spark-icon-rubber-band { animation: spark-icon-rubber-band 0.8s ease; }
+
+/* Entry utility classes */
+.spark-icon-fade-in { animation: spark-icon-fade-in 0.3s ease-out both; }
+.spark-icon-scale-in { animation: spark-icon-scale-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
+.spark-icon-slide-up { animation: spark-icon-slide-up 0.3s ease-out both; }
+.spark-icon-draw > * { stroke-dasharray: 100; stroke-dashoffset: 100; animation: spark-icon-draw 0.6s ease-out forwards; }
+
+/* Hover-triggered — animation only plays on parent hover */
+.spark-icon-hover-spin:hover { animation: spark-icon-spin 1s linear infinite; }
+.spark-icon-hover-pulse:hover { animation: spark-icon-pulse 0.6s ease-in-out; }
+.spark-icon-hover-bounce:hover { animation: spark-icon-bounce 0.5s ease; }
+.spark-icon-hover-wiggle:hover { animation: spark-icon-wiggle 0.8s ease; }
+.spark-icon-hover-shake:hover { animation: spark-icon-shake 0.5s ease; }
+.spark-icon-hover-tada:hover { animation: spark-icon-tada 0.8s ease; }
+.spark-icon-hover-float:hover { animation: spark-icon-float 2s ease-in-out infinite; }
+.spark-icon-hover-rubber-band:hover { animation: spark-icon-rubber-band 0.8s ease; }
+
+/* Group-hover — animation plays when parent with .group is hovered */
+.group:hover .spark-icon-group-hover-spin { animation: spark-icon-spin 1s linear infinite; }
+.group:hover .spark-icon-group-hover-pulse { animation: spark-icon-pulse 0.6s ease-in-out; }
+.group:hover .spark-icon-group-hover-bounce { animation: spark-icon-bounce 0.5s ease; }
+.group:hover .spark-icon-group-hover-wiggle { animation: spark-icon-wiggle 0.8s ease; }
+.group:hover .spark-icon-group-hover-shake { animation: spark-icon-shake 0.5s ease; }
+.group:hover .spark-icon-group-hover-tada { animation: spark-icon-tada 0.8s ease; }
+
 /* ── Reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {
