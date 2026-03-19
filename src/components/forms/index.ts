@@ -72,8 +72,9 @@ export type { GoogleLoginButtonProps } from "./google-login-button";
 export { Form } from "./form";
 export type { FormProps } from "./form";
 
-export { OtpInput } from "./otp-input";
-export type { OtpInputProps } from "./otp-input";
+export { OtpInput } from "./pin-input";
+/** @deprecated Use PinInputProps with `otp` prop instead */
+export type { PinInputProps as OtpInputProps } from "./pin-input";
 
 export { Combobox } from "./combobox";
 export type { ComboboxProps, ComboboxOption } from "./combobox";

@@ -47,9 +47,9 @@ describe("PinInput", () => {
 
   it("has aria-label on each digit", () => {
     render(<PinInput length={3} />);
-    expect(screen.getByLabelText("Pin digit 1")).toBeInTheDocument();
-    expect(screen.getByLabelText("Pin digit 2")).toBeInTheDocument();
-    expect(screen.getByLabelText("Pin digit 3")).toBeInTheDocument();
+    expect(screen.getByLabelText("Pin digit 1 of 3")).toBeInTheDocument();
+    expect(screen.getByLabelText("Pin digit 2 of 3")).toBeInTheDocument();
+    expect(screen.getByLabelText("Pin digit 3 of 3")).toBeInTheDocument();
   });
 
   it("fills inputs with controlled value", () => {

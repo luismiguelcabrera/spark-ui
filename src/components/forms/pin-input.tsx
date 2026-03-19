@@ -30,6 +30,8 @@ type PinInputProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> & {
   label?: string;
   /** Error message */
   errorMessage?: string;
+  /** OTP mode — enables autoComplete="one-time-code" for browser SMS autofill */
+  otp?: boolean;
 };
 
 const sizeMap = {
@@ -55,6 +57,7 @@ const PinInput = forwardRef<HTMLDivElement, PinInputProps>(
       mask = false,
       label,
       errorMessage,
+      otp = false,
       ...props
     },
     ref
@@ -136,6 +139,7 @@ const PinInput = forwardRef<HTMLDivElement, PinInputProps>(
               value={chars[i] || ""}
               placeholder={placeholder}
               disabled={disabled}
+              autoComplete={otp ? "one-time-code" : "off"}
               autoFocus={autoFocus && i === 0}
               onChange={(e) => {
                 const char = e.target.value.slice(-1);
@@ -152,7 +156,7 @@ const PinInput = forwardRef<HTMLDivElement, PinInputProps>(
                 error ? "border-red-300 focus:ring-red-500 focus:border-red-500" : "border-slate-200",
                 sizeMap[size]
               )}
-              aria-label={`Pin digit ${i + 1}`}
+              aria-label={`${otp ? "OTP" : "Pin"} digit ${i + 1} of ${length}`}
             />
           ))}
         </div>
@@ -163,5 +167,11 @@ const PinInput = forwardRef<HTMLDivElement, PinInputProps>(
 );
 PinInput.displayName = "PinInput";
 
-export { PinInput };
+/** @deprecated Use `<PinInput otp />` instead */
+const OtpInput = forwardRef<HTMLDivElement, Omit<PinInputProps, "otp">>((props, ref) => (
+  <PinInput ref={ref} otp type="number" {...props} />
+));
+OtpInput.displayName = "OtpInput";
+
+export { PinInput, OtpInput };
 export type { PinInputProps };

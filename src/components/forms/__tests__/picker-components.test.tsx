@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import { Combobox } from "../combobox";
 import { DatePicker } from "../date-picker";
-import { OtpInput } from "../otp-input";
+import { OtpInput } from "../pin-input";
 import { FileUploadZone, FileUploadItem } from "../file-upload";
 import { ColorPicker } from "../color-picker";
 import { CopyButton } from "../copy-button";
@@ -338,9 +338,9 @@ describe("PinInput", () => {
 
   it("has aria-label on each digit", () => {
     render(<PinInput length={3} />);
-    expect(screen.getByLabelText("Pin digit 1")).toBeInTheDocument();
-    expect(screen.getByLabelText("Pin digit 2")).toBeInTheDocument();
-    expect(screen.getByLabelText("Pin digit 3")).toBeInTheDocument();
+    expect(screen.getByLabelText("Pin digit 1 of 3")).toBeInTheDocument();
+    expect(screen.getByLabelText("Pin digit 2 of 3")).toBeInTheDocument();
+    expect(screen.getByLabelText("Pin digit 3 of 3")).toBeInTheDocument();
   });
 
   it("forwards ref", () => {
