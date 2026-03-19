@@ -359,6 +359,142 @@
 .group:hover .spark-icon-group-hover-shake { animation: spark-icon-shake 0.5s ease; }
 .group:hover .spark-icon-group-hover-tada { animation: spark-icon-tada 0.8s ease; }
 
+/* ── Animation Pattern Templates ── */
+/* 15 distinct patterns matched to icon semantics */
+
+@keyframes spark-pat-jello {
+  0%, 100% { transform: skewX(0) skewY(0); }
+  22% { transform: skewX(-8deg) skewY(-2deg); }
+  33% { transform: skewX(5deg) skewY(1.5deg); }
+  44% { transform: skewX(-3deg) skewY(-1deg); }
+  55% { transform: skewX(2deg) skewY(0.5deg); }
+  66% { transform: skewX(-1deg); }
+}
+@keyframes spark-pat-heartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.25); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.25); }
+  56% { transform: scale(1); }
+}
+@keyframes spark-pat-typewriter {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(1px); }
+  75% { transform: translateX(-1px); }
+}
+@keyframes spark-pat-swing {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(12deg); }
+  40% { transform: rotate(-8deg); }
+  60% { transform: rotate(4deg); }
+  80% { transform: rotate(-2deg); }
+}
+@keyframes spark-pat-wobble {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  15% { transform: translateX(-4px) rotate(-3deg); }
+  30% { transform: translateX(3px) rotate(2deg); }
+  45% { transform: translateX(-2px) rotate(-1deg); }
+  60% { transform: translateX(1px) rotate(1deg); }
+}
+@keyframes spark-pat-flicker {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  25% { opacity: 0.7; transform: scale(0.97); }
+  50% { opacity: 1; transform: scale(1.03); }
+  75% { opacity: 0.85; transform: scale(0.99); }
+}
+@keyframes spark-pat-zoom-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+@keyframes spark-pat-tick {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(12deg); }
+}
+@keyframes spark-pat-nod {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  30% { transform: translateY(-2px) rotate(-3deg); }
+  60% { transform: translateY(1px) rotate(1deg); }
+}
+@keyframes spark-pat-sway {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  25% { transform: rotate(3deg) translateY(-2px); }
+  75% { transform: rotate(-3deg) translateY(-1px); }
+}
+@keyframes spark-pat-slide-shift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+@keyframes spark-pat-pop {
+  0% { transform: scale(0.6); opacity: 0.5; }
+  60% { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes spark-pat-attention {
+  0%, 100% { transform: scale(1) rotate(0); }
+  25% { transform: scale(1.08) rotate(2deg); }
+  50% { transform: scale(1.12) rotate(-1deg); }
+  75% { transform: scale(1.04) rotate(1deg); }
+}
+@keyframes spark-pat-roll {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes spark-pat-flash {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0.3; }
+}
+
+/* Pattern utility classes */
+.spark-pat-jello { animation: spark-pat-jello 0.8s ease; }
+.spark-pat-heartbeat { animation: spark-pat-heartbeat 1s ease; }
+.spark-pat-typewriter { animation: spark-pat-typewriter 0.3s ease 3; }
+.spark-pat-swing { transform-origin: top center; animation: spark-pat-swing 0.8s ease; }
+.spark-pat-wobble { animation: spark-pat-wobble 0.6s ease; }
+.spark-pat-flicker { animation: spark-pat-flicker 1.5s ease infinite; }
+.spark-pat-zoom-pulse { animation: spark-pat-zoom-pulse 0.5s ease; }
+.spark-pat-tick { transform-origin: center bottom; animation: spark-pat-tick 0.4s ease; }
+.spark-pat-nod { animation: spark-pat-nod 0.5s ease; }
+.spark-pat-sway { animation: spark-pat-sway 2s ease-in-out infinite; }
+.spark-pat-slide-shift { animation: spark-pat-slide-shift 0.4s ease; }
+.spark-pat-pop { animation: spark-pat-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.spark-pat-attention { animation: spark-pat-attention 0.6s ease; }
+.spark-pat-roll { animation: spark-pat-roll 2s linear infinite; }
+.spark-pat-flash { animation: spark-pat-flash 0.6s ease; }
+
+/* Hover-triggered patterns */
+.spark-pat-hover-jello:hover { animation: spark-pat-jello 0.8s ease; }
+.spark-pat-hover-heartbeat:hover { animation: spark-pat-heartbeat 1s ease; }
+.spark-pat-hover-typewriter:hover { animation: spark-pat-typewriter 0.3s ease 3; }
+.spark-pat-hover-swing:hover { transform-origin: top center; animation: spark-pat-swing 0.8s ease; }
+.spark-pat-hover-wobble:hover { animation: spark-pat-wobble 0.6s ease; }
+.spark-pat-hover-flicker:hover { animation: spark-pat-flicker 1.5s ease infinite; }
+.spark-pat-hover-zoom-pulse:hover { animation: spark-pat-zoom-pulse 0.5s ease; }
+.spark-pat-hover-tick:hover { transform-origin: center bottom; animation: spark-pat-tick 0.4s ease; }
+.spark-pat-hover-nod:hover { animation: spark-pat-nod 0.5s ease; }
+.spark-pat-hover-sway:hover { animation: spark-pat-sway 2s ease-in-out infinite; }
+.spark-pat-hover-slide-shift:hover { animation: spark-pat-slide-shift 0.4s ease; }
+.spark-pat-hover-pop:hover { animation: spark-pat-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.spark-pat-hover-attention:hover { animation: spark-pat-attention 0.6s ease; }
+.spark-pat-hover-roll:hover { animation: spark-pat-roll 2s linear infinite; }
+.spark-pat-hover-flash:hover { animation: spark-pat-flash 0.6s ease; }
+
+/* Group-hover-triggered patterns */
+.group:hover .spark-pat-group-hover-jello { animation: spark-pat-jello 0.8s ease; }
+.group:hover .spark-pat-group-hover-heartbeat { animation: spark-pat-heartbeat 1s ease; }
+.group:hover .spark-pat-group-hover-typewriter { animation: spark-pat-typewriter 0.3s ease 3; }
+.group:hover .spark-pat-group-hover-swing { transform-origin: top center; animation: spark-pat-swing 0.8s ease; }
+.group:hover .spark-pat-group-hover-wobble { animation: spark-pat-wobble 0.6s ease; }
+.group:hover .spark-pat-group-hover-flicker { animation: spark-pat-flicker 1.5s ease infinite; }
+.group:hover .spark-pat-group-hover-zoom-pulse { animation: spark-pat-zoom-pulse 0.5s ease; }
+.group:hover .spark-pat-group-hover-tick { transform-origin: center bottom; animation: spark-pat-tick 0.4s ease; }
+.group:hover .spark-pat-group-hover-nod { animation: spark-pat-nod 0.5s ease; }
+.group:hover .spark-pat-group-hover-sway { animation: spark-pat-sway 2s ease-in-out infinite; }
+.group:hover .spark-pat-group-hover-slide-shift { animation: spark-pat-slide-shift 0.4s ease; }
+.group:hover .spark-pat-group-hover-pop { animation: spark-pat-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.group:hover .spark-pat-group-hover-attention { animation: spark-pat-attention 0.6s ease; }
+.group:hover .spark-pat-group-hover-roll { animation: spark-pat-roll 2s linear infinite; }
+.group:hover .spark-pat-group-hover-flash { animation: spark-pat-flash 0.6s ease; }
+
 /* ── Per-Icon SVG Animations ── */
 
 /* Bell — clapper swings */

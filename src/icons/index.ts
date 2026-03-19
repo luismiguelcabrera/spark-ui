@@ -2,7 +2,7 @@
 export * from "./icons";
 
 // ── Animated icon registry (used internally by Icon component) ──
-export { animatedSvgRegistry, getDefaultIconAnimation } from "./animated-icons";
+export { animatedSvgRegistry, getDefaultIconAnimation, getHoverIconAnimation, getGroupHoverIconAnimation } from "./animated-icons";
 
 // ── Factory ──
 export { createIcon } from "./create-icon";

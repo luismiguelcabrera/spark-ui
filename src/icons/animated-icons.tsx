@@ -235,77 +235,273 @@ export const animatedSvgRegistry: Record<string, AnimatedSvgEntry> = {
 };
 
 /**
- * Default animation class for icons without custom per-part animation.
- * Maps icon name patterns to generic animation classes.
+ * 15 animation pattern templates mapped to every icon by semantic category.
+ *
+ * Patterns: jello, heartbeat, typewriter, swing, wobble, flicker,
+ * zoom-pulse, tick, nod, sway, slide-shift, pop, attention, roll, flash
+ *
+ * Each icon is mapped to the pattern that best fits its real-world behavior.
  */
+
+/** Explicit per-icon → pattern mapping. Every icon accounted for. */
+const iconPatternMap: Record<string, string> = {
+  // ── Heartbeat: double-pump (hearts, medical, likes) ──
+  "heart": "heartbeat", "heart-pulse": "heartbeat", "heart-crack": "heartbeat",
+  "thumbs-up": "heartbeat", "thumbs-down": "heartbeat",
+  "activity": "heartbeat", "stethoscope": "heartbeat", "pill": "heartbeat",
+  "syringe": "heartbeat", "bandage": "heartbeat", "brain": "heartbeat",
+  "ambulance": "heartbeat", "hospital": "heartbeat",
+
+  // ── Swing: pendulum from top (bells, keys, anchors, pendants) ──
+  "bell": "swing", "bell-dot": "swing", "bell-minus": "swing", "bell-off": "swing",
+  "bell-plus": "swing", "bell-ring": "swing", "megaphone": "swing",
+  "key": "swing", "anchor": "swing", "feather": "swing", "tag": "swing",
+  "paperclip": "swing", "link": "swing", "link-break": "swing", "unlink": "swing",
+
+  // ── Attention: scale+rotate for celebrations & rewards ──
+  "star": "attention", "star-half": "attention", "sparkles": "attention",
+  "crown": "attention", "gem": "attention", "trophy": "attention",
+  "award": "attention", "medal": "attention", "gift": "attention",
+  "rocket": "attention", "wand": "attention", "zap": "attention",
+  "badge-check": "attention", "party-popper": "attention",
+
+  // ── Flash: opacity blink for alerts & warnings ──
+  "alert-circle": "flash", "alert-triangle": "flash", "circle-alert": "flash",
+  "octagon-alert": "flash", "shield-alert": "flash", "shield-x": "flash",
+  "ban": "flash", "x-circle": "flash", "flame": "flash",
+  "cloud-lightning": "flash", "lightning": "flash",
+
+  // ── Roll: continuous rotation for loaders & settings ──
+  "loader": "roll", "refresh-cw": "roll", "rotate-cw": "roll", "rotate-ccw": "roll",
+  "settings": "roll", "settings-gear": "roll", "compass": "roll",
+  "gauge": "roll", "recycle": "roll",
+
+  // ── Wobble: vehicle vibration for transport ──
+  "car": "wobble", "truck": "wobble", "bike": "wobble", "ship": "wobble",
+  "plane": "wobble", "fuel": "wobble", "bus": "wobble", "train": "wobble",
+  "gamepad": "wobble", "dumbbell": "wobble",
+  "hammer": "wobble", "wrench": "wobble", "shuffle": "wobble",
+
+  // ── Jello: elastic fun for food, emoji, playful icons ──
+  "pizza": "jello", "cake": "jello", "coffee": "jello", "wine": "jello",
+  "utensils": "jello", "smile": "jello", "frown": "jello", "meh": "jello",
+  "baby": "jello", "paw-print": "jello", "bug": "jello", "puzzle": "jello",
+  "piggy-bank": "jello", "cookie": "jello",
+
+  // ── Sway: gentle drift for nature & weather ──
+  "cloud": "sway", "cloud-rain": "sway", "cloud-snow": "sway",
+  "cloud-sun": "sway", "cloud-off": "sway",
+  "leaf": "sway", "tree-pine": "sway", "flower": "sway",
+  "bird": "sway", "mountain": "sway", "wind": "sway",
+  "rainbow": "sway", "snowflake": "sway", "umbrella": "sway",
+  "waves": "sway", "droplet": "sway", "tornado": "sway",
+  "sun": "sway", "moon": "sway", "sunrise": "sway", "sunset": "sway",
+  "thermometer": "sway", "tent": "sway",
+
+  // ── Zoom-pulse: focus/scan/search magnification ──
+  "search": "zoom-pulse", "zoom-in": "zoom-pulse", "zoom-out": "zoom-pulse",
+  "focus": "zoom-pulse", "scan": "zoom-pulse", "locate": "zoom-pulse",
+  "crosshair": "zoom-pulse", "target": "zoom-pulse",
+  "eye": "zoom-pulse", "eye-off": "zoom-pulse", "eye-dropper": "zoom-pulse",
+  "binoculars": "zoom-pulse", "qr-code": "zoom-pulse",
+  "globe": "zoom-pulse", "map": "zoom-pulse", "map-pin": "zoom-pulse",
+
+  // ── Tick: clock hand rotation for time icons ──
+  "clock": "tick", "watch": "tick", "timer": "tick", "alarm-clock": "tick",
+  "hourglass": "tick", "history": "tick",
+  "calendar": "tick", "calendar-check": "tick", "calendar-days": "tick",
+  "calendar-plus": "tick", "calendar-x": "tick",
+
+  // ── Nod: subtle head-nod for people & social ──
+  "user": "nod", "users": "nod", "user-plus": "nod", "user-minus": "nod",
+  "user-check": "nod", "user-x": "nod", "user-cog": "nod",
+  "accessibility": "nod", "hand": "nod", "handshake": "nod",
+  "graduation-cap": "nod", "briefcase": "nod",
+  "log-in": "nod", "log-out": "nod",
+  "bookmark": "nod", "flag": "nod",
+
+  // ── Typewriter: horizontal micro-shift for text/formatting ──
+  "bold": "typewriter", "italic": "typewriter", "underline": "typewriter",
+  "strikethrough": "typewriter", "type": "typewriter",
+  "heading-1": "typewriter", "heading-2": "typewriter", "heading-3": "typewriter",
+  "align-left": "typewriter", "align-center": "typewriter",
+  "align-right": "typewriter", "align-justify": "typewriter",
+  "indent": "typewriter", "outdent": "typewriter",
+  "quote": "typewriter", "subscript": "typewriter", "superscript": "typewriter",
+  "highlighter": "typewriter", "wrap-text": "typewriter",
+  "remove-formatting": "typewriter", "list": "typewriter",
+  "list-ordered": "typewriter", "list-filter": "typewriter",
+  "pencil": "typewriter", "pen": "typewriter", "pen-tool": "typewriter",
+  "paintbrush": "typewriter", "palette": "typewriter", "ruler": "typewriter",
+  "text-cursor": "typewriter", "text-cursor-input": "typewriter",
+  "at-sign": "typewriter", "hash": "typewriter", "code": "typewriter",
+  "terminal": "typewriter", "variable": "typewriter", "braces": "typewriter",
+  "brackets": "typewriter", "binary": "typewriter",
+
+  // ── Slide-shift: panels & layout elements slide ──
+  "panel-left": "slide-shift", "panel-left-open": "slide-shift",
+  "panel-left-close": "slide-shift", "panel-right": "slide-shift",
+  "panel-right-open": "slide-shift", "panel-right-close": "slide-shift",
+  "panel-top": "slide-shift", "panel-bottom": "slide-shift",
+  "sidebar": "slide-shift", "menu": "slide-shift", "columns": "slide-shift",
+  "layout-dashboard": "slide-shift", "layout-grid": "slide-shift",
+  "layout-list": "slide-shift", "layout-template": "slide-shift",
+  "kanban": "slide-shift", "table": "slide-shift",
+  "app-window": "slide-shift", "picture-in-picture": "slide-shift",
+  "split": "slide-shift", "resize": "slide-shift",
+  "grid": "slide-shift", "grip-horizontal": "slide-shift",
+  "grip-vertical": "slide-shift", "separator-horizontal": "slide-shift",
+  "separator-vertical": "slide-shift",
+  "maximize": "slide-shift", "minimize": "slide-shift",
+  "expand": "slide-shift", "shrink": "slide-shift",
+  "layers": "slide-shift", "sticky-note": "slide-shift",
+
+  // ── Pop: spring scale-in for shapes, checks, dots ──
+  "circle": "pop", "square": "pop", "triangle": "pop",
+  "diamond": "pop", "hexagon": "pop", "octagon": "pop", "pentagon": "pop",
+  "check": "pop", "check-check": "pop", "check-circle": "pop",
+  "circle-check": "pop", "square-check": "pop",
+  "plus": "pop", "minus": "pop", "close": "pop",
+  "plus-circle": "pop", "minus-circle": "pop",
+  "help-circle": "pop", "info": "pop",
+  "circle-dot": "pop", "circle-dashed": "pop",
+  "slash": "pop", "percent": "pop",
+  "infinity": "pop", "divide": "pop", "equal": "pop",
+  "sigma": "pop", "pi": "pop", "square-root": "pop",
+  "calculator": "pop",
+
+  // ── Flicker: rapid flash for fire, power, energy ──
+  "power": "flicker", "battery": "flicker", "plug": "flicker",
+  "usb": "flicker", "bluetooth": "flicker", "lightbulb": "flicker",
+  "lightbulb-off": "flicker", "signal": "flicker",
+
+  // ── Specific overrides for common actions ──
+  "download": "nod", "upload": "nod",
+  "copy": "slide-shift", "paste": "slide-shift",
+  "clipboard": "slide-shift", "clipboard-check": "slide-shift",
+  "clipboard-copy": "slide-shift", "clipboard-list": "slide-shift",
+  "clipboard-x": "slide-shift",
+  "save": "pop", "edit": "typewriter", "eraser": "typewriter",
+  "undo": "roll", "redo": "roll",
+  "scissors": "wobble", "crop": "zoom-pulse",
+  "filter": "slide-shift", "sort-asc": "slide-shift", "sort-desc": "slide-shift",
+  "arrow-down-az": "slide-shift", "arrow-up-az": "slide-shift",
+  "more-horizontal": "pop", "more-vertical": "pop", "cursor": "nod",
+  "pin": "swing", "pin-off": "swing",
+  "archive": "slide-shift", "archive-restore": "slide-shift",
+  "trash": "wobble", "trash-2": "wobble",
+
+  // ── Files & folders ──
+  "file": "slide-shift", "file-text": "slide-shift", "file-plus": "slide-shift",
+  "file-code": "slide-shift", "file-image": "slide-shift", "file-video": "slide-shift",
+  "file-archive": "slide-shift", "file-check": "slide-shift", "file-x": "slide-shift",
+  "folder": "slide-shift", "folder-open": "slide-shift", "folder-closed": "slide-shift",
+  "folder-plus": "slide-shift", "folder-minus": "slide-shift", "folder-tree": "slide-shift",
+  "newspaper": "slide-shift", "notebook": "slide-shift", "book": "slide-shift",
+  "book-open": "slide-shift", "receipt": "slide-shift", "package": "slide-shift",
+  "backpack": "jello",
+
+  // ── Communication ──
+  "mail": "swing", "mail-open": "swing", "mail-check": "swing",
+  "mail-plus": "swing", "mail-x": "swing",
+  "phone": "wobble", "phone-call": "wobble", "phone-incoming": "wobble",
+  "phone-off": "wobble", "phone-outgoing": "wobble",
+  "message-circle": "pop", "message-square": "pop",
+  "send": "attention", "inbox": "slide-shift",
+  "share": "attention", "share-2": "attention",
+
+  // ── Devices ──
+  "monitor": "zoom-pulse", "laptop": "zoom-pulse", "smartphone": "zoom-pulse",
+  "tablet": "zoom-pulse", "tv": "zoom-pulse", "printer": "slide-shift",
+  "keyboard": "typewriter", "mouse": "nod", "cpu": "flicker",
+  "hard-drive": "flicker", "server": "flicker", "database": "flicker",
+
+  // ── Media ──
+  "play": "pop", "pause": "pop", "stop-circle": "pop",
+  "skip-forward": "slide-shift", "skip-back": "slide-shift",
+  "volume": "zoom-pulse", "volume-2": "zoom-pulse", "volume-x": "flash",
+  "mic": "zoom-pulse", "mic-off": "flash",
+  "video": "zoom-pulse", "camera": "zoom-pulse",
+  "music": "sway", "headphones": "nod", "speaker": "wobble",
+  "radio": "flicker", "podcast": "flicker", "rss": "flicker",
+
+  // ── Commerce ──
+  "shopping-cart": "wobble", "shopping-bag": "wobble",
+  "credit-card": "slide-shift", "dollar-sign": "attention",
+  "wallet": "slide-shift", "coins": "jello", "banknote": "slide-shift",
+  "store": "pop", "ticket": "slide-shift", "barcode": "slide-shift",
+  "scale": "tick",
+
+  // ── Connectivity ──
+  "wifi": "flicker", "wifi-off": "flash",
+  "cast": "zoom-pulse", "screen-share": "zoom-pulse",
+  "router": "flicker",
+
+  // ── Git & dev ──
+  "git-branch": "pop", "git-commit": "pop", "git-merge": "pop",
+  "git-pull-request": "pop", "git-fork": "pop",
+  "webhook": "flicker",
+
+  // ── Buildings ──
+  "home": "pop", "building": "pop", "school": "pop",
+  "factory": "pop", "warehouse": "pop", "landmark": "pop",
+  "hotel": "pop", "library": "pop", "church": "pop",
+
+  // ── Security ──
+  "lock": "wobble", "unlock": "wobble",
+  "shield": "pop", "shield-check": "pop",
+  "fingerprint": "zoom-pulse",
+
+  // ── Navigation arrows ──
+  "arrow-left": "slide-shift", "arrow-right": "slide-shift",
+  "arrow-up": "slide-shift", "arrow-down": "slide-shift",
+  "arrow-up-left": "slide-shift", "arrow-up-right": "slide-shift",
+  "arrow-down-left": "slide-shift", "arrow-down-right": "slide-shift",
+  "arrow-left-right": "slide-shift", "arrow-up-down": "slide-shift",
+  "arrow-big-up": "slide-shift", "arrow-big-down": "slide-shift",
+  "arrow-big-left": "slide-shift", "arrow-big-right": "slide-shift",
+  "chevron-left": "slide-shift", "chevron-right": "slide-shift",
+  "chevron-up": "slide-shift", "chevron-down": "slide-shift",
+  "chevrons-left": "slide-shift", "chevrons-right": "slide-shift",
+  "chevrons-up": "slide-shift", "chevrons-down": "slide-shift",
+  "chevrons-up-down": "slide-shift",
+  "corner-down-left": "slide-shift", "corner-down-right": "slide-shift",
+  "corner-up-left": "slide-shift", "corner-up-right": "slide-shift",
+  "external-link": "slide-shift", "navigation": "slide-shift",
+  "move": "slide-shift", "move-horizontal": "slide-shift",
+  "move-vertical": "slide-shift", "move-diagonal": "slide-shift",
+  "repeat": "roll", "repeat-1": "roll",
+  "trending-up": "attention", "trending-down": "flash",
+
+  // ── Toggles & form ──
+  "toggle-left": "slide-shift", "toggle-right": "slide-shift",
+  "sliders-horizontal": "slide-shift", "sliders-vertical": "slide-shift",
+
+  // ── Misc ──
+  "life-buoy": "roll", "languages": "nod",
+  "image": "zoom-pulse", "road": "slide-shift", "route": "slide-shift",
+  "signpost": "swing", "area-chart": "pop", "line-chart": "pop",
+  "bar-chart": "pop", "pie-chart": "roll", "presentation": "slide-shift",
+};
+
+/** Resolve the animation pattern class for any icon name. */
 export function getDefaultIconAnimation(name: string): string {
-  // Loaders & refresh
-  if (/loader|refresh|rotate|spinner/i.test(name)) return "spark-icon-spin";
+  const pattern = iconPatternMap[name];
+  if (pattern) return `spark-pat-${pattern}`;
+  // Fallback: pop for unknown icons
+  return "spark-pat-pop";
+}
 
-  // Hearts, stars, likes
-  if (/heart|star|thumbs-up|like/i.test(name)) return "spark-icon-pulse";
+/** Resolve the hover-triggered animation pattern class. */
+export function getHoverIconAnimation(name: string): string {
+  const pattern = iconPatternMap[name];
+  if (pattern) return `spark-pat-hover-${pattern}`;
+  return "spark-pat-hover-pop";
+}
 
-  // Bells & notifications
-  if (/bell|notification|megaphone/i.test(name)) return "spark-icon-wiggle";
-
-  // Alerts & errors
-  if (/alert|warning|error|x-circle|ban|octagon-alert/i.test(name)) return "spark-icon-shake";
-
-  // Check & success
-  if (/check|circle-check|badge-check/i.test(name)) return "spark-icon-scale-in";
-
-  // Arrows - bounce in their direction
-  if (/arrow-down|download|chevron-down/i.test(name)) return "spark-icon-bounce";
-  if (/arrow-up|upload|chevron-up|trending-up/i.test(name)) return "spark-icon-bounce";
-  if (/arrow|chevron|corner/i.test(name)) return "spark-icon-bounce";
-
-  // Settings & gears
-  if (/settings|gear|cog/i.test(name)) return "spark-icon-spin";
-
-  // Sparkles, magic, rocket
-  if (/sparkle|magic|wand|crown|gem|trophy|award|medal/i.test(name)) return "spark-icon-tada";
-  if (/rocket|plane|send/i.test(name)) return "spark-icon-tada";
-
-  // Eyes
-  if (/eye/i.test(name)) return "spark-icon-pulse";
-
-  // Locks & security
-  if (/lock|unlock|shield|key|fingerprint/i.test(name)) return "spark-icon-shake";
-
-  // Weather
-  if (/sun|moon|cloud|rain|snow|wind|tornado|wave/i.test(name)) return "spark-icon-float";
-
-  // Nature & animals
-  if (/leaf|tree|flower|bird|feather|mountain/i.test(name)) return "spark-icon-float";
-
-  // Communication
-  if (/mail|message|phone|inbox|chat/i.test(name)) return "spark-icon-bounce";
-
-  // Files & folders
-  if (/file|folder|clipboard|archive|package/i.test(name)) return "spark-icon-slide-up";
-
-  // Maps & transport
-  if (/car|truck|plane|bike|ship|bus|train|rocket|fuel/i.test(name)) return "spark-icon-shake";
-  if (/map|globe|compass|locate/i.test(name)) return "spark-icon-pulse";
-
-  // Devices
-  if (/monitor|laptop|phone|tablet|tv|cpu|keyboard|mouse/i.test(name)) return "spark-icon-pulse";
-
-  // Music & media
-  if (/play|pause|music|video|camera|mic|headphone|volume|speaker/i.test(name)) return "spark-icon-pulse";
-
-  // Commerce
-  if (/cart|bag|wallet|coin|dollar|credit|receipt|store/i.test(name)) return "spark-icon-bounce";
-
-  // Info, help
-  if (/info|help|question/i.test(name)) return "spark-icon-pulse";
-
-  // Code & dev
-  if (/code|terminal|git|bug|braces|bracket|webhook/i.test(name)) return "spark-icon-fade-in";
-
-  // Shapes
-  if (/circle|square|triangle|diamond|hexagon|octagon|pentagon/i.test(name)) return "spark-icon-scale-in";
-
-  // Default fallback
-  return "spark-icon-fade-in";
+/** Resolve the group-hover-triggered animation pattern class. */
+export function getGroupHoverIconAnimation(name: string): string {
+  const pattern = iconPatternMap[name];
+  if (pattern) return `spark-pat-group-hover-${pattern}`;
+  return "spark-pat-group-hover-pop";
 }

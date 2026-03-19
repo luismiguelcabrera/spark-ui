@@ -4,7 +4,7 @@ import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { useIconResolver } from "../../icons/icon-provider";
 import { builtInIcons } from "../../icons/registry";
-import { animatedSvgRegistry, getDefaultIconAnimation } from "../../icons/animated-icons";
+import { animatedSvgRegistry, getDefaultIconAnimation, getHoverIconAnimation, getGroupHoverIconAnimation } from "../../icons/animated-icons";
 
 const svgSizeMap = {
   sm: 16,
@@ -162,15 +162,13 @@ const Icon = forwardRef<SVGSVGElement | HTMLSpanElement, IconProps>(
         );
       }
 
-      // No custom animated SVG — apply smart default animation
-      const defaultAnim = getDefaultIconAnimation(name);
+      // No custom animated SVG — apply smart pattern-based animation
       if (trigger === "hover") {
-        // Convert "spark-icon-xxx" to "spark-icon-hover-xxx"
-        animClass = defaultAnim.replace("spark-icon-", "spark-icon-hover-");
+        animClass = getHoverIconAnimation(name);
       } else if (trigger === "group-hover") {
-        animClass = defaultAnim.replace("spark-icon-", "spark-icon-group-hover-");
+        animClass = getGroupHoverIconAnimation(name);
       } else {
-        animClass = defaultAnim;
+        animClass = getDefaultIconAnimation(name);
       }
     }
 
