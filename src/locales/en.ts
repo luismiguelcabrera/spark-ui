@@ -1,8 +1,7 @@
-/** All translatable message keys used by spark-ui components. */
-export type LocaleMessages = Record<string, string>;
+import type { LocaleMessages } from "../lib/default-messages";
 
-export const defaultMessages: LocaleMessages = {
-  // ── Common ──────────────────────────────────────────────────────────
+/** English (default) locale pack — re-exports defaultMessages for symmetry. */
+export const en: LocaleMessages = {
   "common.close": "Close",
   "common.cancel": "Cancel",
   "common.confirm": "Confirm",
@@ -14,8 +13,6 @@ export const defaultMessages: LocaleMessages = {
   "common.noResults": "No results found",
   "common.showMore": "Show more",
   "common.showLess": "Show less",
-
-  // ── Calendar ────────────────────────────────────────────────────────
   "calendar.monthJanuary": "January",
   "calendar.monthFebruary": "February",
   "calendar.monthMarch": "March",
@@ -56,8 +53,6 @@ export const defaultMessages: LocaleMessages = {
   "calendar.selectEndDate": "select end date",
   "calendar.from": "From",
   "calendar.pickMonth": "click to pick month",
-
-  // ── DatePicker ──────────────────────────────────────────────────────
   "datepicker.placeholder": "Select date",
   "datepicker.pickDate": "Pick a date",
   "datepicker.dayShortSu": "Su",
@@ -67,13 +62,9 @@ export const defaultMessages: LocaleMessages = {
   "datepicker.dayShortTh": "Th",
   "datepicker.dayShortFr": "Fr",
   "datepicker.dayShortSa": "Sa",
-
-  // ── DateRangePicker ─────────────────────────────────────────────────
   "daterange.placeholder": "Select date range",
   "daterange.selectStart": "Select start date",
   "daterange.selectEnd": "Select end date",
-
-  // ── Pagination ──────────────────────────────────────────────────────
   "pagination.next": "Next",
   "pagination.previous": "Previous",
   "pagination.first": "First page",
@@ -82,38 +73,26 @@ export const defaultMessages: LocaleMessages = {
   "pagination.previousPage": "Previous page",
   "pagination.showing": "Showing",
   "pagination.of": "of",
-
-  // ── Select ──────────────────────────────────────────────────────────
   "select.placeholder": "Select...",
   "select.noOptions": "No options",
-
-  // ── Upload ──────────────────────────────────────────────────────────
   "upload.dragDrop": "Drag and drop files here",
   "upload.browse": "Browse",
-
-  // ── Tour ────────────────────────────────────────────────────────────
   "tour.previous": "Previous",
   "tour.next": "Next",
   "tour.finish": "Finish",
   "tour.closeTour": "Close tour",
   "tour.stepOf": "of",
-
-  // ── Modal / Sheet / Dialog ──────────────────────────────────────────
   "modal.close": "Close",
   "sheet.close": "Close",
   "dialog.close": "Close dialog",
   "dialog.confirm": "Confirm",
   "dialog.cancel": "Cancel",
-
-  // ── Carousel ────────────────────────────────────────────────────────
   "carousel.previous": "Previous slide",
   "carousel.next": "Next slide",
   "carousel.goToSlide": "Go to slide",
   "carousel.carousel": "Carousel",
   "carousel.progress": "Carousel progress",
   "carousel.slideOf": "of",
-
-  // ── Galleria ────────────────────────────────────────────────────────
   "galleria.previous": "Previous image",
   "galleria.next": "Next image",
   "galleria.goToImage": "Go to image",
@@ -123,8 +102,6 @@ export const defaultMessages: LocaleMessages = {
   "galleria.fullscreen": "Image gallery fullscreen",
   "galleria.exitFullscreen": "Exit fullscreen",
   "galleria.gallery": "Image gallery",
-
-  // ── EventCalendar ───────────────────────────────────────────────────
   "eventcalendar.today": "Today",
   "eventcalendar.previous": "Previous",
   "eventcalendar.next": "Next",
@@ -137,15 +114,9 @@ export const defaultMessages: LocaleMessages = {
   "eventcalendar.viewDay": "day",
   "eventcalendar.viewDayShort": "D",
   "eventcalendar.calendarView": "Calendar view",
-
-  // ── PopupEdit ───────────────────────────────────────────────────────
   "popupedit.clickToEdit": "Click to edit",
   "popupedit.editValue": "Edit value",
-
-  // ── SearchInput ─────────────────────────────────────────────────────
   "searchinput.clear": "Clear search",
-
-  // ── TreeSelect ──────────────────────────────────────────────────────
   "treeselect.placeholder": "Select...",
   "treeselect.search": "Search...",
   "treeselect.searchTree": "Search tree",
@@ -154,8 +125,6 @@ export const defaultMessages: LocaleMessages = {
   "treeselect.collapse": "Collapse",
   "treeselect.expand": "Expand",
   "treeselect.remove": "Remove",
-
-  // ── RichTextEditor ──────────────────────────────────────────────────
   "rte.bold": "Bold",
   "rte.italic": "Italic",
   "rte.underline": "Underline",
@@ -171,16 +140,8 @@ export const defaultMessages: LocaleMessages = {
   "rte.enterUrl": "Enter URL:",
   "rte.formattingOptions": "Formatting options",
   "rte.editor": "Rich text editor",
-
-  // ── Chip ────────────────────────────────────────────────────────────
   "chip.remove": "Remove",
   "chip.close": "Close",
-
-  // ── DateTimePicker ──────────────────────────────────────────────────
-  "datetimepicker.placeholder": "Select date and time",
-  "datetimepicker.now": "Now",
-
-  // ── PasswordStrength ──────────────────────────────────────────────
   "password.weak": "Weak",
   "password.fair": "Fair",
   "password.good": "Good",
@@ -192,17 +153,13 @@ export const defaultMessages: LocaleMessages = {
   "password.number": "One number",
   "password.special": "One special character",
   "password.strength": "Password strength",
-
-  // ── WeekPicker ──────────────────────────────────────────────────────
+  "datetimepicker.placeholder": "Select date and time",
+  "datetimepicker.now": "Now",
   "weekpicker.placeholder": "Select week",
   "weekpicker.week": "Week",
-
-  // ── Signature ─────────────────────────────────────────────────────
   "signature.signHere": "Sign here",
   "signature.clear": "Clear",
   "signature.undo": "Undo",
-
-  // ── CronInput ─────────────────────────────────────────────────────
   "cron.minute": "Minute",
   "cron.hourly": "Hourly",
   "cron.daily": "Daily",
@@ -215,8 +172,6 @@ export const defaultMessages: LocaleMessages = {
   "cron.onDay": "on day",
   "cron.ofMonth": "of the month",
   "cron.nextRuns": "Next runs",
-
-  // ── ImageCrop ─────────────────────────────────────────────────────
   "imagecrop.zoom": "Zoom",
   "imagecrop.reset": "Reset",
 };

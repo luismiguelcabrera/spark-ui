@@ -18,7 +18,7 @@ export { Divider } from "./divider";
 export type { DividerProps } from "./divider";
 
 export { Rating } from "./rating";
-export type { RatingProps } from "./rating";
+export type { RatingProps, RatingColor } from "./rating";
 
 export { Tooltip } from "./tooltip";
 export type { TooltipProps } from "./tooltip";

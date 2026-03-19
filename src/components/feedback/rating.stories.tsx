@@ -10,6 +10,11 @@ const meta = {
     size: { control: "select", options: ["sm", "md", "lg"] },
     value: { control: { type: "range", min: 0, max: 5, step: 0.5 } },
     max: { control: { type: "range", min: 1, max: 10, step: 1 } },
+    readOnly: { control: "boolean" },
+    allowHalf: { control: "boolean" },
+    allowClear: { control: "boolean" },
+    disabled: { control: "boolean" },
+    color: { control: "select", options: ["amber", "red", "pink", "purple", "blue", "green"] },
   },
 } satisfies Meta<typeof Rating>;
 
@@ -134,4 +139,61 @@ export const Interactive: Story = {
     };
     return <Controller />;
   },
+};
+
+export const InteractiveInput: Story = {
+  args: {
+    readOnly: false,
+    defaultValue: 0,
+    size: "lg",
+  },
+};
+
+export const InteractiveWithDefault: Story = {
+  args: {
+    readOnly: false,
+    defaultValue: 3,
+    size: "lg",
+  },
+};
+
+export const InteractiveHalfStar: Story = {
+  args: {
+    readOnly: false,
+    allowHalf: true,
+    defaultValue: 0,
+    size: "lg",
+  },
+};
+
+export const InteractiveClearable: Story = {
+  args: {
+    readOnly: false,
+    allowClear: true,
+    defaultValue: 3,
+    size: "lg",
+  },
+};
+
+export const InteractiveDisabled: Story = {
+  args: {
+    readOnly: false,
+    disabled: true,
+    defaultValue: 3,
+    size: "lg",
+  },
+};
+
+export const Colors: Story = {
+  args: { readOnly: false, defaultValue: 3 },
+  render: (args) => (
+    <div className="space-y-4">
+      {(["amber", "red", "pink", "purple", "blue", "green"] as const).map((color) => (
+        <div key={color} className="flex items-center gap-3">
+          <span className="text-xs font-medium text-slate-500 w-12 capitalize">{color}</span>
+          <Rating {...args} color={color} />
+        </div>
+      ))}
+    </div>
+  ),
 };
