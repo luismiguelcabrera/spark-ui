@@ -19,7 +19,7 @@ const List = forwardRef<HTMLUListElement | HTMLOListElement, ListProps>(
         role="list"
         className={cn(
           variant === "card" && s.cardBase,
-          variant === "divided" && "divide-y divide-slate-100",
+          variant === "divided" && "divide-y divide-muted",
           className
         )}
         {...props}
@@ -46,8 +46,8 @@ const ListItem = forwardRef<HTMLLIElement, ListItemProps>(
   (
     {
       icon,
-      iconBg = "bg-slate-100",
-      iconColor = "text-slate-600",
+      iconBg = "bg-muted",
+      iconColor = "text-muted-foreground",
       title,
       description,
       timestamp,
@@ -77,7 +77,7 @@ const ListItem = forwardRef<HTMLLIElement, ListItemProps>(
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {timestamp && (
-            <span className="text-xs text-slate-600">{timestamp}</span>
+            <span className="text-xs text-muted-foreground">{timestamp}</span>
           )}
           {actions}
         </div>

@@ -38,11 +38,11 @@ export const Default: Story = {
         hasMore={hasMore}
         loading={loading}
         onLoadMore={loadMore}
-        className="max-h-96 overflow-auto border border-slate-200 rounded-xl"
+        className="max-h-96 overflow-auto border border-muted rounded-xl"
         tabIndex={0}
       >
         {items.map((item) => (
-          <div key={item} className="px-4 py-3 border-b border-slate-100 text-sm text-slate-700">
+          <div key={item} className="px-4 py-3 border-b border-muted text-sm text-navy-text">
             {item}
           </div>
         ))}
@@ -74,11 +74,11 @@ export const WithEndMessage: Story = {
         loading={loading}
         onLoadMore={loadMore}
         endMessage="You have reached the end."
-        className="max-h-96 overflow-auto border border-slate-200 rounded-xl"
+        className="max-h-96 overflow-auto border border-muted rounded-xl"
         tabIndex={0}
       >
         {items.map((item) => (
-          <div key={item} className="px-4 py-3 border-b border-slate-100 text-sm text-slate-700">
+          <div key={item} className="px-4 py-3 border-b border-muted text-sm text-navy-text">
             {item}
           </div>
         ))}
@@ -95,7 +95,7 @@ export const LoadingState: Story = {
     children: (
       <div>
         {Array.from({ length: 5 }, (_, i) => (
-          <div key={i} className="px-4 py-3 border-b border-slate-100 text-sm text-slate-700">
+          <div key={i} className="px-4 py-3 border-b border-muted text-sm text-navy-text">
             Item {i + 1}
           </div>
         ))}
@@ -118,7 +118,7 @@ export const CustomLoader: Story = {
     children: (
       <div>
         {Array.from({ length: 5 }, (_, i) => (
-          <div key={i} className="px-4 py-3 border-b border-slate-100 text-sm text-slate-700">
+          <div key={i} className="px-4 py-3 border-b border-muted text-sm text-navy-text">
             Item {i + 1}
           </div>
         ))}
@@ -136,7 +136,7 @@ export const NoMoreItems: Story = {
     children: (
       <div>
         {Array.from({ length: 5 }, (_, i) => (
-          <div key={i} className="px-4 py-3 border-b border-slate-100 text-sm text-slate-700">
+          <div key={i} className="px-4 py-3 border-b border-muted text-sm text-navy-text">
             Item {i + 1}
           </div>
         ))}
@@ -174,10 +174,10 @@ export const CardLayout: Story = {
           {items.map((num) => (
             <div
               key={num}
-              className="rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm"
+              className="rounded-xl border border-muted bg-surface p-4 text-center shadow-sm"
             >
               <div className="text-2xl font-bold text-primary">{num}</div>
-              <div className="text-xs text-slate-500 mt-1">Card {num}</div>
+              <div className="text-xs text-muted-foreground mt-1">Card {num}</div>
             </div>
           ))}
         </div>

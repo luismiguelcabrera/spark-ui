@@ -51,8 +51,8 @@ const KbdKey = forwardRef<HTMLElement, HTMLAttributes<HTMLElement>>(
       ref={ref}
       className={cn(
         "inline-flex items-center justify-center min-w-[1.5rem] h-6 px-1.5",
-        "rounded-md border border-slate-300 bg-slate-50 shadow-[0_1px_0_1px_rgba(0,0,0,0.05)]",
-        "font-mono text-xs font-medium text-slate-700",
+        "rounded-md border border-muted bg-muted/50 shadow-[0_1px_0_1px_rgba(0,0,0,0.05)]",
+        "font-mono text-xs font-medium text-navy-text",
         "select-none",
         className,
       )}
@@ -122,7 +122,7 @@ const Kbd = forwardRef<HTMLElement, KbdProps>(
           {resolved.map((key, i) => (
             <span key={`${key}-${i}`} className="inline-flex items-center gap-0.5">
               {i > 0 && sep && (
-                <span className="text-[10px] text-slate-600 font-mono select-none">
+                <span className="text-[10px] text-muted-foreground font-mono select-none">
                   {sep}
                 </span>
               )}

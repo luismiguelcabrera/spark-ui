@@ -104,7 +104,7 @@ export const Selectable: Story = {
           <ListItem icon="file" title="Option B" description="Second option" value="b" />
           <ListItem icon="settings" title="Option C" description="Third option" value="c" />
         </List>
-        <p className="text-sm text-slate-500 mt-4">Selected: {selectedKey ?? "none"}</p>
+        <p className="text-sm text-muted-foreground mt-4">Selected: {selectedKey ?? "none"}</p>
       </div>
     );
   },

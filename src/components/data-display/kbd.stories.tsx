@@ -30,13 +30,13 @@ export const CtrlShiftP: Story = {
 export const CopyPaste: Story = {
   render: (args) => (
     <div className="flex items-center gap-6">
-      <div className="flex items-center gap-2 text-sm text-slate-600">
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
         Copy: <Kbd {...args} combo="Mod+C" />
       </div>
-      <div className="flex items-center gap-2 text-sm text-slate-600">
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
         Paste: <Kbd {...args} combo="Mod+V" />
       </div>
-      <div className="flex items-center gap-2 text-sm text-slate-600">
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
         Undo: <Kbd {...args} combo="Mod+Z" />
       </div>
     </div>
@@ -54,7 +54,7 @@ export const CommonShortcuts: Story = {
         { label: "Command Palette", combo: "Ctrl+Shift+P" },
         { label: "Toggle Terminal", combo: "Ctrl+`" },
       ].map(({ label, combo }) => (
-        <div key={combo} className="flex items-center justify-between w-64 text-sm text-slate-700">
+        <div key={combo} className="flex items-center justify-between w-64 text-sm text-navy-text">
           <span>{label}</span>
           <Kbd {...args} combo={combo} />
         </div>
@@ -108,7 +108,7 @@ export const KeysArray: Story = {
 
 export const InContext: Story = {
   render: (args) => (
-    <div className="flex items-center gap-2 text-sm text-slate-600">
+    <div className="flex items-center gap-2 text-sm text-muted-foreground">
       Press <Kbd {...args} combo="Mod+K" /> to open the search bar, or <Kbd {...args}>Esc</Kbd> to close it.
     </div>
   ),

@@ -24,9 +24,9 @@ export const Default: Story = {
     children: logos.map((name) => (
       <div
         key={name}
-        className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 shadow-sm"
+        className="flex items-center justify-center rounded-xl border border-muted bg-surface px-6 py-3 shadow-sm"
       >
-        <span className="text-sm font-semibold text-slate-700">{name}</span>
+        <span className="text-sm font-semibold text-navy-text">{name}</span>
       </div>
     )),
   },
@@ -38,9 +38,9 @@ export const RightDirection: Story = {
     children: logos.map((name) => (
       <div
         key={name}
-        className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 shadow-sm"
+        className="flex items-center justify-center rounded-xl border border-muted bg-surface px-6 py-3 shadow-sm"
       >
-        <span className="text-sm font-semibold text-slate-700">{name}</span>
+        <span className="text-sm font-semibold text-navy-text">{name}</span>
       </div>
     )),
   },
@@ -52,9 +52,9 @@ export const SlowSpeed: Story = {
     children: logos.map((name) => (
       <div
         key={name}
-        className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 shadow-sm"
+        className="flex items-center justify-center rounded-xl border border-muted bg-surface px-6 py-3 shadow-sm"
       >
-        <span className="text-sm font-semibold text-slate-700">{name}</span>
+        <span className="text-sm font-semibold text-navy-text">{name}</span>
       </div>
     )),
   },
@@ -66,9 +66,9 @@ export const FastSpeed: Story = {
     children: logos.map((name) => (
       <div
         key={name}
-        className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 shadow-sm"
+        className="flex items-center justify-center rounded-xl border border-muted bg-surface px-6 py-3 shadow-sm"
       >
-        <span className="text-sm font-semibold text-slate-700">{name}</span>
+        <span className="text-sm font-semibold text-navy-text">{name}</span>
       </div>
     )),
   },
@@ -80,9 +80,9 @@ export const NoPauseOnHover: Story = {
     children: logos.map((name) => (
       <div
         key={name}
-        className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 shadow-sm"
+        className="flex items-center justify-center rounded-xl border border-muted bg-surface px-6 py-3 shadow-sm"
       >
-        <span className="text-sm font-semibold text-slate-700">{name}</span>
+        <span className="text-sm font-semibold text-navy-text">{name}</span>
       </div>
     )),
   },
@@ -94,9 +94,9 @@ export const Vertical: Story = {
     children: logos.slice(0, 5).map((name) => (
       <div
         key={name}
-        className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 shadow-sm"
+        className="flex items-center justify-center rounded-xl border border-muted bg-surface px-6 py-3 shadow-sm"
       >
-        <span className="text-sm font-semibold text-slate-700">{name}</span>
+        <span className="text-sm font-semibold text-navy-text">{name}</span>
       </div>
     )),
   },
@@ -121,10 +121,10 @@ export const Testimonials: Story = {
     ].map(({ name, text }) => (
       <div
         key={name}
-        className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-white px-6 py-4 shadow-sm w-64"
+        className="flex flex-col gap-2 rounded-xl border border-muted bg-surface px-6 py-4 shadow-sm w-64"
       >
-        <p className="text-sm text-slate-600 italic">&ldquo;{text}&rdquo;</p>
-        <span className="text-xs font-semibold text-slate-800">{name}</span>
+        <p className="text-sm text-muted-foreground italic">&ldquo;{text}&rdquo;</p>
+        <span className="text-xs font-semibold text-navy-text">{name}</span>
       </div>
     )),
   },

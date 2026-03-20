@@ -74,7 +74,7 @@ const InfiniteScroll = forwardRef<HTMLDivElement, InfiniteScrollProps>(
 
         {/* End message */}
         {!hasMore && !loading && endMessage && (
-          <div className="flex items-center justify-center py-4 text-sm text-slate-600">
+          <div className="flex items-center justify-center py-4 text-sm text-muted-foreground">
             {endMessage}
           </div>
         )}

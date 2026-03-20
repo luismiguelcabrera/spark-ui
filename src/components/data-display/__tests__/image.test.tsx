@@ -31,7 +31,7 @@ describe("Image", () => {
     const img = screen.getByAltText("test");
     fireEvent.error(img);
     // Fallback should be visible (the icon fallback container)
-    expect(container.querySelector(".bg-slate-100")).toBeInTheDocument();
+    expect(container.querySelector(".bg-muted")).toBeInTheDocument();
     // Image should be gone
     expect(screen.queryByAltText("test")).not.toBeInTheDocument();
   });
@@ -46,7 +46,7 @@ describe("Image", () => {
 
   it("shows fallback when no src provided", () => {
     const { container } = render(<Image alt="empty" />);
-    expect(container.querySelector(".bg-slate-100")).toBeInTheDocument();
+    expect(container.querySelector(".bg-muted")).toBeInTheDocument();
   });
 
   it("calls onLoad prop", () => {

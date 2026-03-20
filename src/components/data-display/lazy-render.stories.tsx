@@ -19,7 +19,7 @@ export const Default: Story = {
   args: {
     once: true,
     placeholder: (
-      <div className="h-40 rounded-xl bg-slate-100 animate-pulse flex items-center justify-center text-sm text-slate-700">
+      <div className="h-40 rounded-xl bg-muted animate-pulse flex items-center justify-center text-sm text-navy-text">
         Loading content...
       </div>
     ),
@@ -38,7 +38,7 @@ export const ScrollToReveal: Story = {
   },
   render: (args) => (
     <div>
-      <div className="h-[80vh] flex items-center justify-center text-slate-700">
+      <div className="h-[80vh] flex items-center justify-center text-navy-text">
         Scroll down to reveal lazy content
       </div>
       {Array.from({ length: 5 }, (_, i) => (
@@ -46,7 +46,7 @@ export const ScrollToReveal: Story = {
           key={i}
           {...args}
           placeholder={
-            <div className="h-32 mb-4 rounded-xl bg-slate-100 animate-pulse" />
+            <div className="h-32 mb-4 rounded-xl bg-muted animate-pulse" />
           }
         >
           <div className="h-32 mb-4 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-sm font-medium text-primary">
@@ -64,12 +64,12 @@ export const WithRootMargin: Story = {
     once: true,
     rootMargin: "200px 0px",
     placeholder: (
-      <div className="h-40 rounded-xl bg-slate-100 animate-pulse flex items-center justify-center text-sm text-slate-700">
+      <div className="h-40 rounded-xl bg-muted animate-pulse flex items-center justify-center text-sm text-navy-text">
         Will load 200px before entering viewport
       </div>
     ),
     children: (
-      <div className="h-40 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-sm font-medium text-green-700">
+      <div className="h-40 rounded-xl bg-success/10 border border-success/20 flex items-center justify-center text-sm font-medium text-success">
         Pre-loaded with rootMargin
       </div>
     ),
@@ -80,12 +80,12 @@ export const ToggleOnScroll: Story = {
   args: {
     once: false,
     placeholder: (
-      <div className="h-40 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-sm text-red-700">
+      <div className="h-40 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center justify-center text-sm text-destructive">
         Out of viewport
       </div>
     ),
     children: (
-      <div className="h-40 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-sm text-green-700">
+      <div className="h-40 rounded-xl bg-success/10 border border-success/20 flex items-center justify-center text-sm text-success">
         In viewport
       </div>
     ),
@@ -99,7 +99,7 @@ export const LazyImage: Story = {
   },
   render: (args) => (
     <div>
-      <div className="h-[80vh] flex items-center justify-center text-slate-700">
+      <div className="h-[80vh] flex items-center justify-center text-navy-text">
         Scroll down for lazy images
       </div>
       {Array.from({ length: 3 }, (_, i) => (
@@ -107,7 +107,7 @@ export const LazyImage: Story = {
           key={i}
           {...args}
           placeholder={
-            <div className="h-64 mb-4 rounded-xl bg-slate-100 animate-pulse" />
+            <div className="h-64 mb-4 rounded-xl bg-muted animate-pulse" />
           }
         >
           <img

@@ -16,7 +16,7 @@ import { Icon } from "./icon";
 /*  Variants                                                                   */
 /* -------------------------------------------------------------------------- */
 
-const imageVariants = cva("relative overflow-hidden bg-slate-100", {
+const imageVariants = cva("relative overflow-hidden bg-muted", {
   variants: {
     radius: {
       none: "rounded-none",
@@ -162,14 +162,14 @@ const Image = forwardRef<HTMLImageElement, ImageProps>(
       >
         {/* Skeleton placeholder */}
         {showSkeleton && (
-          <div className="absolute inset-0 animate-pulse bg-slate-200" />
+          <div className="absolute inset-0 animate-pulse bg-muted" />
         )}
 
         {/* Error / empty fallback */}
         {showError && (
-          <div className="absolute inset-0 flex items-center justify-center bg-slate-100 text-slate-600">
+          <div className="absolute inset-0 flex items-center justify-center bg-muted text-muted-foreground">
             {fallback ?? (
-              <Icon name={fallbackIcon} size="lg" className="text-slate-600" />
+              <Icon name={fallbackIcon} size="lg" className="text-muted-foreground" />
             )}
           </div>
         )}
