@@ -5,11 +5,11 @@ import { cn } from "../../lib/utils";
 const statusDotVariants = cva("inline-block rounded-full", {
   variants: {
     color: {
-      green: "bg-emerald-500",
-      amber: "bg-amber-500",
-      red: "bg-red-500",
-      blue: "bg-blue-500",
-      slate: "bg-slate-400",
+      green: "bg-success",
+      amber: "bg-warning",
+      red: "bg-destructive",
+      blue: "bg-primary",
+      slate: "bg-muted-foreground/50",
     },
     size: {
       sm: "size-1.5",
@@ -40,11 +40,11 @@ const StatusDot = forwardRef<HTMLSpanElement, StatusDotProps>(
           <span
             className={cn(
               "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 motion-reduce:animate-none",
-              color === "green" && "bg-emerald-400",
-              color === "amber" && "bg-amber-400",
-              color === "red" && "bg-red-400",
-              color === "blue" && "bg-blue-400",
-              color === "slate" && "bg-slate-300"
+              color === "green" && "bg-success/70",
+              color === "amber" && "bg-warning/70",
+              color === "red" && "bg-destructive/70",
+              color === "blue" && "bg-primary/70",
+              color === "slate" && "bg-muted-foreground/30"
             )}
           />
           <span className={cn(statusDotVariants({ color, size }), className)} />

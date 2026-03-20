@@ -67,12 +67,12 @@ describe("Snippet", () => {
   // ── Color ───────────────────────────────────────────────────────────
 
   it.each([
-    ["default", "bg-slate-100"],
+    ["default", "bg-muted"],
     ["primary", "bg-primary/10"],
     ["secondary", "bg-secondary/10"],
-    ["success", "bg-green-50"],
-    ["warning", "bg-amber-50"],
-    ["danger", "bg-red-50"],
+    ["success", "bg-success/10"],
+    ["warning", "bg-warning/10"],
+    ["danger", "bg-destructive/10"],
   ] as const)("applies correct background for color=%s", (color, expectedClass) => {
     const { container } = render(
       <Snippet color={color}>npm install</Snippet>,
@@ -82,7 +82,7 @@ describe("Snippet", () => {
 
   it("uses default color when color prop is not provided", () => {
     const { container } = render(<Snippet>npm install</Snippet>);
-    expect(container.firstChild).toHaveClass("bg-slate-100");
+    expect(container.firstChild).toHaveClass("bg-muted");
   });
 
   // ── Copy button ─────────────────────────────────────────────────────

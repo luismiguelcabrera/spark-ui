@@ -167,15 +167,15 @@ export const AnimationComparison: Story = {
   render: (args) => (
     <div className="max-w-lg space-y-8">
       <div>
-        <p className="text-sm font-medium text-slate-700 mb-2">Pulse (default)</p>
+        <p className="text-sm font-medium text-navy-text mb-2">Pulse (default)</p>
         <Skeleton {...args} animation="pulse" />
       </div>
       <div>
-        <p className="text-sm font-medium text-slate-700 mb-2">Wave (shimmer)</p>
+        <p className="text-sm font-medium text-navy-text mb-2">Wave (shimmer)</p>
         <Skeleton {...args} animation="wave" />
       </div>
       <div>
-        <p className="text-sm font-medium text-slate-700 mb-2">None</p>
+        <p className="text-sm font-medium text-navy-text mb-2">None</p>
         <Skeleton {...args} animation="none" />
       </div>
     </div>
@@ -217,15 +217,15 @@ export const CustomDimensions: Story = {
   render: (args) => (
     <div className="space-y-4">
       <div>
-        <p className="text-sm font-medium text-slate-700 mb-2">200px x 40px</p>
+        <p className="text-sm font-medium text-navy-text mb-2">200px x 40px</p>
         <Skeleton {...args} width="200px" height="40px" />
       </div>
       <div>
-        <p className="text-sm font-medium text-slate-700 mb-2">100% x 3rem</p>
+        <p className="text-sm font-medium text-navy-text mb-2">100% x 3rem</p>
         <Skeleton {...args} width="100%" height="3rem" />
       </div>
       <div>
-        <p className="text-sm font-medium text-slate-700 mb-2">50% x 80px</p>
+        <p className="text-sm font-medium text-navy-text mb-2">50% x 80px</p>
         <Skeleton {...args} width="50%" height="80px" />
       </div>
     </div>
@@ -239,7 +239,7 @@ export const BorderRadiusVariants: Story = {
     <div className="space-y-4">
       {(["none", "sm", "md", "lg", "full"] as const).map((radius) => (
         <div key={radius}>
-          <p className="text-sm font-medium text-slate-700 mb-2">
+          <p className="text-sm font-medium text-navy-text mb-2">
             borderRadius=&quot;{radius}&quot;
           </p>
           <Skeleton {...args} borderRadius={radius} height="40px" width="200px" />
@@ -256,11 +256,11 @@ export const Boilerplate: Story = {
   render: (args) => (
     <div className="max-w-md space-y-6">
       <div>
-        <p className="text-sm text-slate-500 mb-2">Default (no animation):</p>
+        <p className="text-sm text-muted-foreground mb-2">Default (no animation):</p>
         <Skeleton {...args} />
       </div>
       <div>
-        <p className="text-sm text-slate-500 mb-2">Card (no animation):</p>
+        <p className="text-sm text-muted-foreground mb-2">Card (no animation):</p>
         <Skeleton {...args} type="card" />
       </div>
     </div>
@@ -286,7 +286,7 @@ export const AllTypes: Story = {
         ] as const
       ).map((type) => (
         <div key={type}>
-          <p className="text-sm font-medium text-slate-700 mb-2 capitalize">
+          <p className="text-sm font-medium text-navy-text mb-2 capitalize">
             {type}
           </p>
           <div className="max-w-sm">

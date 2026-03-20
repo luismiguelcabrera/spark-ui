@@ -33,7 +33,7 @@ export const WithLabel: Story = {
 export const CustomColor: Story = {
   args: {
     value: 42,
-    color: "text-emerald-500",
+    color: "text-success",
     label: "Efficiency",
   },
 };
@@ -41,7 +41,7 @@ export const CustomColor: Story = {
 export const HighValue: Story = {
   args: {
     value: 95,
-    color: "text-red-500",
+    color: "text-destructive",
     label: "CPU Usage",
   },
 };
@@ -49,7 +49,7 @@ export const HighValue: Story = {
 export const LowValue: Story = {
   args: {
     value: 15,
-    color: "text-blue-500",
+    color: "text-primary",
     label: "Memory",
   },
 };
@@ -82,10 +82,10 @@ export const HiddenValue: Story = {
 export const Gallery: Story = {
   render: (args) => (
     <div className="flex flex-wrap items-end gap-8">
-      <SemiCircleProgress {...args} value={20} size={140} color="text-blue-500" label="Low" />
-      <SemiCircleProgress {...args} value={50} size={160} color="text-amber-500" label="Medium" />
-      <SemiCircleProgress {...args} value={80} size={180} color="text-emerald-500" label="High" />
-      <SemiCircleProgress {...args} value={95} size={200} color="text-red-500" label="Critical" />
+      <SemiCircleProgress {...args} value={20} size={140} color="text-primary" label="Low" />
+      <SemiCircleProgress {...args} value={50} size={160} color="text-warning" label="Medium" />
+      <SemiCircleProgress {...args} value={80} size={180} color="text-success" label="High" />
+      <SemiCircleProgress {...args} value={95} size={200} color="text-destructive" label="Critical" />
     </div>
   ),
 };

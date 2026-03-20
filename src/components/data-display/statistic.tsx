@@ -66,10 +66,10 @@ const Statistic = forwardRef<HTMLDivElement, StatisticProps>(
     const trendIsNegative = trend && trend.value < 0;
     const isUpGood = trend?.isUpGood !== false; // default true
 
-    let trendColorClass = "text-gray-500";
+    let trendColorClass = "text-muted-foreground";
     if (trend && trend.value !== 0) {
       const isGood = isUpGood ? trendIsPositive : trendIsNegative;
-      trendColorClass = isGood ? "text-green-700" : "text-red-600";
+      trendColorClass = isGood ? "text-success" : "text-destructive";
     }
 
     const trendArrow = trendIsPositive ? "\u2191" : trendIsNegative ? "\u2193" : "";
@@ -82,8 +82,8 @@ const Statistic = forwardRef<HTMLDivElement, StatisticProps>(
           aria-busy="true"
           {...props}
         >
-          <div className="mb-1 h-4 w-20 rounded bg-gray-200" />
-          <div className="h-8 w-32 rounded bg-gray-200" />
+          <div className="mb-1 h-4 w-20 rounded bg-muted" />
+          <div className="h-8 w-32 rounded bg-muted" />
         </div>
       );
     }
@@ -91,18 +91,18 @@ const Statistic = forwardRef<HTMLDivElement, StatisticProps>(
     return (
       <div ref={ref} className={cn("space-y-1", className)} {...props}>
         {/* Title */}
-        <p className="text-sm font-medium text-gray-500">{title}</p>
+        <p className="text-sm font-medium text-muted-foreground">{title}</p>
 
         {/* Value row */}
         <div className="flex items-baseline gap-1">
           {prefix && (
-            <span className="text-lg text-gray-600">{prefix}</span>
+            <span className="text-lg text-muted-foreground">{prefix}</span>
           )}
-          <span className="text-3xl font-bold tracking-tight text-gray-900">
+          <span className="text-3xl font-bold tracking-tight text-navy-text">
             {formattedValue}
           </span>
           {suffix && (
-            <span className="text-lg text-gray-600">{suffix}</span>
+            <span className="text-lg text-muted-foreground">{suffix}</span>
           )}
         </div>
 

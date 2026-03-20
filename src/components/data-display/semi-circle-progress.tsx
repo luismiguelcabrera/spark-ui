@@ -87,7 +87,7 @@ const SemiCircleProgress = forwardRef<HTMLDivElement, SemiCircleProgressProps>(
             stroke="currentColor"
             strokeWidth={thickness}
             strokeLinecap="round"
-            className="text-gray-100"
+            className="text-muted"
           />
 
           {/* Progress arc */}
@@ -112,12 +112,12 @@ const SemiCircleProgress = forwardRef<HTMLDivElement, SemiCircleProgressProps>(
           style={{ bottom: 0, left: 0, right: 0 }}
         >
           {showValue && (
-            <span className="text-2xl font-bold text-gray-900">
+            <span className="text-2xl font-bold text-navy-text">
               {clampedValue}%
             </span>
           )}
           {label && (
-            <span className="text-sm text-gray-500">{label}</span>
+            <span className="text-sm text-muted-foreground">{label}</span>
           )}
         </div>
       </div>

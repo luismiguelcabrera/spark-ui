@@ -94,7 +94,7 @@ describe("RingProgress", () => {
     const circles = container.querySelectorAll("circle");
     // First circle is the background
     expect(circles[0]).toHaveAttribute("fill", "none");
-    expect(circles[0]).toHaveClass("text-gray-100");
+    expect(circles[0]).toHaveClass("text-muted");
   });
 
   it("renders section tooltips as title elements", () => {

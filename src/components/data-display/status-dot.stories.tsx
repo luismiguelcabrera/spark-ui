@@ -48,7 +48,7 @@ export const AllColors: Story = {
       {(["green", "amber", "red", "blue", "slate"] as const).map((color) => (
         <div key={color} className="flex items-center gap-2">
           <StatusDot {...args} color={color} size="md" />
-          <span className="text-sm text-gray-600 capitalize">{color}</span>
+          <span className="text-sm text-muted-foreground capitalize">{color}</span>
         </div>
       ))}
     </div>
@@ -61,7 +61,7 @@ export const AllColorsPulsing: Story = {
       {(["green", "amber", "red", "blue", "slate"] as const).map((color) => (
         <div key={color} className="flex items-center gap-2">
           <StatusDot {...args} color={color} size="md" pulse />
-          <span className="text-sm text-gray-600 capitalize">{color}</span>
+          <span className="text-sm text-muted-foreground capitalize">{color}</span>
         </div>
       ))}
     </div>
@@ -73,11 +73,11 @@ export const Sizes: Story = {
     <div className="flex items-center gap-6">
       <div className="flex items-center gap-2">
         <StatusDot {...args} color="green" size="sm" />
-        <span className="text-sm text-gray-600">Small</span>
+        <span className="text-sm text-muted-foreground">Small</span>
       </div>
       <div className="flex items-center gap-2">
         <StatusDot {...args} color="green" size="md" />
-        <span className="text-sm text-gray-600">Medium</span>
+        <span className="text-sm text-muted-foreground">Medium</span>
       </div>
     </div>
   ),

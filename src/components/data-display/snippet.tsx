@@ -4,12 +4,12 @@ import { forwardRef, useState, useCallback, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 
 const colorMap = {
-  default: "bg-slate-100 border-slate-200 text-slate-800",
+  default: "bg-muted border-muted text-navy-text",
   primary: "bg-primary/10 border-primary/20 text-primary",
   secondary: "bg-secondary/10 border-secondary/20 text-secondary",
-  success: "bg-green-50 border-green-200 text-green-800",
-  warning: "bg-amber-50 border-amber-200 text-amber-900",
-  danger: "bg-red-50 border-red-200 text-red-800",
+  success: "bg-success/10 border-success/20 text-success",
+  warning: "bg-warning/10 border-warning/20 text-warning",
+  danger: "bg-destructive/10 border-destructive/20 text-destructive",
 } as const;
 
 type SnippetColor = keyof typeof colorMap;
@@ -87,7 +87,7 @@ const Snippet = forwardRef<HTMLDivElement, SnippetProps>(
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="currentColor"
-                className="w-4 h-4 text-green-600"
+                className="w-4 h-4 text-success"
                 aria-hidden="true"
               >
                 <path

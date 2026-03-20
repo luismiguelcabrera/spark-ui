@@ -54,9 +54,9 @@ const DragHandle = forwardRef<HTMLButtonElement, DragHandleProps>(
       aria-label="Drag to reorder"
       aria-roledescription="sortable"
       className={cn(
-        "touch-none cursor-grab shrink-0 text-slate-500 hover:text-slate-500 transition-colors p-1.5 rounded-md",
+        "touch-none cursor-grab shrink-0 text-muted-foreground hover:text-muted-foreground transition-colors p-1.5 rounded-md",
         "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
-        "hover:bg-slate-100",
+        "hover:bg-muted",
         isDragging && "cursor-grabbing text-primary",
         className,
       )}
@@ -97,7 +97,7 @@ function SortableListInner<T extends SortableItem>(
   const resolvedRenderItem = renderItem ?? ((item: T, dragHandle: ReactNode) => (
     <div className="flex items-center gap-3 p-3 flex-1">
       {dragHandle}
-      <span className="text-sm font-medium text-slate-700">
+      <span className="text-sm font-medium text-navy-text">
         {String(item[labelKey ?? "id"])}
       </span>
     </div>
@@ -427,7 +427,7 @@ function SortableListInner<T extends SortableItem>(
       {isDragging && activeIndex !== null && ghostStyle.position && (
         <li
           aria-hidden
-          className="flex items-center gap-2 rounded-xl bg-white ring-2 ring-primary/40 list-none"
+          className="flex items-center gap-2 rounded-xl bg-surface ring-2 ring-primary/40 list-none"
           style={ghostStyle}
         >
           {resolvedRenderItem(items[activeIndex], showHandle ? <DragHandle isDragging /> : null, activeIndex)}

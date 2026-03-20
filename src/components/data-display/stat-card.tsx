@@ -18,12 +18,12 @@ const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
   (
     {
       icon,
-      iconBg = "bg-slate-100",
-      iconColor = "text-slate-600",
+      iconBg = "bg-muted",
+      iconColor = "text-muted-foreground",
       label,
       value,
       change,
-      changeColor = "text-green-700",
+      changeColor = "text-success",
       className,
       ...props
     },

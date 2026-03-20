@@ -109,18 +109,18 @@ describe("SemiCircleProgress", () => {
     expect(paths).toHaveLength(2);
   });
 
-  it("background path has text-gray-100 class", () => {
+  it("background path has text-muted class", () => {
     const { container } = render(<SemiCircleProgress value={50} />);
     const paths = container.querySelectorAll("path");
-    expect(paths[0]).toHaveClass("text-gray-100");
+    expect(paths[0]).toHaveClass("text-muted");
   });
 
   it("applies custom color class to progress path", () => {
     const { container } = render(
-      <SemiCircleProgress value={50} color="text-red-500" />,
+      <SemiCircleProgress value={50} color="text-destructive" />,
     );
     const paths = container.querySelectorAll("path");
-    expect(paths[1]).toHaveClass("text-red-500");
+    expect(paths[1]).toHaveClass("text-destructive");
   });
 
   it("uses default color of text-primary", () => {

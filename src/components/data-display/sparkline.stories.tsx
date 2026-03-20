@@ -75,10 +75,10 @@ export const LargeSize: Story = {
 
 export const SmallInline: Story = {
   render: (args) => (
-    <div className="flex items-center gap-2 text-sm text-gray-700">
+    <div className="flex items-center gap-2 text-sm text-navy-text">
       Revenue
       <Sparkline {...args} data={upTrend} width={80} height={20} color="#10b981" />
-      <span className="text-green-700 font-medium">+12%</span>
+      <span className="text-success font-medium">+12%</span>
     </div>
   ),
 };
@@ -87,19 +87,19 @@ export const Gallery: Story = {
   render: (args) => (
     <div className="space-y-4">
       <div className="flex items-center gap-4">
-        <span className="w-20 text-sm text-gray-500">Up trend</span>
+        <span className="w-20 text-sm text-muted-foreground">Up trend</span>
         <Sparkline {...args} data={upTrend} color="#10b981" fill />
       </div>
       <div className="flex items-center gap-4">
-        <span className="w-20 text-sm text-gray-500">Down trend</span>
+        <span className="w-20 text-sm text-muted-foreground">Down trend</span>
         <Sparkline {...args} data={downTrend} color="#ef4444" fill />
       </div>
       <div className="flex items-center gap-4">
-        <span className="w-20 text-sm text-gray-500">Volatile</span>
+        <span className="w-20 text-sm text-muted-foreground">Volatile</span>
         <Sparkline {...args} data={volatile} color="#f59e0b" fill />
       </div>
       <div className="flex items-center gap-4">
-        <span className="w-20 text-sm text-gray-500">Steady</span>
+        <span className="w-20 text-sm text-muted-foreground">Steady</span>
         <Sparkline {...args} data={steady} color="#6366f1" fill />
       </div>
     </div>

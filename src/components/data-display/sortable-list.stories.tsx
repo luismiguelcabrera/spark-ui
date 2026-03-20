@@ -34,7 +34,7 @@ export const Default: Story = {
           renderItem={(item, handle) => (
             <div className="flex items-center gap-3 p-3 flex-1">
               {handle}
-              <span className="text-sm font-medium text-slate-700">{item.title}</span>
+              <span className="text-sm font-medium text-navy-text">{item.title}</span>
             </div>
           )}
         />
@@ -59,7 +59,7 @@ export const WithBadges: Story = {
           renderItem={(item, handle) => (
             <div className="flex items-center gap-3 p-3 flex-1">
               {handle}
-              <span className="text-sm font-medium text-slate-700 flex-1">
+              <span className="text-sm font-medium text-navy-text flex-1">
                 {item.title}
               </span>
               <Badge variant={priorityVariant[item.priority]} size="sm">
@@ -91,8 +91,8 @@ export const WithIcons: Story = {
           renderItem={(item, handle) => (
             <div className="flex items-center gap-3 p-3 flex-1">
               {handle}
-              <Icon name={item.icon} size="md" className="text-slate-500" />
-              <span className="text-sm font-medium text-slate-700">
+              <Icon name={item.icon} size="md" className="text-muted-foreground" />
+              <span className="text-sm font-medium text-navy-text">
                 {item.title}
               </span>
             </div>
@@ -113,11 +113,11 @@ export const CardStyle: Story = {
           onReorder={setItems}
           className="gap-2"
           renderItem={(item, handle) => (
-            <div className="flex items-center gap-3 p-3 flex-1 bg-white border border-slate-200 rounded-xl shadow-sm">
+            <div className="flex items-center gap-3 p-3 flex-1 bg-surface border border-muted rounded-xl shadow-sm">
               {handle}
               <div className="flex-1">
-                <p className="text-sm font-semibold text-slate-800">{item.title}</p>
-                <p className="text-xs text-slate-500">Task #{item.id}</p>
+                <p className="text-sm font-semibold text-navy-text">{item.title}</p>
+                <p className="text-xs text-muted-foreground">Task #{item.id}</p>
               </div>
             </div>
           )}
@@ -165,14 +165,14 @@ export const CustomHandle: Story = {
           onReorder={setItems}
           showHandle={false}
           renderItem={(item, _handle, index) => (
-            <div className="flex items-center gap-3 p-3 flex-1 bg-white border border-slate-200 rounded-lg">
-              <div className="w-7 h-7 rounded-md bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 cursor-grab">
+            <div className="flex items-center gap-3 p-3 flex-1 bg-surface border border-muted rounded-lg">
+              <div className="w-7 h-7 rounded-md bg-muted flex items-center justify-center text-xs font-bold text-muted-foreground shrink-0 cursor-grab">
                 {index + 1}
               </div>
-              <span className="text-sm font-medium text-slate-700 flex-1">
+              <span className="text-sm font-medium text-navy-text flex-1">
                 {item.title}
               </span>
-              <Icon name="move" size="sm" className="text-slate-500" />
+              <Icon name="move" size="sm" className="text-muted-foreground" />
             </div>
           )}
         />

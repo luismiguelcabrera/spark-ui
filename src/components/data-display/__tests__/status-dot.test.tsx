@@ -64,6 +64,6 @@ describe("StatusDot", () => {
   it("applies default green color", () => {
     const { container } = render(<StatusDot />);
     const el = container.querySelector("[role='status']");
-    expect(el!.className).toContain("emerald");
+    expect(el!.className).toContain("success");
   });
 });

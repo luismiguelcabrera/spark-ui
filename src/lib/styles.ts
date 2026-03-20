@@ -35,7 +35,7 @@ export const s = {
   textLabel: "text-sm font-medium text-gray-700",
   cardTitle: "text-lg font-bold text-secondary",
   statValue: "text-3xl font-bold text-navy-text",
-  statLabel: "text-sm font-medium text-slate-600",
+  statLabel: "text-sm font-medium text-muted-foreground",
 
   // ---- Cards ----
   cardBase: "bg-surface border border-muted shadow-soft rounded-2xl",
@@ -136,18 +136,18 @@ export const s = {
   spinnerBase: "inline-block rounded-full border-2 border-current border-t-transparent animate-spin",
 
   // ---- Skeleton ----
-  skeletonBase: "bg-slate-200 animate-pulse rounded-lg",
-  skeletonCircle: "bg-slate-200 animate-pulse rounded-full",
-  skeletonWave: "bg-slate-200 rounded-lg relative overflow-hidden [&::after]:absolute [&::after]:inset-0 [&::after]:bg-gradient-to-r [&::after]:from-transparent [&::after]:via-white/40 [&::after]:to-transparent [&::after]:animate-[spark-skeleton-shimmer_1.5s_infinite]",
-  skeletonWaveCircle: "bg-slate-200 rounded-full relative overflow-hidden [&::after]:absolute [&::after]:inset-0 [&::after]:bg-gradient-to-r [&::after]:from-transparent [&::after]:via-white/40 [&::after]:to-transparent [&::after]:animate-[spark-skeleton-shimmer_1.5s_infinite]",
-  skeletonStatic: "bg-slate-200 rounded-lg",
-  skeletonStaticCircle: "bg-slate-200 rounded-full",
+  skeletonBase: "bg-muted animate-pulse rounded-lg",
+  skeletonCircle: "bg-muted animate-pulse rounded-full",
+  skeletonWave: "bg-muted rounded-lg relative overflow-hidden [&::after]:absolute [&::after]:inset-0 [&::after]:bg-gradient-to-r [&::after]:from-transparent [&::after]:via-white/40 [&::after]:to-transparent [&::after]:animate-[spark-skeleton-shimmer_1.5s_infinite]",
+  skeletonWaveCircle: "bg-muted rounded-full relative overflow-hidden [&::after]:absolute [&::after]:inset-0 [&::after]:bg-gradient-to-r [&::after]:from-transparent [&::after]:via-white/40 [&::after]:to-transparent [&::after]:animate-[spark-skeleton-shimmer_1.5s_infinite]",
+  skeletonStatic: "bg-muted rounded-lg",
+  skeletonStaticCircle: "bg-muted rounded-full",
 
   // ---- Empty State ----
   emptyStateContainer: "flex flex-col items-center justify-center text-center",
-  emptyStateIcon: "flex items-center justify-center rounded-2xl bg-slate-100 text-slate-600",
+  emptyStateIcon: "flex items-center justify-center rounded-2xl bg-muted text-muted-foreground",
   emptyStateTitle: "text-lg font-bold text-secondary",
-  emptyStateDescription: "text-sm text-slate-600 max-w-sm",
+  emptyStateDescription: "text-sm text-muted-foreground max-w-sm",
 
   // ---- Toast ----
   toastBase: "flex items-start gap-3 rounded-xl p-4 border shadow-float",

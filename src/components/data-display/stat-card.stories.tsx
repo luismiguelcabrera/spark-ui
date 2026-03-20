@@ -34,9 +34,9 @@ export const WithNegativeChange: Story = {
     label: "Bounce Rate",
     value: "32.4%",
     change: "-5.2%",
-    changeColor: "text-red-600",
-    iconBg: "bg-red-100",
-    iconColor: "text-red-600",
+    changeColor: "text-destructive",
+    iconBg: "bg-destructive/15",
+    iconColor: "text-destructive",
   },
 };
 
@@ -46,8 +46,8 @@ export const CustomIcon: Story = {
     label: "Active Users",
     value: "2,847",
     change: "+8.1%",
-    iconBg: "bg-blue-100",
-    iconColor: "text-blue-600",
+    iconBg: "bg-primary/15",
+    iconColor: "text-primary",
   },
 };
 
@@ -56,8 +56,8 @@ export const NoChange: Story = {
     icon: "mail",
     label: "Total Messages",
     value: "12,394",
-    iconBg: "bg-purple-100",
-    iconColor: "text-purple-600",
+    iconBg: "bg-accent/15",
+    iconColor: "text-accent",
   },
 };
 
@@ -67,8 +67,8 @@ export const LargeNumber: Story = {
     label: "Page Views",
     value: "1.2M",
     change: "+23%",
-    iconBg: "bg-emerald-100",
-    iconColor: "text-emerald-600",
+    iconBg: "bg-success/15",
+    iconColor: "text-success",
   },
 };
 
@@ -81,8 +81,8 @@ export const Gallery: Story = {
         label="Revenue"
         value="$45,231"
         change="+12.5%"
-        iconBg="bg-blue-100"
-        iconColor="text-blue-600"
+        iconBg="bg-primary/15"
+        iconColor="text-primary"
       />
       <StatCard
         {...args}
@@ -90,8 +90,8 @@ export const Gallery: Story = {
         label="Users"
         value="2,847"
         change="+8.1%"
-        iconBg="bg-emerald-100"
-        iconColor="text-emerald-600"
+        iconBg="bg-success/15"
+        iconColor="text-success"
       />
       <StatCard
         {...args}
@@ -99,9 +99,9 @@ export const Gallery: Story = {
         label="Orders"
         value="1,234"
         change="-3.2%"
-        changeColor="text-red-600"
-        iconBg="bg-amber-100"
-        iconColor="text-amber-600"
+        changeColor="text-destructive"
+        iconBg="bg-warning/15"
+        iconColor="text-warning"
       />
       <StatCard
         {...args}
@@ -109,8 +109,8 @@ export const Gallery: Story = {
         label="Reviews"
         value="4.8"
         change="+0.3"
-        iconBg="bg-purple-100"
-        iconColor="text-purple-600"
+        iconBg="bg-accent/15"
+        iconColor="text-accent"
       />
     </div>
   ),

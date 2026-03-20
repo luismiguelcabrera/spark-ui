@@ -24,7 +24,7 @@ export const Default: Story = {
 export const WithLabel: Story = {
   args: {
     sections: [{ value: 75 }],
-    label: <span className="text-lg font-bold text-gray-900">75%</span>,
+    label: <span className="text-lg font-bold text-navy-text">75%</span>,
   },
 };
 
@@ -35,7 +35,7 @@ export const MultiSection: Story = {
       { value: 25, tooltip: "Success" },
       { value: 20, tooltip: "Warning" },
     ],
-    label: <span className="text-sm font-semibold text-gray-700">75%</span>,
+    label: <span className="text-sm font-semibold text-navy-text">75%</span>,
   },
 };
 
@@ -43,16 +43,16 @@ export const RoundCaps: Story = {
   args: {
     sections: [{ value: 65 }],
     roundCaps: true,
-    label: <span className="text-lg font-bold text-gray-900">65%</span>,
+    label: <span className="text-lg font-bold text-navy-text">65%</span>,
   },
 };
 
 export const CustomColors: Story = {
   args: {
     sections: [
-      { value: 40, color: "text-blue-500" },
-      { value: 25, color: "text-pink-500" },
-      { value: 15, color: "text-yellow-500" },
+      { value: 40, color: "text-primary" },
+      { value: 25, color: "text-destructive" },
+      { value: 15, color: "text-warning" },
     ],
     roundCaps: true,
   },
@@ -66,8 +66,8 @@ export const LargeSize: Story = {
     roundCaps: true,
     label: (
       <div className="text-center">
-        <div className="text-2xl font-bold text-gray-900">80%</div>
-        <div className="text-xs text-gray-500">Complete</div>
+        <div className="text-2xl font-bold text-navy-text">80%</div>
+        <div className="text-xs text-muted-foreground">Complete</div>
       </div>
     ),
   },
@@ -85,7 +85,7 @@ export const FullProgress: Story = {
   args: {
     sections: [{ value: 100 }],
     roundCaps: true,
-    label: <span className="text-lg font-bold text-green-600">100%</span>,
+    label: <span className="text-lg font-bold text-success">100%</span>,
   },
 };
 
@@ -114,9 +114,9 @@ export const Gallery: Story = {
       <RingProgress
         {...args}
         sections={[
-          { value: 30, color: "text-blue-500" },
-          { value: 20, color: "text-emerald-500" },
-          { value: 15, color: "text-amber-500" },
+          { value: 30, color: "text-primary" },
+          { value: 20, color: "text-success" },
+          { value: 15, color: "text-warning" },
         ]}
         size={140}
         thickness={16}

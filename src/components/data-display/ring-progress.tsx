@@ -26,11 +26,11 @@ type RingProgressProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
 
 const DEFAULT_COLORS = [
   "text-primary",
-  "text-emerald-500",
-  "text-amber-500",
-  "text-red-500",
-  "text-purple-500",
-  "text-cyan-500",
+  "text-success",
+  "text-warning",
+  "text-destructive",
+  "text-accent",
+  "text-mint",
 ];
 
 // ── Component ───────────────────────────────────────────────────────────
@@ -96,7 +96,7 @@ const RingProgress = forwardRef<HTMLDivElement, RingProgressProps>(
             fill="none"
             stroke="currentColor"
             strokeWidth={thickness}
-            className="text-gray-100"
+            className="text-muted"
           />
 
           {/* Sections */}

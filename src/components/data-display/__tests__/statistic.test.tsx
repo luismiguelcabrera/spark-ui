@@ -123,7 +123,7 @@ describe("Statistic", () => {
       <Statistic title="Revenue" value={1000} trend={{ value: 10 }} />,
     );
     const trendEl = screen.getByLabelText("Trend: +10%");
-    expect(trendEl).toHaveClass("text-green-700");
+    expect(trendEl).toHaveClass("text-success");
   });
 
   it("applies red color for negative trend when isUpGood is true (default)", () => {
@@ -131,7 +131,7 @@ describe("Statistic", () => {
       <Statistic title="Revenue" value={1000} trend={{ value: -10 }} />,
     );
     const trendEl = screen.getByLabelText("Trend: -10%");
-    expect(trendEl).toHaveClass("text-red-600");
+    expect(trendEl).toHaveClass("text-destructive");
   });
 
   it("inverts trend color when isUpGood is false", () => {
@@ -144,7 +144,7 @@ describe("Statistic", () => {
     );
     // Positive trend is bad when isUpGood is false
     const trendEl = screen.getByLabelText("Trend: +10%");
-    expect(trendEl).toHaveClass("text-red-600");
+    expect(trendEl).toHaveClass("text-destructive");
   });
 
   it("shows green for negative trend when isUpGood is false", () => {
@@ -156,15 +156,15 @@ describe("Statistic", () => {
       />,
     );
     const trendEl = screen.getByLabelText("Trend: -10%");
-    expect(trendEl).toHaveClass("text-green-700");
+    expect(trendEl).toHaveClass("text-success");
   });
 
-  it("applies gray color for zero trend", () => {
+  it("applies muted color for zero trend", () => {
     render(
       <Statistic title="Revenue" value={1000} trend={{ value: 0 }} />,
     );
     const trendEl = screen.getByLabelText("Trend: 0%");
-    expect(trendEl).toHaveClass("text-gray-500");
+    expect(trendEl).toHaveClass("text-muted-foreground");
   });
 
   it("trend arrow is aria-hidden", () => {
