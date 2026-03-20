@@ -60,7 +60,7 @@ function Drawer({
         aria-modal="true"
         aria-label={title}
         className={cn(
-          "relative ml-auto flex h-full w-full max-w-md flex-col bg-white shadow-float",
+          "relative ml-auto flex h-full w-full max-w-md flex-col bg-surface shadow-float",
           side === "left" && "ml-0 mr-auto",
           className,
         )}

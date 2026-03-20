@@ -51,15 +51,15 @@ export const CustomLabel: Story = {
 export const InCard: Story = {
   args: {},
   render: (args) => (
-    <div className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="w-full max-w-sm rounded-xl border border-muted bg-surface p-4 shadow-sm">
       <h3 className="text-sm font-bold text-secondary">Account Settings</h3>
-      <p className="text-xs text-slate-500 mt-1">Manage your account preferences</p>
+      <p className="text-xs text-muted-foreground mt-1">Manage your account preferences</p>
       <Divider {...args} className="my-4" />
       <h3 className="text-sm font-bold text-secondary">Notifications</h3>
-      <p className="text-xs text-slate-500 mt-1">Configure how you receive alerts</p>
+      <p className="text-xs text-muted-foreground mt-1">Configure how you receive alerts</p>
       <Divider {...args} className="my-4" />
       <h3 className="text-sm font-bold text-secondary">Privacy</h3>
-      <p className="text-xs text-slate-500 mt-1">Control your data sharing settings</p>
+      <p className="text-xs text-muted-foreground mt-1">Control your data sharing settings</p>
     </div>
   ),
 };

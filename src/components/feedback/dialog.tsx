@@ -65,7 +65,7 @@ const confirmStyles: Record<DialogVariant, string> = {
   default:
     "bg-primary hover:bg-primary/90 text-white focus-visible:ring-primary",
   danger:
-    "bg-red-600 hover:bg-red-700 text-white focus-visible:ring-red-600",
+    "bg-destructive hover:bg-destructive/90 text-white focus-visible:ring-destructive",
 };
 
 /* -------------------------------------------------------------------------- */
@@ -165,7 +165,7 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>(
           <div
             ref={setRefs}
             className={cn(
-              "relative bg-white rounded-2xl shadow-float max-w-sm w-full mx-4 p-6",
+              "relative bg-surface rounded-2xl shadow-float max-w-sm w-full mx-4 p-6",
               className,
             )}
             onClick={(e) => e.stopPropagation()}

@@ -25,26 +25,26 @@ describe("Banner", () => {
   it("defaults to info color", () => {
     render(<Banner text="Default" />);
     const banner = screen.getByRole("status");
-    expect(banner).toHaveClass("bg-blue-600");
+    expect(banner).toHaveClass("bg-primary");
   });
 
   it("applies warning color styles", () => {
     render(<Banner text="Warning" color="warning" />);
     const banner = screen.getByRole("status");
-    expect(banner).toHaveClass("bg-amber-500");
-    expect(banner).toHaveClass("text-amber-950");
+    expect(banner).toHaveClass("bg-warning");
+    expect(banner).toHaveClass("text-black");
   });
 
   it("applies danger color styles", () => {
     render(<Banner text="Danger" color="danger" />);
     const banner = screen.getByRole("status");
-    expect(banner).toHaveClass("bg-red-600");
+    expect(banner).toHaveClass("bg-destructive");
   });
 
   it("applies success color styles", () => {
     render(<Banner text="Success" color="success" />);
     const banner = screen.getByRole("status");
-    expect(banner).toHaveClass("bg-green-700");
+    expect(banner).toHaveClass("bg-success");
   });
 
   it("renders actions", () => {

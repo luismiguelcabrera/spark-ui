@@ -91,7 +91,7 @@ const ContextMenu = forwardRef<HTMLDivElement, ContextMenuProps>(
           <div
             ref={menuRef}
             className={cn(
-              "fixed z-50 min-w-[180px] bg-white border border-slate-200 rounded-xl shadow-float py-1 overflow-hidden",
+              "fixed z-50 min-w-[180px] bg-surface border border-muted rounded-xl shadow-float py-1 overflow-hidden",
               "animate-in fade-in zoom-in-95"
             )}
             style={{ left: position.x, top: position.y }}

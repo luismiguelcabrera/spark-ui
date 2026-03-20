@@ -62,8 +62,7 @@ const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
           }
           data-state={open ? "open" : "closed"}
           className={cn(
-            "fixed z-50 flex items-center gap-3 rounded-xl border border-slate-200 bg-white/95 px-4 py-2.5 shadow-lg backdrop-blur-md",
-            "dark:border-slate-700 dark:bg-slate-900/95",
+            "fixed z-50 flex items-center gap-3 rounded-xl border border-muted bg-surface/95 px-4 py-2.5 shadow-lg backdrop-blur-md",
             positionClasses[position],
             animationClasses[position],
             className,

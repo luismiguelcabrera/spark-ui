@@ -203,7 +203,7 @@ describe("Dialog", () => {
 
   it("applies danger variant styling to confirm button", () => {
     render(<DialogWrapper variant="danger" />);
-    expect(screen.getByText("Confirm")).toHaveClass("bg-red-600");
+    expect(screen.getByText("Confirm")).toHaveClass("bg-destructive");
   });
 
   it("focuses cancel button for danger variant", async () => {

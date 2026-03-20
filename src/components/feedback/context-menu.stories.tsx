@@ -62,8 +62,8 @@ export const FileContextMenu: Story = {
   },
   render: (args) => (
     <ContextMenu {...args}>
-      <div className="flex items-center gap-3 p-4 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 cursor-default">
-        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-800 text-sm font-bold">
+      <div className="flex items-center gap-3 p-4 border border-muted rounded-xl bg-surface hover:bg-muted/30 cursor-default">
+        <div className="w-10 h-10 bg-primary/15 rounded-lg flex items-center justify-center text-primary text-sm font-bold">
           PDF
         </div>
         <div>
