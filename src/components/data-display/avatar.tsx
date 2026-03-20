@@ -4,7 +4,6 @@ import {
   forwardRef,
   useState,
   useEffect,
-  useCallback,
   useRef,
   createContext,
   useContext,
@@ -122,6 +121,10 @@ const iconSizeMap = {
 type AvatarProps = {
   /** Image URL */
   src?: string;
+  /** Responsive image sources */
+  srcSet?: string;
+  /** Responsive image sizes */
+  sizes?: string;
   /** Alt text for the image & aria-label fallback */
   alt?: string;
   /** Initials to show when there is no image */
@@ -148,6 +151,8 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
   (
     {
       src,
+      srcSet,
+      sizes,
       alt = "",
       initials,
       icon,
@@ -170,26 +175,9 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
     const [imgLoaded, setImgLoaded] = useState(false);
     const [imgError, setImgError] = useState(false);
 
-    // Keep latest callback in a ref so imgCallbackRef never goes stale
+    // Keep latest callback in a ref so handlers never go stale
     const onStatusRef = useRef(onLoadingStatusChange);
     onStatusRef.current = onLoadingStatusChange;
-
-    // Ref callback detects already-cached images on mount
-    const imgCallbackRef = useCallback(
-      (img: HTMLImageElement | null) => {
-        if (!img) return;
-        if (img.complete) {
-          if (img.naturalWidth > 0) {
-            setImgLoaded(true);
-            onStatusRef.current?.("loaded");
-          } else {
-            setImgError(true);
-            onStatusRef.current?.("error");
-          }
-        }
-      },
-      []
-    );
 
     useEffect(() => {
       setImgLoaded(false); // eslint-disable-line react-hooks/set-state-in-effect -- reset on src change
@@ -198,20 +186,6 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
     }, [src]);
 
     const showFallback = !src || imgError;
-
-    const fallbackContent = fallback ?? (
-      icon ? (
-        typeof icon === "string" ? (
-          <Icon name={icon} size={iconSizeMap[size]} className="text-current" />
-        ) : (
-          icon
-        )
-      ) : (
-        <span aria-hidden="true" className="font-bold">
-          {initials ?? (alt ? alt.charAt(0).toUpperCase() : "?")}
-        </span>
-      )
-    );
 
     return (
       <div
@@ -230,13 +204,27 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         )}
 
         {/* Fallback: custom > icon > initials > first letter of alt > "?" */}
-        {showFallback && fallbackContent}
+        {showFallback &&
+          (fallback ??
+            (icon ? (
+              typeof icon === "string" ? (
+                <Icon name={icon} size={iconSizeMap[size]} className="text-current" />
+              ) : (
+                icon
+              )
+            ) : (
+              <span aria-hidden="true" className="font-bold">
+                {initials ?? (alt ? alt.charAt(0).toUpperCase() : "?")}
+              </span>
+            )))}
 
-        {/* Image — fades in once loaded */}
+        {/* Image — key={src} forces remount so cached images are detected */}
         {src && !imgError && (
           <img
-            ref={imgCallbackRef}
+            key={src}
             src={src}
+            srcSet={srcSet}
+            sizes={sizes}
             alt={alt}
             className={cn(
               "absolute inset-0 w-full h-full object-cover transition-opacity duration-300 motion-reduce:transition-none",

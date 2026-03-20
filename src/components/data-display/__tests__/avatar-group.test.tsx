@@ -242,7 +242,7 @@ describe("AvatarGroup", () => {
   // ------------------------------------------------------------------
   // onExcessClick
   // ------------------------------------------------------------------
-  it("makes counter clickable when onExcessClick is provided", () => {
+  it("renders counter as <button> when onExcessClick is provided", () => {
     const onClick = vi.fn();
     render(
       <AvatarGroup max={1} onExcessClick={onClick}>
@@ -250,27 +250,14 @@ describe("AvatarGroup", () => {
         <span>A2</span>
       </AvatarGroup>
     );
-    const counter = screen.getByText("+1");
-    expect(counter).toHaveAttribute("role", "button");
-    expect(counter).toHaveAttribute("tabindex", "0");
-    fireEvent.click(counter);
+    const button = screen.getByRole("button", { name: "1 more" });
+    expect(button.tagName).toBe("BUTTON");
+    expect(button).toHaveAttribute("type", "button");
+    fireEvent.click(button);
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  it("counter responds to Enter key when onExcessClick is provided", () => {
-    const onClick = vi.fn();
-    render(
-      <AvatarGroup max={1} onExcessClick={onClick}>
-        <span>A1</span>
-        <span>A2</span>
-      </AvatarGroup>
-    );
-    const counter = screen.getByText("+1");
-    fireEvent.keyDown(counter, { key: "Enter" });
-    expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
-  it("counter has no role when onExcessClick is not provided", () => {
+  it("renders counter as <div> when onExcessClick is not provided", () => {
     render(
       <AvatarGroup max={1}>
         <span>A1</span>
@@ -278,7 +265,7 @@ describe("AvatarGroup", () => {
       </AvatarGroup>
     );
     const counter = screen.getByText("+1");
-    expect(counter).not.toHaveAttribute("role");
+    expect(counter.tagName).toBe("DIV");
   });
 
   // ------------------------------------------------------------------

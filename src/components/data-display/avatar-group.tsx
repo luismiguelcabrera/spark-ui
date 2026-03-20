@@ -1,5 +1,6 @@
 import {
   forwardRef,
+  useMemo,
   Children,
   isValidElement,
   type HTMLAttributes,
@@ -13,7 +14,7 @@ import { AvatarGroupContext, type AvatarSize, type AvatarShape } from "./avatar"
 // ---------------------------------------------------------------------------
 type AvatarGroupBorderColor = "white" | "gray" | "dark" | "none";
 
-type AvatarGroupProps = HTMLAttributes<HTMLDivElement> & {
+type AvatarGroupProps = Omit<HTMLAttributes<HTMLDivElement>, "aria-label"> & {
   /** Maximum visible avatars before showing +N */
   max?: number;
   /** Size propagated to child Avatars via context */
@@ -30,6 +31,8 @@ type AvatarGroupProps = HTMLAttributes<HTMLDivElement> & {
   onExcessClick?: () => void;
   /** Reverse stacking order — first avatar on top */
   reversed?: boolean;
+  /** Accessible label for the group */
+  "aria-label"?: string;
   children: ReactNode;
 };
 
@@ -88,6 +91,7 @@ const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
       onExcessClick,
       reversed = false,
       children,
+      "aria-label": ariaLabel,
       ...props
     },
     ref
@@ -101,17 +105,17 @@ const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
     const shapeClass = shapeClassMap[shape];
     const spacingClass = spacingMatrix[size][spacing];
 
+    const ctxValue = useMemo(
+      () => ({ size, shape, statusRingClass: statusRingMap[borderColor] }),
+      [size, shape, borderColor]
+    );
+
     return (
-      <AvatarGroupContext.Provider
-        value={{ size, shape, statusRingClass: statusRingMap[borderColor] }}
-      >
+      <AvatarGroupContext.Provider value={ctxValue}>
         <div
           ref={ref}
           role="group"
-          aria-label={
-            props["aria-label"] ??
-            `Group of ${childArray.length} avatars`
-          }
+          aria-label={ariaLabel ?? `Group of ${childArray.length} avatars`}
           className={cn("flex items-center", spacingClass, className)}
           {...props}
         >
@@ -139,29 +143,29 @@ const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
           {excess > 0 &&
             (renderExcess ? (
               renderExcess(excess, hidden)
-            ) : (
-              <div
-                role={onExcessClick ? "button" : undefined}
-                tabIndex={onExcessClick ? 0 : undefined}
+            ) : onExcessClick ? (
+              <button
+                type="button"
                 aria-label={`${excess} more`}
                 onClick={onExcessClick}
-                onKeyDown={
-                  onExcessClick
-                    ? (e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          onExcessClick();
-                        }
-                      }
-                    : undefined
-                }
+                className={cn(
+                  "relative flex items-center justify-center font-semibold bg-slate-200 text-slate-600",
+                  "cursor-pointer hover:bg-slate-300 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary",
+                  shapeClass,
+                  borderClass,
+                  counterSizeMap[size]
+                )}
+              >
+                +{excess}
+              </button>
+            ) : (
+              <div
+                aria-label={`${excess} more`}
                 className={cn(
                   "relative flex items-center justify-center font-semibold bg-slate-200 text-slate-600",
                   shapeClass,
                   borderClass,
-                  counterSizeMap[size],
-                  onExcessClick &&
-                    "cursor-pointer hover:bg-slate-300 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+                  counterSizeMap[size]
                 )}
               >
                 +{excess}
