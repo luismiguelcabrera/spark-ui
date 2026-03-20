@@ -35,7 +35,7 @@ export function DropdownMenuItem({
       className={cn(
         s.dropdownItem,
         danger && s.dropdownItemDanger,
-        "focus-visible:outline-none focus-visible:bg-slate-100",
+        "focus-visible:outline-none focus-visible:bg-muted",
         className,
       )}
     >

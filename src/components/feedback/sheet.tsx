@@ -419,7 +419,7 @@ const Sheet = forwardRef<HTMLDivElement, SheetProps>(
             onTouchMove={swipeable ? handlePanelTouchMove : undefined}
             onTouchEnd={swipeable ? handlePanelTouchEnd : undefined}
             className={cn(
-              "absolute bg-white shadow-float flex flex-col",
+              "absolute bg-surface shadow-float flex flex-col",
               positionMap[side],
               sizeMap[size][side],
               (side === "left" || side === "right") && "h-full",
@@ -439,12 +439,12 @@ const Sheet = forwardRef<HTMLDivElement, SheetProps>(
             {/* Drag handle */}
             {showDragHandle && (
               <div className="flex justify-center pt-3 pb-1 shrink-0">
-                <div className="w-10 h-1 bg-slate-200 rounded-full" />
+                <div className="w-10 h-1 bg-muted rounded-full" />
               </div>
             )}
             {/* Header */}
             {(title || header || showClose) && (
-              <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-muted">
                 {header ?? (
                   <div>
                     {title && (
@@ -453,7 +453,7 @@ const Sheet = forwardRef<HTMLDivElement, SheetProps>(
                       </h2>
                     )}
                     {description && (
-                      <p className="text-sm text-slate-600 mt-0.5">
+                      <p className="text-sm text-muted-foreground mt-0.5">
                         {description}
                       </p>
                     )}
@@ -463,7 +463,7 @@ const Sheet = forwardRef<HTMLDivElement, SheetProps>(
                   <button
                     type="button"
                     onClick={() => onOpenChange(false)}
-                    className="p-1.5 rounded-lg text-slate-600 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                    className="p-1.5 rounded-lg text-muted-foreground hover:text-navy-text hover:bg-muted transition-colors"
                     aria-label={t("sheet.close", "Close")}
                   >
                     <Icon name="close" size="md" />
@@ -475,7 +475,7 @@ const Sheet = forwardRef<HTMLDivElement, SheetProps>(
             <div className="flex-1 overflow-y-auto px-6 py-4">{children}</div>
             {/* Footer */}
             {footer && (
-              <div className="px-6 py-4 border-t border-slate-100">{footer}</div>
+              <div className="px-6 py-4 border-t border-muted">{footer}</div>
             )}
           </div>
         </div>

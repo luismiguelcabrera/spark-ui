@@ -139,7 +139,7 @@ describe("interactive mode", () => {
 
   it("applies color class", () => {
     const { container } = render(<Rating readOnly={false} defaultValue={3} color="red" />);
-    expect(container.innerHTML).toContain("text-red-500");
+    expect(container.innerHTML).toContain("text-destructive");
   });
 
   it("keeps backward compat - readOnly defaults to true", () => {
@@ -184,7 +184,7 @@ describe("interactive mode", () => {
 
   it("uses default amber color", () => {
     const { container } = render(<Rating readOnly={false} defaultValue={3} />);
-    expect(container.innerHTML).toContain("text-amber-700");
+    expect(container.innerHTML).toContain("text-warning");
   });
 
   it("works in uncontrolled mode", async () => {

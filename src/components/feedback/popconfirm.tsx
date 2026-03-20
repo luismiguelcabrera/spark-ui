@@ -20,9 +20,9 @@ type PopconfirmProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const typeMap = {
-  info: { icon: "info", color: "text-blue-500", confirmBg: "bg-primary hover:bg-primary-dark text-white" },
-  warning: { icon: "alert-triangle", color: "text-amber-600", confirmBg: "bg-amber-700 hover:bg-amber-800 text-white" },
-  danger: { icon: "alert-circle", color: "text-red-500", confirmBg: "bg-red-600 hover:bg-red-700 text-white" },
+  info: { icon: "info", color: "text-primary", confirmBg: "bg-primary hover:bg-primary-dark text-white" },
+  warning: { icon: "alert-triangle", color: "text-warning", confirmBg: "bg-warning hover:bg-warning/90 text-black" },
+  danger: { icon: "alert-circle", color: "text-destructive", confirmBg: "bg-destructive hover:bg-destructive/90 text-white" },
 };
 
 const placementMap = {
@@ -65,7 +65,7 @@ const Popconfirm = forwardRef<HTMLDivElement, PopconfirmProps>(
           <div
             ref={ref}
             className={cn(
-              "absolute z-50 w-64 bg-white border border-slate-200 rounded-xl shadow-float p-4",
+              "absolute z-50 w-64 bg-surface border border-muted rounded-xl shadow-float p-4",
               placementMap[placement]
             )}
             role="alertdialog"
@@ -74,14 +74,14 @@ const Popconfirm = forwardRef<HTMLDivElement, PopconfirmProps>(
               <Icon name={icon ?? styles.icon} size="md" className={cn("shrink-0 mt-0.5", styles.color)} />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-secondary">{title}</p>
-                {description && <p className="text-xs text-slate-600 mt-1">{description}</p>}
+                {description && <p className="text-xs text-muted-foreground mt-1">{description}</p>}
               </div>
             </div>
             <div className="flex justify-end gap-2 mt-3">
               <button
                 type="button"
                 onClick={() => { onCancel?.(); setOpen(false); }}
-                className="px-3 py-1.5 text-xs font-semibold text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+                className="px-3 py-1.5 text-xs font-semibold text-muted-foreground border border-muted rounded-lg hover:bg-muted/30 transition-colors"
               >
                 {cancelText}
               </button>

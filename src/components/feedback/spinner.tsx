@@ -13,7 +13,7 @@ const spinnerVariants = cva(s.spinnerBase, {
     color: {
       primary: "text-primary",
       white: "text-white",
-      muted: "text-slate-600",
+      muted: "text-muted-foreground",
     },
   },
   defaultVariants: {

@@ -7,10 +7,10 @@ import { Icon } from "../data-display/icon";
 const toastVariants = cva(s.toastBase, {
   variants: {
     variant: {
-      success: "bg-green-50 border-green-200 text-green-800",
-      error: "bg-red-50 border-red-200 text-red-800",
-      warning: "bg-amber-50 border-amber-200 text-amber-900",
-      info: "bg-blue-50 border-blue-200 text-blue-800",
+      success: "bg-success/10 border-success/20 text-success",
+      error: "bg-destructive/10 border-destructive/20 text-destructive",
+      warning: "bg-warning/10 border-warning/20 text-warning",
+      info: "bg-primary/10 border-primary/20 text-primary",
     },
   },
   defaultVariants: {

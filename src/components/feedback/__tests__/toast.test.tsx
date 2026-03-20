@@ -20,6 +20,6 @@ describe("Toast", () => {
 
   it("applies variant styling", () => {
     const { container } = render(<Toast title="Err" variant="error" />);
-    expect(container.firstChild).toHaveClass("bg-red-50");
+    expect(container.firstChild).toHaveClass("bg-destructive/10");
   });
 });

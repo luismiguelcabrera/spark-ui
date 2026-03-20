@@ -116,13 +116,13 @@ function Modal({
             <div>
               <h2 id={titleId} className="text-lg font-bold text-secondary">{title}</h2>
               {description && (
-                <p id={descId} className="text-sm text-slate-600 mt-0.5">{description}</p>
+                <p id={descId} className="text-sm text-muted-foreground mt-0.5">{description}</p>
               )}
             </div>
             <button
               type="button"
               aria-label={t("modal.close", "Close")}
-              className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="p-1 rounded-lg hover:bg-muted transition-colors text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <Icon name="close" size="md" />
             </button>
@@ -151,14 +151,14 @@ function Modal({
             <div>
               <h2 id={titleId} className="text-lg font-bold text-secondary">{title}</h2>
               {description && (
-                <p id={descId} className="text-sm text-slate-600 mt-0.5">{description}</p>
+                <p id={descId} className="text-sm text-muted-foreground mt-0.5">{description}</p>
               )}
             </div>
             <button
               type="button"
               aria-label={t("modal.close", "Close")}
               onClick={close}
-              className="p-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="p-1 rounded-lg hover:bg-muted transition-colors text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <Icon name="close" size="md" />
             </button>

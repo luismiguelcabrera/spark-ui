@@ -28,38 +28,38 @@ const statusConfig: Record<
 > = {
   success: {
     icon: "check_circle",
-    colorClass: "text-green-700",
-    bgClass: "bg-green-50",
+    colorClass: "text-success",
+    bgClass: "bg-success/10",
   },
   error: {
     icon: "x-circle",
-    colorClass: "text-red-600",
-    bgClass: "bg-red-50",
+    colorClass: "text-destructive",
+    bgClass: "bg-destructive/10",
   },
   warning: {
     icon: "warning",
-    colorClass: "text-amber-600",
-    bgClass: "bg-amber-50",
+    colorClass: "text-warning",
+    bgClass: "bg-warning/10",
   },
   info: {
     icon: "info",
-    colorClass: "text-blue-700",
-    bgClass: "bg-blue-50",
+    colorClass: "text-primary",
+    bgClass: "bg-primary/10",
   },
   "403": {
     icon: "lock",
-    colorClass: "text-red-600",
-    bgClass: "bg-red-50",
+    colorClass: "text-destructive",
+    bgClass: "bg-destructive/10",
   },
   "404": {
     icon: "search",
-    colorClass: "text-slate-600",
-    bgClass: "bg-slate-50",
+    colorClass: "text-muted-foreground",
+    bgClass: "bg-muted/50",
   },
   "500": {
     icon: "server",
-    colorClass: "text-red-600",
-    bgClass: "bg-red-50",
+    colorClass: "text-destructive",
+    bgClass: "bg-destructive/10",
   },
 };
 
@@ -91,11 +91,11 @@ const Result = forwardRef<HTMLDivElement, ResultProps>(
         </div>
 
         {/* Title */}
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">{title}</h2>
+        <h2 className="text-2xl font-bold text-navy-text mb-2">{title}</h2>
 
         {/* Subtitle */}
         {subtitle && (
-          <p className="text-sm text-slate-600 max-w-md mb-6">{subtitle}</p>
+          <p className="text-sm text-muted-foreground max-w-md mb-6">{subtitle}</p>
         )}
 
         {/* Extra (action buttons) */}

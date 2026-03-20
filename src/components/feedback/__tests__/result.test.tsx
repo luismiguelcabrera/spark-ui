@@ -89,7 +89,7 @@ describe("Result", () => {
     const { container } = render(
       <Result status="success" title="Success" />
     );
-    const iconWrapper = container.querySelector(".bg-green-50");
+    const iconWrapper = container.querySelector("[class*='bg-success']");
     expect(iconWrapper).toBeInTheDocument();
   });
 
@@ -97,7 +97,7 @@ describe("Result", () => {
     const { container } = render(
       <Result status="error" title="Error" />
     );
-    const iconWrapper = container.querySelector(".bg-red-50");
+    const iconWrapper = container.querySelector("[class*='bg-destructive']");
     expect(iconWrapper).toBeInTheDocument();
   });
 

@@ -45,11 +45,11 @@ type SnackbarProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const typeStyles: Record<string, { bg: string; icon: string; iconColor: string }> = {
-  default: { bg: "bg-slate-900 text-white", icon: "", iconColor: "" },
-  success: { bg: "bg-green-800 text-white", icon: "check-circle", iconColor: "text-green-100" },
-  error: { bg: "bg-red-700 text-white", icon: "alert-circle", iconColor: "text-red-100" },
-  warning: { bg: "bg-amber-500 text-amber-950", icon: "alert-triangle", iconColor: "text-amber-800" },
-  info: { bg: "bg-blue-600 text-white", icon: "info", iconColor: "text-blue-200" },
+  default: { bg: "bg-background-dark text-white", icon: "", iconColor: "" },
+  success: { bg: "bg-success text-white", icon: "check-circle", iconColor: "text-white/70" },
+  error: { bg: "bg-destructive text-white", icon: "alert-circle", iconColor: "text-white/70" },
+  warning: { bg: "bg-warning text-black", icon: "alert-triangle", iconColor: "text-black/70" },
+  info: { bg: "bg-primary text-white", icon: "info", iconColor: "text-white/70" },
 };
 
 const positionMap: Record<string, string> = {

@@ -39,12 +39,12 @@ const sizeMap = {
 };
 
 const colorMap: Record<RatingColor, string> = {
-  amber: "text-amber-700",
-  red: "text-red-500",
-  pink: "text-pink-500",
-  purple: "text-purple-500",
-  blue: "text-blue-500",
-  green: "text-green-500",
+  amber: "text-warning",
+  red: "text-destructive",
+  pink: "text-pink-500 dark:text-pink-400",
+  purple: "text-accent",
+  blue: "text-primary",
+  green: "text-success",
 };
 
 const Rating = forwardRef<HTMLDivElement, RatingProps>(

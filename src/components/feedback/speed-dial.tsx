@@ -69,22 +69,22 @@ const colorMap: Record<SpeedDialColor, string> = {
   secondary:
     "bg-secondary hover:bg-secondary-light text-white shadow-lg shadow-secondary/30",
   accent:
-    "bg-accent hover:bg-accent/90 text-amber-950 shadow-lg shadow-accent/30",
+    "bg-accent hover:bg-accent/90 text-black shadow-lg shadow-accent/30",
   destructive:
-    "bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-600/30",
+    "bg-destructive hover:bg-destructive/90 text-white shadow-lg shadow-destructive/30",
   success:
-    "bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/30",
+    "bg-success hover:bg-success/90 text-white shadow-lg shadow-success/30",
   warning:
-    "bg-amber-500 hover:bg-amber-600 text-amber-950 shadow-lg shadow-amber-500/30",
+    "bg-warning hover:bg-warning/90 text-black shadow-lg shadow-warning/30",
 };
 
 const focusRingColorMap: Record<SpeedDialColor, string> = {
   primary: "focus-visible:ring-primary",
   secondary: "focus-visible:ring-secondary",
   accent: "focus-visible:ring-accent",
-  destructive: "focus-visible:ring-red-600",
-  success: "focus-visible:ring-emerald-600",
-  warning: "focus-visible:ring-amber-500",
+  destructive: "focus-visible:ring-destructive",
+  success: "focus-visible:ring-success",
+  warning: "focus-visible:ring-warning",
 };
 
 const directionMap: Record<SpeedDialDirection, string> = {
@@ -208,7 +208,7 @@ const SpeedDial = forwardRef<HTMLDivElement, SpeedDialProps>(
                 {/* Tooltip — direction-aware */}
                 <span
                   className={cn(
-                    "absolute px-2 py-1 bg-slate-900 text-white text-xs font-medium rounded-md whitespace-nowrap",
+                    "absolute px-2 py-1 bg-background-dark text-white text-xs font-medium rounded-md whitespace-nowrap",
                     "opacity-0 group-hover:opacity-100 transition-opacity",
                     "motion-reduce:transition-none",
                     "pointer-events-none z-10",
@@ -223,9 +223,9 @@ const SpeedDial = forwardRef<HTMLDivElement, SpeedDialProps>(
                   onClick={() => handleActionClick(action)}
                   disabled={action.disabled}
                   className={cn(
-                    "w-10 h-10 bg-white border border-slate-200 shadow-md",
-                    "flex items-center justify-center text-slate-600",
-                    "hover:bg-slate-50 hover:shadow-lg transition-all",
+                    "w-10 h-10 bg-surface border border-muted shadow-md",
+                    "flex items-center justify-center text-muted-foreground",
+                    "hover:bg-muted/30 hover:shadow-lg transition-all",
                     "motion-reduce:transition-none",
                     "disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
                     "focus-visible:outline-none focus-visible:ring-2",

@@ -22,7 +22,7 @@ const LoadingOverlay = forwardRef<HTMLDivElement, LoadingOverlayProps>(
           className={cn(
             "flex flex-col items-center justify-center gap-3",
             fullScreen ? "fixed inset-0" : "absolute inset-0",
-            blur ? "bg-white/60 backdrop-blur-sm" : "bg-white/80",
+            blur ? "bg-surface/60 backdrop-blur-sm" : "bg-surface/80",
             "rounded-[inherit]"
           )}
           style={{ zIndex }}
@@ -30,7 +30,7 @@ const LoadingOverlay = forwardRef<HTMLDivElement, LoadingOverlayProps>(
           aria-label={label ?? "Loading"}
         >
           {spinner ?? <Spinner size="lg" color="primary" />}
-          {label && <p className="text-sm font-medium text-slate-600">{label}</p>}
+          {label && <p className="text-sm font-medium text-muted-foreground">{label}</p>}
         </div>
       </div>
     );

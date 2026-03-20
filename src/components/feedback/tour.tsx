@@ -327,7 +327,7 @@ function Tour({
         aria-label={`Tour step ${currentStep + 1} of ${steps.length}: ${step.title}`}
         aria-modal="true"
         className={cn(
-          "w-[360px] max-w-[90vw] bg-white rounded-xl shadow-xl border border-slate-200",
+          "w-[360px] max-w-[90vw] bg-surface rounded-xl shadow-xl border border-muted",
           className
         )}
         style={popoverStyle}
@@ -342,7 +342,7 @@ function Tour({
           <button
             type="button"
             onClick={handleClose}
-            className="absolute top-3 right-3 p-1 rounded-lg text-slate-600 hover:text-slate-700 hover:bg-slate-100 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="absolute top-3 right-3 p-1 rounded-lg text-muted-foreground hover:text-navy-text hover:bg-muted transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
             aria-label={t("tour.closeTour", "Close tour")}
           >
             <Icon name="close" size="sm" />
@@ -357,20 +357,20 @@ function Tour({
           )}
 
           {/* Title */}
-          <h3 className="text-base font-semibold text-slate-900 pr-6">
+          <h3 className="text-base font-semibold text-navy-text pr-6">
             {step.title}
           </h3>
 
           {/* Description */}
           {step.description && (
-            <p className="mt-1 text-sm text-slate-600">{step.description}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{step.description}</p>
           )}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100">
+        <div className="flex items-center justify-between px-5 py-3 border-t border-muted">
           {/* Step indicator */}
-          <span className="text-xs text-slate-600">
+          <span className="text-xs text-muted-foreground">
             {currentStep + 1} {t("tour.stepOf", "of")} {steps.length}
           </span>
 
@@ -380,7 +380,7 @@ function Tour({
               <button
                 type="button"
                 onClick={handlePrev}
-                className="px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-navy-text hover:bg-muted rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 {t("tour.previous", "Previous")}
               </button>

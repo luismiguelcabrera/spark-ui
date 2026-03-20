@@ -76,7 +76,7 @@ const HoverCard = forwardRef<HTMLDivElement, HoverCardProps>(
         {open && (
           <div
             className={cn(
-              "absolute z-50 bg-white border border-slate-200 rounded-xl shadow-float p-4",
+              "absolute z-50 bg-surface border border-muted rounded-xl shadow-float p-4",
               "animate-in fade-in zoom-in-95",
               sideClasses[side],
               alignClasses[align]

@@ -55,7 +55,7 @@ function Popover({
         <div
           role="dialog"
           className={cn(
-            "absolute z-50 min-w-[200px] bg-white border border-slate-200 rounded-xl shadow-float p-4",
+            "absolute z-50 min-w-[200px] bg-surface border border-muted rounded-xl shadow-float p-4",
             sideClasses[side],
             alignClasses[align],
             className,
