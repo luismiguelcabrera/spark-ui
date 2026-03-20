@@ -20,7 +20,7 @@ pnpm build-storybook # Static build
 ```
 src/
 ├── components/
-│   ├── forms/         # Button, Input, Select, Checkbox, Toggle, Slider, NumberInput, TagInput, Switch, ToggleGroup, ColorPicker, DateRangePicker, TimePicker, PinInput, CopyButton, Toolbar, Form (compound), etc. (45+ components)
+│   ├── forms/         # Button, Input, Select, Checkbox, Toggle, Slider, NumberInput, TagInput, Switch, ToggleGroup, ColorPicker, DateRangePicker, TimePicker, PinInput, CopyButton, Toolbar, Form (compound), PhoneInput, Autocomplete, CurrencyInput, CodeInput, JsonInput, CronInput, Signature, ImageCrop, etc. (60+ components)
 │   ├── feedback/      # Spinner, Modal, Toast, Drawer, AlertDialog, Sheet, ContextMenu, HoverCard, Snackbar, CircularProgress, SpeedDial, etc. (22 components)
 │   ├── data-display/  # Badge, Card, Avatar, Icon, Heading, Text, Code, Kbd, Timeline, TreeView, Carousel, Countdown, Table, Chip, etc. (34 components)
 │   ├── navigation/    # Tabs, Accordion, Pagination, Navbar, BottomNav, Menubar, NavigationMenu, Link, SkipNav, etc. (11 components)
