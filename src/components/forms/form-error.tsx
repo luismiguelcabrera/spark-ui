@@ -29,7 +29,7 @@ const FormError = forwardRef<HTMLDivElement, FormErrorProps>(
       <p
         ref={ref as React.Ref<HTMLParagraphElement>}
         role="alert"
-        className={cn("text-sm text-red-600 font-medium", className)}
+        className={cn("text-sm text-destructive font-medium", className)}
         {...props}
       >
         {formError}

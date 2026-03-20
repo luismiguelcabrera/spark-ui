@@ -29,14 +29,14 @@ const FormErrorSummary = forwardRef<HTMLDivElement, FormErrorSummaryProps>(
         role="alert"
         aria-live="assertive"
         className={cn(
-          "rounded-xl border border-red-200 bg-red-50 p-4",
+          "rounded-xl border border-destructive/30 bg-destructive/10 p-4",
           className,
         )}
         {...props}
       >
         <div className="flex items-center gap-2 mb-2">
-          <Icon name="alert-circle" size="md" className="text-red-600 shrink-0" />
-          <p className="text-sm font-semibold text-red-800">{title}</p>
+          <Icon name="alert-circle" size="md" className="text-destructive shrink-0" />
+          <p className="text-sm font-semibold text-destructive">{title}</p>
         </div>
         <ul className="list-none space-y-1 ml-7">
           {errorEntries.map(([fieldName, errorMsg]) =>
@@ -54,7 +54,7 @@ const FormErrorSummary = forwardRef<HTMLDivElement, FormErrorSummaryProps>(
                     el?.scrollIntoView?.({ behavior: "smooth", block: "center" });
                     el?.focus();
                   }}
-                  className="text-sm text-red-700 underline underline-offset-2 hover:text-red-900"
+                  className="text-sm text-destructive underline underline-offset-2 hover:text-destructive"
                 >
                   {errorMsg}
                 </a>

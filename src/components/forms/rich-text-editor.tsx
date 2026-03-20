@@ -295,7 +295,7 @@ const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
     return (
       <div
         className={cn(
-          "border border-slate-200 rounded-xl overflow-hidden bg-white",
+          "border border-muted rounded-xl overflow-hidden bg-surface",
           "focus-within:ring-2 focus-within:ring-primary focus-within:border-primary",
           disabled && "cursor-not-allowed",
           className
@@ -306,7 +306,7 @@ const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
           role="toolbar"
           aria-label={t("rte.formattingOptions", "Formatting options")}
           className={cn(
-            "flex items-center flex-wrap gap-0.5 px-2 py-1.5 border-b border-slate-100 bg-slate-50/50",
+            "flex items-center flex-wrap gap-0.5 px-2 py-1.5 border-b border-muted/50 bg-muted/50/50",
             disabled && "pointer-events-none"
           )}
         >
@@ -315,7 +315,7 @@ const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
               return (
                 <div
                   key={`sep-${index}`}
-                  className="w-px h-5 bg-slate-200 mx-1"
+                  className="w-px h-5 bg-muted mx-1"
                   role="separator"
                 />
               );
@@ -341,7 +341,7 @@ const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
                 disabled={disabled || readOnly}
                 className={cn(
                   "inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors",
-                  "hover:bg-slate-200/70 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
+                  "hover:bg-muted/70 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
                   "disabled:opacity-50 disabled:cursor-not-allowed",
                   isActive && "bg-primary/10 text-primary"
                 )}
@@ -371,7 +371,7 @@ const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
             onInput={handleInput}
             onKeyDown={handleKeyDown}
             className={cn(
-              "outline-none px-4 py-3 text-sm text-slate-900",
+              "outline-none px-4 py-3 text-sm text-navy-text",
               "overflow-y-auto",
               // Typography styles for content
               "[&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-2 [&_h1]:mt-4",
@@ -380,9 +380,9 @@ const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
               "[&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-2",
               "[&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-2",
               "[&_li]:my-0.5",
-              "[&_blockquote]:border-l-4 [&_blockquote]:border-slate-300 [&_blockquote]:pl-4 [&_blockquote]:py-1 [&_blockquote]:my-2 [&_blockquote]:text-slate-600 [&_blockquote]:italic",
-              "[&_pre]:bg-slate-100 [&_pre]:rounded-lg [&_pre]:p-3 [&_pre]:my-2 [&_pre]:font-mono [&_pre]:text-sm [&_pre]:overflow-x-auto",
-              "[&_code]:bg-slate-100 [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-sm",
+              "[&_blockquote]:border-l-4 [&_blockquote]:border-muted [&_blockquote]:pl-4 [&_blockquote]:py-1 [&_blockquote]:my-2 [&_blockquote]:text-muted-foreground [&_blockquote]:italic",
+              "[&_pre]:bg-muted [&_pre]:rounded-lg [&_pre]:p-3 [&_pre]:my-2 [&_pre]:font-mono [&_pre]:text-sm [&_pre]:overflow-x-auto",
+              "[&_code]:bg-muted [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-sm",
               "[&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2",
               disabled && "cursor-not-allowed",
               readOnly && "cursor-default"
@@ -396,7 +396,7 @@ const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(
           {/* Placeholder */}
           {placeholder && isEmpty && (
             <div
-              className="absolute top-3 left-4 text-sm text-slate-600 pointer-events-none select-none"
+              className="absolute top-3 left-4 text-sm text-muted-foreground pointer-events-none select-none"
               aria-hidden="true"
             >
               {placeholder}

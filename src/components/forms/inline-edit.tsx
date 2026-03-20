@@ -130,7 +130,7 @@ const InlineEdit = forwardRef<HTMLDivElement, InlineEditProps>(
           ref={ref}
           className={cn(
             "inline-flex items-center gap-2 group rounded-lg px-2 py-1 -mx-2 -my-1 transition-colors",
-            !disabled && "cursor-pointer hover:bg-slate-100",
+            !disabled && "cursor-pointer hover:bg-muted",
             disabled && "cursor-not-allowed opacity-50",
             className
           )}
@@ -149,14 +149,14 @@ const InlineEdit = forwardRef<HTMLDivElement, InlineEditProps>(
           {renderDisplay ? (
             renderDisplay(value)
           ) : (
-            <span className={cn("text-sm", value ? "text-slate-700" : "text-slate-400")}>
+            <span className={cn("text-sm", value ? "text-navy-text" : "text-muted-foreground")}>
               {value || placeholder}
             </span>
           )}
           <Icon
             name="pencil"
             size="sm"
-            className="opacity-0 group-hover:opacity-100 text-slate-400 transition-opacity"
+            className="opacity-0 group-hover:opacity-100 text-muted-foreground transition-opacity"
             aria-hidden="true"
           />
         </div>
@@ -165,7 +165,7 @@ const InlineEdit = forwardRef<HTMLDivElement, InlineEditProps>(
 
     // Edit mode
     const inputClasses = cn(
-      "bg-transparent outline-none text-sm text-slate-700 w-full",
+      "bg-transparent outline-none text-sm text-navy-text w-full",
       "border-b-2 border-primary focus:ring-0"
     );
 

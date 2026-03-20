@@ -7,7 +7,7 @@ import { s } from "../../lib/styles";
 import { useControllable } from "../../hooks/use-controllable";
 
 const segmentedControlVariants = cva(
-  "flex bg-slate-200/60 p-1 rounded-xl",
+  "flex bg-muted/60 p-1 rounded-xl",
   {
     variants: {
       size: {

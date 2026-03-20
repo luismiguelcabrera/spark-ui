@@ -272,20 +272,20 @@ const Signature = forwardRef<SignatureRef, SignatureProps>(
     // ---------- render ----------
 
     const btnClasses =
-      "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+      "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-muted-foreground border border-muted rounded-lg hover:bg-muted/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
 
     return (
       <div className={cn("flex flex-col gap-2", className)}>
         {label && (
-          <label className="text-sm font-medium text-slate-700">{label}</label>
+          <label className="text-sm font-medium text-navy-text">{label}</label>
         )}
         <div className="relative inline-block">
           <canvas
             ref={canvasRef}
             className={cn(
-              "rounded-xl border border-slate-200 bg-white cursor-crosshair touch-none",
+              "rounded-xl border border-muted bg-surface cursor-crosshair touch-none",
               disabled && "opacity-50 cursor-not-allowed pointer-events-none",
-              error && "border-red-300",
+              error && "border-destructive/50",
             )}
             style={{ width: `${width}px`, height: `${height}px` }}
             onPointerDown={handlePointerDown}
@@ -295,7 +295,7 @@ const Signature = forwardRef<SignatureRef, SignatureProps>(
           />
           {empty && (
             <div
-              className="absolute inset-0 flex items-center justify-center pointer-events-none select-none text-slate-400 text-sm"
+              className="absolute inset-0 flex items-center justify-center pointer-events-none select-none text-muted-foreground text-sm"
               aria-hidden="true"
             >
               {t("signature.signHere", "Sign here")}
@@ -323,7 +323,7 @@ const Signature = forwardRef<SignatureRef, SignatureProps>(
           </button>
         </div>
         {error && (
-          <p className="text-xs text-red-600 font-medium" role="alert">
+          <p className="text-xs text-destructive font-medium" role="alert">
             {error}
           </p>
         )}

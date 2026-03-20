@@ -308,7 +308,7 @@ const Mention = forwardRef<
             aria-label="Suggestions"
             className={cn(
               "absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-auto",
-              "bg-white border border-slate-200 rounded-xl shadow-float py-1",
+              "bg-surface border border-muted rounded-xl shadow-float py-1",
               dropdownSizeStyles[size]
             )}
           >
@@ -317,7 +317,7 @@ const Mention = forwardRef<
                 <Spinner size="sm" />
               </li>
             ) : filteredOptions.length === 0 ? (
-              <li className="px-4 py-3 text-slate-600 text-center">
+              <li className="px-4 py-3 text-muted-foreground text-center">
                 {notFoundContent ?? "No results found"}
               </li>
             ) : (
@@ -330,7 +330,7 @@ const Mention = forwardRef<
                     "flex items-center gap-3 px-4 py-2.5 cursor-pointer transition-colors",
                     index === activeIndex
                       ? "bg-primary/5 text-primary"
-                      : "text-slate-700 hover:bg-slate-50"
+                      : "text-navy-text hover:bg-muted/50"
                   )}
                   onMouseDown={(e) => {
                     e.preventDefault();
@@ -350,7 +350,7 @@ const Mention = forwardRef<
                       {option.label}
                     </span>
                     {option.description && (
-                      <span className="text-xs text-slate-600 truncate">
+                      <span className="text-xs text-muted-foreground truncate">
                         {option.description}
                       </span>
                     )}

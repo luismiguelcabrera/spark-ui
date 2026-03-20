@@ -35,19 +35,19 @@ type PasswordStrengthProps = Omit<
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
 const strengthColors = [
-  "bg-slate-200", // 0 passing
-  "bg-red-500", // 1 passing
+  "bg-muted", // 0 passing
+  "bg-destructive/100", // 1 passing
   "bg-orange-500", // 2 passing
-  "bg-amber-500", // 3 passing
-  "bg-green-500", // 4+ passing
+  "bg-warning", // 3 passing
+  "bg-success", // 4+ passing
 ] as const;
 
 const strengthTextColors = [
-  "text-slate-400", // 0
-  "text-red-500", // 1
+  "text-muted-foreground", // 0
+  "text-destructive", // 1
   "text-orange-500", // 2
-  "text-amber-500", // 3
-  "text-green-500", // 4+
+  "text-warning", // 3
+  "text-success", // 4+
 ] as const;
 
 function getSegmentCount(score: number): number {
@@ -168,7 +168,7 @@ const PasswordStrength = forwardRef<HTMLInputElement, PasswordStrengthProps>(
                     "h-1.5 flex-1 rounded-full transition-colors duration-200",
                     i < segments
                       ? strengthColors[colorIndex]
-                      : "bg-slate-200",
+                      : "bg-muted",
                   )}
                 />
               ))}
@@ -194,7 +194,7 @@ const PasswordStrength = forwardRef<HTMLInputElement, PasswordStrengthProps>(
                 key={i}
                 className={cn(
                   "flex items-center gap-2 text-xs transition-colors duration-150",
-                  rule.passing ? "text-green-600" : "text-slate-400",
+                  rule.passing ? "text-success" : "text-muted-foreground",
                 )}
               >
                 <Icon

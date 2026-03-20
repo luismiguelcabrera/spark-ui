@@ -72,11 +72,11 @@ const colorStyles: Record<RadioCardColor, { border: string; bg: string; radioBor
     ring: "focus-visible:ring-secondary",
   },
   success: {
-    border: "border-green-500",
-    bg: "bg-green-50",
-    radioBorder: "border-green-500",
-    dot: "bg-green-500",
-    ring: "focus-visible:ring-green-500",
+    border: "border-success",
+    bg: "bg-success/10",
+    radioBorder: "border-success",
+    dot: "bg-success",
+    ring: "focus-visible:ring-success",
   },
 };
 
@@ -173,7 +173,7 @@ const RadioCardGroup = forwardRef<HTMLDivElement, RadioCardGroupProps>(
     const renderIcon = (icon: string | ReactNode | undefined) => {
       if (!icon) return null;
       if (typeof icon === "string") {
-        return <Icon name={icon} className={cn("text-slate-500", sizes.icon)} />;
+        return <Icon name={icon} className={cn("text-muted-foreground", sizes.icon)} />;
       }
       return <span className={sizes.icon}>{icon}</span>;
     };
@@ -227,7 +227,7 @@ const RadioCardGroup = forwardRef<HTMLDivElement, RadioCardGroupProps>(
                   sizes.card,
                   selected
                     ? cn(colors.border, colors.bg)
-                    : "border-slate-200 hover:border-slate-300",
+                    : "border-muted hover:border-muted",
                   isDisabled && "opacity-50 cursor-not-allowed pointer-events-none",
                   colors.ring,
                 )}
@@ -238,7 +238,7 @@ const RadioCardGroup = forwardRef<HTMLDivElement, RadioCardGroupProps>(
                   className={cn(
                     "rounded-full border-2 flex items-center justify-center shrink-0 transition-colors",
                     sizes.radio,
-                    selected ? colors.radioBorder : "border-slate-300",
+                    selected ? colors.radioBorder : "border-muted",
                   )}
                 >
                   {selected && (
@@ -250,12 +250,12 @@ const RadioCardGroup = forwardRef<HTMLDivElement, RadioCardGroupProps>(
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     {renderIcon(opt.icon)}
-                    <span className={cn(sizes.title, "text-slate-800")}>
+                    <span className={cn(sizes.title, "text-navy-text")}>
                       {opt.title}
                     </span>
                   </div>
                   {opt.description && (
-                    <p className={cn(sizes.desc, "text-slate-600 mt-1")}>
+                    <p className={cn(sizes.desc, "text-muted-foreground mt-1")}>
                       {opt.description}
                     </p>
                   )}

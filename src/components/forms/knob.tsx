@@ -33,19 +33,19 @@ const colorMap: Record<KnobColor, { arc: string; text: string; ring: string }> =
     ring: "focus-visible:ring-secondary",
   },
   success: {
-    arc: "stroke-green-500",
-    text: "text-green-700",
-    ring: "focus-visible:ring-green-500",
+    arc: "stroke-success",
+    text: "text-success",
+    ring: "focus-visible:ring-success",
   },
   warning: {
-    arc: "stroke-amber-500",
-    text: "text-amber-700",
-    ring: "focus-visible:ring-amber-500",
+    arc: "stroke-warning",
+    text: "text-warning",
+    ring: "focus-visible:ring-warning",
   },
   destructive: {
-    arc: "stroke-red-500",
-    text: "text-red-600",
-    ring: "focus-visible:ring-red-500",
+    arc: "stroke-destructive",
+    text: "text-destructive",
+    ring: "focus-visible:ring-destructive",
   },
 };
 
@@ -258,7 +258,7 @@ const Knob = forwardRef<HTMLDivElement, KnobProps>(
         )}
       >
         {label && (
-          <span className="text-xs font-medium text-slate-600" id={`knob-label-${label}`}>
+          <span className="text-xs font-medium text-muted-foreground" id={`knob-label-${label}`}>
             {label}
           </span>
         )}
@@ -289,7 +289,7 @@ const Knob = forwardRef<HTMLDivElement, KnobProps>(
           <path
             d={bgArcPath}
             fill="none"
-            className="stroke-slate-200"
+            className="stroke-muted"
             strokeWidth={strokeWidth}
             strokeLinecap="round"
           />
@@ -308,7 +308,7 @@ const Knob = forwardRef<HTMLDivElement, KnobProps>(
             cx={thumbPos.x}
             cy={thumbPos.y}
             r={thumbRadius}
-            className={cn("fill-white stroke-slate-300")}
+            className={cn("fill-surface stroke-muted")}
             strokeWidth={1.5}
           />
           {/* Center value */}

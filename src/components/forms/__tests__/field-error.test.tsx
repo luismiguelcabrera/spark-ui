@@ -48,6 +48,6 @@ describe("FieldError", () => {
     render(<FieldError>Error</FieldError>);
     const el = screen.getByRole("alert");
     expect(el.className).toContain("text-xs");
-    expect(el.className).toContain("text-red-600");
+    expect(el.className).toContain("text-destructive");
   });
 });

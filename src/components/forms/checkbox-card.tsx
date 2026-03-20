@@ -61,10 +61,10 @@ const colorStyles: Record<CheckboxCardColor, { border: string; bg: string; check
     ring: "focus-within:ring-secondary",
   },
   success: {
-    border: "border-green-500",
-    bg: "bg-green-50",
-    check: "bg-green-500 text-white border-green-500",
-    ring: "focus-within:ring-green-500",
+    border: "border-success",
+    bg: "bg-success/10",
+    check: "bg-success text-white border-success",
+    ring: "focus-within:ring-success",
   },
 };
 
@@ -111,7 +111,7 @@ const CheckboxCard = forwardRef<HTMLDivElement, CheckboxCardProps>(
     const renderIcon = () => {
       if (!icon) return null;
       if (typeof icon === "string") {
-        return <Icon name={icon} className={cn("text-slate-500", sizes.icon)} />;
+        return <Icon name={icon} className={cn("text-muted-foreground", sizes.icon)} />;
       }
       return <span className={sizes.icon}>{icon}</span>;
     };
@@ -142,7 +142,7 @@ const CheckboxCard = forwardRef<HTMLDivElement, CheckboxCardProps>(
             sizes.card,
             isChecked
               ? cn(colors.border, colors.bg)
-              : "border-slate-200 hover:border-slate-300",
+              : "border-muted hover:border-muted",
             disabled && "opacity-50 cursor-not-allowed pointer-events-none",
             colors.ring,
           )}
@@ -153,7 +153,7 @@ const CheckboxCard = forwardRef<HTMLDivElement, CheckboxCardProps>(
               className={cn(
                 "rounded flex items-center justify-center shrink-0 border-2 transition-colors",
                 sizes.check,
-                isChecked ? colors.check : "border-slate-300 bg-white",
+                isChecked ? colors.check : "border-muted bg-surface",
               )}
               aria-hidden="true"
             >
@@ -176,10 +176,10 @@ const CheckboxCard = forwardRef<HTMLDivElement, CheckboxCardProps>(
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 {renderIcon()}
-                <span className={cn(sizes.title, "text-slate-800")}>{title}</span>
+                <span className={cn(sizes.title, "text-navy-text")}>{title}</span>
               </div>
               {description && (
-                <p className={cn(sizes.desc, "text-slate-600 mt-1")}>{description}</p>
+                <p className={cn(sizes.desc, "text-muted-foreground mt-1")}>{description}</p>
               )}
               {children && <div className="mt-2">{children}</div>}
             </div>

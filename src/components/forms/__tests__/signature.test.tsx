@@ -90,10 +90,10 @@ describe("Signature", () => {
     expect(root).toHaveClass("flex", "flex-col", "gap-2", "custom-class");
   });
 
-  it("error state shows border-red-300 and error text with role=alert", () => {
+  it("error state shows border-destructive and error text with role=alert", () => {
     const { container } = render(<Signature error="Signature is required" />);
     const canvas = container.querySelector("canvas");
-    expect(canvas).toHaveClass("border-red-300");
+    expect(canvas).toHaveClass("border-destructive/50");
     const alert = screen.getByRole("alert");
     expect(alert).toHaveTextContent("Signature is required");
   });

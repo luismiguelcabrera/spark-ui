@@ -93,9 +93,9 @@ const PopupEdit = forwardRef<HTMLDivElement, PopupEditProps>(
     };
 
     const inputClassName = cn(
-      "w-full px-3 py-2 text-sm border border-slate-200 rounded-lg bg-white",
+      "w-full px-3 py-2 text-sm border border-muted rounded-lg bg-surface",
       "focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary",
-      "placeholder:text-slate-500 transition-colors"
+      "placeholder:text-muted-foreground transition-colors"
     );
 
     return (
@@ -119,7 +119,7 @@ const PopupEdit = forwardRef<HTMLDivElement, PopupEditProps>(
           }}
           className={cn(
             "cursor-pointer rounded-md transition-colors",
-            !disabled && "hover:bg-slate-50",
+            !disabled && "hover:bg-muted/50",
             disabled && "opacity-50 cursor-not-allowed"
           )}
         >
@@ -133,7 +133,7 @@ const PopupEdit = forwardRef<HTMLDivElement, PopupEditProps>(
             role="dialog"
             aria-label={t("popupedit.editValue", "Edit value")}
             className={cn(
-              "absolute z-50 top-full left-0 mt-1 p-3 bg-white border border-slate-200 rounded-xl shadow-lg",
+              "absolute z-50 top-full left-0 mt-1 p-3 bg-surface border border-muted rounded-xl shadow-lg",
               "min-w-[240px]"
             )}
           >
@@ -163,8 +163,8 @@ const PopupEdit = forwardRef<HTMLDivElement, PopupEditProps>(
                 type="button"
                 onClick={handleCancel}
                 className={cn(
-                  "px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 text-slate-600",
-                  "hover:bg-slate-50 transition-colors",
+                  "px-3 py-1.5 text-xs font-medium rounded-lg border border-muted text-muted-foreground",
+                  "hover:bg-muted/50 transition-colors",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-primary"
                 )}
               >

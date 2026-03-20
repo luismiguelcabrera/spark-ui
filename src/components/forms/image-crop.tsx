@@ -367,12 +367,12 @@ const ImageCrop = forwardRef<HTMLDivElement, ImageCropProps>(
         )}
       >
         {label && (
-          <label className="text-sm font-medium text-slate-700">{label}</label>
+          <label className="text-sm font-medium text-navy-text">{label}</label>
         )}
 
         <div
           ref={containerRef}
-          className="relative overflow-hidden rounded-xl bg-slate-100 select-none"
+          className="relative overflow-hidden rounded-xl bg-muted select-none"
           style={{ maxWidth: "100%", aspectRatio: "auto" }}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -444,7 +444,7 @@ const ImageCrop = forwardRef<HTMLDivElement, ImageCropProps>(
               <div
                 key={h.position}
                 data-testid={`handle-${h.position}`}
-                className="absolute w-3 h-3 bg-white border border-slate-400 rounded-sm"
+                className="absolute w-3 h-3 bg-surface border border-muted rounded-sm"
                 style={h.style}
                 onPointerDown={(e) => handlePointerDown(e, h.mode)}
               />
@@ -455,7 +455,7 @@ const ImageCrop = forwardRef<HTMLDivElement, ImageCropProps>(
         {/* Zoom slider */}
         {zoomEnabled && (
           <div className="flex items-center gap-3">
-            <Icon name="zoom_out" size="sm" className="text-slate-500" />
+            <Icon name="zoom_out" size="sm" className="text-muted-foreground" />
             <input
               type="range"
               min={1}
@@ -467,12 +467,12 @@ const ImageCrop = forwardRef<HTMLDivElement, ImageCropProps>(
               aria-label={t("imagecrop.zoom", "Zoom")}
               disabled={disabled}
             />
-            <Icon name="zoom_in" size="sm" className="text-slate-500" />
+            <Icon name="zoom_in" size="sm" className="text-muted-foreground" />
           </div>
         )}
 
         {error && (
-          <p className="text-xs text-red-600 font-medium" role="alert">
+          <p className="text-xs text-destructive font-medium" role="alert">
             {error}
           </p>
         )}

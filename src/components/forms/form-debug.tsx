@@ -22,7 +22,7 @@ function FormDebug({ className, collapsed = false }: FormDebugProps) {
     <details
       open={!collapsed}
       className={cn(
-        "rounded-xl bg-gray-900 p-4 font-mono text-sm text-green-400",
+        "rounded-xl bg-background-dark p-4 font-mono text-sm text-green-400",
         className,
       )}
     >

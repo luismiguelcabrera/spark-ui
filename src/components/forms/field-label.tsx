@@ -15,12 +15,12 @@ const FieldLabel = forwardRef<HTMLLabelElement, FieldLabelProps>(
     return (
       <label
         ref={ref}
-        className={cn("text-sm font-medium text-gray-700", className)}
+        className={cn("text-sm font-medium text-navy-text", className)}
         {...props}
       >
         {children}
         {required && (
-          <span className="text-red-600 ml-0.5" aria-hidden="true">
+          <span className="text-destructive ml-0.5" aria-hidden="true">
             *
           </span>
         )}

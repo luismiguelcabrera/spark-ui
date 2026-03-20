@@ -287,14 +287,14 @@ function FormField({
     // Counter + success helper
     const counterEl =
       showCounter && charCount !== null ? (
-        <span className="text-xs text-slate-500">
+        <span className="text-xs text-muted-foreground">
           {charCount}
           {maxLen !== null ? `/${maxLen}` : ""}
         </span>
       ) : null;
 
     const successEl = isSuccess ? (
-      <Icon name="check-circle" size="sm" className="text-green-600" />
+      <Icon name="check-circle" size="sm" className="text-success" />
     ) : null;
 
     const footerEl = (counterEl || successEl) ? (
@@ -365,8 +365,8 @@ function FormField({
                     name={icon}
                     size="md"
                     className={cn(
-                      "text-slate-500 group-focus-within:text-primary transition-colors",
-                      fieldError && "text-red-400",
+                      "text-muted-foreground group-focus-within:text-primary transition-colors",
+                      fieldError && "text-destructive/70",
                     )}
                   />
                 </div>
@@ -378,8 +378,8 @@ function FormField({
                     name={icon}
                     size="md"
                     className={cn(
-                      "text-slate-500 group-focus-within:text-primary transition-colors",
-                      fieldError && "text-red-400",
+                      "text-muted-foreground group-focus-within:text-primary transition-colors",
+                      fieldError && "text-destructive/70",
                     )}
                   />
                 </div>
@@ -433,8 +433,8 @@ function FormField({
                 name={icon}
                 size="md"
                 className={cn(
-                  "text-slate-500 group-focus-within:text-primary transition-colors",
-                  error && "text-red-400",
+                  "text-muted-foreground group-focus-within:text-primary transition-colors",
+                  error && "text-destructive/70",
                 )}
               />
             </div>
@@ -446,20 +446,20 @@ function FormField({
                 name={icon}
                 size="md"
                 className={cn(
-                  "text-slate-500 group-focus-within:text-primary transition-colors",
-                  error && "text-red-400",
+                  "text-muted-foreground group-focus-within:text-primary transition-colors",
+                  error && "text-destructive/70",
                 )}
               />
             </div>
           )}
         </div>
         {error && (
-          <p id={errorId} className="text-xs text-red-600 font-medium" role="alert">
+          <p id={errorId} className="text-xs text-destructive font-medium" role="alert">
             {error}
           </p>
         )}
         {hint && !error && (
-          <p id={hintId} className="text-xs text-slate-600">
+          <p id={hintId} className="text-xs text-muted-foreground">
             {hint}
           </p>
         )}

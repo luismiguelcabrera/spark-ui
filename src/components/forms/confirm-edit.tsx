@@ -113,7 +113,7 @@ const ConfirmEdit = forwardRef<HTMLDivElement, ConfirmEditProps>(
           {renderDisplay ? (
             renderDisplay(value)
           ) : (
-            <span className="text-sm text-slate-700">{value}</span>
+            <span className="text-sm text-navy-text">{value}</span>
           )}
         </div>
       );
@@ -140,9 +140,9 @@ const ConfirmEdit = forwardRef<HTMLDivElement, ConfirmEditProps>(
             onChange={(e) => setDraft(e.target.value)}
             aria-label="Edit value"
             className={cn(
-              "px-3 h-9 bg-slate-50 border border-slate-200 rounded-xl text-sm",
+              "px-3 h-9 bg-muted/50 border border-muted rounded-xl text-sm",
               "focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary",
-              "placeholder:text-slate-500 transition-colors"
+              "placeholder:text-muted-foreground transition-colors"
             )}
           />
         )}
@@ -162,7 +162,7 @@ const ConfirmEdit = forwardRef<HTMLDivElement, ConfirmEditProps>(
           onClick={cancelEdit}
           className={cn(
             "inline-flex items-center justify-center h-9 px-3 text-sm font-medium rounded-xl",
-            "border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors",
+            "border border-muted text-muted-foreground hover:bg-muted/50 transition-colors",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
           )}
         >

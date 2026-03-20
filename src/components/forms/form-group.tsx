@@ -20,7 +20,7 @@ const FormGroup = forwardRef<HTMLFieldSetElement, FormGroupProps>(
       <fieldset
         ref={ref}
         className={cn(
-          "rounded-xl border border-slate-200 p-4 space-y-4",
+          "rounded-xl border border-muted p-4 space-y-4",
           className,
         )}
         {...props}
@@ -28,7 +28,7 @@ const FormGroup = forwardRef<HTMLFieldSetElement, FormGroupProps>(
         {legend && (
           <legend
             className={cn(
-              "px-2 text-sm font-semibold text-gray-800",
+              "px-2 text-sm font-semibold text-navy-text",
               legendClassName,
             )}
           >
@@ -36,7 +36,7 @@ const FormGroup = forwardRef<HTMLFieldSetElement, FormGroupProps>(
           </legend>
         )}
         {description && (
-          <p className="text-xs text-gray-600 -mt-2">{description}</p>
+          <p className="text-xs text-muted-foreground -mt-2">{description}</p>
         )}
         {children}
       </fieldset>

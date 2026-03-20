@@ -85,7 +85,7 @@ const ToggleGroup = forwardRef<HTMLDivElement, ToggleGroupProps>(
           ref={ref}
           role="group"
           className={cn(
-            "inline-flex items-center rounded-lg border border-slate-200 bg-slate-50 p-0.5 gap-0.5",
+            "inline-flex items-center rounded-lg border border-muted bg-muted/50 p-0.5 gap-0.5",
             className
           )}
           {...props}
@@ -135,8 +135,8 @@ const ToggleGroupItem = forwardRef<HTMLButtonElement, ToggleGroupItemProps>(
           "disabled:opacity-50 disabled:cursor-not-allowed",
           sizeMap[size],
           isSelected
-            ? "bg-white text-slate-900 shadow-sm"
-            : "text-slate-600 hover:text-slate-700 hover:bg-slate-100/50",
+            ? "bg-surface text-navy-text shadow-sm"
+            : "text-muted-foreground hover:text-navy-text hover:bg-muted/50",
           className
         )}
         {...props}

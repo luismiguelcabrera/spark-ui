@@ -56,8 +56,8 @@ const TabFilter = forwardRef<HTMLDivElement, TabFilterProps>(
             aria-label="Filter"
             className={cn(
               "appearance-none cursor-pointer",
-              "bg-slate-200/60 rounded-xl px-4 py-1.5 pr-7",
-              "text-[13px] font-semibold text-slate-700",
+              "bg-muted/60 rounded-xl px-4 py-1.5 pr-7",
+              "text-[13px] font-semibold text-navy-text",
               "border-0 focus:outline-none focus:ring-2 focus:ring-primary/20",
               className
             )}
@@ -69,7 +69,7 @@ const TabFilter = forwardRef<HTMLDivElement, TabFilterProps>(
             ))}
           </select>
           <svg
-            className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500"
+            className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
             width="10"
             height="10"
             viewBox="0 0 10 10"
@@ -90,7 +90,7 @@ const TabFilter = forwardRef<HTMLDivElement, TabFilterProps>(
         <div ref={ref} className={cn("hidden md:block shrink-0", className)}>
           <div
             role="tablist"
-            className="flex bg-slate-200/60 @[600px]:p-1 p-0.5 rounded-xl"
+            className="flex bg-muted/60 @[600px]:p-1 p-0.5 rounded-xl"
             onKeyDown={handleKeyDown}
           >
             {items.map((item, index) => {

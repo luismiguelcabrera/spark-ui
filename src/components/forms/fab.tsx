@@ -31,9 +31,9 @@ const colorMap: Record<FabColor, string> = {
   secondary:
     "bg-secondary hover:bg-secondary-light text-white shadow-secondary/30 focus-visible:ring-secondary",
   destructive:
-    "bg-red-600 hover:bg-red-700 text-white shadow-red-600/30 focus-visible:ring-red-600",
+    "bg-destructive hover:bg-destructive/90 text-white shadow-destructive/30 focus-visible:ring-destructive",
   success:
-    "bg-green-700 hover:bg-green-800 text-white shadow-green-700/30 focus-visible:ring-green-700",
+    "bg-success hover:bg-success/90 text-white shadow-success/30 focus-visible:ring-success",
 };
 
 const positionMap: Record<FabPosition, string> = {

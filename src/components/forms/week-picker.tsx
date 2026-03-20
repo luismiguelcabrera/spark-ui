@@ -284,22 +284,22 @@ function WeekPicker({
           s.inputBase,
           s.inputFocus,
           "flex items-center gap-2 text-left",
-          !selected && "text-slate-600",
-          error && "border-red-300",
+          !selected && "text-muted-foreground",
+          error && "border-destructive/50",
           disabled && "opacity-50 cursor-not-allowed",
         )}
       >
-        <Icon name="calendar_today" size="sm" className="text-slate-500" />
+        <Icon name="calendar_today" size="sm" className="text-muted-foreground" />
         <span>{formatDisplayValue()}</span>
       </button>
       {isOpen && (
-        <div className="absolute top-full left-0 z-50 mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-float p-4">
+        <div className="absolute top-full left-0 z-50 mt-2 w-72 bg-surface border border-muted rounded-2xl shadow-float p-4">
           <div className="flex items-center justify-between mb-3">
             <button
               type="button"
               aria-label={t("calendar.previousMonth", "Previous month")}
               onClick={prevMonth}
-              className="p-1 rounded-lg hover:bg-slate-100 text-slate-600"
+              className="p-1 rounded-lg hover:bg-muted text-muted-foreground"
             >
               <Icon name="chevron_left" size="sm" />
             </button>
@@ -310,7 +310,7 @@ function WeekPicker({
               type="button"
               aria-label={t("calendar.nextMonth", "Next month")}
               onClick={nextMonth}
-              className="p-1 rounded-lg hover:bg-slate-100 text-slate-600"
+              className="p-1 rounded-lg hover:bg-muted text-muted-foreground"
             >
               <Icon name="chevron_right" size="sm" />
             </button>
@@ -319,7 +319,7 @@ function WeekPicker({
             {dayLabels.map((d) => (
               <span
                 key={d}
-                className="py-1 text-[11px] font-semibold text-slate-600 uppercase"
+                className="py-1 text-[11px] font-semibold text-muted-foreground uppercase"
               >
                 {d}
               </span>
@@ -370,7 +370,7 @@ function WeekPicker({
                     // Today styling (when not selected)
                     isToday(day) && !inSelected && "text-primary font-bold",
                     // Default hover
-                    !inSelected && !inHovered && "hover:bg-slate-50 rounded-lg",
+                    !inSelected && !inHovered && "hover:bg-muted/50 rounded-lg",
                   )}
                 >
                   {day}
@@ -380,7 +380,7 @@ function WeekPicker({
           </div>
         </div>
       )}
-      {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
+      {error && <p className="text-xs text-destructive font-medium">{error}</p>}
     </div>
   );
 }

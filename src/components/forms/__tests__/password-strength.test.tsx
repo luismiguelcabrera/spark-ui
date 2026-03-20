@@ -135,14 +135,14 @@ describe("PasswordStrength", () => {
       item.textContent?.includes("One lowercase letter"),
     );
     expect(lowercaseItem).toBeDefined();
-    expect(lowercaseItem).toHaveClass("text-green-600");
+    expect(lowercaseItem).toHaveClass("text-success");
 
     // The uppercase rule should not be passing
     const uppercaseItem = items.find((item) =>
       item.textContent?.includes("One uppercase letter"),
     );
     expect(uppercaseItem).toBeDefined();
-    expect(uppercaseItem).toHaveClass("text-slate-400");
+    expect(uppercaseItem).toHaveClass("text-muted-foreground");
   });
 
   it("supports controlled mode", async () => {
@@ -184,7 +184,7 @@ describe("PasswordStrength", () => {
     // Both rules pass
     const items = screen.getAllByRole("listitem");
     items.forEach((item) => {
-      expect(item).toHaveClass("text-green-600");
+      expect(item).toHaveClass("text-success");
     });
   });
 

@@ -122,22 +122,22 @@ function MonthPicker({
           s.inputBase,
           s.inputFocus,
           "flex items-center gap-2 text-left",
-          !selected && "text-slate-600",
-          error && "border-red-300",
+          !selected && "text-muted-foreground",
+          error && "border-destructive/50",
           disabled && "opacity-50 cursor-not-allowed",
         )}
       >
-        <Icon name="calendar_today" size="sm" className="text-slate-500" />
+        <Icon name="calendar_today" size="sm" className="text-muted-foreground" />
         <span>{displayValue}</span>
       </button>
       {isOpen && (
-        <div className="absolute top-full left-0 z-50 mt-2 bg-white border border-slate-200 rounded-2xl shadow-float p-4">
+        <div className="absolute top-full left-0 z-50 mt-2 bg-surface border border-muted rounded-2xl shadow-float p-4">
           <div className="flex items-center justify-between mb-3">
             <button
               type="button"
               aria-label={t("calendar.previousYear", "Previous year")}
               onClick={() => setViewYear(viewYear - 1)}
-              className="p-1 rounded-lg hover:bg-slate-100 text-slate-600"
+              className="p-1 rounded-lg hover:bg-muted text-muted-foreground"
             >
               <Icon name="chevron_left" size="sm" />
             </button>
@@ -146,7 +146,7 @@ function MonthPicker({
               type="button"
               aria-label={t("calendar.nextYear", "Next year")}
               onClick={() => setViewYear(viewYear + 1)}
-              className="p-1 rounded-lg hover:bg-slate-100 text-slate-600"
+              className="p-1 rounded-lg hover:bg-muted text-muted-foreground"
             >
               <Icon name="chevron_right" size="sm" />
             </button>
@@ -161,7 +161,7 @@ function MonthPicker({
                   disabled={monthDisabled}
                   onClick={() => !monthDisabled && selectMonth(i)}
                   className={cn(
-                    "flex items-center justify-center h-10 rounded-lg text-sm font-medium transition-colors cursor-pointer hover:bg-slate-50",
+                    "flex items-center justify-center h-10 rounded-lg text-sm font-medium transition-colors cursor-pointer hover:bg-muted/50",
                     isSelected(i) && "bg-primary text-white hover:bg-primary/90",
                     isCurrent(i) && !isSelected(i) && "bg-primary/10 text-primary font-bold",
                     monthDisabled && "opacity-50 pointer-events-none",
@@ -174,7 +174,7 @@ function MonthPicker({
           </div>
         </div>
       )}
-      {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
+      {error && <p className="text-xs text-destructive font-medium">{error}</p>}
     </div>
   );
 }

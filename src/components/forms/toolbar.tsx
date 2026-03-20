@@ -13,7 +13,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(
       role="toolbar"
       aria-orientation={orientation}
       className={cn(
-        "flex items-center gap-1 p-1 bg-white border border-slate-200 rounded-lg",
+        "flex items-center gap-1 p-1 bg-surface border border-muted rounded-lg",
         orientation === "vertical" && "flex-col",
         className
       )}
@@ -47,8 +47,8 @@ const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
         "disabled:opacity-50 disabled:cursor-not-allowed",
         active
-          ? "bg-slate-100 text-slate-900"
-          : "text-slate-600 hover:text-slate-700 hover:bg-slate-50",
+          ? "bg-muted text-navy-text"
+          : "text-muted-foreground hover:text-navy-text hover:bg-muted/50",
         className
       )}
       {...props}
@@ -72,7 +72,7 @@ const ToolbarSeparator = forwardRef<HTMLDivElement, ToolbarSeparatorProps>(
       ref={ref}
       role="separator"
       className={cn(
-        "bg-slate-200",
+        "bg-muted",
         orientation === "vertical" ? "w-px h-5 mx-0.5" : "h-px w-full my-0.5",
         className
       )}
