@@ -1,8 +1,6 @@
 "use client";
 
 import {
-  createContext,
-  useContext,
   useRef,
   useEffect,
   useState,
@@ -15,14 +13,9 @@ import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { Icon } from "../data-display/icon";
 import { useControllable } from "../../hooks/use-controllable";
-
-// ── Context ──────────────────────────────────────────────
-
-type DropdownContextValue = {
-  close: () => void;
-};
-
-const DropdownContext = createContext<DropdownContextValue | null>(null);
+import { DropdownContext } from "./dropdown-context";
+import { DropdownMenuItem } from "./dropdown-menu-item";
+import { DropdownMenuDivider } from "./dropdown-menu-divider";
 
 // ── Legacy types ─────────────────────────────────────────
 
@@ -251,53 +244,10 @@ function renderLegacyItems(
   });
 }
 
-// ── Compound sub-components ─────────────────────────────
-
-function DropdownMenuItem({
-  icon,
-  danger,
-  onClick,
-  children,
-  className,
-}: {
-  icon?: string;
-  danger?: boolean;
-  onClick?: () => void;
-  children: ReactNode;
-  className?: string;
-}) {
-  const ctx = useContext(DropdownContext);
-
-  return (
-    <button
-      type="button"
-      role="menuitem"
-      tabIndex={-1}
-      onClick={() => {
-        onClick?.();
-        ctx?.close();
-      }}
-      className={cn(
-        s.dropdownItem,
-        danger && s.dropdownItemDanger,
-        "focus-visible:outline-none focus-visible:bg-slate-100",
-        className
-      )}
-    >
-      {icon && <Icon name={icon} size="sm" />}
-      <span>{children}</span>
-    </button>
-  );
-}
-DropdownMenuItem.displayName = "DropdownMenuItem";
-
-function DropdownMenuDivider() {
-  return <div role="separator" className={s.dropdownDivider} />;
-}
-DropdownMenuDivider.displayName = "DropdownMenuDivider";
+// ── Attach compound sub-components for dot-notation API ──
 
 DropdownMenu.Item = DropdownMenuItem;
 DropdownMenu.Divider = DropdownMenuDivider;
 
-export { DropdownMenu };
+export { DropdownMenu, DropdownMenuItem, DropdownMenuDivider };
 export type { DropdownMenuProps, DropdownItem };

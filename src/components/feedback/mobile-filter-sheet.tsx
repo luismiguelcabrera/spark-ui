@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { cn } from "../../lib/utils";
 import { Icon } from "../data-display/icon";
+import { MobileFilterSection } from "./mobile-filter-section";
+import { MobileFilterPill } from "./mobile-filter-pill";
 
 // --- Types ---
 
@@ -23,51 +25,6 @@ type MobileFilterSheetProps = {
   label?: string;
   collapseAt?: "md" | "lg" | "xl" | "@640px" | "@768px" | "@900px" | "@1024px" | "@1050px";
 };
-
-type SectionProps = {
-  label: string;
-  children: ReactNode;
-};
-
-type PillProps = {
-  active?: boolean;
-  onClick: () => void;
-  children: ReactNode;
-};
-
-// --- Sub-components ---
-
-function Section({ label, children }: SectionProps) {
-  return (
-    <div className="flex flex-col gap-3">
-      <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
-        {label}
-      </p>
-      <div className="flex flex-wrap gap-2">{children}</div>
-    </div>
-  );
-}
-Section.displayName = "MobileFilterSheet.Section";
-
-function Pill({ active, onClick, children }: PillProps) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={cn(
-        "px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
-        active
-          ? "bg-primary/10 text-primary border-primary/20"
-          : "bg-white text-slate-700 border-slate-200 hover:border-slate-300"
-      )}
-    >
-      {children}
-    </button>
-  );
-}
-Pill.displayName = "MobileFilterSheet.Pill";
 
 // --- Main component ---
 
@@ -168,8 +125,10 @@ function MobileFilterSheet({
 }
 MobileFilterSheet.displayName = "MobileFilterSheet";
 
-MobileFilterSheet.Section = Section;
-MobileFilterSheet.Pill = Pill;
+// --- Attach compound sub-components for dot-notation API ---
 
-export { MobileFilterSheet, Section as MobileFilterSheetSection, Pill as MobileFilterSheetPill };
-export type { MobileFilterSheetProps, SectionProps, PillProps };
+MobileFilterSheet.Section = MobileFilterSection;
+MobileFilterSheet.Pill = MobileFilterPill;
+
+export { MobileFilterSheet, MobileFilterSection, MobileFilterPill };
+export type { MobileFilterSheetProps };

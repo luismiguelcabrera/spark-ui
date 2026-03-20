@@ -1,84 +1,16 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useRef,
-  useEffect,
-  useCallback,
-  useId,
-  forwardRef,
-  type ReactNode,
-  type KeyboardEvent,
-} from "react";
+import { useId, useCallback, forwardRef, type ReactNode } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { Icon } from "../data-display/icon";
 import { useControllable } from "../../hooks/use-controllable";
-
-// ── Context ──────────────────────────────────────────────
-
-type AccordionContextValue = {
-  type: "single" | "multiple";
-  openSet: Set<string>;
-  toggle: (value: string) => void;
-};
-
-const AccordionContext = createContext<AccordionContextValue | null>(null);
-
-function useAccordionContext() {
-  const ctx = useContext(AccordionContext);
-  if (!ctx) throw new Error("Accordion.Item must be used within <Accordion>");
-  return ctx;
-}
-
-// ── Animated panel ───────────────────────────────────────
-
-function AccordionPanel({
-  open,
-  id,
-  labelledBy,
-  children,
-}: {
-  open: boolean;
-  id: string;
-  labelledBy: string;
-  children: ReactNode;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const innerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (open) {
-      el.style.height = `${innerRef.current?.scrollHeight ?? 0}px`;
-      const onEnd = () => {
-        el.style.height = "auto";
-      };
-      el.addEventListener("transitionend", onEnd, { once: true });
-      return () => el.removeEventListener("transitionend", onEnd);
-    } else {
-      el.style.height = `${el.scrollHeight}px`;
-      el.offsetHeight; // eslint-disable-line @typescript-eslint/no-unused-expressions
-      el.style.height = "0px";
-    }
-  }, [open]);
-
-  return (
-    <div
-      ref={ref}
-      id={id}
-      role="region"
-      aria-labelledby={labelledBy}
-      hidden={!open}
-      className="overflow-hidden transition-[height] duration-200 ease-in-out"
-      style={{ height: open ? undefined : 0 }}
-    >
-      <div ref={innerRef}>{children}</div>
-    </div>
-  );
-}
+import {
+  AccordionContext,
+  AccordionPanel,
+  handleAccordionKeyDown,
+} from "./accordion-context";
+import { AccordionItem } from "./accordion-item";
 
 // ── Legacy types ─────────────────────────────────────────
 
@@ -87,48 +19,6 @@ type AccordionItemData = {
   content: string;
   defaultOpen?: boolean;
 };
-
-// ── Keyboard handler for arrow navigation ────────────────
-
-function handleAccordionKeyDown(e: KeyboardEvent<HTMLDivElement>) {
-  const target = e.target as HTMLElement;
-  if (target.tagName !== "BUTTON") return;
-
-  const container = e.currentTarget;
-  const triggers = Array.from(
-    container.querySelectorAll<HTMLButtonElement>(
-      '[data-accordion-trigger="true"]',
-    ),
-  );
-
-  const index = triggers.indexOf(target as HTMLButtonElement);
-  if (index === -1) return;
-
-  let nextIndex: number | null = null;
-
-  switch (e.key) {
-    case "ArrowDown":
-      e.preventDefault();
-      nextIndex = (index + 1) % triggers.length;
-      break;
-    case "ArrowUp":
-      e.preventDefault();
-      nextIndex = (index - 1 + triggers.length) % triggers.length;
-      break;
-    case "Home":
-      e.preventDefault();
-      nextIndex = 0;
-      break;
-    case "End":
-      e.preventDefault();
-      nextIndex = triggers.length - 1;
-      break;
-  }
-
-  if (nextIndex !== null) {
-    triggers[nextIndex].focus();
-  }
-}
 
 // ── Main component ───────────────────────────────────────
 
@@ -276,60 +166,12 @@ const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
 
 Accordion.displayName = "Accordion";
 
-// ── Compound sub-component ───────────────────────────────
-
-const AccordionItem = forwardRef<
-  HTMLDivElement,
-  {
-    value: string;
-    title: string;
-    children: ReactNode;
-    className?: string;
-  }
->(({ value, title, children, className }, ref) => {
-  const ctx = useAccordionContext();
-  const isOpen = ctx.openSet.has(value);
-  const baseId = useId();
-  const triggerId = `${baseId}-trigger`;
-  const panelId = `${baseId}-panel`;
-
-  return (
-    <div ref={ref} className={cn(s.accordionItem, className)}>
-      <button
-        type="button"
-        id={triggerId}
-        data-accordion-trigger="true"
-        aria-expanded={isOpen}
-        aria-controls={panelId}
-        onClick={() => ctx.toggle(value)}
-        className={cn(
-          s.accordionTrigger,
-          "list-none [&::-webkit-details-marker]:hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none rounded-sm",
-        )}
-      >
-        <span>{title}</span>
-        <Icon
-          name="expand_more"
-          size="sm"
-          className={cn(
-            "text-slate-600 transition-transform duration-200",
-            isOpen && "rotate-180",
-          )}
-        />
-      </button>
-      <AccordionPanel open={isOpen} id={panelId} labelledBy={triggerId}>
-        <div className={s.accordionContent}>{children}</div>
-      </AccordionPanel>
-    </div>
-  );
-});
-
-AccordionItem.displayName = "AccordionItem";
+// ── Attach compound sub-components for dot-notation API ──
 
 const AccordionCompound = Accordion as typeof Accordion & {
   Item: typeof AccordionItem;
 };
 AccordionCompound.Item = AccordionItem;
 
-export { AccordionCompound as Accordion };
-export type { AccordionProps, AccordionItemData as AccordionItem };
+export { AccordionCompound as Accordion, AccordionItem };
+export type { AccordionProps, AccordionItemData };

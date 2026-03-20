@@ -26,8 +26,9 @@ export type { TooltipProps } from "./tooltip";
 export { Modal, ModalOverlay, modalVariants } from "./modal";
 export type { ModalProps } from "./modal";
 
-export { DropdownMenu } from "./dropdown-menu";
+export { DropdownMenu, DropdownMenuItem, DropdownMenuDivider } from "./dropdown-menu";
 export type { DropdownMenuProps, DropdownItem } from "./dropdown-menu";
+export type { DropdownMenuItemProps } from "./dropdown-menu-item";
 
 export { CommandPalette } from "./command-palette";
 export type { CommandPaletteProps, CommandGroup, CommandItem } from "./command-palette";
@@ -35,8 +36,10 @@ export type { CommandPaletteProps, CommandGroup, CommandItem } from "./command-p
 export { AudioPlayer } from "./audio-player";
 export type { AudioPlayerProps } from "./audio-player";
 
-export { MobileFilterSheet } from "./mobile-filter-sheet";
+export { MobileFilterSheet, MobileFilterSection, MobileFilterPill } from "./mobile-filter-sheet";
 export type { MobileFilterSheetProps } from "./mobile-filter-sheet";
+export type { MobileFilterSectionProps } from "./mobile-filter-section";
+export type { MobileFilterPillProps } from "./mobile-filter-pill";
 
 export { Drawer } from "./drawer";
 export type { DrawerProps } from "./drawer";

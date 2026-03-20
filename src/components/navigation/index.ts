@@ -1,5 +1,8 @@
-export { Tabs } from "./tabs";
+export { Tabs, TabsList, Tab, TabsPanel } from "./tabs";
 export type { TabsProps, TabItem } from "./tabs";
+export type { TabsListProps } from "./tabs-list";
+export type { TabProps } from "./tab";
+export type { TabsPanelProps } from "./tabs-panel";
 
 export { Breadcrumb } from "./breadcrumb";
 export type { BreadcrumbProps, BreadcrumbItem } from "./breadcrumb";
@@ -7,8 +10,9 @@ export type { BreadcrumbProps, BreadcrumbItem } from "./breadcrumb";
 export { Pagination } from "./pagination";
 export type { PaginationProps } from "./pagination";
 
-export { Accordion } from "./accordion";
-export type { AccordionProps, AccordionItem } from "./accordion";
+export { Accordion, AccordionItem } from "./accordion";
+export type { AccordionProps, AccordionItemData } from "./accordion";
+export type { AccordionItemProps } from "./accordion-item";
 
 export { Stepper, stepperVariants } from "./stepper";
 export type { StepperProps, StepItem } from "./stepper";

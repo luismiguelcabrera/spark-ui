@@ -19,7 +19,8 @@ export type {
 export { AuthLayout } from "./auth-layout";
 export type { AuthLayoutProps } from "./auth-layout";
 
-export { AdminPage } from "./admin-page";
+export { AdminPage, AdminPageHeader } from "./admin-page";
+export type { AdminPageHeaderProps } from "./admin-page-header";
 
 export { ThemeProvider, useTheme } from "./theme-provider";
 export type { Theme, ThemeProviderProps } from "./theme-provider";
