@@ -33,9 +33,6 @@ export type { DropdownMenuItemProps } from "./dropdown-menu-item";
 export { CommandPalette } from "./command-palette";
 export type { CommandPaletteProps, CommandGroup, CommandItem } from "./command-palette";
 
-export { AudioPlayer } from "./audio-player";
-export type { AudioPlayerProps } from "./audio-player";
-
 export { MobileFilterSheet, MobileFilterSection, MobileFilterPill } from "./mobile-filter-sheet";
 export type { MobileFilterSheetProps } from "./mobile-filter-sheet";
 export type { MobileFilterSectionProps } from "./mobile-filter-section";

@@ -10,7 +10,6 @@ import { Popover } from "../popover";
 import { Drawer } from "../drawer";
 import { CommandPalette } from "../command-palette";
 import { Divider } from "../divider";
-import { AudioPlayer } from "../audio-player";
 import { ContextMenu } from "../context-menu";
 import { SpeedDial } from "../speed-dial";
 
@@ -448,41 +447,6 @@ describe("Divider", () => {
   it("merges className", () => {
     const { container } = render(<Divider className="my-4" />);
     expect(container.querySelector("hr")).toHaveClass("my-4");
-  });
-});
-
-// ── AudioPlayer ──────────────────────────────────────────────────
-
-describe("AudioPlayer", () => {
-  it("renders current time and duration", () => {
-    render(<AudioPlayer currentTime="1:30" duration="4:00" />);
-    expect(screen.getByText("1:30")).toBeInTheDocument();
-    expect(screen.getByText("4:00")).toBeInTheDocument();
-  });
-
-  it("defaults to 0:00 and 3:45", () => {
-    render(<AudioPlayer />);
-    expect(screen.getByText("0:00")).toBeInTheDocument();
-    expect(screen.getByText("3:45")).toBeInTheDocument();
-  });
-
-  it("renders play button when not playing", () => {
-    render(<AudioPlayer playing={false} />);
-    // The play button should be present
-    const buttons = screen.getAllByRole("button");
-    expect(buttons.length).toBeGreaterThanOrEqual(1);
-  });
-
-  it("renders waveform bars by default", () => {
-    const { container } = render(<AudioPlayer showWaveform />);
-    // Waveform bars are divs with rounded-full class
-    const bars = container.querySelectorAll(".rounded-full");
-    expect(bars.length).toBeGreaterThan(0);
-  });
-
-  it("merges className", () => {
-    const { container } = render(<AudioPlayer className="custom-player" />);
-    expect(container.firstChild).toHaveClass("custom-player");
   });
 });
 

@@ -531,7 +531,7 @@ describe("Audio volume", () => {
 /* -------------------------------------------------------------------------- */
 
 describe("Audio sizes", () => {
-  it.each(["sm", "md", "lg"] as const)("renders at size=%s", (s) => {
+  it.each(["xs", "sm", "md", "lg", "xl"] as const)("renders at size=%s", (s) => {
     render(<Audio src="/test.mp3" size={s} />);
     expect(
       screen.getByRole("region", { name: "Audio player" }),
@@ -597,8 +597,8 @@ describe("Audio (SoundCloud)", () => {
     expect(container.firstChild).toHaveClass("rounded-2xl", "my-sc");
   });
 
-  it.each(["sm", "md", "lg"] as const)("adjusts height for size=%s", (s) => {
-    const heights = { sm: "80", md: "166", lg: "300" };
+  it.each(["xs", "sm", "md", "lg", "xl"] as const)("adjusts height for size=%s", (s) => {
+    const heights = { xs: "80", sm: "80", md: "166", lg: "300", xl: "300" };
     render(<Audio src={scUrl} size={s} />);
     const iframe = screen.getByTitle("Audio player") as HTMLIFrameElement;
     expect(iframe).toHaveAttribute("height", heights[s]);
@@ -645,8 +645,8 @@ describe("Audio (Spotify)", () => {
     expect(container.firstChild).toHaveClass("rounded-xl", "my-spotify");
   });
 
-  it.each(["sm", "md", "lg"] as const)("adjusts height for size=%s", (s) => {
-    const heights = { sm: "80", md: "152", lg: "352" };
+  it.each(["xs", "sm", "md", "lg", "xl"] as const)("adjusts height for size=%s", (s) => {
+    const heights = { xs: "80", sm: "80", md: "152", lg: "352", xl: "352" };
     render(<Audio src={spotifyTrack} size={s} />);
     const iframe = screen.getByTitle("Audio player") as HTMLIFrameElement;
     expect(iframe).toHaveAttribute("height", heights[s]);
@@ -783,12 +783,12 @@ describe("Audio (waveform variant)", () => {
     },
   );
 
-  it.each(["sm", "md", "lg"] as const)(
+  it.each(["xs", "sm", "md", "lg", "xl"] as const)(
     "renders at size=%s with different bar counts",
     (s) => {
       render(<Audio src="/test.mp3" variant="waveform" size={s} />);
       const seekBar = screen.getByRole("slider", { name: "Seek" });
-      const counts = { sm: 40, md: 60, lg: 80 };
+      const counts = { xs: 30, sm: 40, md: 60, lg: 80, xl: 100 };
       expect(seekBar.children.length).toBe(counts[s]);
     },
   );
@@ -821,5 +821,462 @@ describe("Audio (waveform variant)", () => {
 
     fireEvent.click(seekBar, { clientX: 100 });
     expect(audio.currentTime).toBe(50);
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Error state                                                                */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio error state", () => {
+  it("shows error message when audio fails to load", () => {
+    const { container } = render(<Audio src="/nonexistent.mp3" />);
+    const audio = container.querySelector("audio")!;
+    fireEvent.error(audio);
+    expect(screen.getByText("Unable to load audio")).toBeInTheDocument();
+  });
+
+  it("fires onError callback", () => {
+    const onError = vi.fn();
+    const { container } = render(
+      <Audio src="/bad.mp3" onError={onError} />,
+    );
+    const audio = container.querySelector("audio")!;
+    fireEvent.error(audio);
+    expect(onError).toHaveBeenCalledTimes(1);
+  });
+
+  it("hides play controls in error state", () => {
+    const { container } = render(<Audio src="/bad.mp3" />);
+    const audio = container.querySelector("audio")!;
+    fireEvent.error(audio);
+    expect(
+      screen.queryByRole("button", { name: "Play" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("still renders audio element in error state for ref forwarding", () => {
+    const { container } = render(<Audio src="/bad.mp3" />);
+    const audio = container.querySelector("audio")!;
+    fireEvent.error(audio);
+    expect(container.querySelector("audio")).toBeInTheDocument();
+  });
+
+  it("shows error in all native variants", () => {
+    for (const variant of [
+      "standard",
+      "minimal",
+      "card",
+      "waveform",
+    ] as const) {
+      const { container, unmount } = render(
+        <Audio src="/bad.mp3" variant={variant} />,
+      );
+      const audio = container.querySelector("audio")!;
+      fireEvent.error(audio);
+      expect(screen.getByText("Unable to load audio")).toBeInTheDocument();
+      unmount();
+    }
+  });
+
+  it("uses gradient background for waveform error state", () => {
+    const { container } = render(
+      <Audio src="/bad.mp3" variant="waveform" />,
+    );
+    const audio = container.querySelector("audio")!;
+    fireEvent.error(audio);
+    expect(container.firstChild).toHaveClass("bg-gradient-to-br");
+    expect(screen.getByText("Unable to load audio")).toBeInTheDocument();
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Loading state                                                              */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio loading state", () => {
+  it("shows spinner when audio is buffering", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    const audio = container.querySelector("audio")!;
+    fireEvent.waiting(audio);
+    const playBtn = screen.getByRole("button", { name: "Play" });
+    expect(playBtn.querySelector(".animate-spin")).toBeInTheDocument();
+  });
+
+  it("hides spinner on canplay", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    const audio = container.querySelector("audio")!;
+    fireEvent.waiting(audio);
+    fireEvent.canPlay(audio);
+    const playBtn = screen.getByRole("button", { name: "Play" });
+    expect(playBtn.querySelector(".animate-spin")).not.toBeInTheDocument();
+  });
+
+  it("sets aria-busy on region when loading", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    const audio = container.querySelector("audio")!;
+    fireEvent.waiting(audio);
+    expect(
+      screen.getByRole("region", { name: "Audio player" }),
+    ).toHaveAttribute("aria-busy", "true");
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Skip buttons                                                               */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio skip buttons", () => {
+  it("does not show skip buttons by default", () => {
+    render(<Audio src="/test.mp3" />);
+    expect(
+      screen.queryByRole("button", { name: /Skip/ }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows skip buttons when enabled", () => {
+    render(<Audio src="/test.mp3" showSkipButtons />);
+    expect(
+      screen.getByRole("button", { name: "Skip back 10 seconds" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Skip forward 10 seconds" }),
+    ).toBeInTheDocument();
+  });
+
+  it("uses custom skip interval", () => {
+    render(<Audio src="/test.mp3" showSkipButtons skipInterval={30} />);
+    expect(
+      screen.getByRole("button", { name: "Skip back 30 seconds" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Skip forward 30 seconds" }),
+    ).toBeInTheDocument();
+  });
+
+  it("skips forward by the interval", () => {
+    const { container } = render(
+      <Audio src="/test.mp3" showSkipButtons skipInterval={10} />,
+    );
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    Object.defineProperty(audio, "duration", { value: 100, writable: true });
+    Object.defineProperty(audio, "currentTime", {
+      value: 20,
+      writable: true,
+      configurable: true,
+    });
+    fireEvent.loadedMetadata(audio);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Skip forward 10 seconds" }),
+    );
+    expect(audio.currentTime).toBe(30);
+  });
+
+  it("skips backward by the interval", () => {
+    const { container } = render(
+      <Audio src="/test.mp3" showSkipButtons skipInterval={10} />,
+    );
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    Object.defineProperty(audio, "duration", { value: 100, writable: true });
+    Object.defineProperty(audio, "currentTime", {
+      value: 20,
+      writable: true,
+      configurable: true,
+    });
+    fireEvent.loadedMetadata(audio);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Skip back 10 seconds" }),
+    );
+    expect(audio.currentTime).toBe(10);
+  });
+
+  it("clamps skip forward to duration", () => {
+    const { container } = render(
+      <Audio src="/test.mp3" showSkipButtons skipInterval={10} />,
+    );
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    Object.defineProperty(audio, "duration", { value: 25, writable: true });
+    Object.defineProperty(audio, "currentTime", {
+      value: 20,
+      writable: true,
+      configurable: true,
+    });
+    fireEvent.loadedMetadata(audio);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Skip forward 10 seconds" }),
+    );
+    expect(audio.currentTime).toBe(25);
+  });
+
+  it("clamps skip backward to zero", () => {
+    const { container } = render(
+      <Audio src="/test.mp3" showSkipButtons skipInterval={10} />,
+    );
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    Object.defineProperty(audio, "duration", { value: 100, writable: true });
+    Object.defineProperty(audio, "currentTime", {
+      value: 5,
+      writable: true,
+      configurable: true,
+    });
+    fireEvent.loadedMetadata(audio);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Skip back 10 seconds" }),
+    );
+    expect(audio.currentTime).toBe(0);
+  });
+
+  it("shows skip buttons in waveform variant", () => {
+    render(<Audio src="/test.mp3" variant="waveform" showSkipButtons />);
+    expect(
+      screen.getByRole("button", { name: "Skip back 10 seconds" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Skip forward 10 seconds" }),
+    ).toBeInTheDocument();
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Playback rate                                                              */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio playback rate", () => {
+  it("does not show rate button by default", () => {
+    render(<Audio src="/test.mp3" />);
+    expect(
+      screen.queryByRole("button", { name: /Playback speed/ }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows rate button when enabled", () => {
+    render(<Audio src="/test.mp3" showPlaybackRate />);
+    expect(
+      screen.getByRole("button", { name: "Playback speed 1x" }),
+    ).toBeInTheDocument();
+  });
+
+  it("cycles through playback rates", () => {
+    const { container } = render(<Audio src="/test.mp3" showPlaybackRate />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Playback speed 1x" }),
+    );
+    expect(audio.playbackRate).toBe(1.25);
+    expect(
+      screen.getByRole("button", { name: "Playback speed 1.25x" }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Playback speed 1.25x" }),
+    );
+    expect(audio.playbackRate).toBe(1.5);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Playback speed 1.5x" }),
+    );
+    expect(audio.playbackRate).toBe(2);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Playback speed 2x" }),
+    );
+    expect(audio.playbackRate).toBe(0.5);
+  });
+
+  it("respects defaultPlaybackRate", () => {
+    render(
+      <Audio src="/test.mp3" showPlaybackRate defaultPlaybackRate={1.5} />,
+    );
+    expect(
+      screen.getByRole("button", { name: "Playback speed 1.5x" }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows rate button in waveform variant", () => {
+    render(
+      <Audio src="/test.mp3" variant="waveform" showPlaybackRate />,
+    );
+    expect(
+      screen.getByRole("button", { name: "Playback speed 1x" }),
+    ).toBeInTheDocument();
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  crossOrigin                                                                */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio crossOrigin", () => {
+  it("passes crossOrigin to audio element", () => {
+    const { container } = render(
+      <Audio src="/test.mp3" crossOrigin="anonymous" />,
+    );
+    const audio = container.querySelector("audio");
+    expect(audio).toHaveAttribute("crossorigin", "anonymous");
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Seek bar thumb                                                             */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio seek bar thumb", () => {
+  it("renders a thumb element in the seek bar", () => {
+    render(<Audio src="/test.mp3" />);
+    const seekBar = screen.getByRole("slider", { name: "Seek" });
+    const thumb = seekBar.querySelector(".border-2");
+    expect(thumb).toBeInTheDocument();
+  });
+
+  it("renders a thumb element in the volume slider", () => {
+    render(<Audio src="/test.mp3" />);
+    const volumeBar = screen.getByRole("slider", { name: "Volume" });
+    const thumb = volumeBar.querySelector(".border-2");
+    expect(thumb).toBeInTheDocument();
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Space key on seek bar                                                      */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio keyboard shortcuts", () => {
+  it("Space on seek bar toggles play", () => {
+    render(<Audio src="/test.mp3" />);
+    const seekBar = screen.getByRole("slider", { name: "Seek" });
+    fireEvent.keyDown(seekBar, { key: " " });
+    expect(HTMLMediaElement.prototype.play).toHaveBeenCalled();
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Responsive card                                                            */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio responsive card", () => {
+  it("stacks vertically at xs size", () => {
+    const { container } = render(
+      <Audio src="/test.mp3" variant="card" size="xs" title="Song" />,
+    );
+    const region = screen.getByRole("region");
+    const flexCol = region.querySelector(".flex-col");
+    expect(flexCol).toBeInTheDocument();
+  });
+
+  it("uses horizontal layout at md size", () => {
+    const { container } = render(
+      <Audio src="/test.mp3" variant="card" size="md" title="Song" />,
+    );
+    // The card's outer flex container (direct child of region after <audio>)
+    // should not have flex-col at md — the artwork and controls sit side by side
+    const region = screen.getByRole("region");
+    const cardFlex = region.querySelector(":scope > div:nth-child(2)");
+    expect(cardFlex).not.toHaveClass("flex-col");
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Error retry                                                                */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio error retry", () => {
+  it("shows retry button in error state", () => {
+    const { container } = render(<Audio src="/bad.mp3" />);
+    fireEvent.error(container.querySelector("audio")!);
+    expect(
+      screen.getByRole("button", { name: "Retry" }),
+    ).toBeInTheDocument();
+  });
+
+  it("clicking retry clears error and reloads", () => {
+    const onRetry = vi.fn();
+    const { container } = render(
+      <Audio src="/bad.mp3" onRetry={onRetry} />,
+    );
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    const loadSpy = vi.spyOn(audio, "load").mockImplementation(() => {});
+    fireEvent.error(audio);
+    fireEvent.click(screen.getByRole("button", { name: "Retry" }));
+    expect(onRetry).toHaveBeenCalledTimes(1);
+    expect(loadSpy).toHaveBeenCalled();
+    expect(
+      screen.queryByText("Unable to load audio"),
+    ).not.toBeInTheDocument();
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  onRateChange                                                               */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio onRateChange", () => {
+  it("fires onRateChange with new rate", () => {
+    const onRateChange = vi.fn();
+    render(
+      <Audio src="/test.mp3" showPlaybackRate onRateChange={onRateChange} />,
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Playback speed 1x" }),
+    );
+    expect(onRateChange).toHaveBeenCalledWith(1.25);
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Time display toggle                                                        */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio time toggle", () => {
+  it("toggles between elapsed and remaining time", () => {
+    const { container } = render(<Audio src="/test.mp3" />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    Object.defineProperty(audio, "duration", { value: 120, writable: true });
+    Object.defineProperty(audio, "currentTime", {
+      value: 30,
+      writable: true,
+    });
+    fireEvent.loadedMetadata(audio);
+    fireEvent.timeUpdate(audio);
+
+    const timeBtn = screen.getByRole("button", {
+      name: "Show remaining time",
+    });
+    expect(timeBtn).toHaveTextContent("0:30 / 2:00");
+
+    fireEvent.click(timeBtn);
+    expect(
+      screen.getByRole("button", { name: "Show elapsed time" }),
+    ).toHaveTextContent("-1:30 / 2:00");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Show elapsed time" }),
+    );
+    expect(
+      screen.getByRole("button", { name: "Show remaining time" }),
+    ).toHaveTextContent("0:30 / 2:00");
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Waveform analysis fallback                                                 */
+/* -------------------------------------------------------------------------- */
+
+describe("Audio waveform analysis", () => {
+  it("uses generated bars when analyzeWaveform is false", () => {
+    render(<Audio src="/test.mp3" variant="waveform" />);
+    const seekBar = screen.getByRole("slider", { name: "Seek" });
+    // children = bars only (tooltip not rendered without hover)
+    expect(seekBar.children.length).toBe(60);
+  });
+
+  it("falls back to generated bars when AudioContext is unavailable", () => {
+    render(<Audio src="/test.mp3" variant="waveform" analyzeWaveform />);
+    const seekBar = screen.getByRole("slider", { name: "Seek" });
+    expect(seekBar.children.length).toBe(60);
   });
 });

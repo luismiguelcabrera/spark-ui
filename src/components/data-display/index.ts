@@ -45,3 +45,6 @@ export type { QrCodeProps } from "./qr-code";
 
 export { AnimatedNumber, easingFunctions } from "./animated-number";
 export type { AnimatedNumberProps, EasingPreset, EasingFunction, AnimatedNumberTrend } from "./animated-number";
+
+export { Audio, audioVariants } from "./audio";
+export type { AudioProps, AudioProvider, AudioVariant, AudioSize, AudioColor, AudioRounded } from "./audio";
