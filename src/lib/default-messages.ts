@@ -219,4 +219,12 @@ export const defaultMessages: LocaleMessages = {
   // ── ImageCrop ─────────────────────────────────────────────────────
   "imagecrop.zoom": "Zoom",
   "imagecrop.reset": "Reset",
+
+  // ── Form ─────────────────────────────────────────────────────────
+  "form.required": "{label} is required",
+  "form.min": "Must be at least {0}",
+  "form.max": "Must be at most {0}",
+  "form.minLength": "Must be at least {0} characters",
+  "form.maxLength": "Must be at most {0} characters",
+  "form.pattern": "{label} is invalid",
 };

@@ -37,6 +37,7 @@ export type UseFormReturn<T extends Record<string, any>> = {
   dirty: boolean;
   isValid: boolean;
   isSubmitting: boolean;
+  formError: string | null;
 
   getFieldProps: (name: keyof T) => {
     value: T[keyof T];
@@ -51,6 +52,7 @@ export type UseFormReturn<T extends Record<string, any>> = {
   setFieldTouched: (name: keyof T, touched?: boolean) => void;
   setValues: (values: Partial<T>) => void;
   setErrors: (errors: Partial<Record<keyof T, string>>) => void;
+  setFormError: (error: string | null) => void;
   reset: (values?: T) => void;
   validate: () => Partial<Record<keyof T, string>>;
   handleSubmit: (e?: React.FormEvent) => void | Promise<void>;
@@ -165,6 +167,7 @@ export function useForm<T extends Record<string, any>>(
     Partial<Record<keyof T, boolean>>
   >({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const initialValuesRef = useRef<T>(initialValues);
   const rulesRef = useRef<Partial<Record<keyof T, ValidationRule>>>({});
@@ -442,6 +445,7 @@ export function useForm<T extends Record<string, any>>(
     dirty,
     isValid,
     isSubmitting,
+    formError,
     getFieldProps,
     getFieldState,
     setFieldValue,
@@ -449,6 +453,7 @@ export function useForm<T extends Record<string, any>>(
     setFieldTouched,
     setValues,
     setErrors,
+    setFormError,
     reset,
     validate,
     handleSubmit,

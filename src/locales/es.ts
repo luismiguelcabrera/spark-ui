@@ -174,4 +174,10 @@ export const es: LocaleMessages = {
   "cron.nextRuns": "Próximas ejecuciones",
   "imagecrop.zoom": "Zoom",
   "imagecrop.reset": "Restablecer",
+  "form.required": "{label} es obligatorio",
+  "form.min": "Debe ser al menos {0}",
+  "form.max": "Debe ser como máximo {0}",
+  "form.minLength": "Debe tener al menos {0} caracteres",
+  "form.maxLength": "Debe tener como máximo {0} caracteres",
+  "form.pattern": "{label} no es válido",
 };

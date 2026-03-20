@@ -174,4 +174,10 @@ export const zh: LocaleMessages = {
   "cron.nextRuns": "下次执行",
   "imagecrop.zoom": "缩放",
   "imagecrop.reset": "重置",
+  "form.required": "{label}为必填项",
+  "form.min": "不能小于{0}",
+  "form.max": "不能大于{0}",
+  "form.minLength": "至少需要{0}个字符",
+  "form.maxLength": "不能超过{0}个字符",
+  "form.pattern": "{label}格式无效",
 };

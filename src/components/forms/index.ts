@@ -49,7 +49,7 @@ export { RadioGroup, radioGroupVariants } from "./radio-group";
 export type { RadioGroupProps, RadioOption } from "./radio-group";
 
 export { FormField } from "./form-field";
-export type { FormFieldProps } from "./form-field";
+export type { FormFieldProps, FormRules, FieldRenderProps } from "./form-field";
 
 export { SegmentedControl, segmentedControlVariants } from "./segmented-control";
 export type {
@@ -70,7 +70,28 @@ export { GoogleLoginButton } from "./google-login-button";
 export type { GoogleLoginButtonProps } from "./google-login-button";
 
 export { Form } from "./form";
-export type { FormProps } from "./form";
+export type { FormProps, SubmitResult } from "./form";
+
+export { RHFForm } from "./rhf-form";
+export type { RHFFormProps } from "./rhf-form";
+
+export { FormSubmit } from "./form-submit";
+export type { FormSubmitProps } from "./form-submit";
+
+export { FormError } from "./form-error";
+export type { FormErrorProps } from "./form-error";
+
+export { FormMessage } from "./form-message";
+export type { FormMessageProps } from "./form-message";
+
+export { FormSteps } from "./form-steps";
+export type { FormStepsProps } from "./form-steps";
+
+export { FormStep } from "./form-step";
+export type { FormStepProps } from "./form-step";
+
+export { useFormContext } from "./form-context";
+export { useFormSteps } from "./form-steps-context";
 
 export { OtpInput } from "./pin-input";
 /** @deprecated Use PinInputProps with `otp` prop instead */

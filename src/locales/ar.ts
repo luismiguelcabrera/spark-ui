@@ -174,4 +174,10 @@ export const ar: LocaleMessages = {
   "cron.nextRuns": "التشغيلات القادمة",
   "imagecrop.zoom": "تكبير",
   "imagecrop.reset": "إعادة تعيين",
+  "form.required": "{label} مطلوب",
+  "form.min": "يجب أن يكون على الأقل {0}",
+  "form.max": "يجب أن يكون على الأكثر {0}",
+  "form.minLength": "يجب أن يحتوي على {0} أحرف على الأقل",
+  "form.maxLength": "يجب أن يحتوي على {0} أحرف على الأكثر",
+  "form.pattern": "{label} غير صالح",
 };

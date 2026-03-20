@@ -174,4 +174,10 @@ export const fr: LocaleMessages = {
   "cron.nextRuns": "Prochaines exécutions",
   "imagecrop.zoom": "Zoom",
   "imagecrop.reset": "Réinitialiser",
+  "form.required": "{label} est requis",
+  "form.min": "Doit être au moins {0}",
+  "form.max": "Doit être au plus {0}",
+  "form.minLength": "Doit contenir au moins {0} caractères",
+  "form.maxLength": "Doit contenir au plus {0} caractères",
+  "form.pattern": "{label} est invalide",
 };

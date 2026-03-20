@@ -174,4 +174,10 @@ export const ja: LocaleMessages = {
   "cron.nextRuns": "次回の実行",
   "imagecrop.zoom": "ズーム",
   "imagecrop.reset": "リセット",
+  "form.required": "{label}は必須です",
+  "form.min": "{0}以上にしてください",
+  "form.max": "{0}以下にしてください",
+  "form.minLength": "{0}文字以上で入力してください",
+  "form.maxLength": "{0}文字以内で入力してください",
+  "form.pattern": "{label}が無効です",
 };

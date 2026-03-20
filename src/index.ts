@@ -26,6 +26,7 @@ export {
 export type { DefaultsProviderProps as LibDefaultsProviderProps } from "./lib/defaults-provider";
 export { useLocale } from "./lib/locale";
 export { defaultMessages } from "./lib/default-messages";
+export type { LocaleMessages } from "./lib/default-messages";
 
 // ── Hooks ──
 export { useControllable } from "./hooks/use-controllable";
@@ -49,3 +50,5 @@ export { useThrottle } from "./hooks/use-throttle";
 export { useWindowSize } from "./hooks/use-window-size";
 export { useHover } from "./hooks/use-hover";
 export { useElevation } from "./hooks/use-elevation";
+export { useForm } from "./hooks/use-form";
+export type { UseFormReturn, UseFormConfig, ValidationRule, FieldState } from "./hooks/use-form";
