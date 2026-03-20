@@ -53,7 +53,7 @@ describe("Checkbox", () => {
 
     it("applies error border class when error is present", () => {
       render(<Checkbox error="Required" />);
-      expect(screen.getByRole("checkbox").className).toContain("border-red-300");
+      expect(screen.getByRole("checkbox").className).toContain("border-destructive");
     });
   });
 

@@ -102,14 +102,14 @@ describe("Button", () => {
     render(<Button variant="outline">Test</Button>);
     const cls = screen.getByRole("button").className;
     expect(cls).toContain("border");
-    expect(cls).toContain("text-gray-600");
+    expect(cls).toContain("text-muted-foreground");
   });
 
   it("applies ghost variant classes", () => {
     render(<Button variant="ghost">Test</Button>);
     const cls = screen.getByRole("button").className;
     expect(cls).toContain("bg-transparent");
-    expect(cls).toContain("text-gray-600");
+    expect(cls).toContain("text-muted-foreground");
   });
 
   it("applies icon variant classes", () => {

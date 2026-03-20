@@ -64,7 +64,7 @@ describe("Input", () => {
 
     it("adds error border class", () => {
       render(<Input label="Email" error="Required" />);
-      expect(screen.getByLabelText("Email").className).toContain("border-red-300");
+      expect(screen.getByLabelText("Email").className).toContain("border-destructive");
     });
   });
 

@@ -50,13 +50,13 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
           className={cn(
             "w-9 h-5 rounded-full relative transition-colors duration-150",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary",
-            isChecked ? "bg-primary" : "bg-slate-300",
+            isChecked ? "bg-primary" : "bg-muted",
             disabled && "opacity-50 cursor-not-allowed pointer-events-none"
           )}
         >
           <span
             className={cn(
-              "absolute top-0.5 bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-200",
+              "absolute top-0.5 bg-surface w-4 h-4 rounded-full shadow-sm transition-transform duration-200",
               isChecked ? "left-4" : "left-0.5"
             )}
           />

@@ -56,8 +56,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 name={icon}
                 size="md"
                 className={cn(
-                  "text-slate-500 group-focus-within:text-primary transition-colors",
-                  error && "text-red-400 group-focus-within:text-red-500"
+                  "text-muted-foreground group-focus-within:text-primary transition-colors",
+                  error && "text-destructive/70 group-focus-within:text-destructive"
                 )}
               />
             </div>
@@ -73,7 +73,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               s.inputDisabled,
               icon && iconPosition === "left" && "pl-11",
               icon && iconPosition === "right" && "pr-11",
-              error && "border-red-300 focus:border-red-500 focus:ring-red-500/20",
+              error && "border-destructive/50 focus:border-destructive focus:ring-destructive/20",
               className
             )}
             ref={ref}
@@ -85,18 +85,18 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 name={icon}
                 size="md"
                 className={cn(
-                  "text-slate-500 group-focus-within:text-primary transition-colors",
-                  error && "text-red-400 group-focus-within:text-red-500"
+                  "text-muted-foreground group-focus-within:text-primary transition-colors",
+                  error && "text-destructive/70 group-focus-within:text-destructive"
                 )}
               />
             </div>
           )}
         </div>
         {error && (
-          <p id={errorId} className="text-xs text-red-600 font-medium" role="alert">{error}</p>
+          <p id={errorId} className="text-xs text-destructive font-medium" role="alert">{error}</p>
         )}
         {hint && !error && (
-          <p id={hintId} className="text-xs text-slate-600">{hint}</p>
+          <p id={hintId} className="text-xs text-muted-foreground">{hint}</p>
         )}
       </div>
     );

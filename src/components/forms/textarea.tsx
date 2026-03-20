@@ -21,7 +21,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             "p-4 h-auto min-h-[120px] resize-none",
             s.inputFocus,
             s.inputDisabled,
-            error && "border-red-300 focus:border-red-500 focus:ring-red-500/20",
+            error && "border-destructive/50 focus:border-destructive focus:ring-destructive/20",
             className
           )}
           ref={ref}
@@ -30,7 +30,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           {...props}
         />
         {error && (
-          <p className="text-xs text-red-600 font-medium" role="alert">{error}</p>
+          <p className="text-xs text-destructive font-medium" role="alert">{error}</p>
         )}
       </div>
     );

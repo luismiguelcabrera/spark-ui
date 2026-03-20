@@ -70,7 +70,7 @@ describe("Textarea", () => {
     it("adds error border class", () => {
       render(<Textarea error="Required" />);
       const textarea = screen.getByRole("textbox");
-      expect(textarea.className).toContain("border-red-300");
+      expect(textarea.className).toContain("border-destructive");
     });
   });
 

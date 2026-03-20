@@ -48,18 +48,18 @@ const thumbTranslateMap = {
 const colorMap: Record<string, string> = {
   primary: "bg-primary",
   secondary: "bg-secondary",
-  success: "bg-green-700",
-  warning: "bg-amber-600",
-  destructive: "bg-red-600",
+  success: "bg-success",
+  warning: "bg-warning",
+  destructive: "bg-destructive",
   accent: "bg-accent",
 };
 
 const focusColorMap: Record<string, string> = {
   primary: "focus-visible:ring-primary",
   secondary: "focus-visible:ring-secondary",
-  success: "focus-visible:ring-green-600",
-  warning: "focus-visible:ring-amber-500",
-  destructive: "focus-visible:ring-red-600",
+  success: "focus-visible:ring-success",
+  warning: "focus-visible:ring-warning",
+  destructive: "focus-visible:ring-destructive",
   accent: "focus-visible:ring-accent",
 };
 
@@ -102,7 +102,7 @@ const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
           "disabled:opacity-50 disabled:cursor-not-allowed",
           trackSizeMap[size],
-          isChecked ? colorMap[color] : "bg-slate-300",
+          isChecked ? colorMap[color] : "bg-muted",
           focusColorMap[color],
           className
         )}
@@ -110,7 +110,7 @@ const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
       >
         <span
           className={cn(
-            "pointer-events-none inline-block rounded-full bg-white shadow-sm transition-transform",
+            "pointer-events-none inline-block rounded-full bg-surface shadow-sm transition-transform",
             "absolute top-1/2 -translate-y-1/2 left-0.5",
             thumbSizeMap[size],
             isChecked && thumbTranslateMap[size]
@@ -125,12 +125,12 @@ const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
       <div className={cn("flex items-start gap-3", labelPlacement === "left" && "flex-row-reverse")}>
         {track}
         <div className="flex flex-col">
-          <span className="text-sm font-medium text-slate-700">
+          <span className="text-sm font-medium text-navy-text">
             {label}
-            {required && <span className="text-red-600 ml-0.5">*</span>}
+            {required && <span className="text-destructive ml-0.5">*</span>}
           </span>
           {description && (
-            <span className="text-xs text-slate-600">
+            <span className="text-xs text-muted-foreground">
               {description}
             </span>
           )}

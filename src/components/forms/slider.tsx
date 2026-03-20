@@ -49,9 +49,9 @@ const thumbSizeMap = { sm: "w-3.5 h-3.5", md: "w-5 h-5", lg: "w-6 h-6" };
 const colorMap: Record<string, { track: string; thumb: string }> = {
   primary: { track: "bg-primary", thumb: "border-primary focus-visible:ring-primary" },
   secondary: { track: "bg-secondary", thumb: "border-secondary focus-visible:ring-secondary" },
-  success: { track: "bg-green-600", thumb: "border-green-600 focus-visible:ring-green-600" },
-  warning: { track: "bg-amber-500", thumb: "border-amber-500 focus-visible:ring-amber-500" },
-  destructive: { track: "bg-red-600", thumb: "border-red-600 focus-visible:ring-red-600" },
+  success: { track: "bg-success", thumb: "border-success focus-visible:ring-success" },
+  warning: { track: "bg-warning", thumb: "border-warning focus-visible:ring-warning" },
+  destructive: { track: "bg-destructive", thumb: "border-destructive focus-visible:ring-destructive" },
   accent: { track: "bg-accent", thumb: "border-accent focus-visible:ring-accent" },
 };
 
@@ -292,7 +292,7 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
           aria-disabled={disabled}
           tabIndex={disabled ? -1 : 0}
           className={cn(
-            "absolute top-1/2 -translate-y-1/2 -translate-x-1/2 rounded-full bg-white border-2 shadow-sm transition-shadow",
+            "absolute top-1/2 -translate-y-1/2 -translate-x-1/2 rounded-full bg-surface border-2 shadow-sm transition-shadow",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
             "hover:shadow-md",
             thumbSizeMap[size],
@@ -305,7 +305,7 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
           onMouseLeave={() => setHoveredThumb(null)}
         >
           {(showLegacyTooltip || showNewLabel) && (
-            <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 rounded-md bg-slate-900 text-white text-xs font-medium whitespace-nowrap">
+            <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 rounded-md bg-background-dark text-white text-xs font-medium whitespace-nowrap">
               {formatValue(thumbValue)}
             </div>
           )}
@@ -318,7 +318,7 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
         <div
           ref={trackRef}
           className={cn(
-            "relative w-full rounded-full bg-slate-200 cursor-pointer",
+            "relative w-full rounded-full bg-muted cursor-pointer",
             trackSizeMap[size],
             disabled && "cursor-not-allowed"
           )}
@@ -362,9 +362,9 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
                 className="absolute flex flex-col items-center -translate-x-1/2"
                 style={{ left: `${percentOf(tickVal)}%` }}
               >
-                <div className="w-0.5 h-1.5 bg-slate-400 rounded-full" />
+                <div className="w-0.5 h-1.5 bg-muted-foreground/50 rounded-full" />
                 {tickLabels && tickLabels[i] !== undefined && (
-                  <span className="text-[10px] text-slate-600 mt-0.5 whitespace-nowrap">
+                  <span className="text-[10px] text-muted-foreground mt-0.5 whitespace-nowrap">
                     {tickLabels[i]}
                   </span>
                 )}
@@ -375,8 +375,8 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
 
         {showLabels && (
           <div className={cn("flex justify-between", ticks ? "mt-0.5" : "mt-1")}>
-            <span className="text-xs text-slate-600">{formatValue(min)}</span>
-            <span className="text-xs text-slate-600">{formatValue(max)}</span>
+            <span className="text-xs text-muted-foreground">{formatValue(min)}</span>
+            <span className="text-xs text-muted-foreground">{formatValue(max)}</span>
           </div>
         )}
       </div>

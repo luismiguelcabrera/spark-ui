@@ -19,10 +19,10 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           <select
             className={cn(
               s.inputBase,
-              "appearance-none pl-4 pr-10 text-gray-900",
+              "appearance-none pl-4 pr-10 text-navy-text",
               s.inputFocus,
               s.inputDisabled,
-              error && "border-red-300 focus:border-red-500 focus:ring-red-500/20",
+              error && "border-destructive/50 focus:border-destructive focus:ring-destructive/20",
               className
             )}
             ref={ref}
@@ -32,12 +32,12 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           >
             {children}
           </select>
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
             <Icon name="expand_more" size="sm" />
           </span>
         </div>
         {error && (
-          <p className="text-xs text-red-600 font-medium" role="alert">{error}</p>
+          <p className="text-xs text-destructive font-medium" role="alert">{error}</p>
         )}
       </div>
     );

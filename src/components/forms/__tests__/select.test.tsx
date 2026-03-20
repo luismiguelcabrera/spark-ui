@@ -83,7 +83,7 @@ describe("Select", () => {
           <option value="">--</option>
         </Select>,
       );
-      expect(screen.getByRole("combobox").className).toContain("border-red-300");
+      expect(screen.getByRole("combobox").className).toContain("border-destructive");
     });
   });
 
