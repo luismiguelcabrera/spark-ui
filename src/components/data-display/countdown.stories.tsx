@@ -58,19 +58,19 @@ export const AllVariants: Story = {
   render: (args) => (
     <div className="space-y-8">
       <div>
-        <p className="text-sm font-medium text-slate-500 mb-2">Default</p>
+        <p className="text-sm font-medium text-muted-foreground mb-2">Default</p>
         <Countdown {...args} variant="default" />
       </div>
       <div>
-        <p className="text-sm font-medium text-slate-500 mb-2">Cards</p>
+        <p className="text-sm font-medium text-muted-foreground mb-2">Cards</p>
         <Countdown {...args} variant="cards" />
       </div>
       <div>
-        <p className="text-sm font-medium text-slate-500 mb-2">Minimal</p>
+        <p className="text-sm font-medium text-muted-foreground mb-2">Minimal</p>
         <Countdown {...args} variant="minimal" />
       </div>
       <div>
-        <p className="text-sm font-medium text-slate-500 mb-2">Compact</p>
+        <p className="text-sm font-medium text-muted-foreground mb-2">Compact</p>
         <Countdown {...args} variant="compact" />
       </div>
     </div>

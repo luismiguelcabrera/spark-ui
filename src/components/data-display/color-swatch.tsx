@@ -58,7 +58,7 @@ const ColorSwatch = forwardRef<HTMLDivElement, ColorSwatchProps>(
         role="img"
         aria-label={`Color swatch: ${color}`}
         className={cn(
-          "inline-block border border-gray-200 shrink-0",
+          "inline-block border border-muted shrink-0",
           sizeClass,
           radiusMap[radius],
           withShadow && "shadow-md",

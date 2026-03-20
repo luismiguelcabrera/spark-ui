@@ -150,7 +150,7 @@ describe("ColorSwatch", () => {
   it("has border class", () => {
     const { container } = render(<ColorSwatch color="#000" />);
     expect(container.firstChild).toHaveClass("border");
-    expect(container.firstChild).toHaveClass("border-gray-200");
+    expect(container.firstChild).toHaveClass("border-muted");
   });
 
   // ── Style merging ──────────────────────────────────────────────────
