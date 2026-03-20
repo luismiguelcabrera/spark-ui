@@ -210,7 +210,7 @@ describe("Audio (native)", () => {
 
   it("has border and background on container", () => {
     const { container } = render(<Audio src="/test.mp3" />);
-    expect(container.firstChild).toHaveClass("bg-white", "border");
+    expect(container.firstChild).toHaveClass("bg-surface", "border");
   });
 });
 

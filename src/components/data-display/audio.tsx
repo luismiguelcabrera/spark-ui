@@ -162,38 +162,38 @@ function formatTime(seconds: number): string {
 
 const progressColorMap: Record<AudioColor, string> = {
   primary: "bg-primary",
-  secondary: "bg-slate-600 dark:bg-slate-400",
-  accent: "bg-amber-500",
-  success: "bg-emerald-500",
-  warning: "bg-orange-500",
-  destructive: "bg-red-500",
+  secondary: "bg-secondary",
+  accent: "bg-accent",
+  success: "bg-success",
+  warning: "bg-warning",
+  destructive: "bg-destructive",
 };
 
 const buttonColorMap: Record<AudioColor, string> = {
   primary: "text-primary",
-  secondary: "text-slate-600 dark:text-slate-500",
-  accent: "text-amber-600",
-  success: "text-emerald-600",
-  warning: "text-orange-600",
-  destructive: "text-red-600",
+  secondary: "text-secondary",
+  accent: "text-accent",
+  success: "text-success",
+  warning: "text-warning",
+  destructive: "text-destructive",
 };
 
 const focusColorMap: Record<AudioColor, string> = {
   primary: "focus-visible:ring-primary",
-  secondary: "focus-visible:ring-slate-500",
-  accent: "focus-visible:ring-amber-500",
-  success: "focus-visible:ring-emerald-500",
-  warning: "focus-visible:ring-orange-500",
-  destructive: "focus-visible:ring-red-500",
+  secondary: "focus-visible:ring-secondary",
+  accent: "focus-visible:ring-accent",
+  success: "focus-visible:ring-success",
+  warning: "focus-visible:ring-warning",
+  destructive: "focus-visible:ring-destructive",
 };
 
 const thumbBorderColorMap: Record<AudioColor, string> = {
   primary: "border-primary",
-  secondary: "border-slate-600 dark:border-slate-400",
-  accent: "border-amber-500",
-  success: "border-emerald-500",
-  warning: "border-orange-500",
-  destructive: "border-red-500",
+  secondary: "border-secondary",
+  accent: "border-accent",
+  success: "border-success",
+  warning: "border-warning",
+  destructive: "border-destructive",
 };
 
 const soundcloudColorHexMap: Record<AudioColor, string> = {
@@ -622,7 +622,7 @@ function SeekBar({
       aria-valuetext={`${formatTime(current)} of ${formatTime(total)}`}
       tabIndex={0}
       className={cn(
-        "relative flex-1 cursor-pointer rounded-full bg-slate-200 dark:bg-slate-700",
+        "relative flex-1 cursor-pointer rounded-full bg-muted",
         height,
       )}
       onClick={handleClick}
@@ -635,7 +635,7 @@ function SeekBar({
     >
       {bufferedPercent > 0 && (
         <div
-          className="absolute inset-y-0 left-0 rounded-full bg-slate-300 dark:bg-slate-600"
+          className="absolute inset-y-0 left-0 rounded-full bg-muted-foreground/20"
           style={{ width: `${bufferedPercent}%` }}
         />
       )}
@@ -660,7 +660,7 @@ function SeekBar({
       )}
       {hoverFraction !== null && total > 0 && (
         <div
-          className="absolute -top-8 -translate-x-1/2 px-1.5 py-0.5 rounded bg-slate-800 text-white text-[10px] pointer-events-none whitespace-nowrap z-10"
+          className="absolute -top-8 -translate-x-1/2 px-1.5 py-0.5 rounded bg-background-dark text-white text-[10px] pointer-events-none whitespace-nowrap z-10"
           style={{ left: `${hoverFraction * 100}%` }}
         >
           {formatTime(hoverFraction * total)}
@@ -807,7 +807,7 @@ function WaveformSeekBar({
       ))}
       {hoverFraction !== null && total > 0 && (
         <div
-          className="absolute -top-8 -translate-x-1/2 px-1.5 py-0.5 rounded bg-slate-800/90 text-white text-[10px] pointer-events-none whitespace-nowrap z-10"
+          className="absolute -top-8 -translate-x-1/2 px-1.5 py-0.5 rounded bg-background-dark/90 text-white text-[10px] pointer-events-none whitespace-nowrap z-10"
           style={{ left: `${hoverFraction * 100}%` }}
         >
           {formatTime(hoverFraction * total)}
@@ -917,7 +917,7 @@ function VolumeSlider({
       tabIndex={0}
       className={cn(
         "relative cursor-pointer rounded-full",
-        trackColor || "bg-slate-200 dark:bg-slate-700",
+        trackColor || "bg-muted",
         width,
         height,
       )}
@@ -1227,7 +1227,7 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
           focusColorMap[color],
           buttonColorMap[color],
           s.iconButton,
-          "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700",
+          "bg-muted hover:brightness-95 dark:hover:brightness-110",
         )}
       >
         {playIcon}
@@ -1278,8 +1278,8 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
           "motion-safe:transition-colors",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
           focusColorMap[color],
-          "text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200",
-          "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700",
+          "text-muted-foreground hover:text-navy-text",
+          "bg-muted hover:brightness-95 dark:hover:brightness-110",
           s.timeText,
         )}
       >
@@ -1310,10 +1310,10 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
         onClick={toggleTimeDisplay}
         className={cn(
           "tabular-nums shrink-0 select-none cursor-pointer rounded",
-          "hover:text-slate-800 dark:hover:text-slate-200",
+          "hover:text-navy-text",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
           focusColorMap[color],
-          "text-slate-600 dark:text-slate-400",
+          "text-muted-foreground",
           s.timeText,
         )}
       >
@@ -1334,7 +1334,7 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
             "motion-safe:transition-colors",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
             focusColorMap[color],
-            "text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200",
+            "text-muted-foreground hover:text-navy-text",
           )}
         >
           {isMuted ? <VolumeMuteIcon className={s.controlIcon} /> : <VolumeIcon className={s.controlIcon} />}
@@ -1353,7 +1353,7 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
 
     const containerClasses = cn(
       audioVariants({ rounded }),
-      "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700",
+      "bg-surface border border-muted",
       s.padding,
       className,
     );
@@ -1364,11 +1364,11 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
       const errorContainer = isWaveform
         ? cn(audioVariants({ rounded }), "bg-gradient-to-br", gradientMap[color], s.padding, className)
         : containerClasses;
-      const errorIconStyle = isWaveform ? "text-white/80 bg-white/20" : "text-red-500 bg-red-50 dark:bg-red-950";
-      const errorTextStyle = isWaveform ? "text-white/70" : "text-slate-500 dark:text-slate-400";
+      const errorIconStyle = isWaveform ? "text-white/80 bg-white/20" : "text-destructive bg-destructive/10";
+      const errorTextStyle = isWaveform ? "text-white/70" : "text-muted-foreground";
       const retryBtnStyle = isWaveform
         ? "text-white/90 bg-white/20 hover:bg-white/30"
-        : "text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 dark:text-slate-400 dark:hover:text-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700";
+        : "text-muted-foreground hover:text-navy-text bg-muted hover:brightness-95 dark:hover:brightness-110";
 
       return (
         <div className={errorContainer} role="region" aria-label={regionLabel}>
@@ -1417,10 +1417,10 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
             onClick={toggleTimeDisplay}
             className={cn(
               "tabular-nums shrink-0 select-none cursor-pointer rounded",
-              "hover:text-slate-800 dark:hover:text-slate-200",
+              "hover:text-navy-text",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
               focusColorMap[color],
-              "text-slate-600 dark:text-slate-400",
+              "text-muted-foreground",
               s.timeText,
             )}
           >
@@ -1441,7 +1441,7 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
             {/* Artwork */}
             <div
               className={cn(
-                "shrink-0 rounded-md overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center",
+                "shrink-0 rounded-md overflow-hidden bg-muted flex items-center justify-center",
                 isStacked ? "w-full h-32" : s.artworkSize,
               )}
             >
@@ -1452,7 +1452,7 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <MusicNoteIcon className="w-6 h-6 text-slate-600 dark:text-slate-400" />
+                <MusicNoteIcon className="w-6 h-6 text-muted-foreground" />
               )}
             </div>
 
@@ -1461,12 +1461,12 @@ const Audio = forwardRef<HTMLAudioElement, AudioProps>(
               {(trackTitle || artist) && (
                 <div className="min-w-0">
                   {trackTitle && (
-                    <p className={cn("font-medium text-slate-900 dark:text-slate-100 truncate", s.text)}>
+                    <p className={cn("font-medium text-navy-text truncate", s.text)}>
                       {trackTitle}
                     </p>
                   )}
                   {artist && (
-                    <p className={cn("text-slate-600 dark:text-slate-400 truncate", s.timeText)}>
+                    <p className={cn("text-muted-foreground truncate", s.timeText)}>
                       {artist}
                     </p>
                   )}
