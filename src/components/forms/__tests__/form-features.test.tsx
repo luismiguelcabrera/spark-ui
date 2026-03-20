@@ -2,8 +2,10 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import { Form } from "../form";
+import { FormField } from "../form-field";
 import { useForm } from "../../../hooks/use-form";
 import { useFieldArray } from "../../../hooks/use-field-array";
+import { useFormField } from "../form-context";
 import { Input } from "../input";
 import { Button } from "../button";
 
@@ -452,6 +454,158 @@ describe("Form.Field transform", () => {
 
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledWith({ tag: "hello-world" });
+    });
+  });
+});
+
+// ── Form.ErrorSummary ──
+
+describe("Form.ErrorSummary", () => {
+  it("renders error list after submit failure", async () => {
+    const user = userEvent.setup();
+    function SummaryForm() {
+      const form = useForm({ initialValues: { email: "", name: "" } });
+      return (
+        <Form form={form} aria-label="form">
+          <Form.ErrorSummary />
+          <Form.Field name="email" label="Email" rules={{ required: true }}>
+            <Input placeholder="Email" />
+          </Form.Field>
+          <Form.Field name="name" label="Name" rules={{ required: true }}>
+            <Input placeholder="Name" />
+          </Form.Field>
+          <Form.Submit>Go</Form.Submit>
+        </Form>
+      );
+    }
+    render(<SummaryForm />);
+    await user.click(screen.getByRole("button", { name: "Go" }));
+
+    await waitFor(() => {
+      const alerts = screen.getAllByRole("alert");
+      expect(alerts.length).toBeGreaterThanOrEqual(1);
+      // ErrorSummary should contain both error messages
+      expect(
+        screen.getByText("Please fix the following errors:"),
+      ).toBeInTheDocument();
+      expect(screen.getAllByText("Email is required").length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText("Name is required").length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  it("renders nothing when no errors", () => {
+    function NoErrorSummary() {
+      const form = useForm({ initialValues: { x: "valid" } });
+      return (
+        <Form form={form} aria-label="form">
+          <Form.ErrorSummary data-testid="summary" />
+        </Form>
+      );
+    }
+    render(<NoErrorSummary />);
+    expect(screen.queryByTestId("summary")).not.toBeInTheDocument();
+  });
+});
+
+// ── Form.Group ──
+
+describe("Form.Group", () => {
+  it("renders a fieldset with legend", () => {
+    function GroupForm() {
+      const form = useForm({ initialValues: { street: "", city: "" } });
+      return (
+        <Form form={form} aria-label="form">
+          <Form.Group legend="Address" description="Enter your address">
+            <Form.Field name="street" label="Street">
+              <Input placeholder="Street" />
+            </Form.Field>
+            <Form.Field name="city" label="City">
+              <Input placeholder="City" />
+            </Form.Field>
+          </Form.Group>
+        </Form>
+      );
+    }
+    render(<GroupForm />);
+    expect(screen.getByRole("group")).toBeInTheDocument();
+    expect(screen.getByText("Address")).toBeInTheDocument();
+    expect(screen.getByText("Enter your address")).toBeInTheDocument();
+  });
+});
+
+// ── useFormField (context-based binding) ──
+
+describe("useFormField", () => {
+  function ContextBoundInput() {
+    const field = useFormField();
+    if (!field) return <input data-testid="fallback" />;
+    return (
+      <input
+        data-testid="context-input"
+        value={field.value ?? ""}
+        onChange={(e) => field.onChange(e.target.value)}
+        name={field.name}
+      />
+    );
+  }
+
+  it("provides field binding via context within Form.Field", async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn();
+    function ContextForm() {
+      const form = useForm({ initialValues: { username: "" } });
+      return (
+        <Form form={form} onSubmit={onSubmit} aria-label="form">
+          <Form.Field name="username" label="Username">
+            <ContextBoundInput />
+          </Form.Field>
+          <Form.Submit>Go</Form.Submit>
+        </Form>
+      );
+    }
+    render(<ContextForm />);
+    // The context-bound input should be rendered (not the fallback)
+    expect(screen.getByTestId("context-input")).toBeInTheDocument();
+  });
+
+  it("returns null outside Form.Field", () => {
+    render(<ContextBoundInput />);
+    expect(screen.getByTestId("fallback")).toBeInTheDocument();
+  });
+});
+
+// ── Nested field paths ──
+
+describe("Nested field paths", () => {
+  it("supports dot-notation for nested values", async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn();
+
+    function NestedForm() {
+      const form = useForm({
+        initialValues: { address: { city: "", zip: "" } },
+      });
+      return (
+        <Form form={form} onSubmit={onSubmit} aria-label="form">
+          <Form.Field name="address.city" label="City">
+            <Input placeholder="City" />
+          </Form.Field>
+          <Form.Field name="address.zip" label="Zip">
+            <Input placeholder="Zip" />
+          </Form.Field>
+          <Form.Submit>Go</Form.Submit>
+        </Form>
+      );
+    }
+    render(<NestedForm />);
+    await user.type(screen.getByPlaceholderText("City"), "NYC");
+    await user.type(screen.getByPlaceholderText("Zip"), "10001");
+    await user.click(screen.getByRole("button", { name: "Go" }));
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith({
+        address: { city: "NYC", zip: "10001" },
+      });
     });
   });
 });

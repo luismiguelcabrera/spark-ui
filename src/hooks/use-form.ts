@@ -79,7 +79,36 @@ export type UseFormReturn<T extends Record<string, any>> = {
 
   /** Returns values with transforms applied (for use by Form component). */
   getTransformedValues: () => T;
+
+  /** Full async validation: marks all touched, runs field+form+resolver validation, returns errors. */
+  validateAsync: () => Promise<Partial<Record<keyof T, string>>>;
 };
+
+// ── Nested path helpers ──
+
+function getByPath(obj: any, path: string): any {
+  if (!path.includes(".")) return obj?.[path];
+  return path.split(".").reduce((acc, key) => {
+    if (acc === null || acc === undefined) return undefined;
+    return acc[key];
+  }, obj);
+}
+
+function setByPath<T extends Record<string, any>>(obj: T, path: string, value: any): T {
+  if (!path.includes(".")) return { ...obj, [path]: value };
+  const keys = path.split(".");
+  const result = { ...obj } as any;
+  let current = result;
+  for (let i = 0; i < keys.length - 1; i++) {
+    const key = keys[i];
+    current[key] = Array.isArray(current[key])
+      ? [...current[key]]
+      : { ...(current[key] ?? {}) };
+    current = current[key];
+  }
+  current[keys[keys.length - 1]] = value;
+  return result;
+}
 
 // ── Helpers ──
 
@@ -273,10 +302,15 @@ export function useForm<T extends Record<string, any>>(
     return newErrors;
   }, [values, formValidate, resolver]);
 
-  // ── Set field value ──
+  // ── Set field value (supports nested dot-notation paths) ──
   const setFieldValue = useCallback(
     (name: keyof T, value: any) => {
-      setValuesState((prev) => ({ ...prev, [name]: value }));
+      const nameStr = name as string;
+      if (nameStr.includes(".")) {
+        setValuesState((prev) => setByPath(prev, nameStr, value));
+      } else {
+        setValuesState((prev) => ({ ...prev, [name]: value }));
+      }
       if (validateOnChange) {
         const error = validateField(value, rulesRef.current[name]);
         setErrorsState((prev) => {
@@ -488,43 +522,114 @@ export function useForm<T extends Record<string, any>>(
     [validateOnBlur, setFieldTouched],
   );
 
-  // ── getFieldProps ──
+  // ── getFieldProps (supports nested dot-notation paths) ──
   const getFieldProps = useCallback(
-    (name: keyof T) => ({
-      value: values[name],
-      onChange: createOnChange(name),
-      onBlur: createOnBlur(name),
-      name: name as string,
-    }),
+    (name: keyof T) => {
+      const nameStr = name as string;
+      const val = nameStr.includes(".") ? getByPath(values, nameStr) : values[name];
+      return {
+        value: val,
+        onChange: createOnChange(name),
+        onBlur: createOnBlur(name),
+        name: nameStr,
+      };
+    },
     [values, createOnChange, createOnBlur],
   );
 
-  // ── getFieldState ──
+  // ── getFieldState (supports nested dot-notation paths) ──
   const getFieldState = useCallback(
-    (name: keyof T): FieldState => ({
-      value: values[name],
-      error: errors[name] ?? null,
-      touched: touched[name] ?? false,
-      dirty: values[name] !== initialValuesRef.current[name],
-    }),
+    (name: keyof T): FieldState => {
+      const nameStr = name as string;
+      const val = nameStr.includes(".") ? getByPath(values, nameStr) : values[name];
+      const initVal = nameStr.includes(".")
+        ? getByPath(initialValuesRef.current, nameStr)
+        : initialValuesRef.current[name];
+      return {
+        value: val,
+        error: errors[name] ?? null,
+        touched: touched[name] ?? false,
+        dirty: val !== initVal,
+      };
+    },
     [values, errors, touched],
   );
 
-  // ── register ──
+  // ── register (supports nested dot-notation paths) ──
   const register = useCallback(
     (name: keyof T, rules?: ValidationRule) => {
       if (rules) {
         rulesRef.current[name] = rules;
       }
+      const nameStr = name as string;
+      const val = nameStr.includes(".") ? getByPath(values, nameStr) : values[name];
       return {
-        value: values[name],
+        value: val,
         onChange: createOnChange(name),
         onBlur: createOnBlur(name),
-        name: name as string,
+        name: nameStr,
       };
     },
     [values, createOnChange, createOnBlur],
   );
+
+  // ── validateAsync — full async validation with touched marking ──
+  const validateAsync = useCallback(async (): Promise<Partial<Record<keyof T, string>>> => {
+    // Mark all fields as touched
+    const allTouched: Partial<Record<keyof T, boolean>> = {};
+    for (const key of Object.keys(values) as (keyof T)[]) {
+      allTouched[key] = true;
+    }
+    setTouchedState(allTouched);
+
+    const newErrors: Partial<Record<keyof T, string>> = {};
+
+    // Field-level validation (sync + async)
+    const fieldKeys = Object.keys(values) as (keyof T)[];
+    const asyncResults = await Promise.all(
+      fieldKeys.map((key) =>
+        validateFieldAsync(values[key], rulesRef.current[key]),
+      ),
+    );
+    fieldKeys.forEach((key, i) => {
+      if (asyncResults[i]) {
+        newErrors[key] = asyncResults[i]!;
+      }
+    });
+
+    // Also validate any registered fields not in values (nested paths, etc.)
+    for (const key of Object.keys(rulesRef.current) as (keyof T)[]) {
+      if (!newErrors[key] && !(key in values)) {
+        const nameStr = key as string;
+        const val = nameStr.includes(".") ? getByPath(values, nameStr) : undefined;
+        const error = await validateFieldAsync(val, rulesRef.current[key]);
+        if (error) newErrors[key] = error;
+      }
+    }
+
+    // Form-level validation
+    if (formValidate) {
+      const formErrors = formValidate(values);
+      for (const [key, msg] of Object.entries(formErrors)) {
+        if (msg) {
+          newErrors[key as keyof T] = msg as string;
+        }
+      }
+    }
+
+    // Resolver validation (async)
+    if (resolver) {
+      const resolverErrors = await resolver(values);
+      for (const [key, msg] of Object.entries(resolverErrors)) {
+        if (msg && !newErrors[key as keyof T]) {
+          newErrors[key as keyof T] = msg as string;
+        }
+      }
+    }
+
+    setErrorsState(newErrors);
+    return newErrors;
+  }, [values, formValidate, resolver]);
 
   // ── getTransformedValues ──
   const getTransformedValues = useCallback((): T => {
@@ -559,5 +664,6 @@ export function useForm<T extends Record<string, any>>(
     handleSubmit,
     register,
     getTransformedValues,
+    validateAsync,
   };
 }

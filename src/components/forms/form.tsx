@@ -17,6 +17,8 @@ import { FormIf } from "./form-if";
 import { FormReset } from "./form-reset";
 import { FormDebug } from "./form-debug";
 import { FormFieldArray } from "./form-field-array";
+import { FormErrorSummary } from "./form-error-summary";
+import { FormGroup } from "./form-group";
 
 // ── Types ──
 
@@ -76,13 +78,8 @@ function FormRoot<T extends Record<string, any>>({
       e.preventDefault();
       setFormError(null);
 
-      // Mark all fields as touched
-      for (const key of Object.keys(form.values)) {
-        form.setFieldTouched(key as keyof T, true);
-      }
-
-      // Validate
-      const errors = form.validate();
+      // Delegate validation to the hook (marks touched, runs sync+async+resolver)
+      const errors = await form.validateAsync();
       if (Object.keys(errors).length > 0) {
         const firstErrorField = Object.keys(errors)[0];
         focusField(firstErrorField);
@@ -179,6 +176,8 @@ const Form = Object.assign(FormRoot, {
   Steps: FormSteps,
   Step: FormStep,
   Debug: FormDebug,
+  ErrorSummary: FormErrorSummary,
+  Group: FormGroup,
 });
 
 export { Form };

@@ -20,7 +20,7 @@ import { Icon } from "../data-display/icon";
 import { FieldLabel } from "./field-label";
 import { FieldError } from "./field-error";
 import { FieldDescription } from "./field-description";
-import { FormFieldContext, useFormContext } from "./form-context";
+import { FormFieldContext, useFormContextSafe } from "./form-context";
 import type { ValidationRule } from "../../hooks/use-form";
 
 // ── Shorthand rules type ──
@@ -201,13 +201,8 @@ function FormField({
   const { t } = useLocale();
   const prevDepsRef = useRef<any[]>([]);
 
-  // Try to access form context (may be null if standalone)
-  let formCtx: ReturnType<typeof useFormContext> | null = null;
-  try {
-    formCtx = useFormContext();
-  } catch {
-    // Not inside a Form — standalone mode
-  }
+  // Access form context safely — returns null if not inside <Form>
+  const formCtx = useFormContextSafe();
 
   // ── Cross-field deps: re-validate when dep values change ──
   const depValues = deps?.map((d) => formCtx?.form.values[d as any]);
@@ -284,6 +279,9 @@ function FormField({
       error: fieldError,
       touched: fieldState.touched,
       dirty: fieldState.dirty,
+      value: registered.value,
+      onChange: finalOnChange,
+      onBlur: wrappedOnBlur,
     };
 
     // Counter + success helper

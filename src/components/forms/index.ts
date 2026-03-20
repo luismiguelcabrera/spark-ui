@@ -105,7 +105,13 @@ export type { FormDebugProps } from "./form-debug";
 export { FormFieldArray } from "./form-field-array";
 export type { FormFieldArrayProps } from "./form-field-array";
 
-export { useFormContext } from "./form-context";
+export { FormErrorSummary } from "./form-error-summary";
+export type { FormErrorSummaryProps } from "./form-error-summary";
+
+export { FormGroup } from "./form-group";
+export type { FormGroupProps } from "./form-group";
+
+export { useFormContext, useFormContextSafe, useFormField } from "./form-context";
 export { useFormSteps } from "./form-steps-context";
 
 export { OtpInput } from "./pin-input";
