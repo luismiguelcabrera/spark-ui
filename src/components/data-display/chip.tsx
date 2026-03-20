@@ -39,9 +39,9 @@ type ChipColor = "default" | "primary" | "secondary" | "success" | "warning" | "
 
 const colorMap: Record<ChipColor, Record<string, string>> = {
   default: {
-    solid: "bg-slate-700 text-white",
-    outline: "border-slate-300 text-slate-700",
-    soft: "bg-slate-100 text-slate-700",
+    solid: "bg-muted-foreground text-white dark:text-black",
+    outline: "border-muted text-muted-foreground",
+    soft: "bg-muted text-muted-foreground",
   },
   primary: {
     solid: "bg-primary text-white",
@@ -54,19 +54,19 @@ const colorMap: Record<ChipColor, Record<string, string>> = {
     soft: "bg-secondary/10 text-secondary",
   },
   success: {
-    solid: "bg-green-700 text-white",
-    outline: "border-green-300 text-green-800",
-    soft: "bg-green-100 text-green-800",
+    solid: "bg-success text-white",
+    outline: "border-success/30 text-success",
+    soft: "bg-success/10 text-success",
   },
   warning: {
-    solid: "bg-amber-500 text-amber-950",
-    outline: "border-amber-300 text-amber-900",
-    soft: "bg-amber-100 text-amber-900",
+    solid: "bg-warning text-black",
+    outline: "border-warning/30 text-warning",
+    soft: "bg-warning/10 text-warning",
   },
   destructive: {
-    solid: "bg-red-600 text-white",
-    outline: "border-red-300 text-red-700",
-    soft: "bg-red-100 text-red-700",
+    solid: "bg-destructive text-white",
+    outline: "border-destructive/30 text-destructive",
+    soft: "bg-destructive/10 text-destructive",
   },
 };
 

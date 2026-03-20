@@ -188,9 +188,9 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
               disabled={!canGoPrev}
               className={cn(
                 "absolute left-2 top-1/2 -translate-y-1/2 z-10",
-                "w-9 h-9 rounded-full bg-white/90 border border-slate-200 shadow-sm",
-                "flex items-center justify-center text-slate-600",
-                "hover:bg-white hover:shadow-md transition-all",
+                "w-9 h-9 rounded-full bg-surface/90 border border-muted shadow-sm",
+                "flex items-center justify-center text-muted-foreground",
+                "hover:bg-surface hover:shadow-md transition-all",
                 "disabled:opacity-0 disabled:pointer-events-none",
                 "opacity-0 group-hover:opacity-100"
               )}
@@ -204,9 +204,9 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
               disabled={!canGoNext}
               className={cn(
                 "absolute right-2 top-1/2 -translate-y-1/2 z-10",
-                "w-9 h-9 rounded-full bg-white/90 border border-slate-200 shadow-sm",
-                "flex items-center justify-center text-slate-600",
-                "hover:bg-white hover:shadow-md transition-all",
+                "w-9 h-9 rounded-full bg-surface/90 border border-muted shadow-sm",
+                "flex items-center justify-center text-muted-foreground",
+                "hover:bg-surface hover:shadow-md transition-all",
                 "disabled:opacity-0 disabled:pointer-events-none",
                 "opacity-0 group-hover:opacity-100"
               )}
@@ -232,7 +232,7 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
                   "rounded-full transition-all",
                   i === currentIndex
                     ? "w-6 h-2 bg-primary"
-                    : "w-2 h-2 bg-slate-300 hover:bg-slate-400"
+                    : "w-2 h-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
                 )}
               />
             ))}
@@ -242,7 +242,7 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
         {/* Progress bar */}
         {progress && totalSlides > slidesPerView && (
           <div
-            className="mt-4 h-1 w-full rounded-full bg-slate-200 overflow-hidden"
+            className="mt-4 h-1 w-full rounded-full bg-muted overflow-hidden"
             role="progressbar"
             aria-valuenow={Math.round(progressPercent)}
             aria-valuemin={0}
