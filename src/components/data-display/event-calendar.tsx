@@ -163,44 +163,44 @@ function getEventColor(color?: string): {
 
   const colorMap: Record<string, { bg: string; text: string; border: string }> = {
     red: {
-      bg: "bg-red-100",
-      text: "text-red-900",
-      border: "border-red-300",
+      bg: "bg-destructive/15",
+      text: "text-destructive",
+      border: "border-destructive/30",
     },
     blue: {
-      bg: "bg-blue-100",
-      text: "text-blue-900",
-      border: "border-blue-300",
+      bg: "bg-primary/15",
+      text: "text-primary",
+      border: "border-primary/30",
     },
     green: {
-      bg: "bg-green-100",
-      text: "text-green-900",
-      border: "border-green-300",
+      bg: "bg-success/15",
+      text: "text-success",
+      border: "border-success/30",
     },
     yellow: {
-      bg: "bg-yellow-100",
-      text: "text-yellow-900",
-      border: "border-yellow-300",
+      bg: "bg-warning/15",
+      text: "text-warning",
+      border: "border-warning/30",
     },
     purple: {
-      bg: "bg-purple-100",
-      text: "text-purple-900",
-      border: "border-purple-300",
+      bg: "bg-purple-100 dark:bg-purple-900/30",
+      text: "text-purple-900 dark:text-purple-200",
+      border: "border-purple-300 dark:border-purple-700",
     },
     orange: {
-      bg: "bg-orange-100",
-      text: "text-orange-900",
-      border: "border-orange-300",
+      bg: "bg-orange-100 dark:bg-orange-900/30",
+      text: "text-orange-900 dark:text-orange-200",
+      border: "border-orange-300 dark:border-orange-700",
     },
     pink: {
-      bg: "bg-pink-100",
-      text: "text-pink-900",
-      border: "border-pink-300",
+      bg: "bg-pink-100 dark:bg-pink-900/30",
+      text: "text-pink-900 dark:text-pink-200",
+      border: "border-pink-300 dark:border-pink-700",
     },
     teal: {
-      bg: "bg-teal-100",
-      text: "text-teal-900",
-      border: "border-teal-300",
+      bg: "bg-teal-100 dark:bg-teal-900/30",
+      text: "text-teal-900 dark:text-teal-200",
+      border: "border-teal-300 dark:border-teal-700",
     },
   };
 
@@ -324,7 +324,7 @@ function ViewSwitcher({
 
   const views: CalendarView[] = ["month", "week", "day"];
   return (
-    <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5" role="group" aria-label={t("eventcalendar.calendarView", "Calendar view")}>
+    <div className="inline-flex rounded-lg border border-muted bg-muted/30 p-0.5" role="group" aria-label={t("eventcalendar.calendarView", "Calendar view")}>
       {views.map((v) => (
         <button
           key={v}
@@ -334,8 +334,8 @@ function ViewSwitcher({
             "py-1.5 text-xs font-medium rounded-md transition-colors capitalize",
             "px-2 sm:px-3",
             v === view
-              ? "bg-white text-slate-900 shadow-sm ring-1 ring-black/5 font-semibold"
-              : "text-slate-600 hover:text-slate-700 hover:bg-slate-200/50"
+              ? "bg-surface text-navy-text shadow-sm ring-1 ring-black/5 font-semibold"
+              : "text-muted-foreground hover:text-navy-text hover:bg-muted/50"
           )}
           aria-pressed={v === view}
           aria-label={v}
@@ -446,11 +446,11 @@ function MonthView({
   return (
     <div role="grid" aria-label="Month calendar">
       {/* Day headers */}
-      <div className="grid grid-cols-7 border-b border-slate-200" role="row">
+      <div className="grid grid-cols-7 border-b border-muted" role="row">
         {dayHeaders.map((label, i) => (
           <div
             key={i}
-            className="py-2 text-center text-[11px] font-semibold text-slate-600 uppercase"
+            className="py-2 text-center text-[11px] font-semibold text-muted-foreground uppercase"
             role="columnheader"
           >
             <span className="sm:hidden" aria-hidden="true">{label.narrow}</span>
@@ -476,8 +476,8 @@ function MonthView({
                 role="gridcell"
                 aria-current={isToday ? "date" : undefined}
                 className={cn(
-                  "min-h-[60px] sm:min-h-[100px] border-b border-r border-slate-100 p-1 cursor-pointer transition-colors hover:bg-slate-50/50",
-                  !isCurrentMonth && "bg-slate-50/30",
+                  "min-h-[60px] sm:min-h-[100px] border-b border-r border-muted/50 p-1 cursor-pointer transition-colors hover:bg-muted/30/50",
+                  !isCurrentMonth && "bg-muted/30/30",
                   colIdx === 0 && "border-l-0"
                 )}
                 onClick={() => {
@@ -502,8 +502,8 @@ function MonthView({
                     className={cn(
                       "inline-flex items-center justify-center w-6 h-6 text-xs font-medium rounded-full",
                       isToday && "bg-primary text-white",
-                      !isToday && isCurrentMonth && "text-slate-700",
-                      !isCurrentMonth && "text-slate-600"
+                      !isToday && isCurrentMonth && "text-navy-text",
+                      !isCurrentMonth && "text-muted-foreground"
                     )}
                   >
                     {day.getDate()}
@@ -517,7 +517,7 @@ function MonthView({
                       <EventDot key={ev.id} color={ev.color} />
                     ))}
                     {dayEvents.length > 4 && (
-                      <span className="text-[8px] text-slate-600 leading-none">+</span>
+                      <span className="text-[8px] text-muted-foreground leading-none">+</span>
                     )}
                   </div>
                 )}
@@ -534,7 +534,7 @@ function MonthView({
                   {overflow > 0 && (
                     <button
                       type="button"
-                      className="w-full text-left text-[10px] text-slate-600 font-medium px-1.5 hover:text-primary transition-colors"
+                      className="w-full text-left text-[10px] text-muted-foreground font-medium px-1.5 hover:text-primary transition-colors"
                       onClick={(e) => {
                         e.stopPropagation();
                         onDayClick(day);
@@ -610,18 +610,18 @@ function TimeGrid({
     <div className="flex flex-col overflow-hidden">
       {/* All-day header */}
       {hasAllDay && (
-        <div className="border-b border-slate-200">
+        <div className="border-b border-muted">
           <div
             className="grid"
             style={{ gridTemplateColumns: `60px repeat(${cols}, 1fr)` }}
           >
-            <div className="px-2 py-1 text-[10px] font-medium text-slate-600 border-r border-slate-100">
+            <div className="px-2 py-1 text-[10px] font-medium text-muted-foreground border-r border-muted/50">
               {t("eventcalendar.allDay", "All day")}
             </div>
             {allDayByDay.map((dayEvents, di) => (
               <div
                 key={di}
-                className="px-1 py-1 space-y-0.5 border-r border-slate-100 last:border-r-0"
+                className="px-1 py-1 space-y-0.5 border-r border-muted/50 last:border-r-0"
               >
                 {dayEvents.map((ev) => (
                   <EventPill
@@ -646,13 +646,13 @@ function TimeGrid({
           style={{ gridTemplateColumns: `60px repeat(${cols}, 1fr)` }}
         >
           {/* Time labels column */}
-          <div className="border-r border-slate-100">
+          <div className="border-r border-muted/50">
             {hours.map((hour) => (
               <div
                 key={hour}
                 className="h-16 flex items-start justify-end pr-2 -mt-2"
               >
-                <span className="text-[10px] text-slate-600 font-medium">
+                <span className="text-[10px] text-muted-foreground font-medium">
                   {formatTime(
                     new Date(2000, 0, 1, hour, 0),
                     locale
@@ -669,12 +669,12 @@ function TimeGrid({
             const isToday = isSameDay(day, today);
 
             return (
-              <div key={di} className="relative border-r border-slate-100 last:border-r-0">
+              <div key={di} className="relative border-r border-muted/50 last:border-r-0">
                 {/* Hour grid lines */}
                 {hours.map((hour) => (
                   <div
                     key={hour}
-                    className="h-16 border-b border-slate-50 cursor-pointer hover:bg-slate-50/50 transition-colors"
+                    className="h-16 border-b border-muted/30 cursor-pointer hover:bg-muted/30/50 transition-colors"
                     role="button"
                     tabIndex={0}
                     aria-label={`${formatDayLabel(day, locale)} ${formatTime(
@@ -759,8 +759,8 @@ function TimeGrid({
                     data-testid="current-time-indicator"
                   >
                     <div className="flex items-center">
-                      <div className="w-2 h-2 rounded-full bg-red-500 -ml-1" />
-                      <div className="flex-1 h-px bg-red-500" />
+                      <div className="w-2 h-2 rounded-full bg-destructive -ml-1" />
+                      <div className="flex-1 h-px bg-destructive" />
                     </div>
                   </div>
                 )}
@@ -797,28 +797,28 @@ function WeekView({
     <div>
       {/* Day headers */}
       <div
-        className="grid border-b border-slate-200"
+        className="grid border-b border-muted"
         style={{ gridTemplateColumns: `60px repeat(7, 1fr)` }}
       >
-        <div className="border-r border-slate-100" />
+        <div className="border-r border-muted/50" />
         {days.map((day, i) => {
           const isToday = isSameDay(day, today);
           return (
             <div
               key={i}
               className={cn(
-                "py-2 text-center border-r border-slate-100 last:border-r-0",
+                "py-2 text-center border-r border-muted/50 last:border-r-0",
                 isToday && "bg-primary/5"
               )}
             >
-              <div className="text-[10px] font-semibold text-slate-600 uppercase">
+              <div className="text-[10px] font-semibold text-muted-foreground uppercase">
                 {formatDayLabel(day, locale)}
               </div>
               <div
                 className={cn(
                   "inline-flex items-center justify-center w-7 h-7 text-sm font-bold rounded-full mt-0.5",
                   isToday && "bg-primary text-white",
-                  !isToday && "text-slate-700"
+                  !isToday && "text-navy-text"
                 )}
               >
                 {day.getDate()}
@@ -860,12 +860,12 @@ function DayView({
     <div>
       {/* Day header */}
       <div
-        className="grid border-b border-slate-200"
+        className="grid border-b border-muted"
         style={{ gridTemplateColumns: `60px 1fr` }}
       >
-        <div className="border-r border-slate-100" />
+        <div className="border-r border-muted/50" />
         <div className="py-2 text-center">
-          <div className="text-sm font-bold text-slate-700">
+          <div className="text-sm font-bold text-navy-text">
             {formatDayHeader(date, locale)}
           </div>
         </div>
@@ -992,19 +992,19 @@ const EventCalendar = forwardRef<HTMLDivElement, EventCalendarProps>(
       <div
         ref={ref}
         className={cn(
-          "bg-white border border-slate-200 rounded-2xl overflow-hidden",
+          "bg-surface border border-muted rounded-2xl overflow-hidden",
           className
         )}
         onKeyDown={handleKeyDown}
         data-testid="event-calendar"
       >
         {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 sm:px-4 sm:py-3 border-b border-slate-200">
+        <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 sm:px-4 sm:py-3 border-b border-muted">
           <div className="flex items-center gap-1 sm:gap-2">
             <button
               type="button"
               onClick={goToToday}
-              className="px-2 py-1 sm:px-3 sm:py-1.5 text-xs font-medium rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors"
+              className="px-2 py-1 sm:px-3 sm:py-1.5 text-xs font-medium rounded-lg border border-muted bg-surface hover:bg-muted/30 text-navy-text transition-colors"
             >
               {t("eventcalendar.today", "Today")}
             </button>
@@ -1013,18 +1013,18 @@ const EventCalendar = forwardRef<HTMLDivElement, EventCalendarProps>(
               <button
                 type="button"
                 onClick={goToPrev}
-                className="p-1 sm:p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                className="p-1 sm:p-1.5 rounded-lg hover:bg-muted/50 transition-colors"
                 aria-label={t("eventcalendar.previous", "Previous")}
               >
-                <Icon name="chevron_left" size="sm" className="text-slate-600" />
+                <Icon name="chevron_left" size="sm" className="text-muted-foreground" />
               </button>
               <button
                 type="button"
                 onClick={goToNext}
-                className="p-1 sm:p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                className="p-1 sm:p-1.5 rounded-lg hover:bg-muted/50 transition-colors"
                 aria-label={t("eventcalendar.next", "Next")}
               >
-                <Icon name="chevron_right" size="sm" className="text-slate-600" />
+                <Icon name="chevron_right" size="sm" className="text-muted-foreground" />
               </button>
             </div>
 

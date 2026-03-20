@@ -9,12 +9,12 @@ type HighlightProps = HTMLAttributes<HTMLElement> & {
 };
 
 const colorMap: Record<HighlightColor, string> = {
-  yellow: "bg-yellow-200/60 text-yellow-900",
-  green: "bg-green-200/60 text-green-900",
-  blue: "bg-blue-200/60 text-blue-900",
-  pink: "bg-pink-200/60 text-pink-900",
-  purple: "bg-purple-200/60 text-purple-900",
-  orange: "bg-orange-200/60 text-orange-900",
+  yellow: "bg-warning/30 text-navy-text",
+  green: "bg-success/30 text-navy-text",
+  blue: "bg-primary/30 text-navy-text",
+  pink: "bg-pink-200/60 text-pink-900 dark:bg-pink-900/30 dark:text-pink-200",
+  purple: "bg-purple-200/60 text-purple-900 dark:bg-purple-900/30 dark:text-purple-200",
+  orange: "bg-orange-200/60 text-orange-900 dark:bg-orange-900/30 dark:text-orange-200",
 };
 
 const Highlight = forwardRef<HTMLElement, HighlightProps>(

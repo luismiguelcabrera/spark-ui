@@ -46,7 +46,7 @@ export const Orange: Story = {
 
 export const AllColors: Story = {
   render: (args) => (
-    <p className="text-slate-700 leading-loose">
+    <p className="text-navy-text leading-loose">
       You can use{" "}
       <Highlight {...args} color="yellow">yellow</Highlight>,{" "}
       <Highlight {...args} color="green">green</Highlight>,{" "}
@@ -61,7 +61,7 @@ export const AllColors: Story = {
 
 export const InParagraph: Story = {
   render: (args) => (
-    <p className="text-slate-700 max-w-prose leading-relaxed">
+    <p className="text-navy-text max-w-prose leading-relaxed">
       The <Highlight {...args} color="blue">Spark UI</Highlight> component library provides a{" "}
       <Highlight {...args} color="green">Highlight component</Highlight> that can be used to draw
       attention to <Highlight {...args} color="pink">important text</Highlight> within paragraphs.

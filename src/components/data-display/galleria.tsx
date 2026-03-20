@@ -144,7 +144,7 @@ const Galleria = forwardRef<HTMLDivElement, GalleriaProps>(
         <div
           ref={ref}
           className={cn(
-            "flex items-center justify-center h-64 bg-slate-100 rounded-xl text-slate-600",
+            "flex items-center justify-center h-64 bg-muted rounded-xl text-muted-foreground",
             className
           )}
           {...props}
@@ -282,7 +282,7 @@ const Galleria = forwardRef<HTMLDivElement, GalleriaProps>(
 
     const renderMainImage = () => (
       <div
-        className="relative flex-1 min-h-0 overflow-hidden bg-slate-900 rounded-lg"
+        className="relative flex-1 min-h-0 overflow-hidden bg-background-dark rounded-lg"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >

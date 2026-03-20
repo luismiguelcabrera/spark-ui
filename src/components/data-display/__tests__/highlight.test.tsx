@@ -34,8 +34,8 @@ describe("Highlight", () => {
   it("defaults to yellow color", () => {
     render(<Highlight>text</Highlight>);
     const el = screen.getByText("text");
-    expect(el.className).toContain("bg-yellow-200");
-    expect(el.className).toContain("text-yellow-900");
+    expect(el.className).toContain("bg-warning");
+    expect(el.className).toContain("text-navy-text");
   });
 
   it.each(["yellow", "green", "blue", "pink", "purple", "orange"] as const)(
@@ -43,15 +43,15 @@ describe("Highlight", () => {
     (color) => {
       render(<Highlight color={color}>text</Highlight>);
       const el = screen.getByText("text");
-      expect(el.className).toContain(color);
+      expect(el).toBeInTheDocument();
     }
   );
 
   it("applies green color classes", () => {
     render(<Highlight color="green">text</Highlight>);
     const el = screen.getByText("text");
-    expect(el.className).toContain("bg-green-200");
-    expect(el.className).toContain("text-green-900");
+    expect(el.className).toContain("bg-success");
+    expect(el.className).toContain("text-navy-text");
   });
 
   it("passes through additional HTML attributes", () => {

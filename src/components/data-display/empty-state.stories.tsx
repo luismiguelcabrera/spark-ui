@@ -77,7 +77,7 @@ export const WithMultipleActions: Story = {
         </button>
         <button
           type="button"
-          className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 text-sm font-medium"
+          className="px-4 py-2 rounded-lg border border-muted text-navy-text text-sm font-medium"
         >
           Import
         </button>
@@ -94,7 +94,7 @@ export const ErrorState: Story = {
     action: (
       <button
         type="button"
-        className="px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium"
+        className="px-4 py-2 rounded-lg bg-destructive text-white text-sm font-medium"
       >
         Retry
       </button>

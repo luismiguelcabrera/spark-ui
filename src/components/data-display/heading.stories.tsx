@@ -73,7 +73,7 @@ export const Weights: Story = {
 export const AutomaticLevelMapping: Story = {
   render: (args) => (
     <div className="space-y-3">
-      <p className="text-sm text-slate-500 mb-4">
+      <p className="text-sm text-muted-foreground mb-4">
         Without specifying &ldquo;as&rdquo;, the heading level is inferred from the size prop.
       </p>
       <Heading {...args} size="4xl">4xl maps to h1</Heading>
