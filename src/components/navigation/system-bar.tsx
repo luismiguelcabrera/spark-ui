@@ -6,7 +6,7 @@ import { cn } from "../../lib/utils";
 type SystemBarProps = HTMLAttributes<HTMLDivElement> & {
   /** Bar content (time, icons, etc.) */
   children?: ReactNode;
-  /** Background color class (e.g. "bg-slate-900") */
+  /** Background color class (e.g. "bg-background-dark") */
   color?: string;
   /** Height in pixels */
   height?: number;
@@ -15,7 +15,7 @@ type SystemBarProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const SystemBar = forwardRef<HTMLDivElement, SystemBarProps>(
-  ({ className, children, color = "bg-slate-900", height = 24, window: isWindow = false, ...props }, ref) => (
+  ({ className, children, color = "bg-background-dark", height = 24, window: isWindow = false, ...props }, ref) => (
     <div
       ref={ref}
       role="banner"

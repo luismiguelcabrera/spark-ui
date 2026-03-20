@@ -38,7 +38,7 @@ describe("SystemBar", () => {
 
   it("applies default color class", () => {
     render(<SystemBar data-testid="bar" />);
-    expect(screen.getByTestId("bar").className).toContain("bg-slate-900");
+    expect(screen.getByTestId("bar").className).toContain("bg-background-dark");
   });
 
   it("applies custom color class", () => {

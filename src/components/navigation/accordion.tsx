@@ -127,7 +127,7 @@ const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
                     name="expand_more"
                     size="sm"
                     className={cn(
-                      "text-slate-600 transition-transform duration-200",
+                      "text-muted-foreground transition-transform duration-200",
                       isOpen && "rotate-180",
                     )}
                   />

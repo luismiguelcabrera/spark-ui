@@ -54,13 +54,13 @@ const Pagination = forwardRef<HTMLElement, PaginationProps>(
           aria-label={ariaLabel ?? "Pagination"}
           className={cn("flex items-center justify-between", className)}
         >
-          <p className="text-xs text-slate-600 font-medium">
+          <p className="text-xs text-muted-foreground font-medium">
             {t("pagination.showing", "Showing")} {start}-{end} of {total.toLocaleString()}
           </p>
           <div className="flex gap-2">
             <button
               type="button"
-              className="p-2 border border-slate-200 rounded-xl hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="p-2 border border-muted rounded-xl hover:bg-muted/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
               disabled={isFirst}
               aria-label={t("pagination.previousPage", "Previous page")}
               onClick={() => !isFirst && setPage(page - 1)}
@@ -69,7 +69,7 @@ const Pagination = forwardRef<HTMLElement, PaginationProps>(
             </button>
             <button
               type="button"
-              className="p-2 border border-slate-200 rounded-xl hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="p-2 border border-muted rounded-xl hover:bg-muted/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
               disabled={isLast}
               aria-label={t("pagination.nextPage", "Next page")}
               onClick={() => !isLast && setPage(page + 1)}
@@ -87,12 +87,12 @@ const Pagination = forwardRef<HTMLElement, PaginationProps>(
         aria-label="Pagination"
         className={cn("px-1 flex items-center justify-between", className)}
       >
-        <div className="text-xs text-slate-600">
+        <div className="text-xs text-muted-foreground">
           {t("pagination.showing", "Showing")}{" "}
-          <span className="font-bold text-slate-900">
+          <span className="font-bold text-navy-text">
             {start}-{end}
           </span>{" "}
-          of <span className="font-bold text-slate-900">{total}</span>
+          of <span className="font-bold text-navy-text">{total}</span>
         </div>
         <div className="flex gap-2">
           <button

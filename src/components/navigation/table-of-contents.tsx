@@ -138,10 +138,10 @@ const TableOfContents = forwardRef<HTMLElement, TableOfContentsProps>(
     );
 
     const variantStyles = {
-      default: "border-l-2 border-slate-200",
+      default: "border-l-2 border-muted",
       minimal: "",
       bordered:
-        "border border-slate-200 rounded-xl p-4 bg-white shadow-sm",
+        "border border-muted rounded-xl p-4 bg-surface shadow-sm",
     };
 
     return (
@@ -209,7 +209,7 @@ function TocList({
                   "text-primary font-medium bg-primary/5 rounded-lg",
                 // Inactive state
                 !isActive &&
-                  "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  "text-muted-foreground hover:text-navy-text hover:bg-muted/50"
               )}
               style={{ paddingLeft: indentPx > 0 ? `${indentPx + (variant === "bordered" ? 12 : 16)}px` : undefined }}
             >

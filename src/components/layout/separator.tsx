@@ -27,9 +27,9 @@ const Separator = forwardRef<HTMLDivElement, SeparatorProps>(
           aria-orientation={decorative ? undefined : orientation}
           {...props}
         >
-          <div className={cn(isHorizontal ? "h-px flex-1 bg-slate-200" : "w-px flex-1 bg-slate-200")} />
-          <span className="text-xs font-medium text-slate-500 shrink-0">{label}</span>
-          <div className={cn(isHorizontal ? "h-px flex-1 bg-slate-200" : "w-px flex-1 bg-slate-200")} />
+          <div className={cn(isHorizontal ? "h-px flex-1 bg-muted" : "w-px flex-1 bg-muted")} />
+          <span className="text-xs font-medium text-muted-foreground shrink-0">{label}</span>
+          <div className={cn(isHorizontal ? "h-px flex-1 bg-muted" : "w-px flex-1 bg-muted")} />
         </div>
       );
     }
@@ -38,7 +38,7 @@ const Separator = forwardRef<HTMLDivElement, SeparatorProps>(
       <div
         ref={ref}
         className={cn(
-          isHorizontal ? "h-px w-full bg-slate-200" : "w-px h-full bg-slate-200",
+          isHorizontal ? "h-px w-full bg-muted" : "w-px h-full bg-muted",
           className
         )}
         role={decorative ? "none" : "separator"}

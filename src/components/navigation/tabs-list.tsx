@@ -16,7 +16,7 @@ export const TabsList = forwardRef<HTMLDivElement, TabsListProps>(
         ref={ref}
         role="tablist"
         className={cn(
-          "flex items-center gap-1 border-b border-gray-200",
+          "flex items-center gap-1 border-b border-muted",
           className,
         )}
         onKeyDown={handleTabListKeyDown}

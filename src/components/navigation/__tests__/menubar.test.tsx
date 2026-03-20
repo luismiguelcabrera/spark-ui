@@ -133,6 +133,6 @@ describe("Menubar", () => {
     ];
     render(<Menubar menus={dangerMenus} />);
     fireEvent.click(screen.getByText("File"));
-    expect(screen.getByText("Delete").closest("button")).toHaveClass("text-red-600");
+    expect(screen.getByText("Delete").closest("button")).toHaveClass("text-destructive");
   });
 });

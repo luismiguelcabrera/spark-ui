@@ -233,7 +233,7 @@ const MegaMenu = forwardRef<HTMLElement, MegaMenuProps>(
                 aria-expanded={openIndex === index}
                 className={cn(
                   "inline-flex items-center gap-1 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors",
-                  "text-slate-700 hover:text-primary hover:bg-primary/5",
+                  "text-navy-text hover:text-primary hover:bg-primary/5",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                   openIndex === index && "text-primary bg-primary/5"
                 )}
@@ -278,7 +278,7 @@ const MegaMenu = forwardRef<HTMLElement, MegaMenuProps>(
                   aria-label={`${section.label} submenu`}
                   className={cn(
                     "absolute left-0 top-full z-50 mt-1 min-w-[480px]",
-                    "bg-white border border-slate-200 rounded-xl shadow-lg",
+                    "bg-surface border border-muted rounded-xl shadow-lg",
                     "animate-in fade-in slide-in-from-top-1 duration-150"
                   )}
                   onMouseEnter={cancelClose}
@@ -289,7 +289,7 @@ const MegaMenu = forwardRef<HTMLElement, MegaMenuProps>(
                     {section.columns.map((column, colIdx) => (
                       <div key={column.title ?? colIdx}>
                         {column.title && (
-                          <h3 className="px-3 py-1.5 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                          <h3 className="px-3 py-1.5 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
                             {column.title}
                           </h3>
                         )}
@@ -305,7 +305,7 @@ const MegaMenu = forwardRef<HTMLElement, MegaMenuProps>(
                                   role="menuitem"
                                   className={cn(
                                     "flex items-start gap-3 w-full px-3 py-2 rounded-lg text-left",
-                                    "text-sm text-slate-700 hover:bg-slate-50 transition-colors",
+                                    "text-sm text-navy-text hover:bg-muted/50 transition-colors",
                                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
                                   )}
                                   onClick={() => close()}
@@ -314,7 +314,7 @@ const MegaMenu = forwardRef<HTMLElement, MegaMenuProps>(
                                     <Icon
                                       name={item.icon}
                                       size="sm"
-                                      className="text-slate-500 mt-0.5 shrink-0"
+                                      className="text-muted-foreground mt-0.5 shrink-0"
                                     />
                                   )}
                                   <div className="flex-1 min-w-0">
@@ -322,7 +322,7 @@ const MegaMenu = forwardRef<HTMLElement, MegaMenuProps>(
                                       {item.label}
                                     </div>
                                     {item.description && (
-                                      <div className="text-xs text-slate-600 mt-0.5 line-clamp-2">
+                                      <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
                                         {item.description}
                                       </div>
                                     )}
@@ -337,7 +337,7 @@ const MegaMenu = forwardRef<HTMLElement, MegaMenuProps>(
                   </div>
 
                   {section.footer && (
-                    <div className="border-t border-slate-100 px-4 py-3 bg-slate-50/50 rounded-b-xl">
+                    <div className="border-t border-muted/50 px-4 py-3 bg-muted/50/50 rounded-b-xl">
                       {section.footer}
                     </div>
                   )}

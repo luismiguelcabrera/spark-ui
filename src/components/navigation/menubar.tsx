@@ -63,7 +63,7 @@ const Menubar = forwardRef<HTMLDivElement, MenubarProps>(
         }}
         role="menubar"
         className={cn(
-          "inline-flex items-center h-9 bg-white border border-slate-200 rounded-lg px-1 gap-0.5",
+          "inline-flex items-center h-9 bg-surface border border-muted rounded-lg px-1 gap-0.5",
           className
         )}
         {...props}
@@ -80,8 +80,8 @@ const Menubar = forwardRef<HTMLDivElement, MenubarProps>(
               className={cn(
                 "px-3 py-1 rounded-md text-sm font-medium transition-colors",
                 openMenu === menuIndex
-                  ? "bg-slate-100 text-slate-900"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                  ? "bg-muted text-navy-text"
+                  : "text-muted-foreground hover:bg-muted/50 hover:text-navy-text"
               )}
             >
               {menu.label}
@@ -89,12 +89,12 @@ const Menubar = forwardRef<HTMLDivElement, MenubarProps>(
 
             {openMenu === menuIndex && (
               <div
-                className="absolute left-0 top-full mt-1 min-w-[200px] bg-white border border-slate-200 rounded-xl shadow-float py-1 z-50"
+                className="absolute left-0 top-full mt-1 min-w-[200px] bg-surface border border-muted rounded-xl shadow-float py-1 z-50"
                 role="menu"
               >
                 {menu.items.map((item, itemIndex) => {
                   if ("separator" in item && item.separator) {
-                    return <div key={`sep-${itemIndex}`} className="my-1 h-px bg-slate-100" />;
+                    return <div key={`sep-${itemIndex}`} className="my-1 h-px bg-muted" />;
                   }
 
                   const menuItem = item as Exclude<MenubarMenuItem, { separator: true }>;
@@ -112,14 +112,14 @@ const Menubar = forwardRef<HTMLDivElement, MenubarProps>(
                         "flex items-center gap-3 w-full px-3 py-2 text-sm transition-colors",
                         "disabled:opacity-50 disabled:cursor-not-allowed",
                         menuItem.danger
-                          ? "text-red-600 hover:bg-red-50"
-                          : "text-slate-700 hover:bg-slate-50"
+                          ? "text-destructive hover:bg-destructive/10"
+                          : "text-navy-text hover:bg-muted/50"
                       )}
                     >
                       {menuItem.icon && <Icon name={menuItem.icon} size="sm" className="shrink-0" />}
                       <span className="flex-1 text-left">{menuItem.label}</span>
                       {menuItem.shortcut && (
-                        <span className="text-[11px] font-mono text-slate-600 ml-6">
+                        <span className="text-[11px] font-mono text-muted-foreground ml-6">
                           {menuItem.shortcut}
                         </span>
                       )}

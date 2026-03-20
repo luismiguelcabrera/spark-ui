@@ -66,7 +66,7 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>(
               type="button"
               onClick={toggleCollapse}
               aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              className="hidden md:flex absolute right-0 top-20 translate-x-1/2 w-6 h-6 rounded-full bg-white border border-slate-200 shadow-md items-center justify-center text-slate-500 hover:text-slate-700 hover:border-slate-300 transition-colors z-10 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              className="hidden md:flex absolute right-0 top-20 translate-x-1/2 w-6 h-6 rounded-full bg-surface border border-muted shadow-md items-center justify-center text-muted-foreground hover:text-navy-text hover:border-muted transition-colors z-10 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
               <span className="material-symbols-outlined text-[14px]">
                 {collapsed ? "chevron_right" : "chevron_left"}
@@ -91,7 +91,7 @@ const SidebarNavGroup = forwardRef<HTMLDivElement, SidebarNavGroupProps>(
     return (
       <div ref={ref} className={cn("mb-2", className)}>
         {label && (
-          <span className="px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+          <span className="px-3 py-2 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
             {label}
           </span>
         )}

@@ -19,9 +19,9 @@ const Footer = forwardRef<HTMLElement, FooterProps>(
     <footer
       ref={ref}
       className={cn(
-        "w-full bg-white",
+        "w-full bg-surface",
         fixed && "fixed bottom-0 left-0 right-0 z-40",
-        bordered && "border-t border-slate-200",
+        bordered && "border-t border-muted",
         padded && "px-4 py-6 sm:px-6 lg:px-8",
         className
       )}

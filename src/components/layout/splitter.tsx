@@ -217,7 +217,7 @@ const Splitter = forwardRef<HTMLDivElement, SplitterProps>(
           data-testid="splitter-gutter"
           className={cn(
             "relative flex shrink-0 items-center justify-center",
-            "bg-slate-200 hover:bg-slate-300 active:bg-primary/30",
+            "bg-muted hover:bg-muted-foreground/30 active:bg-primary/30",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
             "transition-colors",
             isHorizontal ? "cursor-col-resize" : "cursor-row-resize"
@@ -239,9 +239,9 @@ const Splitter = forwardRef<HTMLDivElement, SplitterProps>(
             )}
             aria-hidden="true"
           >
-            <div className="h-1 w-1 rounded-full bg-slate-400" />
-            <div className="h-1 w-1 rounded-full bg-slate-400" />
-            <div className="h-1 w-1 rounded-full bg-slate-400" />
+            <div className="h-1 w-1 rounded-full bg-muted-foreground/40" />
+            <div className="h-1 w-1 rounded-full bg-muted-foreground/40" />
+            <div className="h-1 w-1 rounded-full bg-muted-foreground/40" />
           </div>
         </div>
 

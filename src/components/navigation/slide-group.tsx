@@ -68,7 +68,7 @@ const SlideGroup = forwardRef<HTMLDivElement, SlideGroupProps>(
         {showArrows && canScrollLeft && (
           <button
             type="button"
-            className="absolute left-0 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-md border border-slate-200 text-slate-600 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            className="absolute left-0 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-surface shadow-md border border-muted text-muted-foreground hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             onClick={() => scroll("left")}
             aria-label="Scroll left"
           >
@@ -88,7 +88,7 @@ const SlideGroup = forwardRef<HTMLDivElement, SlideGroupProps>(
         {showArrows && canScrollRight && (
           <button
             type="button"
-            className="absolute right-0 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-md border border-slate-200 text-slate-600 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            className="absolute right-0 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-surface shadow-md border border-muted text-muted-foreground hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             onClick={() => scroll("right")}
             aria-label="Scroll right"
           >

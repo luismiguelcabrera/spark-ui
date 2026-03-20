@@ -22,9 +22,9 @@ type NavbarProps = HTMLAttributes<HTMLElement> & {
 };
 
 const variantMap = {
-  default: "bg-white shadow-sm",
-  bordered: "bg-white border-b border-slate-200",
-  floating: "bg-white/80 backdrop-blur-lg shadow-sm mx-4 mt-4 rounded-2xl border border-slate-200/50",
+  default: "bg-surface shadow-sm",
+  bordered: "bg-surface border-b border-muted",
+  floating: "bg-surface/80 backdrop-blur-lg shadow-sm mx-4 mt-4 rounded-2xl border border-muted/50",
   transparent: "bg-transparent",
 };
 
@@ -86,7 +86,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(
             {showMobileToggle && (
               <button
                 type="button"
-                className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+                className="md:hidden p-2 rounded-lg text-muted-foreground hover:bg-muted transition-colors"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 aria-label="Toggle navigation menu"
                 aria-expanded={mobileOpen}
@@ -99,10 +99,10 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(
 
         {/* Mobile menu */}
         {mobileOpen && (
-          <div className="md:hidden border-t border-slate-100 bg-white">
+          <div className="md:hidden border-t border-muted/50 bg-surface">
             <div className="px-4 py-3 space-y-1">{children}</div>
             {actions && (
-              <div className="px-4 py-3 border-t border-slate-100 flex items-center gap-2">
+              <div className="px-4 py-3 border-t border-muted/50 flex items-center gap-2">
                 {actions}
               </div>
             )}
@@ -131,7 +131,7 @@ const NavbarLink = forwardRef<HTMLAnchorElement, NavbarLinkProps>(
         "px-3 py-2 rounded-lg text-sm font-medium transition-colors",
         active
           ? "bg-primary/10 text-primary"
-          : "text-slate-600 hover:text-slate-900 hover:bg-slate-50",
+          : "text-muted-foreground hover:text-navy-text hover:bg-muted/50",
         className
       )}
       aria-current={active ? "page" : undefined}

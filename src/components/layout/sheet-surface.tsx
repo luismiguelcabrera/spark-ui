@@ -2,7 +2,7 @@ import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 
-const sheetSurfaceVariants = cva("bg-white", {
+const sheetSurfaceVariants = cva("bg-surface", {
   variants: {
     elevation: {
       0: "shadow-none",
@@ -31,7 +31,7 @@ type SheetSurfaceProps = HTMLAttributes<HTMLDivElement> &
   VariantProps<typeof sheetSurfaceVariants> & {
     /** Whether to show a border */
     bordered?: boolean;
-    /** Background color class (overrides default bg-white) */
+    /** Background color class (overrides default bg-surface) */
     color?: string;
   };
 
@@ -44,7 +44,7 @@ const SheetSurface = forwardRef<HTMLDivElement, SheetSurfaceProps>(
       ref={ref}
       className={cn(
         sheetSurfaceVariants({ elevation, rounded }),
-        bordered && "border border-slate-200",
+        bordered && "border border-muted",
         color,
         className
       )}

@@ -94,7 +94,7 @@ const Resizable = forwardRef<HTMLDivElement, ResizableProps>(
         >
           <div
             className={cn(
-              "rounded-full bg-slate-300",
+              "rounded-full bg-muted-foreground/30",
               isHorizontal ? "w-0.5 h-8" : "h-0.5 w-8"
             )}
           />

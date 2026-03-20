@@ -48,7 +48,7 @@ const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(
                   </a>
                 ) : (
                   <span
-                    className="text-gray-900 font-medium"
+                    className="text-navy-text font-medium"
                     aria-current={isLast ? "page" : undefined}
                   >
                     {item.label}

@@ -45,12 +45,12 @@ describe("SheetSurface", () => {
 
   it("renders bordered variant", () => {
     const { container } = render(<SheetSurface bordered>Content</SheetSurface>);
-    expect(container.firstChild).toHaveClass("border", "border-slate-200");
+    expect(container.firstChild).toHaveClass("border", "border-muted");
   });
 
   it("does not have border classes when bordered is false/unset", () => {
     const { container } = render(<SheetSurface>Content</SheetSurface>);
-    expect(container.firstChild).not.toHaveClass("border-slate-200");
+    expect(container.firstChild).not.toHaveClass("border-muted");
   });
 
   it("applies color class", () => {
@@ -83,8 +83,8 @@ describe("SheetSurface", () => {
     expect(screen.getByRole("region")).toBeInTheDocument();
   });
 
-  it("has bg-white by default", () => {
+  it("has bg-surface by default", () => {
     const { container } = render(<SheetSurface>Content</SheetSurface>);
-    expect(container.firstChild).toHaveClass("bg-white");
+    expect(container.firstChild).toHaveClass("bg-surface");
   });
 });

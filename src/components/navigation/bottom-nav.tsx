@@ -31,9 +31,9 @@ type BottomNavProps = HTMLAttributes<HTMLElement> & {
 };
 
 const variantMap = {
-  default: "bg-white border-t border-slate-200",
-  floating: "bg-white/90 backdrop-blur-lg mx-4 mb-4 rounded-2xl shadow-float border border-slate-200/50",
-  bordered: "bg-white border-t border-slate-200 shadow-[0_-1px_3px_rgba(0,0,0,0.05)]",
+  default: "bg-surface border-t border-muted",
+  floating: "bg-surface/90 backdrop-blur-lg mx-4 mb-4 rounded-2xl shadow-float border border-muted/50",
+  bordered: "bg-surface border-t border-muted shadow-[0_-1px_3px_rgba(0,0,0,0.05)]",
 };
 
 const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
@@ -63,7 +63,7 @@ const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-lg",
                 item.active
                   ? "text-primary"
-                  : "text-slate-600 hover:text-slate-700",
+                  : "text-muted-foreground hover:text-navy-text",
                 item.disabled && "opacity-50 pointer-events-none"
               )}
               aria-current={item.active ? "page" : undefined}
@@ -72,7 +72,7 @@ const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
               <div className="relative">
                 <Icon name={item.icon} size="md" />
                 {item.badge !== undefined && item.badge > 0 && (
-                  <span className="absolute -top-1 -right-1.5 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-red-600 text-white text-[10px] font-bold">
+                  <span className="absolute -top-1 -right-1.5 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-destructive text-white text-[10px] font-bold">
                     {item.badge > 99 ? "99+" : item.badge}
                   </span>
                 )}

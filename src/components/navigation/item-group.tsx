@@ -149,7 +149,7 @@ const ItemGroupItem = forwardRef<HTMLDivElement, ItemGroupItemProps & Omit<HTMLA
         className={cn(
           "cursor-pointer select-none rounded-lg px-3 py-2 transition-colors",
           "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-          isSelected ? "bg-primary/10 text-primary font-medium" : "text-slate-600 hover:bg-slate-50",
+          isSelected ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-muted/50",
           className
         )}
         {...props}
