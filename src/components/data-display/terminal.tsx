@@ -101,13 +101,13 @@ const Terminal = forwardRef<HTMLDivElement, TerminalProps>(
       <div
         ref={ref}
         className={cn(
-          "rounded-lg overflow-hidden border border-slate-700 shadow-xl",
+          "rounded-lg overflow-hidden border border-muted-foreground/20 shadow-xl",
           className
         )}
         {...props}
       >
         {/* Title bar */}
-        <div className="flex items-center gap-2 px-4 py-2.5 bg-slate-800 border-b border-slate-700 select-none">
+        <div className="flex items-center gap-2 px-4 py-2.5 bg-background-dark border-b border-muted-foreground/20 select-none">
           <div className="flex items-center gap-1.5">
             <span
               className="w-3 h-3 rounded-full bg-red-500"
@@ -122,7 +122,7 @@ const Terminal = forwardRef<HTMLDivElement, TerminalProps>(
               aria-hidden="true"
             />
           </div>
-          <span className="flex-1 text-center text-xs text-slate-400 font-medium truncate">
+          <span className="flex-1 text-center text-xs text-muted-foreground font-medium truncate">
             {title}
           </span>
         </div>
@@ -133,7 +133,7 @@ const Terminal = forwardRef<HTMLDivElement, TerminalProps>(
           role="log"
           aria-label="Terminal output"
           aria-live="polite"
-          className="bg-slate-900 p-4 font-mono text-sm overflow-y-auto max-h-96 min-h-[8rem]"
+          className="bg-background-dark p-4 font-mono text-sm overflow-y-auto max-h-96 min-h-[8rem]"
           onClick={handleContainerClick}
         >
           {lines.map((line, index) => (
@@ -170,7 +170,7 @@ const Terminal = forwardRef<HTMLDivElement, TerminalProps>(
                 className={cn(
                   "flex-1 bg-transparent text-green-400 font-mono text-sm",
                   "outline-none border-none caret-green-400",
-                  "placeholder:text-slate-600"
+                  "placeholder:text-muted-foreground"
                 )}
                 value={inputValue}
                 onChange={(e) => {

@@ -42,7 +42,7 @@ export const Default: Story = {
       itemHeight={40}
       height={400}
       renderItem={(item) => (
-        <div className="px-4 py-2 text-sm text-slate-700 border-b border-slate-100 h-full flex items-center">
+        <div className="px-4 py-2 text-sm text-navy-text border-b border-muted h-full flex items-center">
           {item.label}
         </div>
       )}
@@ -55,16 +55,16 @@ export const TenThousandItems: Story = {
   name: "10,000 Items",
   render: () => (
     <div className="max-w-md">
-      <p className="text-xs text-slate-500 mb-2">10,000 items — only visible ones render</p>
+      <p className="text-xs text-muted-foreground mb-2">10,000 items — only visible ones render</p>
       <VirtualList
         items={simpleItems}
         itemHeight={36}
         height={300}
-        className="border border-slate-200 rounded-xl"
+        className="border border-muted rounded-xl"
         renderItem={(item, index) => (
-          <div className="px-4 h-full flex items-center justify-between text-sm border-b border-slate-50">
-            <span className="text-slate-700">{item.label}</span>
-            <span className="text-xs text-slate-500">#{index + 1}</span>
+          <div className="px-4 h-full flex items-center justify-between text-sm border-b border-muted/50">
+            <span className="text-navy-text">{item.label}</span>
+            <span className="text-xs text-muted-foreground">#{index + 1}</span>
           </div>
         )}
         getKey={(item) => item.id}
@@ -81,13 +81,13 @@ export const UserList: Story = {
         items={users}
         itemHeight={56}
         height={400}
-        className="border border-slate-200 rounded-xl"
+        className="border border-muted rounded-xl"
         renderItem={(user) => (
-          <div className="px-4 h-full flex items-center gap-3 border-b border-slate-50">
+          <div className="px-4 h-full flex items-center gap-3 border-b border-muted/50">
             <Avatar initials={user.name.slice(0, 2)} size="sm" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-slate-800 truncate">{user.name}</p>
-              <p className="text-xs text-slate-500 truncate">{user.email}</p>
+              <p className="text-sm font-medium text-navy-text truncate">{user.name}</p>
+              <p className="text-xs text-muted-foreground truncate">{user.email}</p>
             </div>
             <Badge
               variant={user.status === "active" ? "success" : "secondary"}
@@ -110,9 +110,9 @@ export const CustomWidth: Story = {
       itemHeight={40}
       height={250}
       width={300}
-      className="border border-slate-200 rounded-lg"
+      className="border border-muted rounded-lg"
       renderItem={(item) => (
-        <div className="px-3 h-full flex items-center text-sm text-slate-600 border-b border-slate-100">
+        <div className="px-3 h-full flex items-center text-sm text-muted-foreground border-b border-muted">
           {item.label}
         </div>
       )}
@@ -128,9 +128,9 @@ export const HighOverscan: Story = {
       itemHeight={40}
       height={300}
       overscan={10}
-      className="border border-slate-200 rounded-xl"
+      className="border border-muted rounded-xl"
       renderItem={(item) => (
-        <div className="px-4 h-full flex items-center text-sm text-slate-700 border-b border-slate-50">
+        <div className="px-4 h-full flex items-center text-sm text-navy-text border-b border-muted/50">
           {item.label}
         </div>
       )}
@@ -144,22 +144,22 @@ export const WithSelection: Story = {
     const [selectedId, setSelectedId] = useState<string | null>(null);
     return (
       <div className="max-w-md">
-        <p className="text-xs text-slate-500 mb-2">
+        <p className="text-xs text-muted-foreground mb-2">
           Click to select. Selected: {selectedId ?? "none"}
         </p>
         <VirtualList
           items={simpleItems.slice(0, 500)}
           itemHeight={40}
           height={300}
-          className="border border-slate-200 rounded-xl"
+          className="border border-muted rounded-xl"
           renderItem={(item) => (
             <button
               type="button"
               onClick={() => setSelectedId(item.id)}
-              className={`px-4 h-full w-full flex items-center text-sm text-left border-b border-slate-50 transition-colors ${
+              className={`px-4 h-full w-full flex items-center text-sm text-left border-b border-muted/50 transition-colors ${
                 selectedId === item.id
                   ? "bg-primary/10 text-primary font-medium"
-                  : "text-slate-700 hover:bg-slate-50"
+                  : "text-navy-text hover:bg-muted/30"
               }`}
             >
               {item.label}

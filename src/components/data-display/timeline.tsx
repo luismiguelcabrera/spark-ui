@@ -49,10 +49,10 @@ const iconSizeMap = {
 const dotColorMap: Record<string, string> = {
   primary: "bg-primary text-white",
   secondary: "bg-secondary text-white",
-  success: "bg-green-700 text-white",
-  warning: "bg-amber-500 text-amber-950",
-  destructive: "bg-red-600 text-white",
-  default: "bg-slate-200 text-slate-600",
+  success: "bg-success text-white",
+  warning: "bg-warning text-black",
+  destructive: "bg-destructive text-white",
+  default: "bg-muted text-muted-foreground",
 };
 
 const lineStyleMap = {
@@ -82,7 +82,7 @@ const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
             {!isLast && (
               <div
                 className={cn(
-                  "absolute border-l-2 border-slate-200",
+                  "absolute border-l-2 border-muted",
                   lineStyleMap[lineStyle],
                   variant === "left" && "left-[calc(theme(spacing.4)-1px)]",
                   variant === "right" && "right-[calc(theme(spacing.4)-1px)]",
@@ -100,9 +100,9 @@ const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
               <div className={cn("w-[calc(50%-1.5rem)] text-right", !isRight && "order-first", isRight && "order-last opacity-0")}>
                 {!isRight && (
                   <>
-                    {item.date && <p className="text-xs font-medium text-slate-600 mb-1">{item.date}</p>}
+                    {item.date && <p className="text-xs font-medium text-muted-foreground mb-1">{item.date}</p>}
                     <h3 className={cn("text-sm font-semibold text-secondary", item.active && "text-primary")}>{item.title}</h3>
-                    {item.description && <p className="text-sm text-slate-600 mt-1">{item.description}</p>}
+                    {item.description && <p className="text-sm text-muted-foreground mt-1">{item.description}</p>}
                     {item.content && <div className="mt-2">{item.content}</div>}
                   </>
                 )}
@@ -132,9 +132,9 @@ const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
             )}>
               {(variant !== "alternating" || isRight) && (
                 <>
-                  {item.date && <p className="text-xs font-medium text-slate-600 mb-1">{item.date}</p>}
+                  {item.date && <p className="text-xs font-medium text-muted-foreground mb-1">{item.date}</p>}
                   <h3 className={cn("text-sm font-semibold text-secondary", item.active && "text-primary")}>{item.title}</h3>
-                  {item.description && <p className="text-sm text-slate-600 mt-1">{item.description}</p>}
+                  {item.description && <p className="text-sm text-muted-foreground mt-1">{item.description}</p>}
                   {item.content && <div className="mt-2">{item.content}</div>}
                 </>
               )}

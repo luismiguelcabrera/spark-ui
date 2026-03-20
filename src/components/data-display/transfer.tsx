@@ -308,7 +308,7 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
       return (
         <div
           className={cn(
-            "flex flex-col border border-slate-200 rounded-xl overflow-hidden bg-white flex-1 min-w-0 transition-colors",
+            "flex flex-col border border-muted rounded-xl overflow-hidden bg-surface flex-1 min-w-0 transition-colors",
             isDragOver && "border-primary bg-primary/5 ring-2 ring-primary/20"
           )}
           role="group"
@@ -326,7 +326,7 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
             : {})}
         >
           {/* Header */}
-          <div className="flex items-center gap-2 px-3 py-2.5 border-b border-slate-100 bg-slate-50/50">
+          <div className="flex items-center gap-2 px-3 py-2.5 border-b border-muted/50 bg-muted/30">
             {showSelectAll && (
               <input
                 type="checkbox"
@@ -338,14 +338,14 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
                   toggleSelectAll(filteredItems, selected, setSelected)
                 }
                 disabled={disabled || selectableItems.length === 0}
-                className="h-4 w-4 rounded border-slate-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-1"
+                className="h-4 w-4 rounded border-muted text-primary focus:ring-2 focus:ring-primary focus:ring-offset-1"
                 aria-label={`Select all ${title.toLowerCase()} items`}
               />
             )}
-            <span className="text-sm font-semibold text-slate-700 flex-1">
+            <span className="text-sm font-semibold text-navy-text flex-1">
               {title}
             </span>
-            <span className="text-xs text-slate-600">
+            <span className="text-xs text-muted-foreground">
               {selectedCount > 0 && `${selectedCount}/`}
               {items.length}
             </span>
@@ -353,12 +353,12 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
 
           {/* Search */}
           {searchable && (
-            <div className="px-3 py-2 border-b border-slate-100">
+            <div className="px-3 py-2 border-b border-muted/50">
               <div className="relative">
                 <Icon
                   name="search"
                   size="sm"
-                  className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500"
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
                 />
                 <input
                   type="text"
@@ -366,7 +366,7 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   disabled={disabled}
-                  className="w-full pl-8 pr-3 py-1.5 text-sm border border-slate-200 rounded-lg bg-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary disabled:opacity-50"
+                  className="w-full pl-8 pr-3 py-1.5 text-sm border border-muted rounded-lg bg-surface placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary disabled:opacity-50"
                   aria-label={`Search ${title.toLowerCase()}`}
                 />
               </div>
@@ -381,7 +381,7 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
             tabIndex={0}
           >
             {filteredItems.length === 0 ? (
-              <li className="flex items-center justify-center h-full text-sm text-slate-600 list-none">
+              <li className="flex items-center justify-center h-full text-sm text-muted-foreground list-none">
                 No items
               </li>
             ) : (
@@ -409,7 +409,7 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
                   >
                     <label
                       className={cn(
-                        "flex items-start gap-2.5 px-3 py-2 cursor-pointer transition-colors hover:bg-slate-50",
+                        "flex items-start gap-2.5 px-3 py-2 cursor-pointer transition-colors hover:bg-muted/30",
                         selected.has(item.key) && "bg-primary/5",
                         (item.disabled || disabled) &&
                           "opacity-50 cursor-not-allowed pointer-events-none",
@@ -425,14 +425,14 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
                         }
                         disabled={item.disabled || disabled}
                         tabIndex={0}
-                        className="h-4 w-4 mt-0.5 rounded border-slate-300 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-1"
+                        className="h-4 w-4 mt-0.5 rounded border-muted text-primary focus:ring-2 focus:ring-primary focus:ring-offset-1"
                       />
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium text-slate-700 truncate">
+                        <div className="text-sm font-medium text-navy-text truncate">
                           {item.label}
                         </div>
                         {item.description && (
-                          <div className="text-xs text-slate-600 truncate">
+                          <div className="text-xs text-muted-foreground truncate">
                             {item.description}
                           </div>
                         )}
@@ -472,10 +472,10 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
             onClick={moveRight}
             disabled={disabled || sourceSelected.size === 0}
             className={cn(
-              "flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 bg-white shadow-sm transition-all",
+              "flex items-center justify-center w-8 h-8 rounded-lg border border-muted bg-surface shadow-sm transition-all",
               "hover:bg-primary hover:text-white hover:border-primary",
               "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
-              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-slate-500 disabled:hover:border-slate-200"
+              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-surface disabled:hover:text-muted-foreground disabled:hover:border-muted"
             )}
             aria-label="Move selected items to target"
           >
@@ -486,10 +486,10 @@ const Transfer = forwardRef<HTMLDivElement, TransferProps>(
             onClick={moveLeft}
             disabled={disabled || targetSelected.size === 0}
             className={cn(
-              "flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 bg-white shadow-sm transition-all",
+              "flex items-center justify-center w-8 h-8 rounded-lg border border-muted bg-surface shadow-sm transition-all",
               "hover:bg-primary hover:text-white hover:border-primary",
               "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
-              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-slate-500 disabled:hover:border-slate-200"
+              "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-surface disabled:hover:text-muted-foreground disabled:hover:border-muted"
             )}
             aria-label="Move selected items to source"
           >

@@ -117,7 +117,7 @@ function PlayButton({ onClick }: { onClick: () => void }) {
       <span
         className={cn(
           "flex items-center justify-center",
-          "w-16 h-16 rounded-full bg-white/90 shadow-lg",
+          "w-16 h-16 rounded-full bg-surface/90 shadow-lg",
           "transition-transform group-hover/play:scale-110",
         )}
       >

@@ -15,17 +15,17 @@ export const Default: Story = {
   render: (args) => (
     <Window {...args} defaultValue="a">
       <Window.Item value="a">
-        <div className="p-6 bg-blue-50 rounded-lg text-blue-800 font-medium">
+        <div className="p-6 bg-primary/10 rounded-lg text-primary font-medium">
           Panel A — Welcome!
         </div>
       </Window.Item>
       <Window.Item value="b">
-        <div className="p-6 bg-green-50 rounded-lg text-green-800 font-medium">
+        <div className="p-6 bg-success/10 rounded-lg text-success font-medium">
           Panel B — Settings
         </div>
       </Window.Item>
       <Window.Item value="c">
-        <div className="p-6 bg-purple-50 rounded-lg text-purple-800 font-medium">
+        <div className="p-6 bg-accent/10 rounded-lg text-accent font-medium">
           Panel C — Profile
         </div>
       </Window.Item>
@@ -47,7 +47,7 @@ export const Controlled: Story = {
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 value === v
                   ? "bg-primary text-white"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  : "bg-muted text-navy-text hover:bg-muted/80"
               }`}
             >
               {v}
@@ -80,7 +80,7 @@ export const TwoItems: Story = {
             type="button"
             onClick={() => setValue("login")}
             className={`flex-1 px-4 py-2 rounded-md text-sm font-medium ${
-              value === "login" ? "bg-primary text-white" : "bg-slate-100"
+              value === "login" ? "bg-primary text-white" : "bg-muted"
             }`}
           >
             Log In
@@ -89,7 +89,7 @@ export const TwoItems: Story = {
             type="button"
             onClick={() => setValue("signup")}
             className={`flex-1 px-4 py-2 rounded-md text-sm font-medium ${
-              value === "signup" ? "bg-primary text-white" : "bg-slate-100"
+              value === "signup" ? "bg-primary text-white" : "bg-muted"
             }`}
           >
             Sign Up
@@ -99,13 +99,13 @@ export const TwoItems: Story = {
           <Window.Item value="login">
             <div className="p-6 border rounded-lg">
               <h3 className="font-semibold mb-2">Welcome back</h3>
-              <p className="text-sm text-slate-600">Enter your credentials to continue.</p>
+              <p className="text-sm text-muted-foreground">Enter your credentials to continue.</p>
             </div>
           </Window.Item>
           <Window.Item value="signup">
             <div className="p-6 border rounded-lg">
               <h3 className="font-semibold mb-2">Create account</h3>
-              <p className="text-sm text-slate-600">Fill in the form to get started.</p>
+              <p className="text-sm text-muted-foreground">Fill in the form to get started.</p>
             </div>
           </Window.Item>
         </Window>

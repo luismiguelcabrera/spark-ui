@@ -250,7 +250,7 @@ function TreeNodeComponent({
             onChange={() => onCheckToggle(node.id)}
             disabled={node.disabled}
             className={cn(
-              "ml-1 mr-1 h-4 w-4 rounded border-slate-300 text-primary",
+              "ml-1 mr-1 h-4 w-4 rounded border-muted text-primary",
               "focus:ring-2 focus:ring-primary focus:ring-offset-1"
             )}
             aria-label={`Select ${node.label}`}
@@ -266,7 +266,7 @@ function TreeNodeComponent({
           }}
           className={cn(
             "flex items-center gap-1.5 w-full rounded-lg transition-colors",
-            "hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+            "hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
             "disabled:opacity-50 disabled:cursor-not-allowed",
             sizeMap[size],
             isSelected && "bg-primary/10 text-primary font-medium"
@@ -279,7 +279,7 @@ function TreeNodeComponent({
               name="chevron-right"
               size="sm"
               className={cn(
-                "shrink-0 transition-transform text-slate-500",
+                "shrink-0 transition-transform text-muted-foreground",
                 isExpanded && "rotate-90"
               )}
             />
@@ -289,7 +289,7 @@ function TreeNodeComponent({
 
           {/* Icon */}
           {node.iconElement ?? (node.icon && (
-            <Icon name={node.icon} size="sm" className="shrink-0 text-slate-500" />
+            <Icon name={node.icon} size="sm" className="shrink-0 text-muted-foreground" />
           ))}
 
           {/* Label */}
@@ -301,7 +301,7 @@ function TreeNodeComponent({
       {hasChildren && isExpanded && (
         <div
           role="group"
-          className={cn(showLines && "border-l border-slate-200")}
+          className={cn(showLines && "border-l border-muted")}
           style={showLines ? { marginLeft: `${level * indentMap[size] + 16}px` } : undefined}
         >
           {node.children!.map((child) => (
@@ -451,8 +451,8 @@ const TreeView = forwardRef<HTMLDivElement, TreeViewProps>(
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder="Search..."
               className={cn(
-                "w-full px-3 py-1.5 text-sm rounded-lg border border-slate-200",
-                "bg-white placeholder:text-slate-500",
+                "w-full px-3 py-1.5 text-sm rounded-lg border border-muted",
+                "bg-surface placeholder:text-muted-foreground",
                 "focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               )}
               aria-label="Search tree"
@@ -479,7 +479,7 @@ const TreeView = forwardRef<HTMLDivElement, TreeViewProps>(
           ))}
 
           {searchValue && filteredNodes.length === 0 && (
-            <p className="px-2 py-4 text-sm text-slate-600 text-center">No results found</p>
+            <p className="px-2 py-4 text-sm text-muted-foreground text-center">No results found</p>
           )}
         </div>
       </div>

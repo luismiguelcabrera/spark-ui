@@ -113,7 +113,7 @@ export const Selectable: Story = {
           selectedIds={selectedIds}
           onSelectionChange={setSelectedIds}
         />
-        <p className="text-sm text-slate-500 mt-4">
+        <p className="text-sm text-muted-foreground mt-4">
           Selected: {selectedIds.length === 0 ? "none" : selectedIds.join(", ")}
         </p>
       </div>
@@ -147,7 +147,7 @@ export const SearchableSelectable: Story = {
           selectedIds={selectedIds}
           onSelectionChange={setSelectedIds}
         />
-        <p className="text-sm text-slate-500 mt-4">
+        <p className="text-sm text-muted-foreground mt-4">
           Selected: {selectedIds.length === 0 ? "none" : selectedIds.join(", ")}
         </p>
       </div>

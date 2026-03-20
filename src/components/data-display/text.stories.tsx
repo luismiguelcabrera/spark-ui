@@ -140,7 +140,7 @@ export const Gallery: Story = {
         <Text {...args} size="lg" weight="semibold" color="primary">$128,400</Text>
         <Text {...args} size="sm" color="success">+12.5% from last month</Text>
       </div>
-      <div className="p-4 bg-red-50 rounded-lg">
+      <div className="p-4 bg-destructive/10 rounded-lg">
         <Text {...args} weight="semibold" color="destructive">Error: Something went wrong</Text>
         <Text {...args} size="sm" color="muted">Please try again later or contact support.</Text>
       </div>
