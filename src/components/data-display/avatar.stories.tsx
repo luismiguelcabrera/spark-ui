@@ -7,8 +7,24 @@ const meta = {
   tags: ["autodocs"],
   argTypes: {
     size: { control: "select", options: ["xs", "sm", "md", "lg", "xl"] },
+    color: {
+      control: "select",
+      options: [
+        "neutral",
+        "primary",
+        "secondary",
+        "success",
+        "warning",
+        "destructive",
+        "accent",
+      ],
+    },
+    shape: { control: "select", options: ["circle", "square", "rounded"] },
     ring: { control: "select", options: ["none", "white", "primary"] },
-    density: { control: "select", options: ["default", "comfortable", "compact"] },
+    status: {
+      control: "select",
+      options: [undefined, "online", "offline", "busy", "away"],
+    },
     icon: { control: "text" },
   },
 } satisfies Meta<typeof Avatar>;
@@ -16,11 +32,22 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const WithInitials: Story = { args: { initials: "JD", size: "lg" } };
-export const WithImage: Story = {
-  args: { src: "https://i.pravatar.cc/150?u=1", alt: "User", size: "lg" },
+export const WithInitials: Story = {
+  args: { initials: "JD", size: "lg" },
 };
-export const Fallback: Story = { args: { alt: "Alice", size: "lg" } };
+
+export const WithImage: Story = {
+  args: {
+    src: "https://i.pravatar.cc/150?u=1",
+    alt: "User",
+    size: "lg",
+  },
+};
+
+export const Fallback: Story = {
+  args: { alt: "Alice", size: "lg" },
+};
+
 export const WithRing: Story = {
   args: { initials: "AB", size: "lg", ring: "primary" },
 };
@@ -36,43 +63,137 @@ export const WithIcon: Story = {
   ),
 };
 
-export const Density: Story = {
+// ------------------------------------------------------------------
+// Color
+// ------------------------------------------------------------------
+export const Colors: Story = {
   render: (args) => (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-4">
-        <span className="text-xs text-slate-500 w-24">Default:</span>
-        <Avatar {...args} density="default" size="xs" initials="XS" />
-        <Avatar {...args} density="default" size="sm" initials="SM" />
-        <Avatar {...args} density="default" size="md" initials="MD" />
-        <Avatar {...args} density="default" size="lg" initials="LG" />
-        <Avatar {...args} density="default" size="xl" initials="XL" />
-      </div>
-      <div className="flex items-center gap-4">
-        <span className="text-xs text-slate-500 w-24">Comfortable:</span>
-        <Avatar {...args} density="comfortable" size="xs" initials="XS" />
-        <Avatar {...args} density="comfortable" size="sm" initials="SM" />
-        <Avatar {...args} density="comfortable" size="md" initials="MD" />
-        <Avatar {...args} density="comfortable" size="lg" initials="LG" />
-        <Avatar {...args} density="comfortable" size="xl" initials="XL" />
-      </div>
-      <div className="flex items-center gap-4">
-        <span className="text-xs text-slate-500 w-24">Compact:</span>
-        <Avatar {...args} density="compact" size="xs" initials="XS" />
-        <Avatar {...args} density="compact" size="sm" initials="SM" />
-        <Avatar {...args} density="compact" size="md" initials="MD" />
-        <Avatar {...args} density="compact" size="lg" initials="LG" />
-        <Avatar {...args} density="compact" size="xl" initials="XL" />
-      </div>
+    <div className="flex items-center gap-3">
+      <Avatar {...args} color="neutral" initials="NE" />
+      <Avatar {...args} color="primary" initials="PR" />
+      <Avatar {...args} color="secondary" initials="SE" />
+      <Avatar {...args} color="success" initials="SU" />
+      <Avatar {...args} color="warning" initials="WA" />
+      <Avatar {...args} color="destructive" initials="DE" />
+      <Avatar {...args} color="accent" initials="AC" />
+    </div>
+  ),
+  args: { size: "lg" },
+};
+
+// ------------------------------------------------------------------
+// Shape
+// ------------------------------------------------------------------
+export const Shapes: Story = {
+  render: (args) => (
+    <div className="flex items-center gap-4">
+      <Avatar {...args} shape="circle" initials="CI" />
+      <Avatar {...args} shape="square" initials="SQ" />
+      <Avatar {...args} shape="rounded" initials="RD" />
+    </div>
+  ),
+  args: { size: "lg", color: "primary" },
+};
+
+export const ShapesWithImage: Story = {
+  render: (args) => (
+    <div className="flex items-center gap-4">
+      <Avatar
+        {...args}
+        shape="circle"
+        src="https://i.pravatar.cc/150?u=10"
+        alt="Circle"
+      />
+      <Avatar
+        {...args}
+        shape="square"
+        src="https://i.pravatar.cc/150?u=11"
+        alt="Square"
+      />
+      <Avatar
+        {...args}
+        shape="rounded"
+        src="https://i.pravatar.cc/150?u=12"
+        alt="Rounded"
+      />
+    </div>
+  ),
+  args: { size: "lg" },
+};
+
+// ------------------------------------------------------------------
+// Status
+// ------------------------------------------------------------------
+export const StatusIndicator: Story = {
+  render: (args) => (
+    <div className="flex items-center gap-4">
+      <Avatar {...args} status="online" initials="ON" />
+      <Avatar {...args} status="offline" initials="OF" />
+      <Avatar {...args} status="busy" initials="BU" />
+      <Avatar {...args} status="away" initials="AW" />
+    </div>
+  ),
+  args: { size: "lg", color: "primary" },
+};
+
+export const StatusWithImage: Story = {
+  render: (args) => (
+    <div className="flex items-center gap-4">
+      <Avatar
+        {...args}
+        status="online"
+        src="https://i.pravatar.cc/150?u=20"
+        alt="Online"
+        size="sm"
+      />
+      <Avatar
+        {...args}
+        status="busy"
+        src="https://i.pravatar.cc/150?u=21"
+        alt="Busy"
+        size="md"
+      />
+      <Avatar
+        {...args}
+        status="away"
+        src="https://i.pravatar.cc/150?u=22"
+        alt="Away"
+        size="lg"
+      />
+      <Avatar
+        {...args}
+        status="offline"
+        src="https://i.pravatar.cc/150?u=23"
+        alt="Offline"
+        size="xl"
+      />
     </div>
   ),
 };
 
-export const IconWithDensity: Story = {
+export const StatusOnShapes: Story = {
   render: (args) => (
     <div className="flex items-center gap-4">
-      <Avatar {...args} icon="user" density="compact" size="md" alt="User avatar" />
-      <Avatar {...args} icon="user" density="default" size="md" alt="User avatar" />
-      <Avatar {...args} icon="user" density="comfortable" size="md" alt="User avatar" />
+      <Avatar {...args} shape="circle" status="online" initials="CI" />
+      <Avatar {...args} shape="square" status="busy" initials="SQ" />
+      <Avatar {...args} shape="rounded" status="away" initials="RD" />
     </div>
   ),
+  args: { size: "lg", color: "accent" },
+};
+
+// ------------------------------------------------------------------
+// Sizes gallery
+// ------------------------------------------------------------------
+export const Sizes: Story = {
+  render: (args) => (
+    <div className="flex items-end gap-3">
+      <Avatar {...args} size="xs" initials="XS" />
+      <Avatar {...args} size="sm" initials="SM" />
+      <Avatar {...args} size="md" initials="MD" />
+      <Avatar {...args} size="lg" initials="LG" />
+      <Avatar {...args} size="xl" initials="XL" />
+    </div>
+  ),
+  args: { color: "primary" },
 };

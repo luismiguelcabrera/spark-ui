@@ -7,8 +7,11 @@ export type { CardProps } from "./card";
 export { Badge, badgeVariants } from "./badge";
 export type { BadgeProps } from "./badge";
 
-export { Avatar, avatarVariants } from "./avatar";
-export type { AvatarProps } from "./avatar";
+export { Avatar, avatarVariants, AvatarGroupContext } from "./avatar";
+export type { AvatarProps, AvatarSize, AvatarColor, AvatarShape, AvatarStatus } from "./avatar";
+
+export { AvatarGroup } from "./avatar-group";
+export type { AvatarGroupProps, AvatarGroupBorderColor } from "./avatar-group";
 
 export { ProgressBar } from "./progress-bar";
 export type { ProgressBarProps } from "./progress-bar";

@@ -1,13 +1,49 @@
 "use client";
 
-import { forwardRef, useState, useEffect, useRef, type ReactNode } from "react";
+import {
+  forwardRef,
+  useState,
+  useEffect,
+  useCallback,
+  createContext,
+  useContext,
+  type ReactNode,
+} from "react";
 import { cn } from "../../lib/utils";
-import { s } from "../../lib/styles";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Icon } from "./icon";
 
+// ---------------------------------------------------------------------------
+// Context — AvatarGroup propagates size & shape to children
+// ---------------------------------------------------------------------------
+type AvatarGroupContextValue = {
+  size?: AvatarSize;
+  shape?: AvatarShape;
+};
+export const AvatarGroupContext = createContext<AvatarGroupContextValue | null>(
+  null
+);
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl";
+type AvatarColor =
+  | "neutral"
+  | "primary"
+  | "secondary"
+  | "success"
+  | "warning"
+  | "destructive"
+  | "accent";
+type AvatarShape = "circle" | "square" | "rounded";
+type AvatarStatus = "online" | "offline" | "busy" | "away";
+
+// ---------------------------------------------------------------------------
+// CVA variants
+// ---------------------------------------------------------------------------
 const avatarVariants = cva(
-  "relative inline-flex items-center justify-center rounded-full bg-gray-200 overflow-hidden shrink-0",
+  "relative inline-flex items-center justify-center overflow-hidden shrink-0",
   {
     variants: {
       size: {
@@ -17,32 +53,58 @@ const avatarVariants = cva(
         lg: "w-12 h-12 text-base",
         xl: "w-16 h-16 text-lg",
       },
+      shape: {
+        circle: "rounded-full",
+        square: "rounded-none",
+        rounded: "rounded-lg",
+      },
       ring: {
         none: "",
         white: "ring-2 ring-white",
         primary: "ring-2 ring-primary",
       },
-      density: {
-        default: "",
-        comfortable: "p-1",
-        compact: "p-0.5",
-      },
     },
     defaultVariants: {
       size: "md",
+      shape: "circle",
       ring: "none",
-      density: "default",
     },
   }
 );
 
-type AvatarProps = {
-  src?: string;
-  alt?: string;
-  initials?: string;
-  icon?: string | ReactNode;
-  className?: string;
-} & VariantProps<typeof avatarVariants>;
+// ---------------------------------------------------------------------------
+// Maps
+// ---------------------------------------------------------------------------
+const colorMap: Record<AvatarColor, string> = {
+  neutral: "bg-gray-200 text-gray-600",
+  primary: "bg-primary/15 text-primary",
+  secondary: "bg-secondary/15 text-secondary",
+  success: "bg-emerald-100 text-emerald-700",
+  warning: "bg-amber-100 text-amber-900",
+  destructive: "bg-red-100 text-red-700",
+  accent: "bg-violet-100 text-violet-700",
+};
+
+const statusColorMap: Record<AvatarStatus, string> = {
+  online: "bg-emerald-500",
+  offline: "bg-gray-400",
+  busy: "bg-red-500",
+  away: "bg-amber-500",
+};
+
+const statusSizeMap: Record<AvatarSize, string> = {
+  xs: "w-1.5 h-1.5",
+  sm: "w-2 h-2",
+  md: "w-2.5 h-2.5",
+  lg: "w-3 h-3",
+  xl: "w-4 h-4",
+};
+
+const statusPositionMap: Record<AvatarShape, string> = {
+  circle: "bottom-0 right-0",
+  square: "-bottom-0.5 -right-0.5",
+  rounded: "bottom-0 right-0",
+};
 
 const iconSizeMap = {
   xs: "sm",
@@ -52,45 +114,103 @@ const iconSizeMap = {
   xl: "xl",
 } as const;
 
+// ---------------------------------------------------------------------------
+// Props
+// ---------------------------------------------------------------------------
+type AvatarProps = {
+  /** Image URL */
+  src?: string;
+  /** Alt text for the image & aria-label fallback */
+  alt?: string;
+  /** Initials to show when there is no image */
+  initials?: string;
+  /** Fallback icon — name string resolved via Icon, or a ReactNode */
+  icon?: string | ReactNode;
+  /** Background color for the fallback state */
+  color?: AvatarColor;
+  /** Shape of the avatar */
+  shape?: AvatarShape;
+  /** Online/offline status indicator dot */
+  status?: AvatarStatus;
+  /** Called when image loading status changes */
+  onLoadingStatusChange?: (status: "loading" | "loaded" | "error") => void;
+  className?: string;
+} & Omit<VariantProps<typeof avatarVariants>, "shape">;
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
-  ({ src, alt = "", initials, icon, size, ring, density, className }, ref) => {
+  (
+    {
+      src,
+      alt = "",
+      initials,
+      icon,
+      color = "neutral",
+      shape: shapeProp,
+      status,
+      size: sizeProp,
+      ring,
+      onLoadingStatusChange,
+      className,
+    },
+    ref
+  ) => {
+    const groupCtx = useContext(AvatarGroupContext);
+    const size = sizeProp ?? groupCtx?.size ?? "md";
+    const shape = shapeProp ?? groupCtx?.shape ?? "circle";
+
     const [imgLoaded, setImgLoaded] = useState(false);
     const [imgError, setImgError] = useState(false);
-    const imgRef = useRef<HTMLImageElement>(null);
+
+    // Ref callback detects already-cached images on mount
+    const imgCallbackRef = useCallback(
+      (img: HTMLImageElement | null) => {
+        if (!img) return;
+        if (img.complete) {
+          if (img.naturalWidth > 0) {
+            setImgLoaded(true);
+            onLoadingStatusChange?.("loaded");
+          } else {
+            setImgError(true);
+            onLoadingStatusChange?.("error");
+          }
+        }
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- only care about callback identity
+      []
+    );
 
     useEffect(() => {
-      setImgLoaded(false); // eslint-disable-line react-hooks/set-state-in-effect -- intentional: reset image state when src changes
+      setImgLoaded(false); // eslint-disable-line react-hooks/set-state-in-effect -- reset on src change
       setImgError(false);
-      if (!src) return;
-      // SSR guard: requestAnimationFrame is not available on the server
-      if (typeof window === "undefined") return;
-      // If the browser already has the image cached, onLoad fires synchronously
-      // before React attaches the handler. Check img.complete after the next frame.
-      const raf = requestAnimationFrame(() => {
-        const img = imgRef.current;
-        if (img?.complete) {
-          if (img.naturalWidth > 0) setImgLoaded(true);
-          else setImgError(true);
-        }
-      });
-      return () => cancelAnimationFrame(raf);
+      if (src) onLoadingStatusChange?.("loading");
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- only reset on src change
     }, [src]);
 
-    const fallbackText = initials ?? (alt ? alt.charAt(0).toUpperCase() : "?");
+    const fallbackText =
+      initials ?? (alt ? alt.charAt(0).toUpperCase() : "?");
     const showFallback = !src || imgError;
 
-    const iconContent = icon
-      ? typeof icon === "string"
-        ? <Icon name={icon} size={iconSizeMap[size ?? "md"]} className="text-gray-500" />
-        : icon
-      : null;
+    const iconContent = icon ? (
+      typeof icon === "string" ? (
+        <Icon name={icon} size={iconSizeMap[size]} className="text-current" />
+      ) : (
+        icon
+      )
+    ) : null;
 
     return (
       <div
         ref={ref}
         role="img"
         aria-label={alt || initials || "Avatar"}
-        className={cn(avatarVariants({ size, ring, density }), className)}
+        className={cn(
+          avatarVariants({ size, shape, ring }),
+          colorMap[color],
+          className
+        )}
       >
         {/* Skeleton — shown while image is fetching */}
         {src && !imgLoaded && !imgError && (
@@ -98,26 +218,44 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         )}
 
         {/* Fallback: icon > initials > first letter of alt > "?" */}
-        {showFallback && (
-          iconContent ?? (
-            <span aria-hidden="true" className="font-bold text-gray-600">
+        {showFallback &&
+          (iconContent ?? (
+            <span aria-hidden="true" className="font-bold">
               {fallbackText}
             </span>
-          )
-        )}
+          ))}
 
         {/* Image — fades in once loaded */}
         {src && !imgError && (
           <img
-            ref={imgRef}
+            ref={imgCallbackRef}
             src={src}
             alt={alt}
             className={cn(
               "absolute inset-0 w-full h-full object-cover transition-opacity duration-300 motion-reduce:transition-none",
-              imgLoaded ? "opacity-100" : "opacity-0",
+              imgLoaded ? "opacity-100" : "opacity-0"
             )}
-            onLoad={() => setImgLoaded(true)}
-            onError={() => setImgError(true)}
+            onLoad={() => {
+              setImgLoaded(true);
+              onLoadingStatusChange?.("loaded");
+            }}
+            onError={() => {
+              setImgError(true);
+              onLoadingStatusChange?.("error");
+            }}
+          />
+        )}
+
+        {/* Status indicator */}
+        {status && (
+          <span
+            aria-label={status}
+            className={cn(
+              "absolute block rounded-full ring-2 ring-white",
+              statusColorMap[status],
+              statusSizeMap[size],
+              statusPositionMap[shape]
+            )}
           />
         )}
       </div>
@@ -127,4 +265,10 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
 Avatar.displayName = "Avatar";
 
 export { Avatar, avatarVariants };
-export type { AvatarProps };
+export type {
+  AvatarProps,
+  AvatarSize,
+  AvatarColor,
+  AvatarShape,
+  AvatarStatus,
+};
