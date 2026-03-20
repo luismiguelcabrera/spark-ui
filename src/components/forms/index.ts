@@ -90,6 +90,21 @@ export type { FormStepsProps } from "./form-steps";
 export { FormStep } from "./form-step";
 export type { FormStepProps } from "./form-step";
 
+export { FormWatch } from "./form-watch";
+export type { FormWatchProps } from "./form-watch";
+
+export { FormIf } from "./form-if";
+export type { FormIfProps } from "./form-if";
+
+export { FormReset } from "./form-reset";
+export type { FormResetProps } from "./form-reset";
+
+export { FormDebug } from "./form-debug";
+export type { FormDebugProps } from "./form-debug";
+
+export { FormFieldArray } from "./form-field-array";
+export type { FormFieldArrayProps } from "./form-field-array";
+
 export { useFormContext } from "./form-context";
 export { useFormSteps } from "./form-steps-context";
 

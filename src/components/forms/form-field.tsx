@@ -4,6 +4,8 @@
 
 import {
   useId,
+  useEffect,
+  useRef,
   isValidElement,
   cloneElement,
   type InputHTMLAttributes,
@@ -59,6 +61,16 @@ type FormFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "children"> & 
   hint?: string;
   /** Hide the built-in error display. Use render prop or Form.Message for custom error rendering. */
   hideError?: boolean;
+  /** Override when this field validates: "change" | "blur" | "submit". Default inherits from form. */
+  validateOn?: "change" | "blur" | "submit";
+  /** Re-validate this field when any of these sibling fields change (e.g. confirm password). */
+  deps?: string[];
+  /** Show character counter for string fields with minLength/maxLength rules. */
+  showCounter?: boolean;
+  /** Show a green check icon when the field is valid and touched. */
+  showSuccess?: boolean;
+  /** Transform the value before storing (e.g. trim, lowercase). */
+  transform?: (value: any) => any;
   children?: ReactNode | ((field: FieldRenderProps) => ReactNode);
   className?: string;
 };
@@ -174,6 +186,11 @@ function FormField({
   error: errorProp,
   hint,
   hideError = false,
+  validateOn,
+  deps,
+  showCounter = false,
+  showSuccess = false,
+  transform: transformFn,
   children,
   className,
   id: idProp,
@@ -182,6 +199,7 @@ function FormField({
   const autoId = useId();
   const id = idProp ?? autoId;
   const { t } = useLocale();
+  const prevDepsRef = useRef<any[]>([]);
 
   // Try to access form context (may be null if standalone)
   let formCtx: ReturnType<typeof useFormContext> | null = null;
@@ -191,6 +209,24 @@ function FormField({
     // Not inside a Form — standalone mode
   }
 
+  // ── Cross-field deps: re-validate when dep values change ──
+  const depValues = deps?.map((d) => formCtx?.form.values[d as any]);
+  useEffect(() => {
+    if (!formCtx || !name || !deps?.length) return;
+    const { form } = formCtx;
+    const fieldState = form.getFieldState(name as any);
+    // Only re-validate if this field has been touched
+    if (!fieldState.touched) return;
+    // Check if dep values actually changed
+    const prevVals = prevDepsRef.current;
+    const changed = depValues?.some((v, i) => v !== prevVals[i]);
+    if (changed) {
+      form.validate();
+    }
+    prevDepsRef.current = depValues ?? [];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [depValues?.join(",")]);
+
   // ── Context-bound mode ──
   if (formCtx && name) {
     const { form } = formCtx;
@@ -198,10 +234,49 @@ function FormField({
     const registered = form.register(name as any, resolvedRules);
     const fieldState = form.getFieldState(name as any);
 
+    // Wrap onChange with transform if provided
+    const wrappedOnChange = transformFn
+      ? (e: any) => {
+          const raw = typeof e === "object" && e?.target ? e.target.value : e;
+          const transformed = transformFn(raw);
+          registered.onChange(transformed);
+        }
+      : registered.onChange;
+
+    // Override onBlur/onChange based on validateOn
+    const wrappedOnBlur =
+      validateOn === "submit"
+        ? () => form.setFieldTouched(name as any, true)
+        : registered.onBlur;
+    const finalOnChange =
+      validateOn === "change"
+        ? (e: any) => {
+            wrappedOnChange(e);
+            // Trigger validation after value update
+            setTimeout(() => form.validate(), 0);
+          }
+        : wrappedOnChange;
+
     const fieldError = errorProp ?? fieldState.error ?? null;
     const errorId = fieldError ? `${id}-error` : undefined;
     const descId = description ? `${id}-desc` : undefined;
     const isRequired = !!rules?.required;
+
+    // Character counter
+    const charCount =
+      showCounter && typeof registered.value === "string"
+        ? registered.value.length
+        : null;
+    const maxLen =
+      rules?.maxLength !== undefined
+        ? typeof rules.maxLength === "number"
+          ? rules.maxLength
+          : rules.maxLength.value
+        : null;
+
+    // Success state
+    const isSuccess =
+      showSuccess && fieldState.touched && !fieldError && fieldState.dirty;
 
     const fieldContextValue = {
       name,
@@ -210,6 +285,26 @@ function FormField({
       touched: fieldState.touched,
       dirty: fieldState.dirty,
     };
+
+    // Counter + success helper
+    const counterEl =
+      showCounter && charCount !== null ? (
+        <span className="text-xs text-slate-500">
+          {charCount}
+          {maxLen !== null ? `/${maxLen}` : ""}
+        </span>
+      ) : null;
+
+    const successEl = isSuccess ? (
+      <Icon name="check-circle" size="sm" className="text-green-600" />
+    ) : null;
+
+    const footerEl = (counterEl || successEl) ? (
+      <div className="flex items-center justify-between">
+        {successEl}
+        {counterEl}
+      </div>
+    ) : null;
 
     // Render prop
     if (typeof children === "function") {
@@ -223,8 +318,8 @@ function FormField({
             )}
             {children({
               value: registered.value,
-              onChange: registered.onChange,
-              onBlur: registered.onBlur,
+              onChange: finalOnChange,
+              onBlur: wrappedOnBlur,
               name: registered.name,
               error: fieldError,
               touched: fieldState.touched,
@@ -235,6 +330,7 @@ function FormField({
             {description && !fieldError && (
               <FieldDescription id={descId}>{description}</FieldDescription>
             )}
+            {footerEl}
           </div>
         </FormFieldContext.Provider>
       );
@@ -247,8 +343,8 @@ function FormField({
         ? cloneElement(child as ReactElement<any>, {
             id,
             value: registered.value,
-            onChange: registered.onChange,
-            onBlur: registered.onBlur,
+            onChange: finalOnChange,
+            onBlur: wrappedOnBlur,
             name: registered.name,
             "aria-invalid": fieldError ? true : undefined,
             "aria-describedby":
@@ -295,6 +391,7 @@ function FormField({
             {description && !fieldError && (
               <FieldDescription id={descId}>{description}</FieldDescription>
             )}
+            {footerEl}
           </div>
         </FormFieldContext.Provider>
       );

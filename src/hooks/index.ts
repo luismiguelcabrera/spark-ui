@@ -33,6 +33,13 @@ export { useHotkey } from "./use-hotkey";
 export { useElevation } from "./use-elevation";
 export { useForm } from "./use-form";
 export type { UseFormConfig, UseFormReturn, ValidationRule, FieldState } from "./use-form";
+export { useFieldArray } from "./use-field-array";
+export type { UseFieldArrayReturn, FieldArrayItem } from "./use-field-array";
+export { useWatch } from "./use-watch";
+export { useFormGuard } from "./use-form-guard";
+export type { UseFormGuardOptions } from "./use-form-guard";
+export { useAutosave } from "./use-autosave";
+export type { UseAutosaveOptions, UseAutosaveReturn } from "./use-autosave";
 
 // Wave 7 — Browser & DOM hooks
 export { useResizeObserver } from "./use-resize-observer";

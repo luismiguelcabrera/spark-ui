@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any -- generic form hook requires any for arbitrary field values */
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 
 // ── Types ──
 
@@ -34,6 +34,10 @@ export type UseFormConfig<T extends Record<string, any>> = {
   onSubmit?: (values: T) => void | Promise<void>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
+  /** localStorage key for auto-persistence. Form state is saved on change and restored on mount. */
+  persist?: string;
+  /** Per-field value transforms applied before submit (e.g. trim strings, parse numbers). */
+  transform?: Partial<Record<keyof T, (value: any) => any>>;
 };
 
 export type UseFormReturn<T extends Record<string, any>> = {
@@ -72,6 +76,9 @@ export type UseFormReturn<T extends Record<string, any>> = {
     onBlur: () => void;
     name: string;
   };
+
+  /** Returns values with transforms applied (for use by Form component). */
+  getTransformedValues: () => T;
 };
 
 // ── Helpers ──
@@ -164,9 +171,24 @@ export function useForm<T extends Record<string, any>>(
     onSubmit,
     validateOnChange = false,
     validateOnBlur = true,
+    persist,
+    transform,
   } = config;
 
-  const [values, setValuesState] = useState<T>(initialValues);
+  // Restore persisted values on mount
+  const getInitialValues = (): T => {
+    if (persist && typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem(`spark-form:${persist}`);
+        if (stored) return { ...initialValues, ...JSON.parse(stored) };
+      } catch {
+        // Ignore parse errors
+      }
+    }
+    return initialValues;
+  };
+
+  const [values, setValuesState] = useState<T>(getInitialValues);
   const [errors, setErrorsState] = useState<Partial<Record<keyof T, string>>>(
     {},
   );
@@ -178,6 +200,23 @@ export function useForm<T extends Record<string, any>>(
 
   const initialValuesRef = useRef<T>(initialValues);
   const rulesRef = useRef<Partial<Record<keyof T, ValidationRule>>>({});
+  const persistTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Persist values to localStorage (debounced)
+  useEffect(() => {
+    if (!persist || typeof window === "undefined") return;
+    if (persistTimerRef.current) clearTimeout(persistTimerRef.current);
+    persistTimerRef.current = setTimeout(() => {
+      try {
+        localStorage.setItem(`spark-form:${persist}`, JSON.stringify(values));
+      } catch {
+        // Ignore quota errors
+      }
+    }, 300);
+    return () => {
+      if (persistTimerRef.current) clearTimeout(persistTimerRef.current);
+    };
+  }, [values, persist]);
 
   // Derived state
   const dirty = Object.keys(values).some(
@@ -301,8 +340,17 @@ export function useForm<T extends Record<string, any>>(
       setValuesState(resetTo);
       setErrorsState({});
       setTouchedState({});
+      setFormError(null);
+      // Clear persisted data
+      if (persist && typeof window !== "undefined") {
+        try {
+          localStorage.removeItem(`spark-form:${persist}`);
+        } catch {
+          // Ignore
+        }
+      }
     },
-    [],
+    [persist],
   );
 
   // ── Handle submit ──
@@ -360,14 +408,25 @@ export function useForm<T extends Record<string, any>>(
       const hasErrors = Object.keys(newErrors).length > 0;
       if (hasErrors || !onSubmit) return;
 
+      // Apply transforms before submit
+      let submitValues = values;
+      if (transform) {
+        submitValues = { ...values };
+        for (const [key, fn] of Object.entries(transform)) {
+          if (typeof fn === "function") {
+            (submitValues as any)[key] = (fn as (v: any) => any)(submitValues[key as keyof T]);
+          }
+        }
+      }
+
       setIsSubmitting(true);
       try {
-        await onSubmit(values);
+        await onSubmit(submitValues);
       } finally {
         setIsSubmitting(false);
       }
     },
-    [values, formValidate, resolver, onSubmit],
+    [values, formValidate, resolver, onSubmit, transform],
   );
 
   // ── onChange handler ──
@@ -467,6 +526,18 @@ export function useForm<T extends Record<string, any>>(
     [values, createOnChange, createOnBlur],
   );
 
+  // ── getTransformedValues ──
+  const getTransformedValues = useCallback((): T => {
+    if (!transform) return values;
+    const result = { ...values };
+    for (const [key, fn] of Object.entries(transform)) {
+      if (typeof fn === "function") {
+        (result as any)[key] = (fn as (v: any) => any)(result[key as keyof T]);
+      }
+    }
+    return result;
+  }, [values, transform]);
+
   return {
     values,
     errors,
@@ -487,5 +558,6 @@ export function useForm<T extends Record<string, any>>(
     validate,
     handleSubmit,
     register,
+    getTransformedValues,
   };
 }
