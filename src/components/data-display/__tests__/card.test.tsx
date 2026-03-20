@@ -55,7 +55,7 @@ describe("Card", () => {
   it("applies variant=outline classes", () => {
     const { container } = render(<Card variant="outline">Content</Card>);
     const card = container.firstElementChild as HTMLElement;
-    expect(card.className).toContain("border-gray-200");
+    expect(card.className).toContain("border-muted");
   });
 
   it("renders footer in title mode", () => {

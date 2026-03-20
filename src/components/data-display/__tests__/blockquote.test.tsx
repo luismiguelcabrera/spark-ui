@@ -65,6 +65,6 @@ describe("Blockquote", () => {
   it("applies destructive color classes", () => {
     render(<Blockquote color="destructive">Quote</Blockquote>);
     const el = screen.getByText("Quote");
-    expect(el.className).toContain("red");
+    expect(el.className).toContain("destructive");
   });
 });

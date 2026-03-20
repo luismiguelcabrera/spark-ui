@@ -305,7 +305,7 @@ function MonthGrid({
                 day.selected && !isColorMark && s.calendarDaySelected,
                 day.hasEvent && !day.mark?.dotColor && (
                   day.selected
-                    ? "after:absolute after:bottom-1 after:w-1 after:h-1 after:rounded-full after:bg-white"
+                    ? "after:absolute after:bottom-1 after:w-1 after:h-1 after:rounded-full after:bg-surface"
                     : s.calendarDayEvent
                 ),
                 isColorMark && !isInlineColor && day.mark!.color,
@@ -325,7 +325,7 @@ function MonthGrid({
               {showToday && day.today && !day.muted && (
                 <span className={cn(
                   "absolute bottom-0.5 left-1/2 -translate-x-1/2 w-3.5 h-0.5 rounded-full",
-                  day.selected ? "bg-white/70" : "bg-primary"
+                  day.selected ? "bg-surface/70" : "bg-primary"
                 )} />
               )}
               {day.mark?.dotColor && !day.selected && (
@@ -559,16 +559,16 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
             aria-label="Previous month"
             className={cn(
               "p-1.5 rounded-lg transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-              canGoPrev ? "hover:bg-slate-100 active:scale-95" : "opacity-30 cursor-not-allowed"
+              canGoPrev ? "hover:bg-muted active:scale-95" : "opacity-30 cursor-not-allowed"
             )}
           >
-            <Icon name="chevron_left" size="sm" className="text-slate-500" />
+            <Icon name="chevron_left" size="sm" className="text-muted-foreground" />
           </button>
 
           <button
             type="button"
             onClick={() => setPickerOpen(!pickerOpen)}
-            className="text-sm font-bold text-secondary hover:text-primary transition-colors px-2 py-1 rounded-lg hover:bg-slate-50 active:scale-95"
+            className="text-sm font-bold text-secondary hover:text-primary transition-colors px-2 py-1 rounded-lg hover:bg-muted/50 active:scale-95"
             aria-expanded={pickerOpen}
             aria-label={`${displayMonth} ${displayYear}, click to pick month`}
           >
@@ -588,10 +588,10 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
             aria-label="Next month"
             className={cn(
               "p-1.5 rounded-lg transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-              canGoNext ? "hover:bg-slate-100 active:scale-95" : "opacity-30 cursor-not-allowed"
+              canGoNext ? "hover:bg-muted active:scale-95" : "opacity-30 cursor-not-allowed"
             )}
           >
-            <Icon name="chevron_right" size="sm" className="text-slate-500" />
+            <Icon name="chevron_right" size="sm" className="text-muted-foreground" />
           </button>
         </div>
 
@@ -599,12 +599,12 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
         {pickerOpen && (
           <div className="px-3 pb-3 animate-in fade-in slide-in-from-top-2 duration-200">
             <div className="flex items-center justify-between mb-2">
-              <button type="button" onClick={() => setNavYear(navYear - 1)} className="p-1 rounded hover:bg-slate-100 active:scale-95" aria-label="Previous year">
-                <Icon name="chevron_left" size="sm" className="text-slate-400" />
+              <button type="button" onClick={() => setNavYear(navYear - 1)} className="p-1 rounded hover:bg-muted active:scale-95" aria-label="Previous year">
+                <Icon name="chevron_left" size="sm" className="text-muted-foreground" />
               </button>
-              <span className="text-xs font-bold text-slate-600">{navYear}</span>
-              <button type="button" onClick={() => setNavYear(navYear + 1)} className="p-1 rounded hover:bg-slate-100 active:scale-95" aria-label="Next year">
-                <Icon name="chevron_right" size="sm" className="text-slate-400" />
+              <span className="text-xs font-bold text-muted-foreground">{navYear}</span>
+              <button type="button" onClick={() => setNavYear(navYear + 1)} className="p-1 rounded hover:bg-muted active:scale-95" aria-label="Next year">
+                <Icon name="chevron_right" size="sm" className="text-muted-foreground" />
               </button>
             </div>
             <div className="grid grid-cols-4 gap-1">
@@ -615,7 +615,7 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
                   onClick={() => { changeMonth(i, navYear, i < navMonth ? "right" : "left"); setPickerOpen(false); }}
                   className={cn(
                     "text-xs py-1.5 rounded-lg transition-all active:scale-95",
-                    i === navMonth ? "bg-primary text-white font-bold" : "hover:bg-slate-100 text-slate-600",
+                    i === navMonth ? "bg-primary text-white font-bold" : "hover:bg-muted text-muted-foreground",
                     i === now.getMonth() && navYear === now.getFullYear() && i !== navMonth && "ring-1 ring-primary/30 text-primary font-medium"
                   )}
                 >
@@ -642,10 +642,10 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
               {monthPanels.map((panel, idx) => (
                 <div key={`${panel.month}-${panel.year}`} className={cn("flex items-start", isMultiMonth && "flex-1 min-w-0")}>
                   {/* Divider between months */}
-                  {idx > 0 && <div className="w-px bg-slate-200 self-stretch mx-0 -ml-3 mr-3" />}
+                  {idx > 0 && <div className="w-px bg-muted self-stretch mx-0 -ml-3 mr-3" />}
                   <div className="flex-1 min-w-0">
                     {isMultiMonth && (
-                      <div className="text-center text-xs font-semibold text-slate-500 pb-1">
+                      <div className="text-center text-xs font-semibold text-muted-foreground pb-1">
                         {MONTH_NAMES[panel.month]} {panel.year}
                       </div>
                     )}
@@ -679,7 +679,7 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
                   </button>
                 ) : <span />}
                 {selectedLabel && (
-                  <span className="text-xs text-slate-500 font-medium">{selectedLabel}</span>
+                  <span className="text-xs text-muted-foreground font-medium">{selectedLabel}</span>
                 )}
               </div>
             )}

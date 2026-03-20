@@ -10,7 +10,7 @@ describe("Badge", () => {
 
   it("applies variant classes", () => {
     render(<Badge variant="success">OK</Badge>);
-    expect(screen.getByText("OK").className).toContain("green");
+    expect(screen.getByText("OK").className).toContain("success");
   });
 
   it("applies size classes", () => {
@@ -32,7 +32,7 @@ describe("Badge", () => {
   it("applies default variant classes", () => {
     render(<Badge>Default</Badge>);
     const el = screen.getByText("Default");
-    expect(el.className).toContain("bg-gray-100");
+    expect(el.className).toContain("bg-muted");
   });
 
   it.each(["primary", "success", "warning", "danger", "info"] as const)(

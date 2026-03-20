@@ -38,12 +38,12 @@ export const s = {
   statLabel: "text-sm font-medium text-slate-600",
 
   // ---- Cards ----
-  cardBase: "bg-surface border border-gray-100 shadow-soft rounded-2xl",
+  cardBase: "bg-surface border border-muted shadow-soft rounded-2xl",
   cardInteractive:
-    "bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary/30 transition-all group",
+    "bg-surface rounded-xl border border-muted shadow-sm hover:shadow-md hover:border-primary/30 transition-all group",
   cardGlass: "glass-panel shadow-glass rounded-2xl",
   cardElevated: "bg-surface shadow-float rounded-2xl",
-  cardOutline: "bg-surface border border-gray-200 rounded-2xl",
+  cardOutline: "bg-surface border border-muted rounded-2xl",
   cardSection:
     "glass-card flex flex-col rounded-2xl relative overflow-hidden group hover:border-primary/30 transition-colors",
 
@@ -243,13 +243,13 @@ export const s = {
   audioWaveform: "flex items-end gap-px h-8",
 
   // ---- Calendar ----
-  calendarContainer: "bg-white border border-slate-200 rounded-2xl overflow-hidden",
+  calendarContainer: "bg-surface border border-muted rounded-2xl overflow-hidden",
   calendarHeader: "flex items-center justify-between px-4 py-3",
   calendarGrid: "grid grid-cols-7 text-center",
-  calendarDayLabel: "py-2 text-[11px] font-semibold text-slate-600 uppercase",
-  calendarDay: "relative flex items-center justify-center h-10 text-sm font-medium rounded-lg transition-colors cursor-pointer hover:bg-slate-50",
+  calendarDayLabel: "py-2 text-[11px] font-semibold text-muted-foreground uppercase",
+  calendarDay: "relative flex items-center justify-center h-10 text-sm font-medium rounded-lg transition-colors cursor-pointer hover:bg-muted/50",
   calendarDayToday: "text-primary font-bold hover:bg-primary/5",
   calendarDaySelected: "bg-primary text-white font-bold hover:bg-primary/90",
-  calendarDayMuted: "text-slate-300",
+  calendarDayMuted: "text-muted-foreground/40",
   calendarDayEvent: "after:absolute after:bottom-1 after:w-1 after:h-1 after:rounded-full after:bg-primary",
 } as const;

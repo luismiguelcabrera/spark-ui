@@ -40,10 +40,10 @@ export const Hoverable: Story = {
   render: (args) => (
     <div className="flex gap-4">
       <Card {...args} hoverable>
-        <p className="text-sm text-slate-600">Hover over me to see the shadow elevation effect.</p>
+        <p className="text-sm text-muted-foreground">Hover over me to see the shadow elevation effect.</p>
       </Card>
       <Card {...args} hoverable variant="outline">
-        <p className="text-sm text-slate-600">Outline card with hover effect.</p>
+        <p className="text-sm text-muted-foreground">Outline card with hover effect.</p>
       </Card>
     </div>
   ),
@@ -57,7 +57,7 @@ export const Clickable: Story = {
       hoverable
       onClick={() => alert("Card clicked!")}
     >
-      <p className="text-sm text-slate-600">Click me! I have cursor-pointer and interactive styles.</p>
+      <p className="text-sm text-muted-foreground">Click me! I have cursor-pointer and interactive styles.</p>
     </Card>
   ),
 };

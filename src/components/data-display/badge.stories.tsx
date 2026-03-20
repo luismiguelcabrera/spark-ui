@@ -55,7 +55,7 @@ export const WithMax: Story = {
 
 export const Bordered: Story = {
   render: (args) => (
-    <div className="flex items-center gap-4 bg-slate-100 p-4 rounded-lg">
+    <div className="flex items-center gap-4 bg-muted p-4 rounded-lg">
       <Badge {...args} bordered variant="danger">3</Badge>
       <Badge {...args} bordered variant="success">Active</Badge>
       <Badge {...args} bordered dot variant="primary" />
@@ -67,17 +67,17 @@ export const Floating: Story = {
   render: (args) => (
     <div className="flex items-center gap-8">
       <Badge {...args} floating content="5" variant="danger" bordered>
-        <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-sm font-bold">
+        <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm font-bold">
           AB
         </div>
       </Badge>
       <Badge {...args} floating content="99+" variant="primary" bordered>
-        <div className="w-10 h-10 rounded-lg bg-slate-200 flex items-center justify-center">
-          <Icon name="mail" size="md" className="text-slate-600" />
+        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
+          <Icon name="mail" size="md" className="text-muted-foreground" />
         </div>
       </Badge>
       <Badge {...args} floating dot variant="success" bordered>
-        <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-sm font-bold">
+        <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm font-bold">
           JD
         </div>
       </Badge>
@@ -89,8 +89,8 @@ export const FloatingWithMax: Story = {
   render: (args) => (
     <div className="flex items-center gap-8">
       <Badge {...args} floating max={99} content="150" variant="danger" bordered>
-        <div className="w-10 h-10 rounded-lg bg-slate-200 flex items-center justify-center">
-          <Icon name="bell" size="md" className="text-slate-600" />
+        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
+          <Icon name="bell" size="md" className="text-muted-foreground" />
         </div>
       </Badge>
     </div>

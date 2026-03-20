@@ -68,7 +68,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
               <div>
                 <h3 className={s.cardTitle}>{title}</h3>
                 {subtitle && (
-                  <p className="text-sm text-slate-600 mt-0.5">{subtitle}</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">{subtitle}</p>
                 )}
               </div>
             </div>
@@ -76,7 +76,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
           </div>
           {children}
           {footer && (
-            <div className="mt-4 pt-4 border-t border-slate-100">{footer}</div>
+            <div className="mt-4 pt-4 border-t border-muted">{footer}</div>
           )}
         </div>
       );
@@ -91,7 +91,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
       >
         {children}
         {footer && (
-          <div className="mt-4 pt-4 border-t border-slate-100">{footer}</div>
+          <div className="mt-4 pt-4 border-t border-muted">{footer}</div>
         )}
       </div>
     );
@@ -132,7 +132,7 @@ CardContent.displayName = "CardContent";
 const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
-      className={cn("mt-4 pt-4 border-t border-slate-100", className)}
+      className={cn("mt-4 pt-4 border-t border-muted", className)}
       ref={ref}
       {...props}
     />
