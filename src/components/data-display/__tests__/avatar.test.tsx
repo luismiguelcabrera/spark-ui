@@ -140,10 +140,11 @@ describe("Avatar", () => {
     expect(container.firstElementChild).toBeInTheDocument();
   });
 
-  it("applies neutral color by default", () => {
+  it("applies neutral color by default (uses muted variable)", () => {
     const { container } = render(<Avatar initials="AB" />);
     const root = container.firstElementChild as HTMLElement;
-    expect(root.className).toContain("bg-gray-200");
+    expect(root.className).toContain("bg-muted");
+    expect(root.className).toContain("text-muted-foreground");
   });
 
   it("applies primary color classes", () => {
@@ -200,10 +201,10 @@ describe("Avatar", () => {
     }
   );
 
-  it("status dot uses ring-white by default", () => {
+  it("status dot uses ring-surface by default", () => {
     const { container } = render(<Avatar status="online" />);
     const dot = container.querySelector("[aria-label='online']") as HTMLElement;
-    expect(dot.className).toContain("ring-white");
+    expect(dot.className).toContain("ring-surface");
   });
 
   it("status dot inherits statusRingClass from context", () => {

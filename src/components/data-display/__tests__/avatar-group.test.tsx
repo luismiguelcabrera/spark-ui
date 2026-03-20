@@ -159,9 +159,20 @@ describe("AvatarGroup", () => {
   // ------------------------------------------------------------------
   // borderColor
   // ------------------------------------------------------------------
-  it("applies white border by default", () => {
+  it("applies auto (surface) border by default", () => {
     const { container } = render(
       <AvatarGroup>
+        <span>A1</span>
+        <span>A2</span>
+      </AvatarGroup>
+    );
+    const wrapper = container.querySelector(".ring-surface");
+    expect(wrapper).toBeInTheDocument();
+  });
+
+  it("applies explicit white border when specified", () => {
+    const { container } = render(
+      <AvatarGroup borderColor="white">
         <span>A1</span>
         <span>A2</span>
       </AvatarGroup>
@@ -199,6 +210,16 @@ describe("AvatarGroup", () => {
     );
     const dot = container.querySelector("[aria-label='online']") as HTMLElement;
     expect(dot.className).toContain("ring-gray-900");
+  });
+
+  it("auto borderColor propagates ring-surface to status dots", () => {
+    const { container } = render(
+      <AvatarGroup>
+        <Avatar status="online" initials="AB" />
+      </AvatarGroup>
+    );
+    const dot = container.querySelector("[aria-label='online']") as HTMLElement;
+    expect(dot.className).toContain("ring-surface");
   });
 
   // ------------------------------------------------------------------

@@ -77,13 +77,13 @@ const avatarVariants = cva(
 // Maps
 // ---------------------------------------------------------------------------
 const colorMap: Record<AvatarColor, string> = {
-  neutral: "bg-gray-200 text-gray-600",
+  neutral: "bg-muted text-muted-foreground",
   primary: "bg-primary/15 text-primary",
   secondary: "bg-secondary/15 text-secondary",
-  success: "bg-emerald-100 text-emerald-700",
-  warning: "bg-amber-100 text-amber-900",
-  destructive: "bg-red-100 text-red-700",
-  accent: "bg-violet-100 text-violet-700",
+  success: "bg-success/15 text-success",
+  warning: "bg-warning/15 text-warning",
+  destructive: "bg-destructive/15 text-destructive",
+  accent: "bg-accent/15 text-accent",
 };
 
 const statusColorMap: Record<AvatarStatus, string> = {
@@ -170,7 +170,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
     const groupCtx = useContext(AvatarGroupContext);
     const size = sizeProp ?? groupCtx?.size ?? "md";
     const shape = shapeProp ?? groupCtx?.shape ?? "circle";
-    const statusRingClass = groupCtx?.statusRingClass ?? "ring-white";
+    const statusRingClass = groupCtx?.statusRingClass ?? "ring-surface";
 
     const [imgLoaded, setImgLoaded] = useState(false);
     const [imgError, setImgError] = useState(false);
@@ -200,7 +200,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       >
         {/* Skeleton — shown while image is fetching */}
         {src && !imgLoaded && !imgError && (
-          <span className="absolute inset-0 animate-pulse bg-gray-300 motion-reduce:animate-none" />
+          <span className="absolute inset-0 animate-pulse bg-muted motion-reduce:animate-none" />
         )}
 
         {/* Fallback: custom > icon > initials > first letter of alt > "?" */}

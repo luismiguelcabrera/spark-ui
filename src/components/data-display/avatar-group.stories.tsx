@@ -13,7 +13,7 @@ const meta = {
     spacing: { control: "select", options: ["tight", "normal", "loose"] },
     borderColor: {
       control: "select",
-      options: ["white", "gray", "dark", "none"],
+      options: ["auto", "white", "dark", "none"],
     },
     reversed: { control: "boolean" },
   },
@@ -142,16 +142,34 @@ export const RoundedAvatars: Story = {
 // ------------------------------------------------------------------
 // Border color
 // ------------------------------------------------------------------
-export const DarkBackground: Story = {
-  args: { max: 4, size: "lg", borderColor: "dark" },
+export const DarkMode: Story = {
+  args: { max: 4, size: "lg" },
   render: (args) => (
-    <div className="rounded-lg bg-gray-900 p-6">
+    <div className="dark rounded-lg bg-surface p-6">
       <AvatarGroup {...args}>
         <Avatar src="https://i.pravatar.cc/150?u=1" alt="Alice" status="online" />
         <Avatar src="https://i.pravatar.cc/150?u=2" alt="Bob" status="busy" />
         <Avatar src="https://i.pravatar.cc/150?u=3" alt="Charlie" status="away" />
         <Avatar src="https://i.pravatar.cc/150?u=4" alt="Diana" />
         <Avatar src="https://i.pravatar.cc/150?u=5" alt="Eve" />
+        <Avatar initials="FK" color="primary" />
+        <Avatar initials="GR" color="accent" />
+      </AvatarGroup>
+    </div>
+  ),
+};
+
+export const DarkModeInitials: Story = {
+  args: { max: 5, size: "lg" },
+  render: (args) => (
+    <div className="dark rounded-lg bg-surface p-6">
+      <AvatarGroup {...args}>
+        <Avatar initials="AB" color="neutral" />
+        <Avatar initials="CD" color="primary" />
+        <Avatar initials="EF" color="success" />
+        <Avatar initials="GH" color="warning" />
+        <Avatar initials="IJ" color="destructive" />
+        <Avatar initials="KL" color="accent" />
       </AvatarGroup>
     </div>
   ),

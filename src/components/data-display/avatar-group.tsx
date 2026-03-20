@@ -12,7 +12,7 @@ import { AvatarGroupContext, type AvatarSize, type AvatarShape } from "./avatar"
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-type AvatarGroupBorderColor = "white" | "gray" | "dark" | "none";
+type AvatarGroupBorderColor = "auto" | "white" | "dark" | "none";
 
 type AvatarGroupProps = Omit<HTMLAttributes<HTMLDivElement>, "aria-label"> & {
   /** Maximum visible avatars before showing +N */
@@ -40,17 +40,17 @@ type AvatarGroupProps = Omit<HTMLAttributes<HTMLDivElement>, "aria-label"> & {
 // Maps
 // ---------------------------------------------------------------------------
 const borderColorMap: Record<AvatarGroupBorderColor, string> = {
+  auto: "ring-2 ring-surface",
   white: "ring-2 ring-white",
-  gray: "ring-2 ring-gray-100",
   dark: "ring-2 ring-gray-900",
   none: "",
 };
 
 const statusRingMap: Record<AvatarGroupBorderColor, string> = {
+  auto: "ring-surface",
   white: "ring-white",
-  gray: "ring-gray-100",
   dark: "ring-gray-900",
-  none: "ring-white",
+  none: "ring-surface",
 };
 
 const shapeClassMap: Record<AvatarShape, string> = {
@@ -86,7 +86,7 @@ const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
       size = "md",
       shape = "circle",
       spacing = "normal",
-      borderColor = "white",
+      borderColor = "auto",
       renderExcess,
       onExcessClick,
       reversed = false,
@@ -149,8 +149,8 @@ const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
                 aria-label={`${excess} more`}
                 onClick={onExcessClick}
                 className={cn(
-                  "relative flex items-center justify-center font-semibold bg-slate-200 text-slate-600",
-                  "cursor-pointer hover:bg-slate-300 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary",
+                  "relative flex items-center justify-center font-semibold bg-muted text-muted-foreground",
+                  "cursor-pointer hover:brightness-95 dark:hover:brightness-110 transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary",
                   shapeClass,
                   borderClass,
                   counterSizeMap[size]
@@ -162,7 +162,7 @@ const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
               <div
                 aria-label={`${excess} more`}
                 className={cn(
-                  "relative flex items-center justify-center font-semibold bg-slate-200 text-slate-600",
+                  "relative flex items-center justify-center font-semibold bg-muted text-muted-foreground",
                   shapeClass,
                   borderClass,
                   counterSizeMap[size]
