@@ -147,9 +147,11 @@ export const DarkBackground: Story = {
   render: (args) => (
     <div className="rounded-lg bg-gray-900 p-6">
       <AvatarGroup {...args}>
-        {avatars.map((a) => (
-          <Avatar key={a.alt} src={a.src} alt={a.alt} />
-        ))}
+        <Avatar src="https://i.pravatar.cc/150?u=1" alt="Alice" status="online" />
+        <Avatar src="https://i.pravatar.cc/150?u=2" alt="Bob" status="busy" />
+        <Avatar src="https://i.pravatar.cc/150?u=3" alt="Charlie" status="away" />
+        <Avatar src="https://i.pravatar.cc/150?u=4" alt="Diana" />
+        <Avatar src="https://i.pravatar.cc/150?u=5" alt="Eve" />
       </AvatarGroup>
     </div>
   ),
@@ -188,11 +190,31 @@ export const CustomExcess: Story = {
   render: (args) => (
     <AvatarGroup
       {...args}
-      renderExcess={(n) => (
-        <div className="relative flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white text-xs font-semibold ring-2 ring-white">
+      renderExcess={(n, hidden) => (
+        <div
+          title={`Hidden: ${hidden.length} avatars`}
+          className="relative flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white text-xs font-semibold ring-2 ring-white"
+        >
           +{n}
         </div>
       )}
+    >
+      {avatars.map((a) => (
+        <Avatar key={a.alt} src={a.src} alt={a.alt} />
+      ))}
+    </AvatarGroup>
+  ),
+};
+
+// ------------------------------------------------------------------
+// Clickable excess counter
+// ------------------------------------------------------------------
+export const ClickableExcess: Story = {
+  args: { max: 3, size: "md" },
+  render: (args) => (
+    <AvatarGroup
+      {...args}
+      onExcessClick={() => alert("Show all members")}
     >
       {avatars.map((a) => (
         <Avatar key={a.alt} src={a.src} alt={a.alt} />

@@ -183,6 +183,31 @@ export const StatusOnShapes: Story = {
 };
 
 // ------------------------------------------------------------------
+// Custom fallback
+// ------------------------------------------------------------------
+export const CustomFallback: Story = {
+  render: (args) => (
+    <div className="flex items-center gap-4">
+      <Avatar
+        {...args}
+        size="lg"
+        color="primary"
+        fallback={
+          <span className="text-xs font-medium">N/A</span>
+        }
+      />
+      <Avatar
+        {...args}
+        size="lg"
+        fallback={
+          <div className="w-full h-full bg-gradient-to-br from-violet-400 to-pink-400" />
+        }
+      />
+    </div>
+  ),
+};
+
+// ------------------------------------------------------------------
 // Sizes gallery
 // ------------------------------------------------------------------
 export const Sizes: Story = {

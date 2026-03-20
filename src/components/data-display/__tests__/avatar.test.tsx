@@ -26,6 +26,26 @@ describe("Avatar", () => {
     expect(screen.getByAltText("User")).toBeInTheDocument();
   });
 
+  it("renders custom fallback ReactNode", () => {
+    render(
+      <Avatar fallback={<span data-testid="custom-fb">Custom</span>} />
+    );
+    expect(screen.getByTestId("custom-fb")).toBeInTheDocument();
+    expect(screen.queryByText("?")).not.toBeInTheDocument();
+  });
+
+  it("fallback prop takes priority over icon and initials", () => {
+    render(
+      <Avatar
+        fallback={<span data-testid="fb">FB</span>}
+        icon="user"
+        initials="JD"
+      />
+    );
+    expect(screen.getByTestId("fb")).toBeInTheDocument();
+    expect(screen.queryByText("JD")).not.toBeInTheDocument();
+  });
+
   // ------------------------------------------------------------------
   // Accessibility
   // ------------------------------------------------------------------
@@ -179,6 +199,25 @@ describe("Avatar", () => {
       ).toBeInTheDocument();
     }
   );
+
+  it("status dot uses ring-white by default", () => {
+    const { container } = render(<Avatar status="online" />);
+    const dot = container.querySelector("[aria-label='online']") as HTMLElement;
+    expect(dot.className).toContain("ring-white");
+  });
+
+  it("status dot inherits statusRingClass from context", () => {
+    const { container } = render(
+      <AvatarGroupContext.Provider
+        value={{ size: "md", statusRingClass: "ring-gray-900" }}
+      >
+        <Avatar status="online" />
+      </AvatarGroupContext.Provider>
+    );
+    const dot = container.querySelector("[aria-label='online']") as HTMLElement;
+    expect(dot.className).toContain("ring-gray-900");
+    expect(dot.className).not.toContain("ring-white");
+  });
 
   // ------------------------------------------------------------------
   // onLoadingStatusChange

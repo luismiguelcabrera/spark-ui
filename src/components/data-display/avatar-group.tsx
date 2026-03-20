@@ -4,7 +4,6 @@ import {
   isValidElement,
   type HTMLAttributes,
   type ReactNode,
-  type ReactElement,
 } from "react";
 import { cn } from "../../lib/utils";
 import { AvatarGroupContext, type AvatarSize, type AvatarShape } from "./avatar";
@@ -26,7 +25,9 @@ type AvatarGroupProps = HTMLAttributes<HTMLDivElement> & {
   /** Ring color for overlap borders */
   borderColor?: AvatarGroupBorderColor;
   /** Custom render for the +N overflow counter */
-  renderExcess?: (count: number) => ReactNode;
+  renderExcess?: (count: number, hiddenChildren: ReactNode[]) => ReactNode;
+  /** Called when the +N counter is clicked */
+  onExcessClick?: () => void;
   /** Reverse stacking order — first avatar on top */
   reversed?: boolean;
   children: ReactNode;
@@ -40,6 +41,13 @@ const borderColorMap: Record<AvatarGroupBorderColor, string> = {
   gray: "ring-2 ring-gray-100",
   dark: "ring-2 ring-gray-900",
   none: "",
+};
+
+const statusRingMap: Record<AvatarGroupBorderColor, string> = {
+  white: "ring-white",
+  gray: "ring-gray-100",
+  dark: "ring-gray-900",
+  none: "ring-white",
 };
 
 const shapeClassMap: Record<AvatarShape, string> = {
@@ -77,6 +85,7 @@ const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
       spacing = "normal",
       borderColor = "white",
       renderExcess,
+      onExcessClick,
       reversed = false,
       children,
       ...props
@@ -85,20 +94,23 @@ const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
   ) => {
     const childArray = Children.toArray(children);
     const visible = childArray.slice(0, max);
-    const excess = childArray.length - max;
+    const hidden = childArray.slice(max);
+    const excess = hidden.length;
 
     const borderClass = borderColorMap[borderColor];
     const shapeClass = shapeClassMap[shape];
     const spacingClass = spacingMatrix[size][spacing];
 
     return (
-      <AvatarGroupContext.Provider value={{ size, shape }}>
+      <AvatarGroupContext.Provider
+        value={{ size, shape, statusRingClass: statusRingMap[borderColor] }}
+      >
         <div
           ref={ref}
           role="group"
           aria-label={
             props["aria-label"] ??
-            `Avatar group, ${childArray.length} users`
+            `Group of ${childArray.length} avatars`
           }
           className={cn("flex items-center", spacingClass, className)}
           {...props}
@@ -126,15 +138,30 @@ const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
 
           {excess > 0 &&
             (renderExcess ? (
-              renderExcess(excess)
+              renderExcess(excess, hidden)
             ) : (
               <div
-                aria-label={`${excess} more users`}
+                role={onExcessClick ? "button" : undefined}
+                tabIndex={onExcessClick ? 0 : undefined}
+                aria-label={`${excess} more`}
+                onClick={onExcessClick}
+                onKeyDown={
+                  onExcessClick
+                    ? (e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          onExcessClick();
+                        }
+                      }
+                    : undefined
+                }
                 className={cn(
                   "relative flex items-center justify-center font-semibold bg-slate-200 text-slate-600",
                   shapeClass,
                   borderClass,
-                  counterSizeMap[size]
+                  counterSizeMap[size],
+                  onExcessClick &&
+                    "cursor-pointer hover:bg-slate-300 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
                 )}
               >
                 +{excess}

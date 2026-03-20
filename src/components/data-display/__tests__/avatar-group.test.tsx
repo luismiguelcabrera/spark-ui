@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
 import { AvatarGroup } from "../avatar-group";
 import { Avatar } from "../avatar";
 
@@ -55,7 +55,7 @@ describe("AvatarGroup", () => {
     expect(screen.getByRole("group")).toBeInTheDocument();
   });
 
-  it("has a default aria-label with user count", () => {
+  it("has a default aria-label with avatar count", () => {
     render(
       <AvatarGroup>
         <span>A1</span>
@@ -65,7 +65,7 @@ describe("AvatarGroup", () => {
     );
     expect(screen.getByRole("group")).toHaveAttribute(
       "aria-label",
-      "Avatar group, 3 users"
+      "Group of 3 avatars"
     );
   });
 
@@ -90,7 +90,7 @@ describe("AvatarGroup", () => {
       </AvatarGroup>
     );
     const counter = screen.getByText("+2");
-    expect(counter).toHaveAttribute("aria-label", "2 more users");
+    expect(counter).toHaveAttribute("aria-label", "2 more");
   });
 
   // ------------------------------------------------------------------
@@ -142,7 +142,6 @@ describe("AvatarGroup", () => {
         <Avatar initials="AB" />
       </AvatarGroup>
     );
-    // The Avatar should pick up lg size (w-12 h-12) from context
     const avatar = container.querySelector("[role='img']") as HTMLElement;
     expect(avatar.className).toContain("w-12");
   });
@@ -192,12 +191,27 @@ describe("AvatarGroup", () => {
     expect(container.querySelector(".ring-2")).not.toBeInTheDocument();
   });
 
+  it("propagates statusRingClass matching borderColor to children", () => {
+    const { container } = render(
+      <AvatarGroup borderColor="dark">
+        <Avatar status="online" initials="AB" />
+      </AvatarGroup>
+    );
+    const dot = container.querySelector("[aria-label='online']") as HTMLElement;
+    expect(dot.className).toContain("ring-gray-900");
+  });
+
   // ------------------------------------------------------------------
   // renderExcess
   // ------------------------------------------------------------------
   it("uses renderExcess for custom counter", () => {
     render(
-      <AvatarGroup max={1} renderExcess={(n) => <span data-testid="custom-counter">and {n} more</span>}>
+      <AvatarGroup
+        max={1}
+        renderExcess={(n) => (
+          <span data-testid="custom-counter">and {n} more</span>
+        )}
+      >
         <span>A1</span>
         <span>A2</span>
         <span>A3</span>
@@ -207,6 +221,64 @@ describe("AvatarGroup", () => {
       "and 2 more"
     );
     expect(screen.queryByText("+2")).not.toBeInTheDocument();
+  });
+
+  it("passes hidden children to renderExcess", () => {
+    const renderExcess = vi.fn(
+      (n: number, _hidden: unknown[]) => <span>+{n}</span>
+    );
+    render(
+      <AvatarGroup max={1} renderExcess={renderExcess}>
+        <span>A1</span>
+        <span>A2</span>
+        <span>A3</span>
+      </AvatarGroup>
+    );
+    expect(renderExcess).toHaveBeenCalledWith(2, expect.any(Array));
+    const [, hidden] = renderExcess.mock.calls[0];
+    expect(hidden).toHaveLength(2);
+  });
+
+  // ------------------------------------------------------------------
+  // onExcessClick
+  // ------------------------------------------------------------------
+  it("makes counter clickable when onExcessClick is provided", () => {
+    const onClick = vi.fn();
+    render(
+      <AvatarGroup max={1} onExcessClick={onClick}>
+        <span>A1</span>
+        <span>A2</span>
+      </AvatarGroup>
+    );
+    const counter = screen.getByText("+1");
+    expect(counter).toHaveAttribute("role", "button");
+    expect(counter).toHaveAttribute("tabindex", "0");
+    fireEvent.click(counter);
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("counter responds to Enter key when onExcessClick is provided", () => {
+    const onClick = vi.fn();
+    render(
+      <AvatarGroup max={1} onExcessClick={onClick}>
+        <span>A1</span>
+        <span>A2</span>
+      </AvatarGroup>
+    );
+    const counter = screen.getByText("+1");
+    fireEvent.keyDown(counter, { key: "Enter" });
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("counter has no role when onExcessClick is not provided", () => {
+    render(
+      <AvatarGroup max={1}>
+        <span>A1</span>
+        <span>A2</span>
+      </AvatarGroup>
+    );
+    const counter = screen.getByText("+1");
+    expect(counter).not.toHaveAttribute("role");
   });
 
   // ------------------------------------------------------------------

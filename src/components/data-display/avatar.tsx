@@ -5,6 +5,7 @@ import {
   useState,
   useEffect,
   useCallback,
+  useRef,
   createContext,
   useContext,
   type ReactNode,
@@ -19,6 +20,7 @@ import { Icon } from "./icon";
 type AvatarGroupContextValue = {
   size?: AvatarSize;
   shape?: AvatarShape;
+  statusRingClass?: string;
 };
 export const AvatarGroupContext = createContext<AvatarGroupContextValue | null>(
   null
@@ -126,6 +128,8 @@ type AvatarProps = {
   initials?: string;
   /** Fallback icon — name string resolved via Icon, or a ReactNode */
   icon?: string | ReactNode;
+  /** Custom fallback content — overrides initials/icon when no image */
+  fallback?: ReactNode;
   /** Background color for the fallback state */
   color?: AvatarColor;
   /** Shape of the avatar */
@@ -147,6 +151,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       alt = "",
       initials,
       icon,
+      fallback,
       color = "neutral",
       shape: shapeProp,
       status,
@@ -160,9 +165,14 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
     const groupCtx = useContext(AvatarGroupContext);
     const size = sizeProp ?? groupCtx?.size ?? "md";
     const shape = shapeProp ?? groupCtx?.shape ?? "circle";
+    const statusRingClass = groupCtx?.statusRingClass ?? "ring-white";
 
     const [imgLoaded, setImgLoaded] = useState(false);
     const [imgError, setImgError] = useState(false);
+
+    // Keep latest callback in a ref so imgCallbackRef never goes stale
+    const onStatusRef = useRef(onLoadingStatusChange);
+    onStatusRef.current = onLoadingStatusChange;
 
     // Ref callback detects already-cached images on mount
     const imgCallbackRef = useCallback(
@@ -171,35 +181,37 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         if (img.complete) {
           if (img.naturalWidth > 0) {
             setImgLoaded(true);
-            onLoadingStatusChange?.("loaded");
+            onStatusRef.current?.("loaded");
           } else {
             setImgError(true);
-            onLoadingStatusChange?.("error");
+            onStatusRef.current?.("error");
           }
         }
       },
-      // eslint-disable-next-line react-hooks/exhaustive-deps -- only care about callback identity
       []
     );
 
     useEffect(() => {
       setImgLoaded(false); // eslint-disable-line react-hooks/set-state-in-effect -- reset on src change
       setImgError(false);
-      if (src) onLoadingStatusChange?.("loading");
-      // eslint-disable-next-line react-hooks/exhaustive-deps -- only reset on src change
+      if (src) onStatusRef.current?.("loading");
     }, [src]);
 
-    const fallbackText =
-      initials ?? (alt ? alt.charAt(0).toUpperCase() : "?");
     const showFallback = !src || imgError;
 
-    const iconContent = icon ? (
-      typeof icon === "string" ? (
-        <Icon name={icon} size={iconSizeMap[size]} className="text-current" />
+    const fallbackContent = fallback ?? (
+      icon ? (
+        typeof icon === "string" ? (
+          <Icon name={icon} size={iconSizeMap[size]} className="text-current" />
+        ) : (
+          icon
+        )
       ) : (
-        icon
+        <span aria-hidden="true" className="font-bold">
+          {initials ?? (alt ? alt.charAt(0).toUpperCase() : "?")}
+        </span>
       )
-    ) : null;
+    );
 
     return (
       <div
@@ -217,13 +229,8 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
           <span className="absolute inset-0 animate-pulse bg-gray-300 motion-reduce:animate-none" />
         )}
 
-        {/* Fallback: icon > initials > first letter of alt > "?" */}
-        {showFallback &&
-          (iconContent ?? (
-            <span aria-hidden="true" className="font-bold">
-              {fallbackText}
-            </span>
-          ))}
+        {/* Fallback: custom > icon > initials > first letter of alt > "?" */}
+        {showFallback && fallbackContent}
 
         {/* Image — fades in once loaded */}
         {src && !imgError && (
@@ -237,11 +244,11 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
             )}
             onLoad={() => {
               setImgLoaded(true);
-              onLoadingStatusChange?.("loaded");
+              onStatusRef.current?.("loaded");
             }}
             onError={() => {
               setImgError(true);
-              onLoadingStatusChange?.("error");
+              onStatusRef.current?.("error");
             }}
           />
         )}
@@ -251,7 +258,8 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
           <span
             aria-label={status}
             className={cn(
-              "absolute block rounded-full ring-2 ring-white",
+              "absolute block rounded-full ring-2",
+              statusRingClass,
               statusColorMap[status],
               statusSizeMap[size],
               statusPositionMap[shape]
