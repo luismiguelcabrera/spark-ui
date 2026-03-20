@@ -109,13 +109,13 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label className="text-sm font-medium text-slate-700">{label}</label>
+          <label className="text-sm font-medium text-navy-text">{label}</label>
         )}
         <div
           className={cn(
-            "inline-flex items-center rounded-xl border bg-slate-50 transition-colors",
+            "inline-flex items-center rounded-xl border bg-muted/50 transition-colors",
             "focus-within:ring-2 focus-within:ring-primary focus-within:border-primary",
-            error ? "border-red-300" : "border-slate-200",
+            error ? "border-destructive/50" : "border-muted",
             disabled && "opacity-50 cursor-not-allowed",
             className
           )}
@@ -127,7 +127,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
               onClick={decrement}
               disabled={disabled || value <= min}
               className={cn(
-                "flex items-center justify-center border-r border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors",
+                "flex items-center justify-center border-r border-muted text-muted-foreground hover:bg-muted transition-colors",
                 "disabled:opacity-30 disabled:cursor-not-allowed",
                 buttonSizeMap[size],
                 sizeMap[size]
@@ -164,7 +164,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
               onClick={increment}
               disabled={disabled || value >= max}
               className={cn(
-                "flex items-center justify-center border-l border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors",
+                "flex items-center justify-center border-l border-muted text-muted-foreground hover:bg-muted transition-colors",
                 "disabled:opacity-30 disabled:cursor-not-allowed",
                 buttonSizeMap[size],
                 sizeMap[size]
@@ -175,7 +175,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
             </button>
           )}
         </div>
-        {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
+        {error && <p className="text-xs text-destructive font-medium">{error}</p>}
       </div>
     );
   }

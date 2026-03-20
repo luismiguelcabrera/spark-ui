@@ -354,9 +354,9 @@ const Cascader = forwardRef<HTMLDivElement, CascaderProps>(
             aria-label={ariaLabel ?? placeholder}
             tabIndex={disabled ? -1 : 0}
             className={cn(
-              "flex items-center rounded-xl border bg-slate-50 transition-colors cursor-pointer",
+              "flex items-center rounded-xl border bg-muted/50 transition-colors cursor-pointer",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-              "border-slate-200",
+              "border-muted",
               disabled && "opacity-50 cursor-not-allowed",
               sizeMap[size],
             )}
@@ -386,7 +386,7 @@ const Cascader = forwardRef<HTMLDivElement, CascaderProps>(
                   setFocusedIndex(0);
                 }}
                 placeholder={displayText || placeholder}
-                className="flex-1 bg-transparent outline-none placeholder:text-slate-500 text-inherit min-w-0"
+                className="flex-1 bg-transparent outline-none placeholder:text-muted-foreground text-inherit min-w-0"
                 aria-label="Search options"
                 onClick={(e) => e.stopPropagation()}
               />
@@ -394,7 +394,7 @@ const Cascader = forwardRef<HTMLDivElement, CascaderProps>(
               <span
                 className={cn(
                   "flex-1 truncate",
-                  !displayText && "text-slate-600",
+                  !displayText && "text-muted-foreground",
                 )}
               >
                 {displayText || placeholder}
@@ -404,7 +404,7 @@ const Cascader = forwardRef<HTMLDivElement, CascaderProps>(
               name="expand_more"
               size="sm"
               className={cn(
-                "text-slate-500 transition-transform shrink-0 ml-1",
+                "text-muted-foreground transition-transform shrink-0 ml-1",
                 isOpen && "rotate-180",
               )}
             />
@@ -413,14 +413,14 @@ const Cascader = forwardRef<HTMLDivElement, CascaderProps>(
           {/* Dropdown */}
           {isOpen && !disabled && (
             <div
-              className="absolute z-50 mt-1 rounded-xl border border-slate-200 bg-white shadow-lg overflow-hidden"
+              className="absolute z-50 mt-1 rounded-xl border border-muted bg-surface shadow-lg overflow-hidden"
               role="listbox"
             >
               {query && searchable ? (
                 /* Search results */
                 <ul className="max-h-60 overflow-auto py-1 min-w-[200px]">
                   {searchResults.length === 0 && (
-                    <li className={cn("px-4 py-3 text-slate-600", dropdownTextSize[size])}>
+                    <li className={cn("px-4 py-3 text-muted-foreground", dropdownTextSize[size])}>
                       No results found.
                     </li>
                   )}
@@ -434,8 +434,8 @@ const Cascader = forwardRef<HTMLDivElement, CascaderProps>(
                       className={cn(
                         "px-4 py-2.5 cursor-pointer transition-colors",
                         dropdownTextSize[size],
-                        index === focusedIndex && "bg-slate-50",
-                        index !== focusedIndex && "hover:bg-slate-50",
+                        index === focusedIndex && "bg-muted/50",
+                        index !== focusedIndex && "hover:bg-muted/50",
                       )}
                       onClick={() => handleSearchSelect(path)}
                       onMouseEnter={() => setFocusedIndex(index)}
@@ -452,7 +452,7 @@ const Cascader = forwardRef<HTMLDivElement, CascaderProps>(
                       key={colIndex}
                       className={cn(
                         "max-h-60 overflow-auto py-1 min-w-[150px]",
-                        colIndex > 0 && "border-l border-slate-200",
+                        colIndex > 0 && "border-l border-muted",
                       )}
                       role="group"
                     >
@@ -475,9 +475,9 @@ const Cascader = forwardRef<HTMLDivElement, CascaderProps>(
                               "flex items-center justify-between gap-2 px-4 py-2.5 cursor-pointer transition-colors",
                               dropdownTextSize[size],
                               (isExpanded || isSelectedLeaf) && "bg-primary/5 text-primary",
-                              isFocused && "bg-slate-50",
+                              isFocused && "bg-muted/50",
                               option.disabled && "opacity-50 cursor-not-allowed",
-                              !option.disabled && !isExpanded && !isSelectedLeaf && !isFocused && "hover:bg-slate-50",
+                              !option.disabled && !isExpanded && !isSelectedLeaf && !isFocused && "hover:bg-muted/50",
                             )}
                             onClick={() => handleSelect(option, colIndex)}
                             onMouseEnter={() => {
@@ -488,7 +488,7 @@ const Cascader = forwardRef<HTMLDivElement, CascaderProps>(
                           >
                             <span className="truncate">{option.label}</span>
                             {option.children && option.children.length > 0 && (
-                              <Icon name="chevron_right" size="sm" className="text-slate-500 shrink-0" />
+                              <Icon name="chevron_right" size="sm" className="text-muted-foreground shrink-0" />
                             )}
                             {isSelectedLeaf && (
                               <Icon name="check" size="sm" className="text-primary shrink-0" />

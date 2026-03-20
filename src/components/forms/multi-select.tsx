@@ -239,7 +239,7 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
     return (
       <div ref={ref} className={cn("flex flex-col gap-1.5", className)}>
         {label && (
-          <label className="text-sm font-medium text-slate-700">{label}</label>
+          <label className="text-sm font-medium text-navy-text">{label}</label>
         )}
         <div ref={containerRef} className="relative">
           {/* Trigger / chip area */}
@@ -251,11 +251,11 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
             aria-label={ariaLabel ?? label ?? placeholder}
             tabIndex={disabled ? -1 : 0}
             className={cn(
-              "flex flex-wrap items-center gap-1.5 rounded-xl border bg-slate-50 px-3 py-2 transition-colors cursor-text",
+              "flex flex-wrap items-center gap-1.5 rounded-xl border bg-muted/50 px-3 py-2 transition-colors cursor-text",
               "focus-within:ring-2 focus-within:ring-primary focus-within:border-primary",
               error
-                ? "border-red-300 focus-within:border-red-500 focus-within:ring-red-500/20"
-                : "border-slate-200",
+                ? "border-destructive/50 focus-within:border-destructive focus-within:ring-destructive/20"
+                : "border-muted",
               disabled && "cursor-not-allowed",
               sizeMap[size],
             )}
@@ -284,7 +284,7 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
                       e.stopPropagation();
                       removeValue(opt.value);
                     }}
-                    className="hover:text-red-500 transition-colors"
+                    className="hover:text-destructive transition-colors"
                     aria-label={`Remove ${opt.label}`}
                   >
                     <Icon name="close" size={chipIconSize[size]} />
@@ -306,14 +306,14 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
                 }}
                 onFocus={() => setIsOpen(true)}
                 placeholder={selected.length === 0 ? placeholder : searchPlaceholder}
-                className="flex-1 min-w-[80px] bg-transparent outline-none placeholder:text-slate-500 text-inherit"
+                className="flex-1 min-w-[80px] bg-transparent outline-none placeholder:text-muted-foreground text-inherit"
                 aria-label="Search options"
               />
             )}
 
             {/* Placeholder when not searchable and nothing selected */}
             {(!searchable || disabled || atLimit) && selected.length === 0 && (
-              <span className="text-slate-600">{placeholder}</span>
+              <span className="text-muted-foreground">{placeholder}</span>
             )}
 
             {/* Right side: clear + chevron */}
@@ -325,7 +325,7 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
                     e.stopPropagation();
                     clearAll();
                   }}
-                  className="text-slate-600 hover:text-slate-700 transition-colors"
+                  className="text-muted-foreground hover:text-navy-text transition-colors"
                   aria-label="Clear all selections"
                 >
                   <Icon name="close" size="sm" />
@@ -335,7 +335,7 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
                 name="chevron-down"
                 size="sm"
                 className={cn(
-                  "text-slate-500 transition-transform",
+                  "text-muted-foreground transition-transform",
                   isOpen && "rotate-180",
                 )}
               />
@@ -348,10 +348,10 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
               ref={listRef}
               role="listbox"
               aria-multiselectable="true"
-              className="absolute z-50 mt-1 w-full max-h-60 overflow-auto rounded-xl border border-slate-200 bg-white py-1 shadow-float"
+              className="absolute z-50 mt-1 w-full max-h-60 overflow-auto rounded-xl border border-muted bg-surface py-1 shadow-float"
             >
               {filteredOptions.length === 0 && (
-                <li className="px-4 py-3 text-sm text-slate-600">
+                <li className="px-4 py-3 text-sm text-muted-foreground">
                   {query ? "No results found." : "No options available."}
                 </li>
               )}
@@ -366,9 +366,9 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
                     aria-disabled={isDisabledOption}
                     className={cn(
                       "flex items-center gap-2 px-4 py-2.5 text-sm cursor-pointer transition-colors",
-                      isHighlighted && "bg-slate-50",
+                      isHighlighted && "bg-muted/50",
                       isDisabledOption && "opacity-50 cursor-not-allowed",
-                      !isDisabledOption && !isHighlighted && "hover:bg-slate-50",
+                      !isDisabledOption && !isHighlighted && "hover:bg-muted/50",
                     )}
                     onClick={() => {
                       if (!isDisabledOption) toggleOption(option.value);
@@ -381,7 +381,7 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
                         "w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors",
                         selected.includes(option.value)
                           ? "bg-primary border-primary text-white"
-                          : "border-slate-300",
+                          : "border-muted",
                       )}
                     >
                       {selected.includes(option.value) && (
@@ -398,11 +398,11 @@ const MultiSelect = forwardRef<HTMLDivElement, MultiSelectProps>(
 
         {/* Meta info */}
         {maxSelections && (
-          <p className="text-xs text-slate-600">
+          <p className="text-xs text-muted-foreground">
             {selected.length}/{maxSelections} selected
           </p>
         )}
-        {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
+        {error && <p className="text-xs text-destructive font-medium">{error}</p>}
       </div>
     );
   },

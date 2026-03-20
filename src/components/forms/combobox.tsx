@@ -374,7 +374,7 @@ const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
     const renderList = () => {
       if (filtered.length === 0) {
         return (
-          <li className="px-3 py-6 text-center text-sm text-slate-600">
+          <li className="px-3 py-6 text-center text-sm text-muted-foreground">
             No results found
           </li>
         );
@@ -441,8 +441,8 @@ const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
             "flex items-center justify-between text-left",
             s.inputFocus,
             s.inputDisabled,
-            !displayLabel && "text-slate-600",
-            error && "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+            !displayLabel && "text-muted-foreground",
+            error && "border-destructive/50 focus:border-destructive focus:ring-destructive/20"
           )}
           onClick={() => (open ? closeDropdown() : openDropdown())}
         >
@@ -452,24 +452,24 @@ const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
           <Icon
             name={open ? "expand_less" : "expand_more"}
             size="sm"
-            className="text-slate-500 shrink-0 ml-2"
+            className="text-muted-foreground shrink-0 ml-2"
           />
         </button>
 
         {/* Error message */}
         {error && (
-          <p className="mt-1.5 text-xs text-red-600 font-medium">{error}</p>
+          <p className="mt-1.5 text-xs text-destructive font-medium">{error}</p>
         )}
 
         {/* Dropdown */}
         {open && (
           <div
             className={cn(
-              "absolute z-50 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-float overflow-hidden"
+              "absolute z-50 mt-1 w-full bg-surface border border-muted rounded-xl shadow-float overflow-hidden"
             )}
           >
             {/* Search input */}
-            <div className="p-2 border-b border-slate-100">
+            <div className="p-2 border-b border-muted/50">
               <input
                 ref={inputRef}
                 type="text"
@@ -482,8 +482,8 @@ const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
                   setHighlightIndex(0);
                 }}
                 className={cn(
-                  "w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg",
-                  "placeholder:text-slate-500",
+                  "w-full px-3 py-2 text-sm bg-muted/50 border border-muted rounded-lg",
+                  "placeholder:text-muted-foreground",
                   "focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                 )}
               />

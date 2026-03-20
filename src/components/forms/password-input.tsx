@@ -27,7 +27,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
               s.inputFocus,
               s.inputDisabled,
               "transition-colors duration-150",
-              error && "border-red-300 focus:border-red-500 focus:ring-red-500/20",
+              error && "border-destructive/50 focus:border-destructive focus:ring-destructive/20",
               className
             )}
             ref={ref}
@@ -39,7 +39,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             aria-label={visible ? "Hide password" : "Show password"}
             onClick={() => setVisible((v) => !v)}
             className={cn(
-              "absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-700",
+              "absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-navy-text",
               "transition-colors duration-150",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
             )}
@@ -48,7 +48,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
           </button>
         </div>
         {error && (
-          <p id={id ? `${id}-error` : undefined} className="text-xs text-red-600 font-medium" role="alert">{error}</p>
+          <p id={id ? `${id}-error` : undefined} className="text-xs text-destructive font-medium" role="alert">{error}</p>
         )}
       </div>
     );

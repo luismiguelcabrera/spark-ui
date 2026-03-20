@@ -43,7 +43,7 @@ const tagSizeMap = {
 const tagColorMap = {
   primary: "bg-primary/10 text-primary border-primary/20",
   secondary: "bg-secondary/10 text-secondary border-secondary/20",
-  default: "bg-slate-100 text-slate-700 border-slate-200",
+  default: "bg-muted text-navy-text border-muted",
 };
 
 const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
@@ -109,13 +109,13 @@ const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label className="text-sm font-medium text-slate-700">{label}</label>
+          <label className="text-sm font-medium text-navy-text">{label}</label>
         )}
         <div
           className={cn(
-            "flex flex-wrap items-center gap-1.5 rounded-xl border bg-slate-50 px-3 py-2 transition-colors cursor-text",
+            "flex flex-wrap items-center gap-1.5 rounded-xl border bg-muted/50 px-3 py-2 transition-colors cursor-text",
             "focus-within:ring-2 focus-within:ring-primary focus-within:border-primary",
-            error ? "border-red-300" : "border-slate-200",
+            error ? "border-destructive/50" : "border-muted",
             disabled && "cursor-not-allowed",
             sizeMap[size],
             className
@@ -139,7 +139,7 @@ const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
                     e.stopPropagation();
                     removeTag(index);
                   }}
-                  className="hover:text-red-500 transition-colors"
+                  className="hover:text-destructive transition-colors"
                   aria-label={`Remove ${tag}`}
                 >
                   <Icon name="close" size="sm" />
@@ -161,16 +161,16 @@ const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
             onPaste={handlePaste}
             placeholder={tags.length === 0 ? placeholder : ""}
             disabled={disabled || (maxTags !== undefined && tags.length >= maxTags)}
-            className="flex-1 min-w-[80px] bg-transparent outline-none text-sm placeholder:text-slate-500"
+            className="flex-1 min-w-[80px] bg-transparent outline-none text-sm placeholder:text-muted-foreground"
             {...props}
           />
         </div>
         {maxTags && (
-          <p className="text-xs text-slate-600">
+          <p className="text-xs text-muted-foreground">
             {tags.length}/{maxTags} tags
           </p>
         )}
-        {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
+        {error && <p className="text-xs text-destructive font-medium">{error}</p>}
       </div>
     );
   }

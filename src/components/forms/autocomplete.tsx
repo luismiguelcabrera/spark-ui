@@ -314,7 +314,7 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       <div ref={wrapperRef} className="flex flex-col gap-1.5 relative">
         {/* Label */}
         {label && (
-          <label className="text-sm font-medium text-slate-700">{label}</label>
+          <label className="text-sm font-medium text-navy-text">{label}</label>
         )}
 
         {/* Input wrapper */}
@@ -343,7 +343,7 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
               s.inputDisabled,
               sizeMap[size],
               "pr-10",
-              error && "border-red-300 focus:border-red-500 focus:ring-red-500/20",
+              error && "border-destructive/50 focus:border-destructive focus:ring-destructive/20",
               className
             )}
           />
@@ -356,7 +356,7 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
               <Icon
                 name="expand_more"
                 size="sm"
-                className="text-slate-500"
+                className="text-muted-foreground"
               />
             )}
           </div>
@@ -365,16 +365,16 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
         {/* Dropdown */}
         {showDropdown && (
           <div
-            className="absolute top-full left-0 z-50 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-float overflow-hidden"
+            className="absolute top-full left-0 z-50 mt-1 w-full bg-surface border border-muted rounded-xl shadow-float overflow-hidden"
             style={{ marginTop: label ? undefined : undefined }}
           >
             {showLoading ? (
-              <div className="flex items-center gap-2 px-3 py-6 justify-center text-sm text-slate-600">
+              <div className="flex items-center gap-2 px-3 py-6 justify-center text-sm text-muted-foreground">
                 <Spinner size="sm" color="muted" />
                 <span>{loadingMessage}</span>
               </div>
             ) : displayOptions.length === 0 ? (
-              <div className="px-3 py-6 text-center text-sm text-slate-600">
+              <div className="px-3 py-6 text-center text-sm text-muted-foreground">
                 {emptyMessage}
               </div>
             ) : (
@@ -414,7 +414,7 @@ const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
 
         {/* Error message */}
         {error && (
-          <p className="text-xs text-red-600 font-medium" role="alert">
+          <p className="text-xs text-destructive font-medium" role="alert">
             {error}
           </p>
         )}

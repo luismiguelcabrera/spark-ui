@@ -23,13 +23,13 @@ const FileUploadZone = forwardRef<HTMLDivElement, FileUploadZoneProps>(
         )}
         {...props}
       >
-        <div className={cn(s.iconBox, "w-12 h-12 rounded-xl bg-slate-100 mb-3")}>
-          <Icon name="cloud_upload" size="lg" className="text-slate-500" />
+        <div className={cn(s.iconBox, "w-12 h-12 rounded-xl bg-muted mb-3")}>
+          <Icon name="cloud_upload" size="lg" className="text-muted-foreground" />
         </div>
         <p className="text-sm font-semibold text-secondary">
           Drop files here or click to upload
         </p>
-        <p className="text-xs text-slate-600 mt-1">
+        <p className="text-xs text-muted-foreground mt-1">
           {accept ?? "PNG, JPG, PDF up to 10MB"}
         </p>
       </div>
@@ -74,12 +74,12 @@ const FileUploadItem = forwardRef<HTMLDivElement, FileUploadItemProps>(
                 name={statusIcon}
                 size="sm"
                 className={cn(
-                  file.status === "complete" ? "text-green-700" : "text-red-600"
+                  file.status === "complete" ? "text-success" : "text-destructive"
                 )}
               />
             )}
           </div>
-          <p className="text-xs text-slate-600">{file.size}</p>
+          <p className="text-xs text-muted-foreground">{file.size}</p>
           {file.progress !== undefined && file.status === "uploading" && (
             <ProgressBar value={file.progress} size="sm" className="mt-2" />
           )}

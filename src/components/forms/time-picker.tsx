@@ -96,36 +96,36 @@ const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(
 
     return (
       <div ref={containerRef} className={cn("relative", className)}>
-        {label && <label className="block text-sm font-medium text-slate-700 mb-1.5">{label}</label>}
+        {label && <label className="block text-sm font-medium text-navy-text mb-1.5">{label}</label>}
         <button
           type="button"
           disabled={disabled}
           onClick={() => setOpen(!open)}
           className={cn(
-            "flex items-center gap-2 w-full h-10 px-3 bg-slate-50 border rounded-xl text-sm transition-colors text-left",
+            "flex items-center gap-2 w-full h-10 px-3 bg-muted/50 border rounded-xl text-sm transition-colors text-left",
             "focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary",
             "disabled:opacity-50 disabled:cursor-not-allowed",
-            error ? "border-red-300" : "border-slate-200"
+            error ? "border-destructive/50" : "border-muted"
           )}
         >
-          <Icon name="clock" size="sm" className="text-slate-500 shrink-0" />
-          <span className={cn("flex-1", !displayValue && "text-slate-600")}>
+          <Icon name="clock" size="sm" className="text-muted-foreground shrink-0" />
+          <span className={cn("flex-1", !displayValue && "text-muted-foreground")}>
             {displayValue || placeholder}
           </span>
-          <Icon name="chevron-down" size="sm" className="text-slate-500 shrink-0" />
+          <Icon name="chevron-down" size="sm" className="text-muted-foreground shrink-0" />
         </button>
-        {error && <p className="mt-1 text-xs text-red-600 font-medium">{error}</p>}
+        {error && <p className="mt-1 text-xs text-destructive font-medium">{error}</p>}
 
         {open && (
           <div
             ref={ref}
-            className="absolute z-50 top-full mt-2 bg-white border border-slate-200 rounded-2xl shadow-float p-3 w-[240px]"
+            className="absolute z-50 top-full mt-2 bg-surface border border-muted rounded-2xl shadow-float p-3 w-[240px]"
             {...props}
           >
             <div className="flex gap-2">
               {/* Hours */}
               <div className="flex-1">
-                <div className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider text-center mb-1">
+                <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider text-center mb-1">
                   Hour
                 </div>
                 <div className="max-h-48 overflow-y-auto space-y-0.5 pr-1 custom-scrollbar">
@@ -138,7 +138,7 @@ const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(
                         "w-full py-1.5 rounded-lg text-sm font-medium transition-colors text-center",
                         currentTime?.hour === h
                           ? "bg-primary text-white"
-                          : "text-slate-600 hover:bg-slate-50"
+                          : "text-muted-foreground hover:bg-muted/50"
                       )}
                     >
                       {pad(h)}
@@ -147,11 +147,11 @@ const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(
                 </div>
               </div>
 
-              <div className="w-px bg-slate-200" />
+              <div className="w-px bg-muted" />
 
               {/* Minutes */}
               <div className="flex-1">
-                <div className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider text-center mb-1">
+                <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider text-center mb-1">
                   Min
                 </div>
                 <div className="max-h-48 overflow-y-auto space-y-0.5 pr-1 custom-scrollbar">
@@ -164,7 +164,7 @@ const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(
                         "w-full py-1.5 rounded-lg text-sm font-medium transition-colors text-center",
                         currentTime?.minute === m
                           ? "bg-primary text-white"
-                          : "text-slate-600 hover:bg-slate-50"
+                          : "text-muted-foreground hover:bg-muted/50"
                       )}
                     >
                       {pad(m)}

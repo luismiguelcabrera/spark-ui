@@ -149,30 +149,30 @@ const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
 
     return (
       <div ref={containerRef} className={cn("relative", className)}>
-        {label && <label className="block text-sm font-medium text-slate-700 mb-1.5">{label}</label>}
+        {label && <label className="block text-sm font-medium text-navy-text mb-1.5">{label}</label>}
         <button
           type="button"
           disabled={disabled}
           onClick={() => setOpen(!open)}
           className={cn(
-            "flex items-center gap-2 w-full h-10 px-3 bg-slate-50 border rounded-xl text-sm transition-colors text-left",
+            "flex items-center gap-2 w-full h-10 px-3 bg-muted/50 border rounded-xl text-sm transition-colors text-left",
             "focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary",
             "disabled:opacity-50 disabled:cursor-not-allowed",
-            error ? "border-red-300" : "border-slate-200"
+            error ? "border-destructive/50" : "border-muted"
           )}
         >
-          <Icon name="calendar" size="sm" className="text-slate-500 shrink-0" />
-          <span className={cn("flex-1 truncate", !displayValue && "text-slate-600")}>
+          <Icon name="calendar" size="sm" className="text-muted-foreground shrink-0" />
+          <span className={cn("flex-1 truncate", !displayValue && "text-muted-foreground")}>
             {displayValue || resolvedPlaceholder}
           </span>
-          <Icon name="chevron-down" size="sm" className="text-slate-500 shrink-0" />
+          <Icon name="chevron-down" size="sm" className="text-muted-foreground shrink-0" />
         </button>
-        {error && <p className="mt-1 text-xs text-red-600 font-medium">{error}</p>}
+        {error && <p className="mt-1 text-xs text-destructive font-medium">{error}</p>}
 
         {open && (
           <div
             ref={ref}
-            className="absolute z-50 top-full mt-2 bg-white border border-slate-200 rounded-2xl shadow-float p-4 w-[300px]"
+            className="absolute z-50 top-full mt-2 bg-surface border border-muted rounded-2xl shadow-float p-4 w-[300px]"
             {...props}
           >
             {/* Header */}
@@ -180,7 +180,7 @@ const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
               <button
                 type="button"
                 onClick={prevMonth}
-                className="p-1 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
+                className="p-1 rounded-lg hover:bg-muted text-muted-foreground transition-colors"
               >
                 <Icon name="chevron-left" size="sm" />
               </button>
@@ -190,7 +190,7 @@ const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
               <button
                 type="button"
                 onClick={nextMonth}
-                className="p-1 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors"
+                className="p-1 rounded-lg hover:bg-muted text-muted-foreground transition-colors"
               >
                 <Icon name="chevron-right" size="sm" />
               </button>
@@ -199,7 +199,7 @@ const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
             {/* Day labels */}
             <div className="grid grid-cols-7 mb-1">
               {days.map((d) => (
-                <div key={d} className="text-center text-[11px] font-semibold text-slate-600 py-1">
+                <div key={d} className="text-center text-[11px] font-semibold text-muted-foreground py-1">
                   {d}
                 </div>
               ))}
@@ -229,12 +229,12 @@ const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
                     onClick={() => handleDayClick(day)}
                     className={cn(
                       "relative h-9 flex items-center justify-center text-sm font-medium rounded-lg transition-colors",
-                      "hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed",
+                      "hover:bg-muted/50 disabled:opacity-30 disabled:cursor-not-allowed",
                       isStart && "bg-primary text-white hover:bg-primary/90",
                       isEnd && "bg-primary text-white hover:bg-primary/90",
                       inRange && !isStart && !isEnd && "bg-primary/10 text-primary",
                       isToday && !isStart && !isEnd && "ring-1 ring-primary/30",
-                      !isStart && !isEnd && !inRange && "text-slate-700"
+                      !isStart && !isEnd && !inRange && "text-navy-text"
                     )}
                   >
                     {day}
@@ -244,7 +244,7 @@ const DateRangePicker = forwardRef<HTMLDivElement, DateRangePickerProps>(
             </div>
 
             {/* Quick select hint */}
-            <div className="mt-3 pt-3 border-t border-slate-100 text-xs text-slate-600 text-center">
+            <div className="mt-3 pt-3 border-t border-muted/50 text-xs text-muted-foreground text-center">
               {selecting === "start" ? t("daterange.selectStart", "Select start date") : t("daterange.selectEnd", "Select end date")}
             </div>
           </div>

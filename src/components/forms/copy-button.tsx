@@ -33,9 +33,9 @@ const sizeWithLabelMap = {
 };
 
 const variantMap = {
-  default: "bg-slate-100 hover:bg-slate-200 text-slate-600",
-  ghost: "hover:bg-slate-100 text-slate-600",
-  outline: "border border-slate-200 hover:bg-slate-50 text-slate-600",
+  default: "bg-muted hover:bg-muted text-muted-foreground",
+  ghost: "hover:bg-muted text-muted-foreground",
+  outline: "border border-muted hover:bg-muted/50 text-muted-foreground",
 };
 
 const CopyButton = forwardRef<HTMLButtonElement, CopyButtonProps>(
@@ -69,7 +69,7 @@ const CopyButton = forwardRef<HTMLButtonElement, CopyButtonProps>(
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
           variantMap[variant],
           label ? sizeWithLabelMap[size] : sizeMap[size],
-          copied && "text-green-700",
+          copied && "text-success",
           className
         )}
         aria-label={copied ? "Copied!" : "Copy to clipboard"}

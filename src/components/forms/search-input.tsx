@@ -20,7 +20,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           <Icon
             name={icon}
             size="md"
-            className="text-slate-500 group-focus-within:text-primary transition-colors"
+            className="text-muted-foreground group-focus-within:text-primary transition-colors"
           />
         </div>
         <input
@@ -35,7 +35,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             type="button"
             aria-label={t("searchinput.clear", "Clear search")}
             onClick={onClear}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-600 hover:text-slate-700 transition-colors cursor-pointer"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-navy-text transition-colors cursor-pointer"
           >
             <Icon name="close" size="sm" />
           </button>

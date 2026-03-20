@@ -72,7 +72,7 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
     return (
       <div ref={ref} className={cn("flex flex-col gap-3", disabled && "pointer-events-none", className)} {...props}>
         {label && (
-          <label className="text-sm font-medium text-slate-700">{label}</label>
+          <label className="text-sm font-medium text-navy-text">{label}</label>
         )}
 
         {/* Color preview + native picker */}
@@ -80,7 +80,7 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
           <div className="relative">
             <div
               className={cn(
-                "rounded-xl border-2 border-slate-200 cursor-pointer overflow-hidden shadow-sm",
+                "rounded-xl border-2 border-muted cursor-pointer overflow-hidden shadow-sm",
                 swatchSizeMap[size]
               )}
               style={{ backgroundColor: color }}
@@ -105,7 +105,7 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
               maxLength={7}
               disabled={disabled}
               className={cn(
-                "w-24 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-mono",
+                "w-24 px-3 py-1.5 bg-muted/50 border border-muted rounded-lg text-sm font-mono",
                 "focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary",
                 "disabled:cursor-not-allowed"
               )}
@@ -125,7 +125,7 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
                 className={cn(
                   "w-6 h-6 rounded-lg border-2 transition-all hover:scale-110",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
-                  color === preset ? "border-slate-400 ring-2 ring-slate-300 ring-offset-1" : "border-transparent"
+                  color === preset ? "border-muted ring-2 ring-muted ring-offset-1" : "border-transparent"
                 )}
                 style={{ backgroundColor: preset }}
                 aria-label={`Select color ${preset}`}

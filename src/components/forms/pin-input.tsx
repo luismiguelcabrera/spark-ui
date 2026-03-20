@@ -127,7 +127,7 @@ const PinInput = forwardRef<HTMLDivElement, PinInputProps>(
 
     return (
       <div ref={ref} className={cn("flex flex-col gap-2", className)} {...props}>
-        {label && <label className="text-sm font-medium text-slate-700">{label}</label>}
+        {label && <label className="text-sm font-medium text-navy-text">{label}</label>}
         <div className="flex items-center gap-2">
           {Array.from({ length }, (_, i) => (
             <input
@@ -149,18 +149,18 @@ const PinInput = forwardRef<HTMLDivElement, PinInputProps>(
               onPaste={i === 0 ? handlePaste : undefined}
               onFocus={(e) => e.target.select()}
               className={cn(
-                "text-center font-semibold rounded-xl border bg-slate-50 transition-all",
+                "text-center font-semibold rounded-xl border bg-muted/50 transition-all",
                 "focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary",
                 "disabled:opacity-50 disabled:cursor-not-allowed",
-                "placeholder:text-slate-500",
-                error ? "border-red-300 focus:ring-red-500 focus:border-red-500" : "border-slate-200",
+                "placeholder:text-muted-foreground",
+                error ? "border-destructive/50 focus:ring-destructive focus:border-destructive" : "border-muted",
                 sizeMap[size]
               )}
               aria-label={`${otp ? "OTP" : "Pin"} digit ${i + 1} of ${length}`}
             />
           ))}
         </div>
-        {errorMessage && <p className="text-xs text-red-600 font-medium">{errorMessage}</p>}
+        {errorMessage && <p className="text-xs text-destructive font-medium">{errorMessage}</p>}
       </div>
     );
   }

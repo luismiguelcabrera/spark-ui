@@ -143,21 +143,21 @@ function DatePicker({
           s.inputBase,
           s.inputFocus,
           "flex items-center gap-2 text-left",
-          !value && "text-slate-600",
-          error && "border-red-300",
+          !value && "text-muted-foreground",
+          error && "border-destructive/50",
         )}
       >
-        <Icon name="calendar_today" size="sm" className="text-slate-500" />
+        <Icon name="calendar_today" size="sm" className="text-muted-foreground" />
         <span>{value ? formatDate(value, monthNames) : resolvedPlaceholder}</span>
       </button>
       {isOpen && (
-        <div className="absolute top-full left-0 z-50 mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-float p-4">
+        <div className="absolute top-full left-0 z-50 mt-2 w-72 bg-surface border border-muted rounded-2xl shadow-float p-4">
           <div className="flex items-center justify-between mb-3">
             <button
               type="button"
               aria-label={t("calendar.previousMonth", "Previous month")}
               onClick={prevMonth}
-              className="p-1 rounded-lg hover:bg-slate-100 text-slate-600"
+              className="p-1 rounded-lg hover:bg-muted text-muted-foreground"
             >
               <Icon name="chevron_left" size="sm" />
             </button>
@@ -168,14 +168,14 @@ function DatePicker({
               type="button"
               aria-label={t("calendar.nextMonth", "Next month")}
               onClick={nextMonth}
-              className="p-1 rounded-lg hover:bg-slate-100 text-slate-600"
+              className="p-1 rounded-lg hover:bg-muted text-muted-foreground"
             >
               <Icon name="chevron_right" size="sm" />
             </button>
           </div>
           <div className="grid grid-cols-7 text-center mb-1">
             {dayLabels.map((d) => (
-              <span key={d} className="py-1 text-[11px] font-semibold text-slate-600 uppercase">
+              <span key={d} className="py-1 text-[11px] font-semibold text-muted-foreground uppercase">
                 {d}
               </span>
             ))}
@@ -192,7 +192,7 @@ function DatePicker({
                   type="button"
                   onClick={() => selectDate(day)}
                   className={cn(
-                    "h-9 w-9 mx-auto rounded-lg text-sm font-medium transition-colors hover:bg-slate-50",
+                    "h-9 w-9 mx-auto rounded-lg text-sm font-medium transition-colors hover:bg-muted/50",
                     isSelected(day) && "bg-primary text-white hover:bg-primary/90",
                     isToday(day) && !isSelected(day) && "bg-primary/10 text-primary font-bold",
                   )}
@@ -204,7 +204,7 @@ function DatePicker({
           </div>
         </div>
       )}
-      {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
+      {error && <p className="text-xs text-destructive font-medium">{error}</p>}
     </div>
   );
 }
