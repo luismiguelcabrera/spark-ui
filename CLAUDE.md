@@ -128,8 +128,12 @@ Components with async actions should support:
 
 ### 10. Theme Integration
 
-- Use CSS variable colors (`bg-primary`, `text-secondary`) from `theme.css`, not hardcoded colors
-- Hardcoded Tailwind colors (e.g., `red-600`) are OK for semantic colors that don't change with theme (destructive = red)
+- Use CSS variable colors for **all** colors — brand (`bg-primary`, `text-secondary`) and semantic (`bg-success`, `text-destructive`, `bg-muted`, `text-muted-foreground`)
+- `theme.css` ships `--color-success`, `--color-warning`, `--color-destructive`, `--color-muted`, `--color-muted-foreground` with light/dark defaults under `.dark`
+- Use `bg-surface` / `ring-surface` for elements that must match the page background in both light and dark mode
+- For color tints, use opacity modifier: `bg-success/15 text-success` (15% opacity background + full text)
+- **Do not hardcode Tailwind colors** (e.g., `bg-red-100`, `text-gray-600`) for anything that should adapt to dark mode — use the CSS variables instead
+- Consumers override any color via CSS: `:root { --color-success: #22c55e; }` / `.dark { --color-success: #4ade80; }`
 - Custom keyframes go in `theme.css`, not injected at runtime
 
 ### 11. Exports
