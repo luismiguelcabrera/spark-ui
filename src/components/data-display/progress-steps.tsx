@@ -130,13 +130,13 @@ type ColorConfig = {
   inactiveLabel: string;
 };
 
-/** Shared inactive tokens (concrete slate colors that exist in the project). */
-const TRACK_BG = "bg-slate-200";
-const INACTIVE_DOT_SOLID = "bg-slate-300 ring-2 ring-slate-200/50";
-const INACTIVE_DOT_OUTLINE = "bg-transparent border-2 border-slate-300";
-const INACTIVE_DOT_SOFT = "bg-slate-200";
-const LABEL_COMPLETE = "text-slate-700";
-const LABEL_INACTIVE = "text-slate-600";
+/** Shared inactive tokens using CSS variable utilities. */
+const TRACK_BG = "bg-muted";
+const INACTIVE_DOT_SOLID = "bg-muted-foreground/30 ring-2 ring-muted/50";
+const INACTIVE_DOT_OUTLINE = "bg-transparent border-2 border-muted";
+const INACTIVE_DOT_SOFT = "bg-muted";
+const LABEL_COMPLETE = "text-navy-text";
+const LABEL_INACTIVE = "text-muted-foreground";
 
 const colorVariantMap: Record<
   ProgressStepsColor,
@@ -202,28 +202,28 @@ const colorVariantMap: Record<
   },
   success: {
     solid: {
-      bar: "bg-green-500",
-      dot: "bg-green-500 text-white",
-      dotBorder: "ring-green-500/20",
+      bar: "bg-success",
+      dot: "bg-success text-white",
+      dotBorder: "ring-success/20",
       trackBg: TRACK_BG,
       inactiveDot: INACTIVE_DOT_SOLID,
       completedLabel: LABEL_COMPLETE,
       inactiveLabel: LABEL_INACTIVE,
     },
     outline: {
-      bar: "bg-green-500",
-      dot: "bg-transparent border-2 border-green-500 text-green-700",
-      dotBorder: "ring-green-500/10",
+      bar: "bg-success",
+      dot: "bg-transparent border-2 border-success text-success",
+      dotBorder: "ring-success/10",
       trackBg: TRACK_BG,
       inactiveDot: INACTIVE_DOT_OUTLINE,
       completedLabel: LABEL_COMPLETE,
       inactiveLabel: LABEL_INACTIVE,
     },
     soft: {
-      bar: "bg-green-500",
-      dot: "bg-green-500/15 text-green-700",
-      dotBorder: "ring-green-500/10",
-      trackBg: "bg-green-500/10",
+      bar: "bg-success",
+      dot: "bg-success/15 text-success",
+      dotBorder: "ring-success/10",
+      trackBg: "bg-success/10",
       inactiveDot: INACTIVE_DOT_SOFT,
       completedLabel: LABEL_COMPLETE,
       inactiveLabel: LABEL_INACTIVE,
@@ -231,28 +231,28 @@ const colorVariantMap: Record<
   },
   warning: {
     solid: {
-      bar: "bg-amber-500",
-      dot: "bg-amber-500 text-amber-950",
-      dotBorder: "ring-amber-500/20",
+      bar: "bg-warning",
+      dot: "bg-warning text-black",
+      dotBorder: "ring-warning/20",
       trackBg: TRACK_BG,
       inactiveDot: INACTIVE_DOT_SOLID,
       completedLabel: LABEL_COMPLETE,
       inactiveLabel: LABEL_INACTIVE,
     },
     outline: {
-      bar: "bg-amber-500",
-      dot: "bg-transparent border-2 border-amber-500 text-amber-700",
-      dotBorder: "ring-amber-500/10",
+      bar: "bg-warning",
+      dot: "bg-transparent border-2 border-warning text-warning",
+      dotBorder: "ring-warning/10",
       trackBg: TRACK_BG,
       inactiveDot: INACTIVE_DOT_OUTLINE,
       completedLabel: LABEL_COMPLETE,
       inactiveLabel: LABEL_INACTIVE,
     },
     soft: {
-      bar: "bg-amber-500",
-      dot: "bg-amber-500/15 text-amber-700",
-      dotBorder: "ring-amber-500/10",
-      trackBg: "bg-amber-500/10",
+      bar: "bg-warning",
+      dot: "bg-warning/15 text-warning",
+      dotBorder: "ring-warning/10",
+      trackBg: "bg-warning/10",
       inactiveDot: INACTIVE_DOT_SOFT,
       completedLabel: LABEL_COMPLETE,
       inactiveLabel: LABEL_INACTIVE,
@@ -260,28 +260,28 @@ const colorVariantMap: Record<
   },
   destructive: {
     solid: {
-      bar: "bg-red-600",
-      dot: "bg-red-600 text-white",
-      dotBorder: "ring-red-600/20",
+      bar: "bg-destructive",
+      dot: "bg-destructive text-white",
+      dotBorder: "ring-destructive/20",
       trackBg: TRACK_BG,
       inactiveDot: INACTIVE_DOT_SOLID,
       completedLabel: LABEL_COMPLETE,
       inactiveLabel: LABEL_INACTIVE,
     },
     outline: {
-      bar: "bg-red-600",
-      dot: "bg-transparent border-2 border-red-600 text-red-600",
-      dotBorder: "ring-red-600/10",
+      bar: "bg-destructive",
+      dot: "bg-transparent border-2 border-destructive text-destructive",
+      dotBorder: "ring-destructive/10",
       trackBg: TRACK_BG,
       inactiveDot: INACTIVE_DOT_OUTLINE,
       completedLabel: LABEL_COMPLETE,
       inactiveLabel: LABEL_INACTIVE,
     },
     soft: {
-      bar: "bg-red-600",
-      dot: "bg-red-500/15 text-red-600",
-      dotBorder: "ring-red-500/10",
-      trackBg: "bg-red-500/10",
+      bar: "bg-destructive",
+      dot: "bg-destructive/15 text-destructive",
+      dotBorder: "ring-destructive/10",
+      trackBg: "bg-destructive/10",
       inactiveDot: INACTIVE_DOT_SOFT,
       completedLabel: LABEL_COMPLETE,
       inactiveLabel: LABEL_INACTIVE,

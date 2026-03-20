@@ -20,8 +20,8 @@ export const Default: Story = {
   args: {
     items: [
       { label: "Used", value: 60, color: "bg-primary" },
-      { label: "Shared", value: 20, color: "bg-blue-400" },
-      { label: "Free", value: 20, color: "bg-slate-300" },
+      { label: "Shared", value: 20, color: "bg-primary/70" },
+      { label: "Free", value: 20, color: "bg-muted" },
     ],
   },
 };
@@ -29,10 +29,10 @@ export const Default: Story = {
 export const DiskUsage: Story = {
   args: {
     items: [
-      { label: "Documents", value: 35, color: "bg-blue-500" },
-      { label: "Photos", value: 25, color: "bg-purple-500" },
-      { label: "Apps", value: 15, color: "bg-amber-500" },
-      { label: "System", value: 10, color: "bg-red-500" },
+      { label: "Documents", value: 35, color: "bg-primary" },
+      { label: "Photos", value: 25, color: "bg-accent" },
+      { label: "Apps", value: 15, color: "bg-warning" },
+      { label: "System", value: 10, color: "bg-destructive" },
     ],
   },
 };
@@ -41,9 +41,9 @@ export const Small: Story = {
   args: {
     size: "sm",
     items: [
-      { label: "Completed", value: 70, color: "bg-green-500" },
-      { label: "In Progress", value: 20, color: "bg-amber-500" },
-      { label: "Failed", value: 10, color: "bg-red-500" },
+      { label: "Completed", value: 70, color: "bg-success" },
+      { label: "In Progress", value: 20, color: "bg-warning" },
+      { label: "Failed", value: 10, color: "bg-destructive" },
     ],
   },
 };
@@ -52,9 +52,9 @@ export const Large: Story = {
   args: {
     size: "lg",
     items: [
-      { label: "Completed", value: 70, color: "bg-green-500" },
-      { label: "In Progress", value: 20, color: "bg-amber-500" },
-      { label: "Failed", value: 10, color: "bg-red-500" },
+      { label: "Completed", value: 70, color: "bg-success" },
+      { label: "In Progress", value: 20, color: "bg-warning" },
+      { label: "Failed", value: 10, color: "bg-destructive" },
     ],
   },
 };
@@ -64,8 +64,8 @@ export const NoLabels: Story = {
     showLabels: false,
     items: [
       { label: "A", value: 40, color: "bg-primary" },
-      { label: "B", value: 30, color: "bg-blue-400" },
-      { label: "C", value: 30, color: "bg-slate-300" },
+      { label: "B", value: 30, color: "bg-primary/70" },
+      { label: "C", value: 30, color: "bg-muted" },
     ],
   },
 };
@@ -76,7 +76,7 @@ export const NoValues: Story = {
     items: [
       { label: "React", value: 45, color: "bg-cyan-500" },
       { label: "Vue", value: 30, color: "bg-emerald-500" },
-      { label: "Angular", value: 25, color: "bg-red-500" },
+      { label: "Angular", value: 25, color: "bg-destructive" },
     ],
   },
 };
@@ -94,11 +94,11 @@ export const CustomMax: Story = {
 export const BudgetBreakdown: Story = {
   args: {
     items: [
-      { label: "Engineering", value: 40, color: "bg-indigo-500" },
+      { label: "Engineering", value: 40, color: "bg-primary" },
       { label: "Marketing", value: 25, color: "bg-pink-500" },
       { label: "Design", value: 15, color: "bg-violet-500" },
       { label: "Sales", value: 12, color: "bg-emerald-500" },
-      { label: "Other", value: 8, color: "bg-slate-400" },
+      { label: "Other", value: 8, color: "bg-muted-foreground/50" },
     ],
     size: "lg",
   },

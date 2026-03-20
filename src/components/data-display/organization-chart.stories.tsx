@@ -130,8 +130,8 @@ export const CustomNodeRenderer: Story = {
           {node.label.charAt(0)}
         </div>
         <div>
-          <div className="text-sm font-semibold text-slate-800">{node.label}</div>
-          {node.title && <div className="text-xs text-slate-600">{node.title}</div>}
+          <div className="text-sm font-semibold text-navy-text">{node.label}</div>
+          {node.title && <div className="text-xs text-muted-foreground">{node.title}</div>}
         </div>
       </div>
     ),

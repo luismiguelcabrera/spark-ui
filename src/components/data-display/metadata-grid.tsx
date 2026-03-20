@@ -39,7 +39,7 @@ const MetadataItem = forwardRef<HTMLDivElement, MetadataItemProps>(
       <div ref={ref} className={cn(className)} {...props}>
         <dt className={cn(s.textMuted, "flex items-center gap-2")}>
           {icon && (
-            <Icon name={icon} size="sm" className="text-slate-600 shrink-0" aria-hidden="true" />
+            <Icon name={icon} size="sm" className="text-muted-foreground shrink-0" aria-hidden="true" />
           )}
           {label}
         </dt>

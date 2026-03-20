@@ -61,7 +61,7 @@ const MeterGroup = forwardRef<HTMLDivElement, MeterGroupProps>(
           aria-valuemax={clampedMax}
           aria-label="Meter group"
           className={cn(
-            "flex w-full overflow-hidden rounded-full bg-gray-100",
+            "flex w-full overflow-hidden rounded-full bg-muted",
             sizeMap[size],
           )}
         >
@@ -96,10 +96,10 @@ const MeterGroup = forwardRef<HTMLDivElement, MeterGroupProps>(
                   aria-hidden="true"
                 />
                 {showLabels && (
-                  <span className="text-gray-600">{item.label}</span>
+                  <span className="text-muted-foreground">{item.label}</span>
                 )}
                 {showValues && (
-                  <span className="font-medium text-gray-900">
+                  <span className="font-medium text-navy-text">
                     {item.value}
                   </span>
                 )}

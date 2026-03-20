@@ -14,7 +14,7 @@ const QrCode = forwardRef<HTMLDivElement, QrCodeProps>(
       <div
         ref={ref}
         className={cn(
-          "bg-white rounded-xl p-4 inline-flex items-center justify-center",
+          "bg-surface rounded-xl p-4 inline-flex items-center justify-center",
           className
         )}
       >

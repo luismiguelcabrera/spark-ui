@@ -71,7 +71,7 @@ export const WithLabel: Story = {
   render: (args) => (
     <div className="flex flex-col items-center gap-3">
       <QrCode {...args} dataUrl={SAMPLE_QR_DATA_URL} size={180} />
-      <span className="text-sm text-slate-600 font-medium">Scan to download the app</span>
+      <span className="text-sm text-muted-foreground font-medium">Scan to download the app</span>
     </div>
   ),
 };
@@ -81,15 +81,15 @@ export const Sizes: Story = {
     <div className="flex items-end gap-6">
       <div className="flex flex-col items-center gap-2">
         <QrCode {...args} dataUrl={SAMPLE_QR_DATA_URL} size={80} />
-        <span className="text-xs text-slate-500">80px</span>
+        <span className="text-xs text-muted-foreground">80px</span>
       </div>
       <div className="flex flex-col items-center gap-2">
         <QrCode {...args} dataUrl={SAMPLE_QR_DATA_URL} size={150} />
-        <span className="text-xs text-slate-500">150px</span>
+        <span className="text-xs text-muted-foreground">150px</span>
       </div>
       <div className="flex flex-col items-center gap-2">
         <QrCode {...args} dataUrl={SAMPLE_QR_DATA_URL} size={200} />
-        <span className="text-xs text-slate-500">200px</span>
+        <span className="text-xs text-muted-foreground">200px</span>
       </div>
     </div>
   ),
@@ -97,13 +97,13 @@ export const Sizes: Story = {
 
 export const InCard: Story = {
   render: (args) => (
-    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm max-w-xs">
-      <h3 className="text-lg font-bold text-slate-800 mb-1">Share Link</h3>
-      <p className="text-sm text-slate-500 mb-4">Scan the code below to open in your browser.</p>
+    <div className="rounded-xl border border-muted bg-surface p-6 shadow-sm max-w-xs">
+      <h3 className="text-lg font-bold text-navy-text mb-1">Share Link</h3>
+      <p className="text-sm text-muted-foreground mb-4">Scan the code below to open in your browser.</p>
       <div className="flex justify-center">
         <QrCode {...args} dataUrl={SAMPLE_QR_DATA_URL} size={160} />
       </div>
-      <p className="text-xs text-slate-500 text-center mt-3">https://example.com</p>
+      <p className="text-xs text-muted-foreground text-center mt-3">https://example.com</p>
     </div>
   ),
 };

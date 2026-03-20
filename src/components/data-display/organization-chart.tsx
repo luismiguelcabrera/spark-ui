@@ -67,8 +67,7 @@ function DefaultNodeCard({
           : undefined
       }
       className={cn(
-        "inline-flex flex-col items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm",
-        "dark:border-slate-700 dark:bg-slate-900",
+        "inline-flex flex-col items-center gap-1.5 rounded-xl border border-muted bg-surface px-4 py-3 shadow-sm",
         isClickable &&
           "cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
         nodeClassName,
@@ -77,11 +76,11 @@ function DefaultNodeCard({
       {node.avatar && (
         <Avatar src={node.avatar} alt={node.label} size="md" />
       )}
-      <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+      <span className="text-sm font-semibold text-navy-text">
         {node.label}
       </span>
       {node.title && (
-        <span className="text-xs text-slate-500 dark:text-slate-500">
+        <span className="text-xs text-muted-foreground">
           {node.title}
         </span>
       )}
@@ -275,7 +274,7 @@ const OrganizationChart = forwardRef<HTMLDivElement, OrganizationChartProps>(
       direction = "vertical",
       className,
       nodeClassName,
-      lineColor = "slate-300",
+      lineColor = "muted",
       onNodeClick,
       renderNode,
     },

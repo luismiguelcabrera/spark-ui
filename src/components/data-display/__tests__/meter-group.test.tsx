@@ -3,9 +3,9 @@ import { describe, it, expect } from "vitest";
 import { MeterGroup } from "../meter-group";
 
 const sampleItems = [
-  { label: "Documents", value: 25, color: "bg-blue-500" },
-  { label: "Photos", value: 40, color: "bg-emerald-500" },
-  { label: "Music", value: 15, color: "bg-amber-500" },
+  { label: "Documents", value: 25, color: "bg-primary" },
+  { label: "Photos", value: 40, color: "bg-success" },
+  { label: "Music", value: 15, color: "bg-warning" },
 ];
 
 describe("MeterGroup", () => {

@@ -66,27 +66,27 @@ export const AllVariants: Story = {
   render: (args) => (
     <div className="flex flex-col gap-6 w-80">
       <div>
-        <p className="text-sm font-semibold text-gray-500 mb-2">Default</p>
+        <p className="text-sm font-semibold text-muted-foreground mb-2">Default</p>
         <ProgressBar {...args} value={60} />
       </div>
       <div>
-        <p className="text-sm font-semibold text-gray-500 mb-2">Striped</p>
+        <p className="text-sm font-semibold text-muted-foreground mb-2">Striped</p>
         <ProgressBar {...args} value={60} striped />
       </div>
       <div>
-        <p className="text-sm font-semibold text-gray-500 mb-2">With Buffer</p>
+        <p className="text-sm font-semibold text-muted-foreground mb-2">With Buffer</p>
         <ProgressBar {...args} value={35} bufferValue={70} />
       </div>
       <div>
-        <p className="text-sm font-semibold text-gray-500 mb-2">Indeterminate</p>
+        <p className="text-sm font-semibold text-muted-foreground mb-2">Indeterminate</p>
         <ProgressBar {...args} indeterminate />
       </div>
       <div>
-        <p className="text-sm font-semibold text-gray-500 mb-2">Indeterminate + Striped</p>
+        <p className="text-sm font-semibold text-muted-foreground mb-2">Indeterminate + Striped</p>
         <ProgressBar {...args} indeterminate striped />
       </div>
       <div>
-        <p className="text-sm font-semibold text-gray-500 mb-2">Medium size</p>
+        <p className="text-sm font-semibold text-muted-foreground mb-2">Medium size</p>
         <ProgressBar {...args} value={50} size="md" striped />
       </div>
     </div>

@@ -96,8 +96,8 @@ export const RichValues: Story = {
         <MetadataItem
           label="Status"
           value={
-            <span className="inline-flex items-center gap-1.5 text-green-700">
-              <span className="w-2 h-2 rounded-full bg-green-500" />
+            <span className="inline-flex items-center gap-1.5 text-success">
+              <span className="w-2 h-2 rounded-full bg-success" />
               Online
             </span>
           }
@@ -106,7 +106,7 @@ export const RichValues: Story = {
           label="Progress"
           value={
             <div className="flex items-center gap-2">
-              <div className="w-24 h-2 rounded-full bg-slate-200">
+              <div className="w-24 h-2 rounded-full bg-muted">
                 <div className="h-2 rounded-full bg-primary" style={{ width: "73%" }} />
               </div>
               <span className="text-sm">73%</span>
@@ -115,7 +115,7 @@ export const RichValues: Story = {
         />
         <MetadataItem
           label="Rating"
-          value={<span className="text-amber-700">4.8 / 5.0</span>}
+          value={<span className="text-warning">4.8 / 5.0</span>}
         />
       </>
     ),
