@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any -- generic form component requires any */
 
-import { useState, useCallback, useRef, type ComponentProps, type ReactNode } from "react";
+import { useCallback, useRef, type ComponentProps, type ReactNode } from "react";
 import { cn } from "../../lib/utils";
 import { FormContext } from "./form-context";
 import type { UseFormReturn } from "../../hooks/use-form";
@@ -55,13 +55,11 @@ function FormRoot<T extends Record<string, any>>({
   className,
   ...props
 }: FormProps<T>) {
-  const [formError, setFormError] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   const focusField = useCallback(
     (fieldName: string) => {
       if (!focusFirstError || typeof document === "undefined") return;
-      // Try by name attribute, then by ID
       const el =
         formRef.current?.querySelector<HTMLElement>(`[name="${fieldName}"]`) ??
         formRef.current?.querySelector<HTMLElement>(`#${CSS.escape(fieldName)}`);
@@ -76,7 +74,7 @@ function FormRoot<T extends Record<string, any>>({
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      setFormError(null);
+      form.setFormError(null);
 
       // Delegate validation to the hook (marks touched, runs sync+async+resolver)
       const errors = await form.validateAsync();
@@ -110,7 +108,7 @@ function FormRoot<T extends Record<string, any>>({
               if (first) focusField(first);
             }
             if (data?.formError) {
-              setFormError(data.formError);
+              form.setFormError(data.formError);
             }
             onError?.(data);
           }
@@ -133,12 +131,12 @@ function FormRoot<T extends Record<string, any>>({
               if (first) focusField(first);
             }
             if (result.formError) {
-              setFormError(result.formError);
+              form.setFormError(result.formError);
             }
           }
         } catch (err) {
           if (err instanceof Error) {
-            setFormError(err.message);
+            form.setFormError(err.message);
           }
         }
       }
@@ -147,7 +145,13 @@ function FormRoot<T extends Record<string, any>>({
   );
 
   return (
-    <FormContext.Provider value={{ form: form as any, formError, setFormError }}>
+    <FormContext.Provider
+      value={{
+        form: form as any,
+        formError: form.formError,
+        setFormError: form.setFormError,
+      }}
+    >
       <form
         ref={formRef}
         onSubmit={handleSubmit}

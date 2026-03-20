@@ -61,24 +61,21 @@ function FormSteps({
     return result;
   }, [steps, form]);
 
-  // Validate current step fields
+  // Validate current step fields (async — runs resolver + async validators)
   const validateStep = useCallback(
-    (stepIndex: number): boolean => {
+    async (stepIndex: number): Promise<boolean> => {
       const stepFields = steps[stepIndex]?.fields ?? [];
-      let hasError = false;
 
       for (const field of stepFields) {
         form.setFieldTouched(field as any, true);
       }
 
-      // Trigger validation
-      const errors = form.validate();
+      // Use async validation to include resolver + async validators
+      const errors = await form.validateAsync();
 
-      for (const field of stepFields) {
-        if (errors[field as any]) {
-          hasError = true;
-        }
-      }
+      const hasError = stepFields.some(
+        (field) => !!errors[field as any],
+      );
 
       return !hasError;
     },
@@ -86,7 +83,7 @@ function FormSteps({
   );
 
   const next = useCallback(async (): Promise<boolean> => {
-    const isValid = validateStep(currentStep);
+    const isValid = await validateStep(currentStep);
     if (!isValid) return false;
 
     setCompleted((prev) => ({ ...prev, [currentStep]: true }));
