@@ -1,29 +1,39 @@
 "use client";
 
-import { forwardRef, type HTMLAttributes } from "react";
+import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { cn } from "../../lib/utils";
 import { useFormContext } from "./form-context";
-import { Alert } from "../feedback/alert";
 
-type FormErrorProps = HTMLAttributes<HTMLDivElement> & {
+type FormErrorProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
+  children?: ReactNode | ((error: string) => ReactNode);
   className?: string;
 };
 
 const FormError = forwardRef<HTMLDivElement, FormErrorProps>(
-  ({ className, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     const { formError } = useFormContext();
 
     if (!formError) return null;
 
+    // Render prop — full control over error rendering
+    if (typeof children === "function") {
+      return (
+        <div ref={ref} className={cn(className)} {...props}>
+          {children(formError)}
+        </div>
+      );
+    }
+
+    // Default — plain text with role="alert"
     return (
-      <Alert
-        ref={ref}
-        variant="error"
-        className={cn(className)}
+      <p
+        ref={ref as React.Ref<HTMLParagraphElement>}
+        role="alert"
+        className={cn("text-sm text-red-600 font-medium", className)}
         {...props}
       >
         {formError}
-      </Alert>
+      </p>
     );
   },
 );

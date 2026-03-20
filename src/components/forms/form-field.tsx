@@ -57,6 +57,8 @@ type FormFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "children"> & 
   iconPosition?: "left" | "right";
   error?: string;
   hint?: string;
+  /** Hide the built-in error display. Use render prop or Form.Message for custom error rendering. */
+  hideError?: boolean;
   children?: ReactNode | ((field: FieldRenderProps) => ReactNode);
   className?: string;
 };
@@ -171,6 +173,7 @@ function FormField({
   iconPosition = "right",
   error: errorProp,
   hint,
+  hideError = false,
   children,
   className,
   id: idProp,
@@ -228,7 +231,7 @@ function FormField({
               dirty: fieldState.dirty,
               id,
             })}
-            <FieldError id={errorId}>{fieldError}</FieldError>
+            {!hideError && <FieldError id={errorId}>{fieldError}</FieldError>}
             {description && !fieldError && (
               <FieldDescription id={descId}>{description}</FieldDescription>
             )}
@@ -288,7 +291,7 @@ function FormField({
                 </div>
               )}
             </div>
-            <FieldError id={errorId}>{fieldError}</FieldError>
+            {!hideError && <FieldError id={errorId}>{fieldError}</FieldError>}
             {description && !fieldError && (
               <FieldDescription id={descId}>{description}</FieldDescription>
             )}
@@ -306,7 +309,7 @@ function FormField({
             label={label}
             icon={icon}
             iconPosition={iconPosition}
-            error={fieldError ?? undefined}
+            error={hideError ? undefined : (fieldError ?? undefined)}
             hint={description ?? hint}
             aria-invalid={fieldError ? true : undefined}
             aria-describedby={errorId ?? descId}

@@ -3,9 +3,12 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import { Form } from "../form";
 import { FormField } from "../form-field";
+import { FormMessage } from "../form-message";
 import { useForm } from "../../../hooks/use-form";
+import { zodResolver } from "../../../lib/resolvers";
 import { Input } from "../input";
 import { Switch } from "../switch";
+import { Alert } from "../../feedback/alert";
 import { LocaleContext } from "../../../lib/locale";
 import { defaultMessages } from "../../../lib/default-messages";
 
@@ -342,5 +345,273 @@ describe("Form (compound)", () => {
     }
     render(<ClassForm />);
     expect(screen.getByRole("form")).toHaveClass("my-form");
+  });
+
+  // ── Form.Error render prop ──
+
+  it("Form.Error renders plain text by default", async () => {
+    const user = userEvent.setup();
+    function ErrorForm() {
+      const form = useForm({ initialValues: { email: "a@b.com" } });
+      return (
+        <Form
+          form={form}
+          onSubmit={async () => ({ formError: "Something went wrong" })}
+          aria-label="form"
+        >
+          <Form.Error />
+          <Form.Submit>Go</Form.Submit>
+        </Form>
+      );
+    }
+    render(<ErrorForm />);
+    await user.click(screen.getByRole("button", { name: "Go" }));
+
+    await waitFor(() => {
+      const errorEl = screen.getByRole("alert");
+      expect(errorEl).toHaveTextContent("Something went wrong");
+      expect(errorEl.tagName).toBe("P");
+    });
+  });
+
+  it("Form.Error supports render prop for custom rendering", async () => {
+    const user = userEvent.setup();
+    function CustomErrorForm() {
+      const form = useForm({ initialValues: { email: "a@b.com" } });
+      return (
+        <Form
+          form={form}
+          onSubmit={async () => ({ formError: "Server down" })}
+          aria-label="form"
+        >
+          <Form.Error>
+            {(error) => (
+              <Alert variant="error" data-testid="custom-alert">
+                Custom: {error}
+              </Alert>
+            )}
+          </Form.Error>
+          <Form.Submit>Go</Form.Submit>
+        </Form>
+      );
+    }
+    render(<CustomErrorForm />);
+    await user.click(screen.getByRole("button", { name: "Go" }));
+
+    await waitFor(() => {
+      const alert = screen.getByTestId("custom-alert");
+      expect(alert).toHaveTextContent("Custom: Server down");
+    });
+  });
+
+  // ── hideError ──
+
+  it("Form.Field hides built-in error when hideError is set", async () => {
+    const user = userEvent.setup();
+    function HideErrorForm() {
+      const form = useForm({ initialValues: { name: "" } });
+      return (
+        <Form form={form} aria-label="form">
+          <Form.Field name="name" label="Name" rules={{ required: true }} hideError>
+            <Input placeholder="Name" />
+          </Form.Field>
+          <Form.Submit>Go</Form.Submit>
+        </Form>
+      );
+    }
+    render(<HideErrorForm />);
+    await user.click(screen.getByRole("button", { name: "Go" }));
+
+    await waitFor(() => {
+      // Error should NOT appear in the field
+      expect(screen.queryByText("Name is required")).not.toBeInTheDocument();
+    });
+  });
+
+  it("Form.Field with hideError + Form.Message shows error elsewhere", async () => {
+    const user = userEvent.setup();
+    function CustomErrorLocationForm() {
+      const form = useForm({ initialValues: { name: "" } });
+      return (
+        <Form form={form} aria-label="form">
+          <Form.Field name="name" label="Name" rules={{ required: true }} hideError>
+            <Input placeholder="Name" />
+          </Form.Field>
+          <div data-testid="custom-error-zone">
+            <Form.Message name="name" />
+          </div>
+          <Form.Submit>Go</Form.Submit>
+        </Form>
+      );
+    }
+    render(<CustomErrorLocationForm />);
+    await user.click(screen.getByRole("button", { name: "Go" }));
+
+    await waitFor(() => {
+      const zone = screen.getByTestId("custom-error-zone");
+      expect(zone).toHaveTextContent("Name is required");
+    });
+  });
+
+  it("Form.Field with hideError + render prop gives error in field props", async () => {
+    const user = userEvent.setup();
+    function RenderPropErrorForm() {
+      const form = useForm({ initialValues: { email: "" } });
+      return (
+        <Form form={form} aria-label="form">
+          <Form.Field name="email" label="Email" rules={{ required: true }} hideError>
+            {(field) => (
+              <>
+                <Input value={field.value} onChange={field.onChange} placeholder="Email" />
+                {field.error && (
+                  <span data-testid="my-error" className="text-orange-500">
+                    {field.error}
+                  </span>
+                )}
+              </>
+            )}
+          </Form.Field>
+          <Form.Submit>Go</Form.Submit>
+        </Form>
+      );
+    }
+    render(<RenderPropErrorForm />);
+    await user.click(screen.getByRole("button", { name: "Go" }));
+
+    await waitFor(() => {
+      const customError = screen.getByTestId("my-error");
+      expect(customError).toHaveTextContent("Email is required");
+      expect(customError).toHaveClass("text-orange-500");
+    });
+  });
+
+  // ── Resolver / schema validation ──
+
+  it("supports resolver for schema-based validation", async () => {
+    const user = userEvent.setup();
+
+    // Mock a zod-like schema
+    const mockSchema = {
+      safeParse: (data: { email: string; age: string }) => {
+        const issues = [];
+        if (!data.email.includes("@")) {
+          issues.push({ path: ["email"], message: "Invalid email" });
+        }
+        if (!data.age) {
+          issues.push({ path: ["age"], message: "Age required" });
+        }
+        return issues.length > 0
+          ? { success: false, error: { issues } }
+          : { success: true };
+      },
+    };
+
+    function ResolverForm() {
+      const form = useForm({
+        initialValues: { email: "bad", age: "" },
+        resolver: zodResolver(mockSchema),
+      });
+      return (
+        <Form form={form} aria-label="form">
+          <Form.Field name="email" label="Email">
+            <Input placeholder="Email" />
+          </Form.Field>
+          <Form.Field name="age" label="Age">
+            <Input placeholder="Age" />
+          </Form.Field>
+          <Form.Submit>Go</Form.Submit>
+        </Form>
+      );
+    }
+
+    render(<ResolverForm />);
+    await user.click(screen.getByRole("button", { name: "Go" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Invalid email")).toBeInTheDocument();
+      expect(screen.getByText("Age required")).toBeInTheDocument();
+    });
+  });
+
+  it("resolver errors clear when values become valid", async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn();
+
+    const mockSchema = {
+      safeParse: (data: { name: string }) => {
+        if (!data.name) {
+          return { success: false, error: { issues: [{ path: ["name"], message: "Required" }] } };
+        }
+        return { success: true };
+      },
+    };
+
+    function ClearingForm() {
+      const form = useForm({
+        initialValues: { name: "" },
+        resolver: zodResolver(mockSchema),
+      });
+      return (
+        <Form form={form} onSubmit={onSubmit} aria-label="form">
+          <Form.Field name="name" label="Name">
+            <Input placeholder="Name" />
+          </Form.Field>
+          <Form.Submit>Go</Form.Submit>
+        </Form>
+      );
+    }
+
+    render(<ClearingForm />);
+    await user.click(screen.getByRole("button", { name: "Go" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Required")).toBeInTheDocument();
+    });
+
+    // Fix the value and resubmit
+    await user.type(screen.getByPlaceholderText("Name"), "John");
+    await user.click(screen.getByRole("button", { name: "Go" }));
+
+    await waitFor(() => {
+      expect(screen.queryByText("Required")).not.toBeInTheDocument();
+      expect(onSubmit).toHaveBeenCalledWith({ name: "John" });
+    });
+  });
+
+  it("field-level rules take priority over resolver for same field", async () => {
+    const user = userEvent.setup();
+
+    const mockSchema = {
+      safeParse: (data: { name: string }) => {
+        if (!data.name) {
+          return { success: false, error: { issues: [{ path: ["name"], message: "Schema says required" }] } };
+        }
+        return { success: true };
+      },
+    };
+
+    function PriorityForm() {
+      const form = useForm({
+        initialValues: { name: "" },
+        resolver: zodResolver(mockSchema),
+      });
+      return (
+        <Form form={form} aria-label="form">
+          <Form.Field name="name" label="Name" rules={{ required: "Field says required" }}>
+            <Input />
+          </Form.Field>
+          <Form.Submit>Go</Form.Submit>
+        </Form>
+      );
+    }
+
+    render(<PriorityForm />);
+    await user.click(screen.getByRole("button", { name: "Go" }));
+
+    await waitFor(() => {
+      // Field-level rule should win since it's checked first
+      expect(screen.getByText("Field says required")).toBeInTheDocument();
+      expect(screen.queryByText("Schema says required")).not.toBeInTheDocument();
+    });
   });
 });

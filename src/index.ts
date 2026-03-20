@@ -51,4 +51,5 @@ export { useWindowSize } from "./hooks/use-window-size";
 export { useHover } from "./hooks/use-hover";
 export { useElevation } from "./hooks/use-elevation";
 export { useForm } from "./hooks/use-form";
-export type { UseFormReturn, UseFormConfig, ValidationRule, FieldState } from "./hooks/use-form";
+export type { UseFormReturn, UseFormConfig, ValidationRule, FieldState, FormResolver } from "./hooks/use-form";
+export { zodResolver, yupResolver } from "./lib/resolvers";

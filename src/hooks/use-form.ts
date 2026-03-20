@@ -22,9 +22,15 @@ export type FieldState = {
   dirty: boolean;
 };
 
+export type FormResolver<T extends Record<string, any>> = (
+  values: T,
+) => Partial<Record<keyof T, string>> | Promise<Partial<Record<keyof T, string>>>;
+
 export type UseFormConfig<T extends Record<string, any>> = {
   initialValues: T;
   validate?: (values: T) => Partial<Record<keyof T, string>>;
+  /** External validation resolver (e.g. zodResolver, yupResolver). Runs alongside field-level rules. */
+  resolver?: FormResolver<T>;
   onSubmit?: (values: T) => void | Promise<void>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
@@ -154,6 +160,7 @@ export function useForm<T extends Record<string, any>>(
   const {
     initialValues,
     validate: formValidate,
+    resolver,
     onSubmit,
     validateOnChange = false,
     validateOnBlur = true,
@@ -211,9 +218,21 @@ export function useForm<T extends Record<string, any>>(
       }
     }
 
+    // Resolver (sync path — async resolvers handled in handleSubmit)
+    if (resolver) {
+      const result = resolver(values);
+      if (result && typeof result === "object" && !("then" in result)) {
+        for (const [key, msg] of Object.entries(result)) {
+          if (msg && !newErrors[key as keyof T]) {
+            newErrors[key as keyof T] = msg as string;
+          }
+        }
+      }
+    }
+
     setErrorsState(newErrors);
     return newErrors;
-  }, [values, formValidate]);
+  }, [values, formValidate, resolver]);
 
   // ── Set field value ──
   const setFieldValue = useCallback(
@@ -326,6 +345,16 @@ export function useForm<T extends Record<string, any>>(
         }
       }
 
+      // Resolver validation (supports async)
+      if (resolver) {
+        const resolverErrors = await resolver(values);
+        for (const [key, msg] of Object.entries(resolverErrors)) {
+          if (msg && !newErrors[key as keyof T]) {
+            newErrors[key as keyof T] = msg as string;
+          }
+        }
+      }
+
       setErrorsState(newErrors);
 
       const hasErrors = Object.keys(newErrors).length > 0;
@@ -338,7 +367,7 @@ export function useForm<T extends Record<string, any>>(
         setIsSubmitting(false);
       }
     },
-    [values, formValidate, onSubmit],
+    [values, formValidate, resolver, onSubmit],
   );
 
   // ── onChange handler ──
