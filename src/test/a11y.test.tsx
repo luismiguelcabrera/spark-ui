@@ -93,7 +93,14 @@ import { ItemGroup, ItemGroupItem } from "../components/navigation/item-group";
 
 expect.extend(toHaveNoViolations);
 
-describe("Accessibility (axe)", () => {
+describe.each(["light", "dark"] as const)("Accessibility (axe) — %s", (mode) => {
+  beforeEach(() => {
+    document.documentElement.classList.toggle("dark", mode === "dark");
+  });
+  afterEach(() => {
+    document.documentElement.classList.remove("dark");
+  });
+
   it("Button", async () => {
     const { container } = render(<Button>Click me</Button>);
     expect(await axe(container)).toHaveNoViolations();

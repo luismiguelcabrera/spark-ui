@@ -132,13 +132,13 @@ export const EasingComparison: Story = {
     <div className="flex flex-col gap-4">
       {(["linear", "easeIn", "easeOut", "easeInOut"] as const).map((easing) => (
         <div key={easing} className="flex items-center gap-3">
-          <span className="w-24 text-sm text-slate-500 font-mono">{easing}</span>
+          <span className="w-24 text-sm text-muted-foreground font-mono">{easing}</span>
           <AnimatedNumber
             {...args}
             value={args.value ?? 1000}
             from={args.from ?? 0}
             easing={easing}
-            className="text-xl font-bold text-slate-800"
+            className="text-xl font-bold text-navy-text"
           />
         </div>
       ))}
@@ -158,9 +158,9 @@ export const StaggeredCounters: Story = {
             from={args.from ?? 0}
             delay={d}
             prefix={args.prefix ?? "$"}
-            className="text-2xl font-bold text-slate-800"
+            className="text-2xl font-bold text-navy-text"
           />
-          <span className="text-xs text-slate-400">delay: {d}ms</span>
+          <span className="text-xs text-muted-foreground">delay: {d}ms</span>
         </div>
       ))}
     </div>
@@ -180,10 +180,10 @@ export const OnComplete: Story = {
           duration={args.duration ?? 1500}
           onComplete={() => setDone(true)}
           prefix={args.prefix ?? "$"}
-          className="text-3xl font-bold text-slate-800"
+          className="text-3xl font-bold text-navy-text"
         />
         {done && (
-          <span className="text-sm text-green-600 font-medium">Animation complete!</span>
+          <span className="text-sm text-success font-medium">Animation complete!</span>
         )}
         <button
           type="button"
@@ -204,7 +204,7 @@ export const DashboardExample: Story = {
       <div className="flex flex-col gap-6">
         <div className="grid grid-cols-3 gap-4">
           <div className="rounded-xl border p-4">
-            <p className="text-xs text-slate-500 mb-1">Revenue</p>
+            <p className="text-xs text-muted-foreground mb-1">Revenue</p>
             <AnimatedNumber
               {...args}
               value={12_500 * multiplier}
@@ -218,7 +218,7 @@ export const DashboardExample: Story = {
             />
           </div>
           <div className="rounded-xl border p-4">
-            <p className="text-xs text-slate-500 mb-1">Users</p>
+            <p className="text-xs text-muted-foreground mb-1">Users</p>
             <AnimatedNumber
               {...args}
               value={1_430_000 * multiplier}
@@ -231,7 +231,7 @@ export const DashboardExample: Story = {
             />
           </div>
           <div className="rounded-xl border p-4">
-            <p className="text-xs text-slate-500 mb-1">Bounce Rate</p>
+            <p className="text-xs text-muted-foreground mb-1">Bounce Rate</p>
             <AnimatedNumber
               {...args}
               value={Math.max(5, 32 - multiplier * 3)}
@@ -256,6 +256,31 @@ export const DashboardExample: Story = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// Dark-mode variants — tested by Storybook's addon-a11y in the browser
+// for real contrast checking that jsdom cannot perform.
+// ---------------------------------------------------------------------------
+
+export const DarkDefault: Story = {
+  args: { value: 1234 },
+  globals: { theme: "dark" },
+};
+
+export const DarkTrendUp: Story = {
+  args: { value: 1234, trend: "up", showTrendIcon: true, prefix: "$" },
+  globals: { theme: "dark" },
+};
+
+export const DarkTrendDown: Story = {
+  args: { value: 567, trend: "down", showTrendIcon: true, suffix: "%" },
+  globals: { theme: "dark" },
+};
+
+export const DarkDashboard: Story = {
+  ...DashboardExample,
+  globals: { theme: "dark" },
+};
+
 export const Interactive: Story = {
   render: (args) => {
     const [value, setValue] = useState(0);
@@ -267,7 +292,7 @@ export const Interactive: Story = {
           prefix={args.prefix ?? "$"}
           decimals={args.decimals ?? 2}
           locale={args.locale ?? "en-US"}
-          className="text-3xl font-bold text-slate-800"
+          className="text-3xl font-bold text-navy-text"
         />
         <div className="flex gap-2">
           <button
@@ -280,14 +305,14 @@ export const Interactive: Story = {
           <button
             type="button"
             onClick={() => setValue((v) => Math.max(0, v - 100))}
-            className="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-700 text-sm font-medium"
+            className="px-3 py-1.5 rounded-lg bg-muted text-muted-foreground text-sm font-medium"
           >
             -100
           </button>
           <button
             type="button"
             onClick={() => setValue(0)}
-            className="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-700 text-sm font-medium"
+            className="px-3 py-1.5 rounded-lg bg-muted text-muted-foreground text-sm font-medium"
           >
             Reset
           </button>

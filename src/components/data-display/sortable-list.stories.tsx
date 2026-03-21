@@ -46,7 +46,7 @@ export const Default: Story = {
 export const WithBadges: Story = {
   render: () => {
     const [items, setItems] = useState(initialTasks);
-    const priorityVariant = {
+    const priorityColor = {
       high: "danger" as const,
       medium: "warning" as const,
       low: "secondary" as const,
@@ -62,7 +62,7 @@ export const WithBadges: Story = {
               <span className="text-sm font-medium text-navy-text flex-1">
                 {item.title}
               </span>
-              <Badge variant={priorityVariant[item.priority]} size="sm">
+              <Badge color={priorityColor[item.priority]} size="sm">
                 {item.priority}
               </Badge>
             </div>

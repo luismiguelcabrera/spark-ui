@@ -1,76 +1,164 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
-import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 
-const badgeVariants = cva(
-  "inline-flex items-center gap-1 font-bold uppercase tracking-wider rounded-full border",
-  {
-    variants: {
-      variant: {
-        default: "bg-muted text-muted-foreground border-muted",
-        primary: "bg-primary/10 text-primary border-primary/20",
-        success: "bg-success/10 text-success border-success/20",
-        warning: "bg-warning/10 text-warning border-warning/20",
-        danger: "bg-destructive/10 text-destructive border-destructive/20",
-        info: "bg-primary/10 text-primary border-primary/20",
-        accent: "bg-accent/10 text-accent border-accent/20",
-        mint: "bg-mint/10 text-mint border-mint/20",
-        purple: "bg-purple-50 text-purple-800 border-purple-100 dark:bg-purple-950 dark:text-purple-300 dark:border-purple-800",
-        indigo: "bg-primary/10 text-primary border-primary/20",
-        live: "bg-primary text-white border-primary shadow-lg shadow-primary/30 animate-pulse motion-reduce:animate-none",
-      },
-      size: {
-        sm: "px-2 py-0.5 text-[10px]",
-        md: "px-2.5 py-1 text-xs",
-        lg: "px-3 py-1.5 text-sm",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "md",
-    },
-  }
-);
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
-/** Solid background colors for dot mode (no text, just a colored circle) */
-const dotColorMap: Record<string, string> = {
+type BadgeColor =
+  | "default"
+  | "primary"
+  | "secondary"
+  | "accent"
+  | "success"
+  | "warning"
+  | "danger"
+  | "info";
+
+type BadgeVariant =
+  | "elevated"
+  | "flat"
+  | "tonal"
+  | "outlined"
+  | "text"
+  | "plain";
+
+type BadgeSize = "sm" | "md" | "lg";
+
+// ---------------------------------------------------------------------------
+// Color × Variant matrix (WCAG AA compliant in both light & dark)
+// ---------------------------------------------------------------------------
+
+const colorMap: Record<BadgeColor, Record<BadgeVariant, string>> = {
+  default: {
+    elevated: "bg-muted text-muted-foreground shadow-md",
+    flat: "bg-muted text-muted-foreground",
+    tonal: "bg-muted/50 text-muted-foreground",
+    outlined: "border border-muted-foreground/30 text-muted-foreground",
+    text: "text-muted-foreground",
+    plain: "text-muted-foreground/60 hover:text-muted-foreground",
+  },
+  primary: {
+    elevated: "bg-primary-dark text-white shadow-md shadow-primary/25",
+    flat: "bg-primary-dark text-white",
+    tonal: "bg-primary/15 text-primary-text",
+    outlined: "border border-primary text-primary-text",
+    text: "text-primary-text",
+    plain: "text-muted-foreground hover:text-primary-text",
+  },
+  secondary: {
+    elevated:
+      "bg-secondary text-white dark:text-on-bright shadow-md shadow-secondary/10",
+    flat: "bg-secondary text-white dark:text-on-bright",
+    tonal: "bg-secondary/10 text-navy-text",
+    outlined: "border border-secondary/40 text-navy-text",
+    text: "text-navy-text",
+    plain: "text-muted-foreground hover:text-navy-text",
+  },
+  accent: {
+    elevated: "bg-accent text-on-bright shadow-md shadow-accent/25",
+    flat: "bg-accent text-on-bright",
+    tonal: "bg-accent/15 text-accent-text",
+    outlined: "border border-accent text-accent-text",
+    text: "text-accent-text",
+    plain: "text-muted-foreground hover:text-accent-text",
+  },
+  success: {
+    elevated: "bg-success text-on-bright shadow-md shadow-success/25",
+    flat: "bg-success text-on-bright",
+    tonal: "bg-success/15 text-success-text",
+    outlined: "border border-success text-success-text",
+    text: "text-success-text",
+    plain: "text-muted-foreground hover:text-success-text",
+  },
+  warning: {
+    elevated: "bg-warning text-on-bright shadow-md shadow-warning/25",
+    flat: "bg-warning text-on-bright",
+    tonal: "bg-warning/15 text-warning-text",
+    outlined: "border border-warning text-warning-text",
+    text: "text-warning-text",
+    plain: "text-muted-foreground hover:text-warning-text",
+  },
+  danger: {
+    elevated: "bg-destructive text-on-bright shadow-md shadow-destructive/25",
+    flat: "bg-destructive text-on-bright",
+    tonal: "bg-destructive/15 text-destructive-text",
+    outlined: "border border-destructive text-destructive-text",
+    text: "text-destructive-text",
+    plain: "text-muted-foreground hover:text-destructive-text",
+  },
+  info: {
+    elevated: "bg-primary-dark text-white shadow-md shadow-primary/25",
+    flat: "bg-primary-dark text-white",
+    tonal: "bg-primary/15 text-primary-text",
+    outlined: "border border-primary text-primary-text",
+    text: "text-primary-text",
+    plain: "text-muted-foreground hover:text-primary-text",
+  },
+};
+
+// ---------------------------------------------------------------------------
+// Size map
+// ---------------------------------------------------------------------------
+
+const sizeClasses: Record<BadgeSize, string> = {
+  sm: "px-2 py-0.5 text-[10px]",
+  md: "px-2.5 py-1 text-xs",
+  lg: "px-3 py-1.5 text-sm",
+};
+
+// ---------------------------------------------------------------------------
+// Dot helpers
+// ---------------------------------------------------------------------------
+
+const dotColorMap: Record<BadgeColor, string> = {
   default: "bg-muted-foreground",
   primary: "bg-primary",
+  secondary: "bg-secondary",
+  accent: "bg-accent",
   success: "bg-success",
   warning: "bg-warning",
   danger: "bg-destructive",
   info: "bg-primary",
-  accent: "bg-accent",
-  mint: "bg-mint",
-  purple: "bg-purple-500",
-  indigo: "bg-primary",
-  live: "bg-primary animate-pulse motion-reduce:animate-none",
 };
 
-const dotSizeMap: Record<string, string> = {
+const dotSizeMap: Record<BadgeSize, string> = {
   sm: "size-2",
   md: "size-2.5",
   lg: "size-3",
 };
 
-type BadgeProps = HTMLAttributes<HTMLSpanElement> &
-  VariantProps<typeof badgeVariants> & {
-    /** Render as a small dot indicator with no text */
-    dot?: boolean;
-    /** Add a white border ring (useful when overlapping other elements) */
-    bordered?: boolean;
-    /** Position badge as floating indicator over children */
-    floating?: boolean;
-    /** Content to display (used with floating) */
-    content?: ReactNode;
-    /** Cap numeric content at this value (shows "N+" when exceeded) */
-    max?: number;
-  };
+// ---------------------------------------------------------------------------
+// Props
+// ---------------------------------------------------------------------------
+
+type BadgeProps = HTMLAttributes<HTMLSpanElement> & {
+  /** Color palette */
+  color?: BadgeColor;
+  /** Visual style variant */
+  variant?: BadgeVariant;
+  /** Size */
+  size?: BadgeSize;
+  /** Render as a small dot indicator with no text */
+  dot?: boolean;
+  /** Add a ring border (useful when overlapping other elements) */
+  bordered?: boolean;
+  /** Position badge as floating indicator over children */
+  floating?: boolean;
+  /** Content to display (used with floating) */
+  content?: ReactNode;
+  /** Cap numeric content at this value (shows "N+" when exceeded) */
+  max?: number;
+};
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 
 function resolveContent(
   children: ReactNode,
   content: ReactNode,
-  max?: number
+  max?: number,
 ): ReactNode {
   const raw = content ?? children;
   if (max != null && typeof raw === "string") {
@@ -80,12 +168,17 @@ function resolveContent(
   return raw;
 }
 
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
 const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   (
     {
       className,
-      variant,
-      size,
+      color = "default",
+      variant = "tonal",
+      size = "md",
       dot,
       bordered,
       floating,
@@ -94,10 +187,9 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       children,
       ...props
     },
-    ref
+    ref,
   ) => {
-    const resolvedSize = size ?? "md";
-    const resolvedVariant = variant ?? "default";
+    const ringClass = bordered ? "ring-2 ring-surface" : "";
 
     // Dot mode: small solid circle
     if (dot && !floating) {
@@ -105,11 +197,11 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         <span
           ref={ref}
           className={cn(
-            "inline-block rounded-full border-0",
-            dotColorMap[resolvedVariant],
-            dotSizeMap[resolvedSize],
-            bordered && "ring-2 ring-surface",
-            className
+            "inline-block rounded-full",
+            dotColorMap[color],
+            dotSizeMap[size],
+            ringClass,
+            className,
           )}
           {...props}
         />
@@ -125,18 +217,20 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
           {dot ? (
             <span
               className={cn(
-                "absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 rounded-full border-0",
-                dotColorMap[resolvedVariant],
-                dotSizeMap[resolvedSize],
-                bordered && "ring-2 ring-surface"
+                "absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 rounded-full",
+                dotColorMap[color],
+                dotSizeMap[size],
+                ringClass,
               )}
             />
           ) : (
             <span
               className={cn(
-                badgeVariants({ variant, size }),
+                "inline-flex items-center gap-1 font-bold uppercase tracking-wider rounded-full",
                 "absolute top-0 right-0 translate-x-1/3 -translate-y-1/3",
-                bordered && "ring-2 ring-surface"
+                colorMap[color][variant],
+                sizeClasses[size],
+                ringClass,
               )}
             >
               {badgeContent}
@@ -152,18 +246,20 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       <span
         ref={ref}
         className={cn(
-          badgeVariants({ variant, size }),
-          bordered && "ring-2 ring-surface",
-          className
+          "inline-flex items-center gap-1 font-bold uppercase tracking-wider rounded-full",
+          colorMap[color][variant],
+          sizeClasses[size],
+          ringClass,
+          className,
         )}
         {...props}
       >
         {displayed}
       </span>
     );
-  }
+  },
 );
 Badge.displayName = "Badge";
 
-export { Badge, badgeVariants };
-export type { BadgeProps };
+export { Badge, colorMap as badgeColorMap };
+export type { BadgeProps, BadgeColor, BadgeVariant, BadgeSize };

@@ -90,7 +90,7 @@ export const UserList: Story = {
               <p className="text-xs text-muted-foreground truncate">{user.email}</p>
             </div>
             <Badge
-              variant={user.status === "active" ? "success" : "secondary"}
+              color={user.status === "active" ? "success" : "secondary"}
               size="sm"
             >
               {user.status}

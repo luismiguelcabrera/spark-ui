@@ -4,8 +4,8 @@ export type { IconProps } from "./icon";
 export { Card, CardHeader, CardTitle, CardContent, CardFooter, cardVariants } from "./card";
 export type { CardProps } from "./card";
 
-export { Badge, badgeVariants } from "./badge";
-export type { BadgeProps } from "./badge";
+export { Badge, badgeColorMap } from "./badge";
+export type { BadgeProps, BadgeColor, BadgeVariant, BadgeSize } from "./badge";
 
 export { Avatar, avatarVariants, AvatarGroupContext } from "./avatar";
 export type { AvatarProps, AvatarSize, AvatarColor, AvatarShape, AvatarStatus } from "./avatar";

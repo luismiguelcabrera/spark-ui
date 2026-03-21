@@ -26,8 +26,8 @@ type EasingFunction = (t: number) => number;
 type Trend = "up" | "down" | "neutral";
 
 const trendClasses: Record<Trend, string> = {
-  up: "text-green-600",
-  down: "text-red-600",
+  up: "text-success",
+  down: "text-destructive",
   neutral: "",
 };
 
@@ -210,7 +210,7 @@ const AnimatedNumber = forwardRef<HTMLSpanElement, AnimatedNumberProps>(
     return (
       <Comp
         ref={ref as never}
-        className={cn("tabular-nums", trendClass, className)}
+        className={cn("tabular-nums text-navy-text", trendClass, className)}
         {...(announce !== "off" && { "aria-live": announce, "aria-atomic": true })}
         {...props}
       >

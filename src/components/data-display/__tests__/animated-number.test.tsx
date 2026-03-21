@@ -222,32 +222,32 @@ describe("AnimatedNumber", () => {
   it("applies trend='up' green color class", () => {
     render(<AnimatedNumber value={100} trend="up" data-testid="trend-up" />);
     const el = screen.getByTestId("trend-up");
-    expect(el.className).toContain("text-green-600");
+    expect(el.className).toContain("text-success");
   });
 
-  it("applies trend='down' red color class", () => {
+  it("applies trend='down' destructive color class", () => {
     render(<AnimatedNumber value={100} trend="down" data-testid="trend-down" />);
     const el = screen.getByTestId("trend-down");
-    expect(el.className).toContain("text-red-600");
+    expect(el.className).toContain("text-destructive");
   });
 
   it("applies no extra color for trend='neutral'", () => {
     render(<AnimatedNumber value={100} trend="neutral" data-testid="trend-neutral" />);
     const el = screen.getByTestId("trend-neutral");
-    expect(el.className).not.toContain("text-green");
-    expect(el.className).not.toContain("text-red");
+    expect(el.className).not.toContain("text-success");
+    expect(el.className).not.toContain("text-destructive");
   });
 
   it("trend='auto' resolves based on value vs from", () => {
     render(<AnimatedNumber value={100} from={50} trend="auto" data-testid="trend-auto" />);
     const el = screen.getByTestId("trend-auto");
-    expect(el.className).toContain("text-green-600");
+    expect(el.className).toContain("text-success");
   });
 
   it("trend='auto' resolves down when value < from", () => {
     render(<AnimatedNumber value={10} from={50} trend="auto" data-testid="trend-auto-down" />);
     const el = screen.getByTestId("trend-auto-down");
-    expect(el.className).toContain("text-red-600");
+    expect(el.className).toContain("text-destructive");
   });
 
   it("shows trend icon when showTrendIcon is true", () => {

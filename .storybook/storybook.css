@@ -21,6 +21,15 @@
   --color-warning: var(--color-warning);
   --color-destructive: var(--color-destructive);
 
+  /* ── Semantic text (WCAG AA safe on tinted backgrounds) ── */
+  --color-primary-text: var(--color-primary-text);
+  --color-success-text: var(--color-success-text);
+  --color-destructive-text: var(--color-destructive-text);
+  --color-warning-text: var(--color-warning-text);
+  --color-accent-text: var(--color-accent-text);
+  --color-mint-text: var(--color-mint-text);
+  --color-on-bright: var(--color-on-bright);
+
   /* ── Surfaces ── */
   --color-surface: var(--color-surface);
   --color-light: var(--color-light);

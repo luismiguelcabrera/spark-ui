@@ -180,7 +180,7 @@ export const WrapLayout = {
         "ESLint",
         "Prettier",
       ].map((tag) => (
-        <Badge key={tag} variant="primary">
+        <Badge key={tag} color="primary">
           {tag}
         </Badge>
       ))}
