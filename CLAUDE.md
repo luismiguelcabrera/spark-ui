@@ -133,6 +133,8 @@ Components with async actions should support:
 - Use `bg-surface` / `ring-surface` for elements that must match the page background in both light and dark mode
 - For color tints, use opacity modifier: `bg-success/15 text-success` (15% opacity background + full text)
 - **Do not hardcode Tailwind colors** (e.g., `bg-red-100`, `text-gray-600`) for anything that should adapt to dark mode — use the CSS variables instead
+- **`--color-secondary` inverts between modes** (dark navy in light, light in dark) — do NOT use it for backgrounds, progress bars, or UI chrome. Use `muted-foreground` for neutral interactive elements instead. `secondary` is only suitable for heading/text color.
+- **Storybook `@theme` registration**: When adding a new CSS variable to `theme.css`, you MUST also register it in `.storybook/storybook.css` `@theme` block. Without this, Tailwind v4 cannot generate the utility class (e.g., `bg-muted` won't work unless `--color-muted` is in `@theme`).
 - Consumers override any color via CSS: `:root { --color-success: #22c55e; }` / `.dark { --color-success: #4ade80; }`
 - Custom keyframes go in `theme.css`, not injected at runtime
 
