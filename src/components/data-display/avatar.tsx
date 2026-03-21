@@ -30,13 +30,15 @@ export const AvatarGroupContext = createContext<AvatarGroupContextValue | null>(
 // ---------------------------------------------------------------------------
 type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl";
 type AvatarColor =
-  | "neutral"
+  | "default"
   | "primary"
   | "secondary"
+  | "accent"
   | "success"
   | "warning"
-  | "destructive"
-  | "accent";
+  | "danger"
+  | "info";
+type AvatarVariant = "elevated" | "flat" | "tonal" | "outlined";
 type AvatarShape = "circle" | "square" | "rounded";
 type AvatarStatus = "online" | "offline" | "busy" | "away";
 
@@ -74,23 +76,64 @@ const avatarVariants = cva(
 );
 
 // ---------------------------------------------------------------------------
-// Maps
+// Color × Variant matrix (WCAG AA compliant in both light & dark)
 // ---------------------------------------------------------------------------
-const colorMap: Record<AvatarColor, string> = {
-  neutral: "bg-muted text-muted-foreground",
-  primary: "bg-primary/15 text-primary",
-  secondary: "bg-secondary/15 text-secondary",
-  success: "bg-success/15 text-success",
-  warning: "bg-warning/15 text-warning",
-  destructive: "bg-destructive/15 text-destructive",
-  accent: "bg-accent/15 text-accent",
+const colorMap: Record<AvatarColor, Record<AvatarVariant, string>> = {
+  default: {
+    elevated: "bg-muted text-muted-foreground shadow-md",
+    flat: "bg-muted text-muted-foreground",
+    tonal: "bg-muted/50 text-muted-foreground",
+    outlined: "border-2 border-muted-foreground/30 text-muted-foreground",
+  },
+  primary: {
+    elevated: "bg-primary-dark text-white shadow-md shadow-primary/25",
+    flat: "bg-primary-dark text-white",
+    tonal: "bg-primary/15 text-primary-text",
+    outlined: "border-2 border-primary text-primary-text",
+  },
+  secondary: {
+    elevated: "bg-secondary text-on-secondary shadow-md shadow-secondary/10",
+    flat: "bg-secondary text-on-secondary",
+    tonal: "bg-secondary/10 text-navy-text",
+    outlined: "border-2 border-secondary/40 text-navy-text",
+  },
+  accent: {
+    elevated: "bg-accent text-on-bright shadow-md shadow-accent/25",
+    flat: "bg-accent text-on-bright",
+    tonal: "bg-accent/15 text-accent-text",
+    outlined: "border-2 border-accent text-accent-text",
+  },
+  success: {
+    elevated: "bg-success text-on-bright shadow-md shadow-success/25",
+    flat: "bg-success text-on-bright",
+    tonal: "bg-success/15 text-success-text",
+    outlined: "border-2 border-success text-success-text",
+  },
+  warning: {
+    elevated: "bg-warning text-on-bright shadow-md shadow-warning/25",
+    flat: "bg-warning text-on-bright",
+    tonal: "bg-warning/15 text-warning-text",
+    outlined: "border-2 border-warning text-warning-text",
+  },
+  danger: {
+    elevated: "bg-destructive text-on-bright shadow-md shadow-destructive/25",
+    flat: "bg-destructive text-on-bright",
+    tonal: "bg-destructive/15 text-destructive-text",
+    outlined: "border-2 border-destructive text-destructive-text",
+  },
+  info: {
+    elevated: "bg-primary-dark text-white shadow-md shadow-primary/25",
+    flat: "bg-primary-dark text-white",
+    tonal: "bg-primary/15 text-primary-text",
+    outlined: "border-2 border-primary text-primary-text",
+  },
 };
 
 const statusColorMap: Record<AvatarStatus, string> = {
-  online: "bg-emerald-500",
-  offline: "bg-gray-400",
-  busy: "bg-red-500",
-  away: "bg-amber-500",
+  online: "bg-success",
+  offline: "bg-muted-foreground",
+  busy: "bg-destructive",
+  away: "bg-warning",
 };
 
 const statusSizeMap: Record<AvatarSize, string> = {
@@ -133,8 +176,10 @@ type AvatarProps = {
   icon?: string | ReactNode;
   /** Custom fallback content — overrides initials/icon when no image */
   fallback?: ReactNode;
-  /** Background color for the fallback state */
+  /** Color palette */
   color?: AvatarColor;
+  /** Visual style variant */
+  variant?: AvatarVariant;
   /** Shape of the avatar */
   shape?: AvatarShape;
   /** Online/offline status indicator dot */
@@ -157,7 +202,8 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       initials,
       icon,
       fallback,
-      color = "neutral",
+      color = "default",
+      variant = "tonal",
       shape: shapeProp,
       status,
       size: sizeProp,
@@ -194,7 +240,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         aria-label={alt || initials || "Avatar"}
         className={cn(
           avatarVariants({ size, shape, ring }),
-          colorMap[color],
+          colorMap[color][variant],
           className
         )}
       >
@@ -260,11 +306,12 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
 );
 Avatar.displayName = "Avatar";
 
-export { Avatar, avatarVariants };
+export { Avatar, avatarVariants, colorMap as avatarColorMap };
 export type {
   AvatarProps,
   AvatarSize,
   AvatarColor,
+  AvatarVariant,
   AvatarShape,
   AvatarStatus,
 };

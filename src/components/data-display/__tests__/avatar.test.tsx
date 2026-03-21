@@ -128,29 +128,97 @@ describe("Avatar", () => {
   // Color
   // ------------------------------------------------------------------
   it.each([
-    "neutral",
+    "default",
     "primary",
     "secondary",
+    "accent",
     "success",
     "warning",
-    "destructive",
-    "accent",
+    "danger",
+    "info",
   ] as const)("renders color=%s without error", (color) => {
     const { container } = render(<Avatar color={color} initials="AB" />);
     expect(container.firstElementChild).toBeInTheDocument();
   });
 
-  it("applies neutral color by default (uses muted variable)", () => {
+  it("applies default color by default (uses muted variable)", () => {
     const { container } = render(<Avatar initials="AB" />);
     const root = container.firstElementChild as HTMLElement;
-    expect(root.className).toContain("bg-muted");
     expect(root.className).toContain("text-muted-foreground");
   });
 
-  it("applies primary color classes", () => {
+  it("applies primary tonal color classes", () => {
     const { container } = render(<Avatar color="primary" initials="AB" />);
     const root = container.firstElementChild as HTMLElement;
-    expect(root.className).toContain("text-primary");
+    expect(root.className).toContain("text-primary-text");
+  });
+
+  // ------------------------------------------------------------------
+  // Variant
+  // ------------------------------------------------------------------
+  it.each(["elevated", "flat", "tonal", "outlined"] as const)(
+    "renders variant=%s without error",
+    (variant) => {
+      const { container } = render(
+        <Avatar variant={variant} color="primary" initials="AB" />
+      );
+      expect(container.firstElementChild).toBeInTheDocument();
+    }
+  );
+
+  it("defaults to tonal variant", () => {
+    const { container } = render(<Avatar color="primary" initials="AB" />);
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.className).toContain("bg-primary/15");
+    expect(root.className).toContain("text-primary-text");
+  });
+
+  it("applies elevated variant classes", () => {
+    const { container } = render(
+      <Avatar color="primary" variant="elevated" initials="AB" />
+    );
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.className).toContain("bg-primary-dark");
+    expect(root.className).toContain("text-white");
+    expect(root.className).toContain("shadow-md");
+  });
+
+  it("applies flat variant classes", () => {
+    const { container } = render(
+      <Avatar color="success" variant="flat" initials="AB" />
+    );
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.className).toContain("bg-success");
+    expect(root.className).toContain("text-on-bright");
+  });
+
+  it("applies outlined variant classes", () => {
+    const { container } = render(
+      <Avatar color="accent" variant="outlined" initials="AB" />
+    );
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.className).toContain("border-2");
+    expect(root.className).toContain("border-accent");
+    expect(root.className).toContain("text-accent-text");
+  });
+
+  // ------------------------------------------------------------------
+  // Color × Variant matrix
+  // ------------------------------------------------------------------
+  it.each(
+    (
+      ["default", "primary", "secondary", "accent", "success", "warning", "danger", "info"] as const
+    ).flatMap((color) =>
+      (["elevated", "flat", "tonal", "outlined"] as const).map((variant) => ({
+        color,
+        variant,
+      }))
+    )
+  )("renders color=$color variant=$variant", ({ color, variant }) => {
+    const { container } = render(
+      <Avatar color={color} variant={variant} initials="AB" />
+    );
+    expect(container.firstElementChild).toBeInTheDocument();
   });
 
   // ------------------------------------------------------------------
@@ -181,7 +249,7 @@ describe("Avatar", () => {
     const { container } = render(<Avatar status="online" alt="User" />);
     const dot = container.querySelector("[aria-label='online']");
     expect(dot).toBeInTheDocument();
-    expect(dot?.className).toContain("bg-emerald-500");
+    expect(dot?.className).toContain("bg-success");
   });
 
   it("does not render status indicator when status is not set", () => {

@@ -10,14 +10,19 @@ const meta = {
     color: {
       control: "select",
       options: [
-        "neutral",
+        "default",
         "primary",
         "secondary",
+        "accent",
         "success",
         "warning",
-        "destructive",
-        "accent",
+        "danger",
+        "info",
       ],
+    },
+    variant: {
+      control: "select",
+      options: ["elevated", "flat", "tonal", "outlined"],
     },
     shape: { control: "select", options: ["circle", "square", "rounded"] },
     ring: { control: "select", options: ["none", "white", "primary"] },
@@ -64,18 +69,73 @@ export const WithIcon: Story = {
 };
 
 // ------------------------------------------------------------------
+// Variants
+// ------------------------------------------------------------------
+export const Variants: Story = {
+  render: (args) => (
+    <div className="flex items-center gap-3">
+      <Avatar {...args} variant="elevated" initials="EL" />
+      <Avatar {...args} variant="flat" initials="FL" />
+      <Avatar {...args} variant="tonal" initials="TO" />
+      <Avatar {...args} variant="outlined" initials="OL" />
+    </div>
+  ),
+  args: { size: "lg", color: "primary" },
+};
+
+// ------------------------------------------------------------------
 // Color
 // ------------------------------------------------------------------
 export const Colors: Story = {
   render: (args) => (
     <div className="flex items-center gap-3">
-      <Avatar {...args} color="neutral" initials="NE" />
+      <Avatar {...args} color="default" initials="DE" />
       <Avatar {...args} color="primary" initials="PR" />
       <Avatar {...args} color="secondary" initials="SE" />
+      <Avatar {...args} color="accent" initials="AC" />
       <Avatar {...args} color="success" initials="SU" />
       <Avatar {...args} color="warning" initials="WA" />
-      <Avatar {...args} color="destructive" initials="DE" />
-      <Avatar {...args} color="accent" initials="AC" />
+      <Avatar {...args} color="danger" initials="DA" />
+      <Avatar {...args} color="info" initials="IN" />
+    </div>
+  ),
+  args: { size: "lg" },
+};
+
+// ------------------------------------------------------------------
+// Color × Variant matrix
+// ------------------------------------------------------------------
+const colors = [
+  "default",
+  "primary",
+  "secondary",
+  "accent",
+  "success",
+  "warning",
+  "danger",
+  "info",
+] as const;
+const variants = ["elevated", "flat", "tonal", "outlined"] as const;
+
+export const ColorVariantMatrix: Story = {
+  render: (args) => (
+    <div className="space-y-4">
+      {variants.map((variant) => (
+        <div key={variant} className="flex items-center gap-3">
+          <span className="w-20 text-xs text-muted-foreground font-mono">
+            {variant}
+          </span>
+          {colors.map((color) => (
+            <Avatar
+              {...args}
+              key={`${color}-${variant}`}
+              color={color}
+              variant={variant}
+              initials={color.slice(0, 2).toUpperCase()}
+            />
+          ))}
+        </div>
+      ))}
     </div>
   ),
   args: { size: "lg" },

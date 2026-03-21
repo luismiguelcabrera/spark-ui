@@ -7,8 +7,8 @@ export type { CardProps } from "./card";
 export { Badge, badgeColorMap } from "./badge";
 export type { BadgeProps, BadgeColor, BadgeVariant, BadgeSize } from "./badge";
 
-export { Avatar, avatarVariants, AvatarGroupContext } from "./avatar";
-export type { AvatarProps, AvatarSize, AvatarColor, AvatarShape, AvatarStatus } from "./avatar";
+export { Avatar, avatarVariants, avatarColorMap, AvatarGroupContext } from "./avatar";
+export type { AvatarProps, AvatarSize, AvatarColor, AvatarVariant, AvatarShape, AvatarStatus } from "./avatar";
 
 export { AvatarGroup } from "./avatar-group";
 export type { AvatarGroupProps, AvatarGroupBorderColor } from "./avatar-group";
