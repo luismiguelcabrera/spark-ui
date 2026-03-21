@@ -36,7 +36,7 @@ const colorMap: Record<BadgeColor, Record<BadgeVariant, string>> = {
     tonal: "bg-muted/50 text-muted-foreground",
     outlined: "border border-muted-foreground/30 text-muted-foreground",
     text: "text-muted-foreground",
-    plain: "text-muted-foreground/60 hover:text-muted-foreground",
+    plain: "text-muted-foreground hover:text-navy-text",
   },
   primary: {
     elevated: "bg-primary-dark text-white shadow-md shadow-primary/25",
@@ -48,8 +48,8 @@ const colorMap: Record<BadgeColor, Record<BadgeVariant, string>> = {
   },
   secondary: {
     elevated:
-      "bg-secondary text-white dark:text-on-bright shadow-md shadow-secondary/10",
-    flat: "bg-secondary text-white dark:text-on-bright",
+      "bg-secondary text-on-secondary shadow-md shadow-secondary/10",
+    flat: "bg-secondary text-on-secondary",
     tonal: "bg-secondary/10 text-navy-text",
     outlined: "border border-secondary/40 text-navy-text",
     text: "text-navy-text",
@@ -108,10 +108,10 @@ const sizeClasses: Record<BadgeSize, string> = {
 };
 
 // ---------------------------------------------------------------------------
-// Dot helpers
+// Floating dot helpers (standalone dots use StatusDot component)
 // ---------------------------------------------------------------------------
 
-const dotColorMap: Record<BadgeColor, string> = {
+const floatingDotColorMap: Record<BadgeColor, string> = {
   default: "bg-muted-foreground",
   primary: "bg-primary",
   secondary: "bg-secondary",
@@ -122,7 +122,7 @@ const dotColorMap: Record<BadgeColor, string> = {
   info: "bg-primary",
 };
 
-const dotSizeMap: Record<BadgeSize, string> = {
+const floatingDotSizeMap: Record<BadgeSize, string> = {
   sm: "size-2",
   md: "size-2.5",
   lg: "size-3",
@@ -139,12 +139,12 @@ type BadgeProps = HTMLAttributes<HTMLSpanElement> & {
   variant?: BadgeVariant;
   /** Size */
   size?: BadgeSize;
-  /** Render as a small dot indicator with no text */
-  dot?: boolean;
   /** Add a ring border (useful when overlapping other elements) */
   bordered?: boolean;
   /** Position badge as floating indicator over children */
   floating?: boolean;
+  /** Show a dot instead of text content (only in floating mode) */
+  dot?: boolean;
   /** Content to display (used with floating) */
   content?: ReactNode;
   /** Cap numeric content at this value (shows "N+" when exceeded) */
@@ -191,24 +191,7 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   ) => {
     const ringClass = bordered ? "ring-2 ring-surface" : "";
 
-    // Dot mode: small solid circle
-    if (dot && !floating) {
-      return (
-        <span
-          ref={ref}
-          className={cn(
-            "inline-block rounded-full",
-            dotColorMap[color],
-            dotSizeMap[size],
-            ringClass,
-            className,
-          )}
-          {...props}
-        />
-      );
-    }
-
-    // Floating mode: wrap children with an absolutely positioned badge
+    // Floating mode: wrap children with an absolutely positioned badge or dot
     if (floating) {
       const badgeContent = dot ? null : resolveContent(null, content, max);
       return (
@@ -218,8 +201,8 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
             <span
               className={cn(
                 "absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 rounded-full",
-                dotColorMap[color],
-                dotSizeMap[size],
+                floatingDotColorMap[color],
+                floatingDotSizeMap[size],
                 ringClass,
               )}
             />

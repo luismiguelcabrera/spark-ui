@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Badge, type BadgeColor, type BadgeVariant } from "./badge";
+import { StatusDot } from "./status-dot";
 import { Icon } from "./icon";
 
 const colors: BadgeColor[] = [
@@ -36,9 +37,9 @@ const meta = {
       options: variants,
     },
     size: { control: "select", options: ["sm", "md", "lg"] },
-    dot: { control: "boolean" },
     bordered: { control: "boolean" },
     floating: { control: "boolean" },
+    dot: { control: "boolean" },
     max: { control: "number" },
   },
 } satisfies Meta<typeof Badge>;
@@ -174,18 +175,6 @@ export const FullMatrix: Story = {
 // Features
 // ---------------------------------------------------------------------------
 
-export const Dot: Story = {
-  render: (args) => (
-    <div className="flex items-center gap-4">
-      <Badge {...args} dot color="success" />
-      <Badge {...args} dot color="danger" />
-      <Badge {...args} dot color="primary" />
-      <Badge {...args} dot color="warning" />
-      <Badge {...args} dot color="info" />
-    </div>
-  ),
-};
-
 export const WithMax: Story = {
   render: (args) => (
     <div className="flex items-center gap-4">
@@ -214,7 +203,7 @@ export const Bordered: Story = {
       <Badge {...args} bordered color="success">
         Active
       </Badge>
-      <Badge {...args} bordered dot color="primary" />
+      <StatusDot color="blue" size="md" />
     </div>
   ),
 };

@@ -69,15 +69,6 @@ describe("Badge", () => {
     },
   );
 
-  // --- Dot ---
-
-  it("renders dot mode", () => {
-    const { container } = render(<Badge dot color="success" />);
-    const dot = container.firstChild as HTMLElement;
-    expect(dot.className).toContain("rounded-full");
-    expect(dot.className).toContain("bg-success");
-  });
-
   // --- Bordered ---
 
   it("applies ring class when bordered", () => {

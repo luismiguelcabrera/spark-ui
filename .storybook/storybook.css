@@ -29,6 +29,7 @@
   --color-accent-text: var(--color-accent-text);
   --color-mint-text: var(--color-mint-text);
   --color-on-bright: var(--color-on-bright);
+  --color-on-secondary: var(--color-on-secondary);
 
   /* ── Surfaces ── */
   --color-surface: var(--color-surface);

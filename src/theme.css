@@ -35,8 +35,9 @@
   --color-accent-text: #92400e;       /* amber-800 */
   --color-mint-text: #065f46;         /* emerald-800 */
 
-  /* ── On-bright (dark text for solid bright backgrounds, both modes) ── */
+  /* ── On-surface (text for solid colored backgrounds) ── */
   --color-on-bright: #030712;
+  --color-on-secondary: #ffffff;
 
   /* ── Surfaces ── */
   --color-surface: #ffffff;
@@ -62,7 +63,7 @@
 /* ── Dark mode ── */
 .dark {
   --color-primary: #818cf8;
-  --color-primary-dark: #6366f1;
+  --color-primary-dark: #4f46e5;    /* indigo-600 — 5.1:1 with white */
   --color-secondary: #f1f5f9;
   --color-secondary-light: #e2e8f0;
   --color-accent: #fbbf24;
@@ -80,6 +81,7 @@
   --color-mint-text: #6ee7b7;         /* emerald-300 */
 
   --color-on-bright: #030712;
+  --color-on-secondary: #030712;    /* dark text on light secondary bg */
 
   --color-surface: #1e293b;
   --color-light: #0f172a;

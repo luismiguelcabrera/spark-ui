@@ -71,9 +71,12 @@ Use a consistent size scale across all components: `xs`, `sm`, `md`, `lg`, `xl`.
 
 All text/background combinations MUST pass WCAG AA (≥ 4.5:1 contrast ratio).
 
-- Light backgrounds (amber, yellow) use dark text (`text-amber-950`), not white
+- Light backgrounds (amber, yellow) use dark text (`text-on-bright`), not white
+- For text on tinted backgrounds (10-15% opacity), use `-text` CSS variables: `text-primary-text`, `text-success-text`, `text-destructive-text`, `text-warning-text`, `text-accent-text` — these are darker in light mode, brighter in dark mode
+- For text on solid bright backgrounds (elevated/flat badges, buttons), use `text-on-bright` (always dark) or `text-on-secondary` (white in light, dark in dark)
 - Verify with a contrast checker before shipping
-- Run `jest-axe` tests against all component stories
+- Run `jest-axe` tests against all component stories (tests run in both light and dark mode)
+- Use Storybook's addon-a11y for browser-based contrast checking (supports dark mode via addon-themes)
 
 ### 4. Accessibility
 
@@ -129,12 +132,15 @@ Components with async actions should support:
 ### 10. Theme Integration
 
 - Use CSS variable colors for **all** colors — brand (`bg-primary`, `text-secondary`) and semantic (`bg-success`, `text-destructive`, `bg-muted`, `text-muted-foreground`)
-- `theme.css` ships `--color-success`, `--color-warning`, `--color-destructive`, `--color-muted`, `--color-muted-foreground` with light/dark defaults under `.dark`
+- `theme.css` ships light/dark defaults under `.dark` for: brand colors, semantic colors, `-text` variants, `on-*` surface tokens, and surface/shadow tokens
 - Use `bg-surface` / `ring-surface` for elements that must match the page background in both light and dark mode
-- For color tints, use opacity modifier: `bg-success/15 text-success` (15% opacity background + full text)
+- For color tints, use opacity modifier: `bg-success/15 text-success-text` (15% opacity background + WCAG-safe text)
 - **Do not hardcode Tailwind colors** (e.g., `bg-red-100`, `text-gray-600`) for anything that should adapt to dark mode — use the CSS variables instead
-- **`--color-secondary` inverts between modes** (dark navy in light, light in dark) — do NOT use it for backgrounds, progress bars, or UI chrome. Use `muted-foreground` for neutral interactive elements instead. `secondary` is only suitable for heading/text color.
-- **Storybook `@theme` registration**: When adding a new CSS variable to `theme.css`, you MUST also register it in `.storybook/storybook.css` `@theme` block. Without this, Tailwind v4 cannot generate the utility class (e.g., `bg-muted` won't work unless `--color-muted` is in `@theme`).
+- **`--color-secondary` inverts between modes** (dark navy in light, light in dark) — use `text-on-secondary` for solid secondary backgrounds, `text-navy-text` for tonal/outlined. Do NOT use `text-white dark:text-*` (Tailwind `dark:` variants may not work with Storybook's theme wrapper).
+- **Semantic text tokens**: Use `text-{color}-text` (e.g., `text-primary-text`, `text-destructive-text`) when text must contrast with a tinted background. These are darker in light mode, brighter in dark mode.
+- **On-surface tokens**: Use `text-on-bright` for dark text on solid bright backgrounds (warning, accent, success, danger). Use `text-on-secondary` for secondary's mode-flipping bg.
+- **Storybook `@theme` registration**: When adding a new CSS variable to `theme.css`, you MUST also register it in `.storybook/storybook.css` `@theme` block. Without this, Tailwind v4 cannot generate the utility class.
+- **Storybook dark mode**: `@storybook/addon-themes` with `withThemeByClassName` toggles `.dark` on the preview. Add `globals: { theme: "dark" }` to stories for automated dark-mode a11y testing.
 - Consumers override any color via CSS: `:root { --color-success: #22c55e; }` / `.dark { --color-success: #4ade80; }`
 - Custom keyframes go in `theme.css`, not injected at runtime
 
