@@ -422,8 +422,8 @@ const Sheet = forwardRef<HTMLDivElement, SheetProps>(
               "absolute bg-surface shadow-float flex flex-col",
               positionMap[side],
               sizeMap[size][side],
-              (side === "left" || side === "right") && "h-full",
-              (side === "top" || side === "bottom") && "w-full",
+              (side === "left" || side === "right") && "h-full max-w-full",
+              (side === "top" || side === "bottom") && "w-full max-h-full",
               // Transition: transform + opacity, 300ms (disabled during swipe)
               !isSwiping && "transition-[transform,opacity] duration-300",
               isVisible
