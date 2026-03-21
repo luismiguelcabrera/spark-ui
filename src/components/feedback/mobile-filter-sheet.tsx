@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { cn } from "../../lib/utils";
 import { Icon } from "../data-display/icon";
+import { Sheet } from "./sheet";
 import { MobileFilterSection } from "./mobile-filter-section";
 import { MobileFilterPill } from "./mobile-filter-pill";
 
@@ -37,36 +38,26 @@ function MobileFilterSheet({
   const [isOpen, setIsOpen] = useState(false);
   const hideClass = COLLAPSE_CLASS[collapseAt];
 
-  const close = useCallback(() => setIsOpen(false), []);
-
-  // Escape key to close
-  useEffect(() => {
-    if (!isOpen) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [isOpen, close]);
-
-  // Lock body scroll when open
-  useEffect(() => {
-    if (!isOpen) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, [isOpen]);
+  const title = (
+    <span>
+      {label}
+      {activeCount > 0 && (
+        <span className="ml-2 text-xs font-semibold text-primary">
+          {activeCount} active
+        </span>
+      )}
+    </span>
+  );
 
   return (
     <>
+      {/* Trigger button — hidden above collapseAt breakpoint */}
       <button
         type="button"
         onClick={() => setIsOpen(true)}
         aria-label={label || "Filters"}
         className={cn(
-          "relative flex items-center gap-1 bg-slate-50 text-slate-700 rounded-lg border border-slate-200 hover:border-slate-300 transition-colors shrink-0 p-2",
+          "relative flex items-center gap-1 bg-muted/50 text-navy-text rounded-lg border border-muted hover:border-muted transition-colors shrink-0 p-2",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
           hideClass
         )}
@@ -80,46 +71,27 @@ function MobileFilterSheet({
         )}
       </button>
 
-      {isOpen && (
-        <div
-          className={cn("fixed inset-0 z-50 flex items-end bg-black/40 backdrop-blur-sm", hideClass)}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) close();
-          }}
-        >
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label={label || "Filters"}
-            className="w-full bg-white rounded-t-2xl shadow-float max-h-[80vh] flex flex-col"
-          >
-            <div className="flex justify-center pt-3 pb-1 shrink-0">
-              <div className="w-10 h-1 bg-slate-200 rounded-full" />
-            </div>
-            <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 shrink-0">
-              <h3 className="font-bold text-slate-900 text-base">
-                {label}
-                {activeCount > 0 && (
-                  <span className="ml-2 text-xs font-semibold text-primary">
-                    {activeCount} active
-                  </span>
-                )}
-              </h3>
-              <button
-                type="button"
-                aria-label="Close filters"
-                onClick={close}
-                className="p-1 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                <Icon name="close" size="md" />
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto px-5 pt-4 pb-10 flex flex-col gap-6">
-              {children}
-            </div>
+      {/* Bottom sheet — powered by the shared Sheet component */}
+      <Sheet
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        side="bottom"
+        size="md"
+        title={label ? undefined : undefined}
+        header={
+          <div className="flex items-center justify-between w-full">
+            <h3 className="font-bold text-navy-text text-base">{title}</h3>
           </div>
+        }
+        showClose
+        showDragHandle
+        swipeable
+        className={hideClass}
+      >
+        <div className="flex flex-col gap-6">
+          {children}
         </div>
-      )}
+      </Sheet>
     </>
   );
 }

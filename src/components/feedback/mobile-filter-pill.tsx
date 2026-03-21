@@ -20,7 +20,7 @@ export function MobileFilterPill({ active, onClick, children }: MobileFilterPill
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
         active
           ? "bg-primary/10 text-primary border-primary/20"
-          : "bg-white text-slate-700 border-slate-200 hover:border-slate-300",
+          : "bg-surface text-navy-text border-muted hover:border-muted",
       )}
     >
       {children}

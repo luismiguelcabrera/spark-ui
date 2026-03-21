@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import { MobileFilterSheet } from "../mobile-filter-sheet";
@@ -68,7 +68,10 @@ describe("MobileFilterSheet", () => {
     );
     await user.click(screen.getByRole("button", { name: /Filters/i }));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Close filters" }));
+    await user.click(screen.getByRole("button", { name: /close/i }));
+    // Sheet uses exit animation — fire transitionEnd to unmount in jsdom
+    const panel = screen.getByRole("dialog").querySelector("[class*=shadow-float]");
+    if (panel) fireEvent.transitionEnd(panel);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
