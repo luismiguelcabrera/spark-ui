@@ -8,8 +8,13 @@ const meta = {
   component: ProgressSteps,
   tags: ["autodocs"],
   argTypes: {
-    size: { control: "select", options: ["sm", "md", "lg"] },
-    color: { control: "select", options: ["primary", "success", "warning", "accent"] },
+    size: { control: "select", options: ["xs", "sm", "md", "lg", "xl"] },
+    color: {
+      control: "select",
+      options: ["primary", "secondary", "success", "warning", "destructive", "accent"],
+    },
+    variant: { control: "select", options: ["solid", "outline", "soft"] },
+    orientation: { control: "select", options: ["horizontal", "vertical"] },
     value: { control: { type: "range", min: 0, max: 100, step: 1 } },
     showCheck: { control: "boolean" },
   },
@@ -123,20 +128,22 @@ export const Interactive: Story = {
             Reset
           </Button>
         </div>
-        <p className="text-xs text-slate-400">Progress: {value}%</p>
+        <p className="text-xs text-muted-foreground">Progress: {value}%</p>
       </div>
     );
   },
 };
 
 export const Sizes: Story = {
-  render: () => (
+  render: (args) => (
     <div className="flex flex-col gap-12 max-w-lg">
-      {(["sm", "md", "lg"] as const).map((sz) => (
+      {(["xs", "sm", "md", "lg", "xl"] as const).map((sz) => (
         <div key={sz}>
-          <p className="text-xs font-semibold text-slate-400 uppercase mb-4">{sz}</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase mb-4">
+            {sz}
+          </p>
           <div className="pt-2 pb-8">
-            <ProgressSteps steps={orderSteps} value={66} size={sz} />
+            <ProgressSteps {...args} steps={orderSteps} value={66} size={sz} />
           </div>
         </div>
       ))}
@@ -145,13 +152,120 @@ export const Sizes: Story = {
 };
 
 export const Colors: Story = {
-  render: () => (
+  render: (args) => (
     <div className="flex flex-col gap-12 max-w-lg">
-      {(["primary", "success", "warning", "accent"] as const).map((clr) => (
+      {(
+        ["primary", "secondary", "success", "warning", "destructive", "accent"] as const
+      ).map((clr) => (
         <div key={clr}>
-          <p className="text-xs font-semibold text-slate-400 uppercase mb-4">{clr}</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase mb-4">
+            {clr}
+          </p>
           <div className="pt-2 pb-8">
-            <ProgressSteps steps={orderSteps} value={66} color={clr} />
+            <ProgressSteps {...args} steps={orderSteps} value={66} color={clr} />
+          </div>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const Variants: Story = {
+  render: (args) => (
+    <div className="flex flex-col gap-12 max-w-lg">
+      {(["solid", "outline", "soft"] as const).map((v) => (
+        <div key={v}>
+          <p className="text-xs font-semibold text-muted-foreground uppercase mb-4">
+            {v}
+          </p>
+          <div className="pt-2 pb-8">
+            <ProgressSteps {...args} steps={orderSteps} value={66} variant={v} />
+          </div>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const Vertical: Story = {
+  args: {
+    steps: orderSteps,
+    value: 66,
+    orientation: "vertical",
+  },
+  render: (args) => (
+    <div className="max-w-xs">
+      <ProgressSteps {...args} />
+    </div>
+  ),
+};
+
+export const VerticalWithDescriptions: Story = {
+  args: {
+    steps: [
+      { label: "Account", description: "Create your account" },
+      { label: "Profile", description: "Fill in your details" },
+      { label: "Preferences", description: "Configure your settings" },
+      { label: "Done", description: "You're all set!" },
+    ],
+    value: 50,
+    orientation: "vertical",
+  },
+  render: (args) => (
+    <div className="max-w-xs">
+      <ProgressSteps {...args} />
+    </div>
+  ),
+};
+
+export const VerticalVariants: Story = {
+  render: (args) => (
+    <div className="flex gap-12">
+      {(["solid", "outline", "soft"] as const).map((v) => (
+        <div key={v}>
+          <p className="text-xs font-semibold text-muted-foreground uppercase mb-4">
+            {v}
+          </p>
+          <ProgressSteps
+            {...args}
+            steps={orderSteps}
+            value={66}
+            orientation="vertical"
+            variant={v}
+          />
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const ColorVariantMatrix: Story = {
+  render: (args) => (
+    <div className="flex flex-col gap-10">
+      {(["solid", "outline", "soft"] as const).map((v) => (
+        <div key={v}>
+          <p className="text-sm font-bold text-foreground mb-4 capitalize">
+            {v}
+          </p>
+          <div className="flex flex-col gap-8">
+            {(
+              ["primary", "success", "destructive"] as const
+            ).map((clr) => (
+              <div key={clr} className="max-w-lg">
+                <p className="text-xs text-muted-foreground mb-2 capitalize">
+                  {clr}
+                </p>
+                <div className="pt-2 pb-6">
+                  <ProgressSteps
+                    {...args}
+                    steps={orderSteps}
+                    value={66}
+                    variant={v}
+                    color={clr}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       ))}

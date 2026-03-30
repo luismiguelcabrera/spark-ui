@@ -65,18 +65,46 @@ describe("ProgressSteps", () => {
     expect(screen.getByText("Second step")).toBeInTheDocument();
   });
 
-  it.each(["sm", "md", "lg"] as const)("renders size %s without error", (sz) => {
-    render(<ProgressSteps steps={steps} value={50} size={sz} />);
-    expect(screen.getByRole("progressbar")).toBeInTheDocument();
-  });
+  it.each(["xs", "sm", "md", "lg", "xl"] as const)(
+    "renders size %s without error",
+    (sz) => {
+      render(<ProgressSteps steps={steps} value={50} size={sz} />);
+      expect(screen.getByRole("progressbar")).toBeInTheDocument();
+    },
+  );
 
-  it.each(["primary", "success", "warning", "accent"] as const)(
+  it.each(["primary", "secondary", "success", "warning", "destructive", "accent"] as const)(
     "renders color %s without error",
     (clr) => {
       render(<ProgressSteps steps={steps} value={50} color={clr} />);
       expect(screen.getByRole("progressbar")).toBeInTheDocument();
     },
   );
+
+  it.each(["solid", "outline", "soft"] as const)(
+    "renders variant %s without error",
+    (v) => {
+      render(<ProgressSteps steps={steps} value={50} variant={v} />);
+      expect(screen.getByRole("progressbar")).toBeInTheDocument();
+    },
+  );
+
+  it("renders vertical orientation", () => {
+    render(<ProgressSteps steps={steps} value={50} orientation="vertical" />);
+    expect(screen.getByRole("progressbar")).toBeInTheDocument();
+    expect(screen.getByText("Order Placed")).toBeInTheDocument();
+    expect(screen.getByText("Delivered")).toBeInTheDocument();
+  });
+
+  it("renders vertical with descriptions", () => {
+    const withDesc = [
+      { label: "Step 1", description: "First step" },
+      { label: "Step 2", description: "Second step" },
+    ];
+    render(<ProgressSteps steps={withDesc} value={50} orientation="vertical" />);
+    expect(screen.getByText("First step")).toBeInTheDocument();
+    expect(screen.getByText("Second step")).toBeInTheDocument();
+  });
 
   it("respects custom step value positions", () => {
     const customSteps = [
@@ -94,7 +122,6 @@ describe("ProgressSteps", () => {
     const { container } = render(
       <ProgressSteps steps={steps} value={100} showCheck={false} />,
     );
-    // No SVG check icons should be rendered
     const svgs = container.querySelectorAll("svg");
     expect(svgs.length).toBe(0);
   });
@@ -104,16 +131,27 @@ describe("ProgressSteps", () => {
     expect(screen.getByText("Only")).toBeInTheDocument();
   });
 
-  it("distributes steps evenly when no value is set", () => {
-    const { container } = render(
-      <ProgressSteps steps={steps} value={0} />,
-    );
-    // 4 steps should position at 0%, 33.3%, 66.6%, 100%
-    const markers = container.querySelectorAll(".absolute");
-    expect(markers.length).toBe(4);
-    // First should be at 0%
-    expect((markers[0] as HTMLElement).style.left).toBe("0%");
-    // Last should be at 100%
-    expect((markers[3] as HTMLElement).style.left).toBe("100%");
+  it("renders all steps in flow layout", () => {
+    render(<ProgressSteps steps={steps} value={0} />);
+    // All 4 labels should be visible
+    expect(screen.getByText("Order Placed")).toBeInTheDocument();
+    expect(screen.getByText("Processing")).toBeInTheDocument();
+    expect(screen.getByText("Shipped")).toBeInTheDocument();
+    expect(screen.getByText("Delivered")).toBeInTheDocument();
+  });
+
+  it("renders all color × variant combinations", () => {
+    const colors = ["primary", "secondary", "success", "warning", "destructive", "accent"] as const;
+    const variants = ["solid", "outline", "soft"] as const;
+
+    for (const color of colors) {
+      for (const variant of variants) {
+        const { unmount } = render(
+          <ProgressSteps steps={steps} value={50} color={color} variant={variant} />,
+        );
+        expect(screen.getByRole("progressbar")).toBeInTheDocument();
+        unmount();
+      }
+    }
   });
 });
