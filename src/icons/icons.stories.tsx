@@ -36,42 +36,51 @@ const categoryMap: Record<string, string[]> = {
     "Close", "Plus", "Minus", "Check", "Search", "Edit", "Trash", "Trash2",
     "Copy", "Paste", "Download", "Upload", "Filter", "Settings", "SettingsGear",
     "MoreHorizontal", "MoreVertical", "Save", "Scissors", "Crop",
-    "Undo", "Redo", "ZoomIn", "ZoomOut", "RefreshCw", "RotateCcw",
+    "Undo", "Redo", "ZoomIn", "ZoomOut", "RefreshCw", "RotateCcw", "RotateCw",
     "ClipboardCheck", "ClipboardCopy", "ClipboardList", "ClipboardX",
     "ArchiveRestore", "Eraser", "Wand", "Pin", "PinOff",
     "SortAsc", "SortDesc", "ArrowDownAZ", "ArrowUpAZ",
     "ListOrdered", "ListFilter", "Cursor",
+    "Expand", "Shrink", "Focus", "Scan", "Shuffle",
   ],
   "Status & Feedback": [
     "CheckCircle", "AlertCircle", "AlertTriangle", "Info", "XCircle",
     "HelpCircle", "PlusCircle", "MinusCircle", "Slash",
     "Ban", "CircleAlert", "CircleCheck", "OctagonAlert",
     "CheckCheck", "CircleDot", "CircleDashed", "BadgeCheck",
-    "Sparkles",
+    "Sparkles", "Lightbulb", "LightbulbOff",
   ],
   "Bell & Notifications": [
     "Bell", "BellOff", "BellRing", "BellDot", "BellPlus", "BellMinus",
+    "Megaphone",
   ],
   "Security": [
     "Lock", "Unlock", "Shield", "ShieldCheck", "ShieldAlert", "ShieldX",
     "Key", "Fingerprint",
   ],
-  "Users": [
-    "User", "Users", "UserPlus", "UserMinus", "UserCheck",
-    "LogIn", "LogOut",
+  "Users & People": [
+    "User", "Users", "UserPlus", "UserMinus", "UserCheck", "UserX", "UserCog",
+    "LogIn", "LogOut", "Accessibility", "Baby",
+    "Smile", "Frown", "Meh", "Hand", "Handshake",
   ],
   "Communication": [
-    "Phone", "PhoneOff", "MessageSquare", "MessageCircle",
-    "Send", "Inbox", "AtSign", "Mail",
+    "Phone", "PhoneOff", "PhoneCall", "PhoneIncoming", "PhoneOutgoing",
+    "MessageSquare", "MessageCircle",
+    "Send", "Inbox", "AtSign",
+    "Mail", "MailOpen", "MailCheck", "MailPlus", "MailX",
   ],
   "Media Controls": [
     "Play", "Pause", "StopCircle", "SkipForward", "SkipBack",
     "Volume", "Volume1", "Volume2", "VolumeX",
     "Mic", "MicOff", "Video", "Camera", "Music",
+    "Headphones", "Speaker", "Radio", "Podcast",
   ],
   "Files & Folders": [
-    "File", "FileText", "FilePlus", "Folder", "FolderOpen",
-    "Clipboard", "Archive", "Paperclip", "Link", "Image",
+    "File", "FileText", "FilePlus", "FileCode", "FileImage", "FileVideo",
+    "FileArchive", "FileCheck", "FileX",
+    "Folder", "FolderOpen", "FolderClosed", "FolderPlus", "FolderMinus", "FolderTree",
+    "Clipboard", "Archive", "Paperclip", "Link", "Unlink", "LinkBreak", "Image",
+    "Newspaper", "Notebook", "BookOpen", "Book",
   ],
   "Layout & Panels": [
     "Menu", "GripVertical", "GripHorizontal", "Grid", "List", "Columns",
@@ -85,7 +94,7 @@ const categoryMap: Record<string, string[]> = {
     "Resize", "Split", "AppWindow", "PictureInPicture",
   ],
   "Form Controls": [
-    "Eye", "EyeOff", "Calendar",
+    "Eye", "EyeOff", "Calendar", "CalendarDays", "CalendarCheck", "CalendarPlus", "CalendarX",
     "ToggleLeft", "ToggleRight",
     "SlidersHorizontal", "SlidersVertical",
     "TextCursor", "TextCursorInput",
@@ -93,35 +102,80 @@ const categoryMap: Record<string, string[]> = {
   ],
   "Commerce": [
     "ShoppingCart", "ShoppingBag", "CreditCard", "DollarSign",
-    "Gift", "Percent", "Tag",
+    "Gift", "Percent", "Tag", "Ticket", "Barcode", "QrCode",
+    "Wallet", "Receipt", "Coins", "Banknote", "PiggyBank", "Store",
   ],
   "Data & Charts": [
-    "BarChart", "PieChart", "TrendingUp", "TrendingDown", "Activity",
-    "Database", "Server", "Hash",
+    "BarChart", "PieChart", "LineChart", "AreaChart",
+    "TrendingUp", "TrendingDown", "Activity", "Gauge",
+    "Database", "Server", "Hash", "Presentation",
   ],
-  "Maps & Location": [
-    "MapPin", "Map", "Compass", "Globe",
+  "Maps & Transportation": [
+    "MapPin", "Map", "Compass", "Globe", "Locate", "Signpost", "Road", "Route",
+    "Car", "Truck", "Plane", "Ship", "Bike", "Fuel",
+    "Rocket", "Tent",
   ],
-  "Devices": [
-    "Smartphone", "Tablet", "Monitor", "Laptop", "Printer",
+  "Devices & Connectivity": [
+    "Smartphone", "Tablet", "Monitor", "Laptop", "Printer", "Tv",
+    "Keyboard", "Mouse", "Cpu", "HardDrive",
+    "Wifi", "WifiOff", "Bluetooth", "Usb", "Plug", "Router",
+    "Cast", "ScreenShare", "Rss", "Signal",
   ],
   "Formatting": [
-    "Bold", "Italic", "Underline", "AlignLeft", "AlignCenter", "AlignRight", "Type",
+    "Bold", "Italic", "Underline", "Strikethrough", "AlignLeft", "AlignCenter", "AlignRight", "AlignJustify",
+    "Type", "Heading1", "Heading2", "Heading3",
+    "Quote", "Indent", "Outdent", "Subscript", "Superscript",
+    "Highlighter", "WrapText", "RemoveFormatting",
+    "Pencil", "Pen", "PenTool", "Paintbrush", "Palette", "EyeDropper", "Ruler",
   ],
-  "Social": [
+  "Social & Reactions": [
     "Share", "Share2", "ThumbsUp", "ThumbsDown",
-    "Bookmark", "Flag", "Award", "Heart", "Star",
+    "Bookmark", "Flag", "Award", "Heart", "HeartPulse", "HeartCrack",
+    "Star", "StarHalf", "Trophy", "Crown", "Medal", "Gem",
   ],
-  "Weather": [
-    "Sun", "Moon", "Cloud", "CloudRain", "Thermometer", "Wind", "Droplet",
+  "Weather & Nature": [
+    "Sun", "Moon", "Cloud", "CloudRain", "CloudOff", "CloudSnow", "CloudLightning", "CloudSun",
+    "Thermometer", "Wind", "Droplet", "Snowflake", "Rainbow",
+    "Sunrise", "Sunset", "Umbrella", "Waves", "Tornado",
+    "Leaf", "TreePine", "Flower", "Mountain", "Bird", "PawPrint", "Feather", "Recycle",
   ],
   "Time": [
-    "Clock", "Watch", "Timer",
+    "Clock", "Watch", "Timer", "AlarmClock", "Hourglass", "History",
+  ],
+  "Buildings": [
+    "Home", "Building", "School", "Hospital", "Factory", "Warehouse",
+    "Landmark", "Hotel", "Library", "Church", "Store",
+  ],
+  "Development": [
+    "Code", "Terminal", "Braces", "Brackets", "Variable", "Binary",
+    "GitBranch", "GitCommit", "GitMerge", "GitPullRequest", "GitFork",
+    "Bug", "Webhook",
+  ],
+  "Health & Medical": [
+    "HeartPulse", "HeartCrack", "Pill", "Stethoscope", "Brain",
+    "Ambulance", "Syringe", "Bandage",
+  ],
+  "Food & Drink": [
+    "Coffee", "Pizza", "Cake", "Utensils", "Wine",
+  ],
+  "Math & Symbols": [
+    "Calculator", "Infinity", "Divide", "Equal", "Sigma", "Pi", "SquareRoot",
+    "Percent", "Hash",
+  ],
+  "Sports & Games": [
+    "Puzzle", "Gamepad", "Medal", "Dumbbell", "Trophy",
+  ],
+  "Education": [
+    "GraduationCap", "BookOpen", "Book", "Notebook", "Backpack",
+  ],
+  "Shapes": [
+    "Circle", "Square", "Triangle", "Diamond", "Hexagon", "Octagon", "Pentagon",
+    "StarHalf",
   ],
   "Misc": [
-    "Zap", "Battery", "Wifi", "Bluetooth", "Power", "Home",
-    "Loader", "Code", "Terminal", "Target", "Crosshair",
-    "Anchor", "LifeBuoy", "Slash", "Crop",
+    "Zap", "Battery", "Power", "Flame", "Briefcase",
+    "Loader", "Target", "Crosshair", "Anchor", "LifeBuoy",
+    "Package", "Languages", "Scale",
   ],
 };
 
@@ -190,7 +244,7 @@ export const ByCategory: Story = {
           return (
             <div key={category}>
               <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 border-b pb-1">
-                {category} <span className="text-slate-400 font-normal">({items.length})</span>
+                {category} <span className="text-slate-500 font-normal">({items.length})</span>
               </h3>
               <div className="grid grid-cols-8 gap-3">
                 {items.map(({ name, Comp }) => (
@@ -207,7 +261,7 @@ export const ByCategory: Story = {
           return (
             <div>
               <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 border-b pb-1">
-                Other <span className="text-slate-400 font-normal">({uncategorized.length})</span>
+                Other <span className="text-slate-500 font-normal">({uncategorized.length})</span>
               </h3>
               <div className="grid grid-cols-8 gap-3">
                 {uncategorized.map(({ name, Comp }) => (
