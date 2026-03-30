@@ -78,3 +78,15 @@ export type { ErrorBoundaryProps } from "./error-boundary";
 
 export { Dialog, useDialog } from "./dialog";
 export type { DialogProps, DialogVariant, UseDialogOptions, UseDialogReturn } from "./dialog";
+
+export { Overlay } from "./overlay";
+export type { OverlayProps } from "./overlay";
+
+export { BottomSheet } from "./bottom-sheet";
+export type { BottomSheetProps } from "./bottom-sheet";
+
+export { Banner } from "./banner";
+export type { BannerProps, BannerColor } from "./banner";
+
+export { useSnackbarQueue } from "./snackbar-queue";
+export type { SnackbarQueueItem, SnackbarQueueVariant, UseSnackbarQueueReturn } from "./snackbar-queue";
