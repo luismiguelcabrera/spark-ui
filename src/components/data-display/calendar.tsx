@@ -348,7 +348,12 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
                 day.muted && s.calendarDayMuted,
                 showToday && day.today && !day.selected && !day.inRange && !day.mark?.color && s.calendarDayToday,
                 day.selected && !day.mark?.color && s.calendarDaySelected,
-                day.hasEvent && !day.today && !day.selected && !day.inRange && !day.mark?.dotColor && s.calendarDayEvent,
+                // Event dot: primary when unselected, white when selected (so it stays visible)
+                day.hasEvent && !day.mark?.dotColor && (
+                  day.selected
+                    ? "after:absolute after:bottom-1 after:w-1 after:h-1 after:rounded-full after:bg-white"
+                    : s.calendarDayEvent
+                ),
                 // Custom mark background color (Tailwind class)
                 day.mark?.color && !day.mark.color.startsWith("#") && !day.mark.color.startsWith("rgb") && day.mark.color,
                 // Range: in-between days get a soft band
