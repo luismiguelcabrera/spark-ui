@@ -33,3 +33,42 @@ export { useHotkey } from "./use-hotkey";
 export { useElevation } from "./use-elevation";
 export { useForm } from "./use-form";
 export type { UseFormConfig, UseFormReturn, ValidationRule, FieldState } from "./use-form";
+
+// Wave 7 — Browser & DOM hooks
+export { useResizeObserver } from "./use-resize-observer";
+export { useElementSize } from "./use-element-size";
+export { useDocumentVisibility } from "./use-document-visibility";
+export { useDocumentTitle } from "./use-document-title";
+export { useFullscreen } from "./use-fullscreen";
+export { useIdle } from "./use-idle";
+export { useNetwork } from "./use-network";
+
+// Wave 7 — Data structure hooks
+export { useCounter } from "./use-counter";
+export { useListState } from "./use-list-state";
+export { useMap } from "./use-map";
+export { useSet } from "./use-set";
+export { useStateHistory } from "./use-state-history";
+export { usePagination } from "./use-pagination";
+export { useSelection } from "./use-selection";
+
+// Wave 7 — Utility hooks
+export { useDebouncedCallback } from "./use-debounced-callback";
+export { useInterval } from "./use-interval";
+export { useMergedRef } from "./use-merged-ref";
+export { useFocusReturn } from "./use-focus-return";
+export { useFocusWithin } from "./use-focus-within";
+export { useScrollIntoView } from "./use-scroll-into-view";
+export { useScrollSpy } from "./use-scroll-spy";
+
+// Wave 7 — Gesture & interaction hooks
+export { useLongPress } from "./use-long-press";
+export { useTouchPan } from "./use-touch-pan";
+export { useMorph } from "./use-morph";
+export { useEventCallback } from "./use-event-callback";
+export { useColorScheme } from "./use-color-scheme";
+export { useMouse } from "./use-mouse";
+export { useOs } from "./use-os";
+export { useOrientation } from "./use-orientation";
+export { useHeadroom } from "./use-headroom";
+export { useScrollTrigger } from "./use-scroll-trigger";
