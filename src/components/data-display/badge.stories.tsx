@@ -36,7 +36,7 @@ const meta = {
       control: "select",
       options: variants,
     },
-    size: { control: "select", options: ["sm", "md", "lg"] },
+    size: { control: "select", options: ["xs", "sm", "md", "lg", "xl"] },
     bordered: { control: "boolean" },
     floating: { control: "boolean" },
     dot: { control: "boolean" },

@@ -61,7 +61,7 @@ describe("Badge", () => {
     expect(screen.getByText("V")).toBeInTheDocument();
   });
 
-  it.each(["sm", "md", "lg"] as const)(
+  it.each(["xs", "sm", "md", "lg", "xl"] as const)(
     "renders size=%s without error",
     (size) => {
       render(<Badge size={size}>S</Badge>);

@@ -23,7 +23,7 @@ type BadgeVariant =
   | "text"
   | "plain";
 
-type BadgeSize = "sm" | "md" | "lg";
+type BadgeSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 // ---------------------------------------------------------------------------
 // Color × Variant matrix (WCAG AA compliant in both light & dark)
@@ -102,9 +102,11 @@ const colorMap: Record<BadgeColor, Record<BadgeVariant, string>> = {
 // ---------------------------------------------------------------------------
 
 const sizeClasses: Record<BadgeSize, string> = {
+  xs: "px-1.5 py-0 text-[9px]",
   sm: "px-2 py-0.5 text-[10px]",
   md: "px-2.5 py-1 text-xs",
   lg: "px-3 py-1.5 text-sm",
+  xl: "px-4 py-2 text-base",
 };
 
 // ---------------------------------------------------------------------------
@@ -123,9 +125,11 @@ const floatingDotColorMap: Record<BadgeColor, string> = {
 };
 
 const floatingDotSizeMap: Record<BadgeSize, string> = {
+  xs: "size-1.5",
   sm: "size-2",
   md: "size-2.5",
   lg: "size-3",
+  xl: "size-3.5",
 };
 
 // ---------------------------------------------------------------------------
