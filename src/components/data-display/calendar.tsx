@@ -318,13 +318,17 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
               className={cn(
                 s.calendarDay,
                 day.muted && s.calendarDayMuted,
-                day.today && s.calendarDayToday,
-                day.selected && !day.today && s.calendarDaySelected,
-                day.hasEvent && !day.today && !day.selected && s.calendarDayEvent,
-                day.inRange && "bg-primary/10 text-primary",
-                day.rangeStart && "rounded-l-lg",
-                day.rangeEnd && "rounded-r-lg",
-                !day.muted && isAutoMode && "cursor-pointer"
+                day.today && !day.selected && !day.inRange && s.calendarDayToday,
+                day.selected && s.calendarDaySelected,
+                day.hasEvent && !day.today && !day.selected && !day.inRange && s.calendarDayEvent,
+                // Range: in-between days get a soft band
+                day.inRange && "bg-primary/15 text-primary font-medium rounded-none",
+                // Range: start/end get full selected color + one-sided rounding
+                day.rangeStart && "rounded-l-lg rounded-r-none",
+                day.rangeEnd && "rounded-r-lg rounded-l-none",
+                // Both start and end (single-day range)
+                day.rangeStart && day.rangeEnd && "rounded-lg",
+                !day.muted && isAutoMode && "cursor-pointer hover:bg-primary/10 transition-colors"
               )}
             >
               {day.day}

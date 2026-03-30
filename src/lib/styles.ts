@@ -249,7 +249,7 @@ export const s = {
   calendarDayLabel: "py-2 text-[11px] font-semibold text-slate-400 uppercase",
   calendarDay: "relative flex items-center justify-center h-10 text-sm font-medium rounded-lg transition-colors cursor-pointer hover:bg-slate-50",
   calendarDayToday: "bg-primary text-white hover:bg-primary/90",
-  calendarDaySelected: "bg-primary/10 text-primary font-bold",
+  calendarDaySelected: "bg-primary text-white font-bold hover:bg-primary/90",
   calendarDayMuted: "text-slate-300",
   calendarDayEvent: "after:absolute after:bottom-1 after:w-1 after:h-1 after:rounded-full after:bg-primary",
 } as const;
