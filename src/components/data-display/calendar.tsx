@@ -18,9 +18,22 @@ type CalendarDay = {
   rangeEnd?: boolean;
   /** Range: between start and end */
   inRange?: boolean;
+  /** Custom mark info */
+  mark?: MarkedDate;
 };
 
 type CalendarMode = "single" | "multiple" | "range";
+
+type MarkedDate = {
+  /** Day of the month */
+  day: number;
+  /** Background color (Tailwind class or CSS color) */
+  color?: string;
+  /** Dot color below the date (Tailwind class or CSS color) */
+  dotColor?: string;
+  /** Tooltip label shown on hover */
+  label?: string;
+};
 
 type CalendarProps = {
   /** Selection mode: single date, multiple dates, or date range */
@@ -55,6 +68,8 @@ type CalendarProps = {
   onNextMonth?: () => void;
   /** Days that have events (shown with dot indicator) */
   eventDays?: number[];
+  /** Custom-marked dates with colors, dots, and tooltips */
+  markedDates?: MarkedDate[];
   /** Max number of selectable dates (multiple mode) */
   max?: number;
   className?: string;
@@ -73,7 +88,8 @@ function generateCalendarDays(
   selectedDay: number | undefined,
   selectedDates: Set<number>,
   range: [number, number] | null,
-  eventDays: number[]
+  eventDays: number[],
+  markedDates: Map<number, MarkedDate>
 ): CalendarDay[] {
   const firstDay = new Date(Date.UTC(year, monthIndex, 1)).getUTCDay();
   const daysInMonth = new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
@@ -109,6 +125,7 @@ function generateCalendarDays(
       rangeStart: isRangeStart,
       rangeEnd: isRangeEnd,
       inRange: isInRange,
+      mark: markedDates.get(d),
     });
   }
 
@@ -142,12 +159,18 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
       onPrevMonth,
       onNextMonth,
       eventDays = [],
+      markedDates: markedDatesProp,
       max,
       className,
     },
     ref
   ) => {
     const isAutoMode = !days;
+
+    const markedMap = useMemo(
+      () => new Map((markedDatesProp ?? []).map((m) => [m.day, m])),
+      [markedDatesProp]
+    );
 
     // Month navigation state (only used in auto mode)
     const now = new Date();
@@ -220,10 +243,11 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
               activeSelectedDay,
               mode === "multiple" ? multiDateSet : new Set<number>(),
               mode === "range" ? range : null,
-              eventDays
+              eventDays,
+              markedMap
             )
           : [],
-      [isAutoMode, navMonth, navYear, activeSelectedDay, mode, multiDateSet, range, eventDays]
+      [isAutoMode, navMonth, navYear, activeSelectedDay, mode, multiDateSet, range, eventDays, markedMap]
     );
 
     const hasExternalNav = !!(onPrevMonth || onNextMonth);
@@ -243,10 +267,11 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
               activeSelectedDay,
               mode === "multiple" ? multiDateSet : new Set<number>(),
               mode === "range" ? range : null,
-              eventDays
+              eventDays,
+              markedMap
             )
           : [],
-      [hasExternalNav, activeMonth, activeYear, activeSelectedDay, mode, multiDateSet, range, eventDays]
+      [hasExternalNav, activeMonth, activeYear, activeSelectedDay, mode, multiDateSet, range, eventDays, markedMap]
     );
 
     const displayDays = !isAutoMode ? days : hasExternalNav ? externalDays : autoDays;
@@ -318,9 +343,11 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
               className={cn(
                 s.calendarDay,
                 day.muted && s.calendarDayMuted,
-                day.today && !day.selected && !day.inRange && s.calendarDayToday,
-                day.selected && s.calendarDaySelected,
-                day.hasEvent && !day.today && !day.selected && !day.inRange && s.calendarDayEvent,
+                day.today && !day.selected && !day.inRange && !day.mark?.color && s.calendarDayToday,
+                day.selected && !day.mark?.color && s.calendarDaySelected,
+                day.hasEvent && !day.today && !day.selected && !day.inRange && !day.mark?.dotColor && s.calendarDayEvent,
+                // Custom mark background color (Tailwind class)
+                day.mark?.color && !day.mark.color.startsWith("#") && !day.mark.color.startsWith("rgb") && day.mark.color,
                 // Range: in-between days get a soft band
                 day.inRange && "bg-primary/15 text-primary font-medium rounded-none",
                 // Range: start/end get full selected color + one-sided rounding
@@ -330,8 +357,29 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
                 day.rangeStart && day.rangeEnd && "rounded-lg",
                 !day.muted && isAutoMode && "cursor-pointer hover:bg-primary/10 transition-colors"
               )}
+              // Inline style for CSS color values (hex, rgb)
+              style={
+                day.mark?.color && (day.mark.color.startsWith("#") || day.mark.color.startsWith("rgb"))
+                  ? { backgroundColor: day.mark.color, color: "#fff" }
+                  : undefined
+              }
+              title={day.mark?.label}
             >
               {day.day}
+              {/* Custom dot from markedDates */}
+              {day.mark?.dotColor && !day.selected && (
+                <span
+                  className={cn(
+                    "absolute bottom-1 w-1.5 h-1.5 rounded-full",
+                    !(day.mark.dotColor.startsWith("#") || day.mark.dotColor.startsWith("rgb")) && day.mark.dotColor
+                  )}
+                  style={
+                    day.mark.dotColor.startsWith("#") || day.mark.dotColor.startsWith("rgb")
+                      ? { backgroundColor: day.mark.dotColor }
+                      : undefined
+                  }
+                />
+              )}
             </div>
           ))}
         </div>
@@ -342,4 +390,4 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
 Calendar.displayName = "Calendar";
 
 export { Calendar };
-export type { CalendarProps, CalendarDay, CalendarMode };
+export type { CalendarProps, CalendarDay, CalendarMode, MarkedDate };
