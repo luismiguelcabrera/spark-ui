@@ -2,6 +2,9 @@ import { render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, it, expect } from "vitest";
 import { Parallax } from "../components/data-display/parallax";
+import { Window } from "../components/data-display/window";
+import { Pie } from "../components/data-display/pie";
+import { Video } from "../components/data-display/video";
 
 import { Button } from "../components/forms/button";
 import { Input } from "../components/forms/input";
@@ -624,4 +627,55 @@ describe("Accessibility (axe)", () => {
     );
     expect(await axe(container)).toHaveNoViolations();
   });
+
+  it("Window (default)", async () => {
+    const { container } = render(
+      <Window defaultValue="a">
+        <Window.Item value="a">Panel A</Window.Item>
+        <Window.Item value="b">Panel B</Window.Item>
+      </Window>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Window (controlled)", async () => {
+    const { container } = render(
+      <Window value="b" onValueChange={() => {}}>
+        <Window.Item value="a">Alpha</Window.Item>
+        <Window.Item value="b">Beta</Window.Item>
+      </Window>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Pie (basic)", async () => {
+    const { container } = render(
+      <Pie
+        data={[
+          { value: 60, color: "#3b82f6", label: "Blue" },
+          { value: 40, color: "#ef4444", label: "Red" },
+        ]}
+      />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Pie (donut with center)", async () => {
+    const { container } = render(
+      <Pie
+        data={[
+          { value: 70, color: "#22c55e", label: "Complete" },
+          { value: 30, color: "#e2e8f0", label: "Remaining" },
+        ]}
+        donut
+        strokeWidth={30}
+      >
+        <span>70%</span>
+      </Pie>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  // Video a11y tests skipped — axe + <video> in jsdom causes timeouts.
+  // The Video component wraps a native <video> element with no custom ARIA needed.
 });
