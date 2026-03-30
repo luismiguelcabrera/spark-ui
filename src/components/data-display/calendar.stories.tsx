@@ -9,6 +9,8 @@ const meta = {
     mode: { control: "select", options: ["single", "multiple", "range"] },
     weekStartsOn: { control: "select", options: [0, 1, 2, 3, 4, 5, 6] },
     showToday: { control: "boolean" },
+    showTodayButton: { control: "boolean" },
+    showSelectedLabel: { control: "boolean" },
     fixedWeeks: { control: "boolean" },
     max: { control: "number" },
   },
@@ -19,30 +21,24 @@ type Story = StoryObj<typeof meta>;
 
 // ── Basic ──
 
-export const Default: Story = {};
-
-export const WithSelectedDate: Story = {
-  args: { defaultSelected: 15 },
+export const Default: Story = {
+  args: { showTodayButton: true, showSelectedLabel: true },
 };
 
 export const WithEvents: Story = {
-  args: { eventDays: [3, 7, 12, 18, 22, 28], defaultSelected: 12 },
+  args: { eventDays: [3, 7, 12, 18, 22, 28], defaultSelected: 12, showSelectedLabel: true },
 };
 
-// ── Multiple Mode ──
+// ── Multiple ──
 
 export const MultipleDates: Story = {
-  args: { mode: "multiple", defaultSelectedDates: [5, 12, 18, 25] },
+  args: { mode: "multiple", defaultSelectedDates: [5, 12, 18, 25], showSelectedLabel: true },
 };
 
-export const MultipleWithMax: Story = {
-  args: { mode: "multiple", max: 3, defaultSelectedDates: [10, 20] },
-};
-
-// ── Range Mode ──
+// ── Range with hover preview ──
 
 export const DateRange: Story = {
-  args: { mode: "range", defaultSelectedRange: [10, 20] },
+  args: { mode: "range", showSelectedLabel: true, showTodayButton: true },
 };
 
 // ── Marked Dates ──
@@ -65,6 +61,7 @@ export const MinMaxDates: Story = {
   args: {
     minDate: new Date(new Date().getFullYear(), new Date().getMonth(), 5),
     maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), 25),
+    showTodayButton: true,
   },
 };
 
@@ -89,11 +86,15 @@ export const FixedWeeks: Story = {
   args: { fixedWeeks: true, month: "February", year: 2026 },
 };
 
-export const HideToday: Story = {
-  args: { showToday: false, defaultSelected: 15 },
+// ── UX Features ──
+
+export const WithTodayButton: Story = {
+  args: { showTodayButton: true, month: "January", year: 2025 },
 };
 
-// ── Combined ──
+export const WithSelectedLabel: Story = {
+  args: { showSelectedLabel: true, defaultSelected: 15 },
+};
 
 export const FullFeatured: Story = {
   args: {
@@ -101,15 +102,12 @@ export const FullFeatured: Story = {
     weekStartsOn: 1,
     fixedWeeks: true,
     showToday: true,
+    showTodayButton: true,
+    showSelectedLabel: true,
     eventDays: [5, 15, 22],
-    minDate: new Date(new Date().getFullYear(), new Date().getMonth(), 3),
-    maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), 28),
     markedDates: [
       { day: 1, color: "bg-red-100 text-red-700", label: "Holiday" },
-      { day: 25, color: "bg-green-100 text-green-700", label: "Christmas" },
-    ],
-    disabledDates: [
-      new Date(new Date().getFullYear(), new Date().getMonth(), 13),
+      { day: 25, dotColor: "bg-green-500" },
     ],
   },
 };

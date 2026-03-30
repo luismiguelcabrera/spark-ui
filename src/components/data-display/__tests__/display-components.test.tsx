@@ -211,10 +211,9 @@ describe("Calendar", () => {
 
   it("navigates to next month", () => {
     render(<Calendar month="January" year={2024} />);
-    const buttons = screen.getAllByRole("button");
-    // Second button is the next month button
-    fireEvent.click(buttons[1]);
-    expect(screen.getByText("February 2024")).toBeInTheDocument();
+    fireEvent.click(screen.getByLabelText("Next month"));
+    expect(screen.getByText(/February/)).toBeInTheDocument();
+    expect(screen.getByText(/2024/)).toBeInTheDocument();
   });
 });
 
