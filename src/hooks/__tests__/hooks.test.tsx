@@ -1528,3 +1528,600 @@ describe("useHotkey", () => {
     expect(count).toBe(2);
   });
 });
+
+// ---------------------------------------------------------------------------
+// useRipple
+// ---------------------------------------------------------------------------
+describe("useRipple", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      configurable: true,
+      value: vi.fn().mockImplementation((query: string) => ({
+        matches: false,
+        media: query,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("returns a ref, ripples array, and RippleContainer", () => {
+    const { result } = renderHook(() => useRipple());
+    expect(result.current.ref).toBeDefined();
+    expect(result.current.ripples).toEqual([]);
+    expect(typeof result.current.RippleContainer).toBe("function");
+  });
+
+  it("creates a ripple on click", () => {
+    const el = document.createElement("div");
+    Object.defineProperty(el, "getBoundingClientRect", {
+      value: () => ({ left: 10, top: 20, width: 100, height: 50 }),
+    });
+    document.body.appendChild(el);
+
+    // Pre-set ref via a wrapper that assigns it immediately
+    const { result } = renderHook(() => {
+      const ripple = useRipple();
+      (ripple.ref as React.MutableRefObject<HTMLElement | null>).current = el;
+      return ripple;
+    });
+
+    // Force re-render so useEffect attaches the click listener
+    act(() => { /* trigger effect flush */ });
+
+    act(() => {
+      el.dispatchEvent(
+        new MouseEvent("click", { clientX: 50, clientY: 40, bubbles: true }),
+      );
+    });
+
+    expect(result.current.ripples.length).toBe(1);
+    expect(typeof result.current.ripples[0].x).toBe("number");
+    expect(typeof result.current.ripples[0].y).toBe("number");
+    expect(typeof result.current.ripples[0].size).toBe("number");
+
+    document.body.removeChild(el);
+  });
+
+  it("removes ripples after the duration", () => {
+    const el = document.createElement("div");
+    Object.defineProperty(el, "getBoundingClientRect", {
+      value: () => ({ left: 0, top: 0, width: 100, height: 100 }),
+    });
+    document.body.appendChild(el);
+
+    const { result } = renderHook(() => {
+      const ripple = useRipple({ duration: 600 });
+      (ripple.ref as React.MutableRefObject<HTMLElement | null>).current = el;
+      return ripple;
+    });
+
+    act(() => { /* flush effects */ });
+
+    act(() => {
+      el.dispatchEvent(
+        new MouseEvent("click", { clientX: 50, clientY: 50, bubbles: true }),
+      );
+    });
+
+    expect(result.current.ripples.length).toBe(1);
+
+    act(() => {
+      vi.advanceTimersByTime(600);
+    });
+
+    expect(result.current.ripples.length).toBe(0);
+
+    document.body.removeChild(el);
+  });
+
+  it("does not create ripples when prefers-reduced-motion is enabled", () => {
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      configurable: true,
+      value: vi.fn().mockImplementation((query: string) => ({
+        matches: true,
+        media: query,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+
+    const el = document.createElement("div");
+    Object.defineProperty(el, "getBoundingClientRect", {
+      value: () => ({ left: 0, top: 0, width: 100, height: 100 }),
+    });
+    document.body.appendChild(el);
+
+    const { result } = renderHook(() => {
+      const ripple = useRipple();
+      (ripple.ref as React.MutableRefObject<HTMLElement | null>).current = el;
+      return ripple;
+    });
+
+    act(() => { /* flush effects */ });
+
+    act(() => {
+      el.dispatchEvent(
+        new MouseEvent("click", { clientX: 50, clientY: 50, bubbles: true }),
+      );
+    });
+
+    expect(result.current.ripples.length).toBe(0);
+
+    document.body.removeChild(el);
+  });
+
+  it("RippleContainer returns null when no ripples exist", () => {
+    const { result } = renderHook(() => useRipple());
+    const Container = result.current.RippleContainer;
+    const output = Container({});
+    expect(output).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useTouch
+// ---------------------------------------------------------------------------
+describe("useTouch", () => {
+  function makeTouchEvent(type: string, clientX: number, clientY: number): Event {
+    const event = new Event(type, { bubbles: true, cancelable: true });
+    const touchObj = { identifier: 0, target: document, clientX, clientY };
+    if (type === "touchstart") {
+      Object.defineProperty(event, "touches", { value: [touchObj] });
+    } else {
+      Object.defineProperty(event, "changedTouches", { value: [touchObj] });
+    }
+    return event;
+  }
+
+  it("returns a ref", () => {
+    const { result } = renderHook(() => useTouch());
+    expect(result.current.ref).toBeDefined();
+  });
+
+  it("calls onSwipeLeft when swiping left beyond threshold", () => {
+    const onSwipeLeft = vi.fn();
+    const el = document.createElement("div");
+    document.body.appendChild(el);
+
+    const { result } = renderHook(() => {
+      const touch = useTouch({ onSwipeLeft, threshold: 50 });
+      (touch.ref as React.MutableRefObject<HTMLElement | null>).current = el;
+      return touch;
+    });
+
+    act(() => { /* flush effects */ });
+
+    act(() => {
+      el.dispatchEvent(makeTouchEvent("touchstart", 200, 100));
+      el.dispatchEvent(makeTouchEvent("touchend", 100, 100));
+    });
+
+    expect(onSwipeLeft).toHaveBeenCalledTimes(1);
+    document.body.removeChild(el);
+  });
+
+  it("calls onSwipeRight when swiping right beyond threshold", () => {
+    const onSwipeRight = vi.fn();
+    const el = document.createElement("div");
+    document.body.appendChild(el);
+
+    renderHook(() => {
+      const touch = useTouch({ onSwipeRight, threshold: 50 });
+      (touch.ref as React.MutableRefObject<HTMLElement | null>).current = el;
+      return touch;
+    });
+
+    act(() => { /* flush effects */ });
+
+    act(() => {
+      el.dispatchEvent(makeTouchEvent("touchstart", 100, 100));
+      el.dispatchEvent(makeTouchEvent("touchend", 200, 100));
+    });
+
+    expect(onSwipeRight).toHaveBeenCalledTimes(1);
+    document.body.removeChild(el);
+  });
+
+  it("calls onSwipeUp when swiping up beyond threshold", () => {
+    const onSwipeUp = vi.fn();
+    const el = document.createElement("div");
+    document.body.appendChild(el);
+
+    renderHook(() => {
+      const touch = useTouch({ onSwipeUp, threshold: 50 });
+      (touch.ref as React.MutableRefObject<HTMLElement | null>).current = el;
+      return touch;
+    });
+
+    act(() => { /* flush effects */ });
+
+    act(() => {
+      el.dispatchEvent(makeTouchEvent("touchstart", 100, 200));
+      el.dispatchEvent(makeTouchEvent("touchend", 100, 100));
+    });
+
+    expect(onSwipeUp).toHaveBeenCalledTimes(1);
+    document.body.removeChild(el);
+  });
+
+  it("calls onSwipeDown when swiping down beyond threshold", () => {
+    const onSwipeDown = vi.fn();
+    const el = document.createElement("div");
+    document.body.appendChild(el);
+
+    renderHook(() => {
+      const touch = useTouch({ onSwipeDown, threshold: 50 });
+      (touch.ref as React.MutableRefObject<HTMLElement | null>).current = el;
+      return touch;
+    });
+
+    act(() => { /* flush effects */ });
+
+    act(() => {
+      el.dispatchEvent(makeTouchEvent("touchstart", 100, 100));
+      el.dispatchEvent(makeTouchEvent("touchend", 100, 200));
+    });
+
+    expect(onSwipeDown).toHaveBeenCalledTimes(1);
+    document.body.removeChild(el);
+  });
+
+  it("does not fire callback when swipe is below threshold", () => {
+    const onSwipeLeft = vi.fn();
+    const el = document.createElement("div");
+    document.body.appendChild(el);
+
+    renderHook(() => {
+      const touch = useTouch({ onSwipeLeft, threshold: 50 });
+      (touch.ref as React.MutableRefObject<HTMLElement | null>).current = el;
+      return touch;
+    });
+
+    act(() => { /* flush effects */ });
+
+    act(() => {
+      el.dispatchEvent(makeTouchEvent("touchstart", 200, 100));
+      el.dispatchEvent(makeTouchEvent("touchend", 170, 100));
+    });
+
+    expect(onSwipeLeft).not.toHaveBeenCalled();
+    document.body.removeChild(el);
+  });
+
+  it("uses default threshold of 50", () => {
+    const onSwipeLeft = vi.fn();
+    const el = document.createElement("div");
+    document.body.appendChild(el);
+
+    renderHook(() => {
+      const touch = useTouch({ onSwipeLeft });
+      (touch.ref as React.MutableRefObject<HTMLElement | null>).current = el;
+      return touch;
+    });
+
+    act(() => { /* flush effects */ });
+
+    // 49px swipe — should not trigger
+    act(() => {
+      el.dispatchEvent(makeTouchEvent("touchstart", 200, 100));
+      el.dispatchEvent(makeTouchEvent("touchend", 151, 100));
+    });
+    expect(onSwipeLeft).not.toHaveBeenCalled();
+
+    // 50px swipe — should trigger
+    act(() => {
+      el.dispatchEvent(makeTouchEvent("touchstart", 200, 100));
+      el.dispatchEvent(makeTouchEvent("touchend", 150, 100));
+    });
+    expect(onSwipeLeft).toHaveBeenCalledTimes(1);
+
+    document.body.removeChild(el);
+  });
+
+  it("cleans up event listeners on unmount", () => {
+    const onSwipeLeft = vi.fn();
+    const el = document.createElement("div");
+    document.body.appendChild(el);
+
+    const { unmount } = renderHook(() => {
+      const touch = useTouch({ onSwipeLeft });
+      (touch.ref as React.MutableRefObject<HTMLElement | null>).current = el;
+      return touch;
+    });
+
+    act(() => { /* flush effects */ });
+
+    unmount();
+
+    el.dispatchEvent(makeTouchEvent("touchstart", 200, 100));
+    el.dispatchEvent(makeTouchEvent("touchend", 100, 100));
+
+    expect(onSwipeLeft).not.toHaveBeenCalled();
+    document.body.removeChild(el);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useMutationObserver
+// ---------------------------------------------------------------------------
+describe("useMutationObserver", () => {
+  let observeSpy: ReturnType<typeof vi.fn>;
+  let disconnectSpy: ReturnType<typeof vi.fn>;
+  let lastCallback: MutationCallback | null;
+  let OriginalMutationObserver: typeof MutationObserver;
+
+  beforeEach(() => {
+    observeSpy = vi.fn();
+    disconnectSpy = vi.fn();
+    lastCallback = null;
+    OriginalMutationObserver = global.MutationObserver;
+
+    // Use a proper class so `new MutationObserver(cb)` works
+    global.MutationObserver = class MockMutationObserver {
+      constructor(cb: MutationCallback) {
+        lastCallback = cb;
+      }
+      observe = observeSpy;
+      disconnect = disconnectSpy;
+      takeRecords = vi.fn();
+    } as unknown as typeof MutationObserver;
+  });
+
+  afterEach(() => {
+    global.MutationObserver = OriginalMutationObserver;
+  });
+
+  it("observes the ref element with default options", () => {
+    const ref = { current: document.createElement("div") };
+    const callback = vi.fn();
+
+    renderHook(() => useMutationObserver(ref, callback));
+
+    expect(observeSpy).toHaveBeenCalledWith(ref.current, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+      characterData: false,
+    });
+  });
+
+  it("passes custom options to MutationObserver", () => {
+    const ref = { current: document.createElement("div") };
+    const callback = vi.fn();
+
+    renderHook(() =>
+      useMutationObserver(ref, callback, {
+        attributes: false,
+        childList: true,
+        subtree: false,
+        characterData: true,
+      }),
+    );
+
+    expect(observeSpy).toHaveBeenCalledWith(ref.current, {
+      attributes: false,
+      childList: true,
+      subtree: false,
+      characterData: true,
+    });
+  });
+
+  it("invokes callback when mutations occur", () => {
+    const ref = { current: document.createElement("div") };
+    const callback = vi.fn();
+
+    renderHook(() => useMutationObserver(ref, callback));
+
+    const fakeMutations = [{ type: "childList" }] as unknown as MutationRecord[];
+    const fakeObserver = {} as MutationObserver;
+    act(() => {
+      lastCallback?.(fakeMutations, fakeObserver);
+    });
+
+    expect(callback).toHaveBeenCalledWith(fakeMutations, fakeObserver);
+  });
+
+  it("disconnects on unmount", () => {
+    const ref = { current: document.createElement("div") };
+    const callback = vi.fn();
+
+    const { unmount } = renderHook(() => useMutationObserver(ref, callback));
+
+    expect(disconnectSpy).not.toHaveBeenCalled();
+    unmount();
+    expect(disconnectSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("does nothing when ref.current is null", () => {
+    const ref = { current: null };
+    const callback = vi.fn();
+
+    renderHook(() => useMutationObserver(ref, callback));
+
+    expect(observeSpy).not.toHaveBeenCalled();
+  });
+
+  it("reconnects when options change", () => {
+    const ref = { current: document.createElement("div") };
+    const callback = vi.fn();
+
+    const { rerender } = renderHook(
+      ({ opts }) => useMutationObserver(ref, callback, opts),
+      { initialProps: { opts: { attributes: true, childList: true, subtree: true } } },
+    );
+
+    expect(observeSpy).toHaveBeenCalledTimes(1);
+
+    rerender({ opts: { attributes: false, childList: true, subtree: true } });
+
+    expect(disconnectSpy).toHaveBeenCalledTimes(1);
+    expect(observeSpy).toHaveBeenCalledTimes(2);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useGoTo
+// ---------------------------------------------------------------------------
+describe("useGoTo", () => {
+  beforeEach(() => {
+    vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+    Object.defineProperty(window, "scrollY", {
+      value: 0,
+      writable: true,
+      configurable: true,
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("returns a goTo function", () => {
+    const { result } = renderHook(() => useGoTo());
+    expect(typeof result.current.goTo).toBe("function");
+  });
+
+  it("scrolls to a numeric pixel offset", () => {
+    const { result } = renderHook(() => useGoTo());
+
+    act(() => {
+      result.current.goTo(500);
+    });
+
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: 500,
+      behavior: "smooth",
+    });
+  });
+
+  it("scrolls to a numeric offset with custom behavior", () => {
+    const { result } = renderHook(() => useGoTo());
+
+    act(() => {
+      result.current.goTo(200, { behavior: "instant" });
+    });
+
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: 200,
+      behavior: "instant",
+    });
+  });
+
+  it("subtracts offset from numeric target", () => {
+    const { result } = renderHook(() => useGoTo());
+
+    act(() => {
+      result.current.goTo(500, { offset: 64 });
+    });
+
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: 436,
+      behavior: "smooth",
+    });
+  });
+
+  it("scrolls to an element by CSS selector", () => {
+    const el = document.createElement("div");
+    el.id = "test-section-goto";
+    document.body.appendChild(el);
+
+    Object.defineProperty(el, "getBoundingClientRect", {
+      value: () => ({ top: 300, left: 0, width: 100, height: 50 }),
+    });
+
+    const { result } = renderHook(() => useGoTo());
+
+    act(() => {
+      result.current.goTo("#test-section-goto");
+    });
+
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: 300,
+      behavior: "smooth",
+    });
+
+    document.body.removeChild(el);
+  });
+
+  it("applies offset when scrolling to a CSS selector", () => {
+    const el = document.createElement("div");
+    el.id = "offset-section-goto";
+    document.body.appendChild(el);
+
+    Object.defineProperty(el, "getBoundingClientRect", {
+      value: () => ({ top: 400, left: 0, width: 100, height: 50 }),
+    });
+
+    const { result } = renderHook(() => useGoTo());
+
+    act(() => {
+      result.current.goTo("#offset-section-goto", { offset: 80 });
+    });
+
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: 320,
+      behavior: "smooth",
+    });
+
+    document.body.removeChild(el);
+  });
+
+  it("scrolls to an HTMLElement directly", () => {
+    const el = document.createElement("div");
+    Object.defineProperty(el, "getBoundingClientRect", {
+      value: () => ({ top: 250, left: 0, width: 100, height: 50 }),
+    });
+
+    const { result } = renderHook(() => useGoTo());
+
+    act(() => {
+      result.current.goTo(el);
+    });
+
+    expect(window.scrollTo).toHaveBeenCalledWith({
+      top: 250,
+      behavior: "smooth",
+    });
+  });
+
+  it("warns and does not scroll when selector element is not found", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const { result } = renderHook(() => useGoTo());
+
+    act(() => {
+      result.current.goTo("#nonexistent-goto-element");
+    });
+
+    expect(window.scrollTo).not.toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalledWith(
+      '[spark-ui] useGoTo: Element not found for selector "#nonexistent-goto-element"',
+    );
+
+    warnSpy.mockRestore();
+  });
+
+  it("provides a stable goTo reference across re-renders", () => {
+    const { result, rerender } = renderHook(() => useGoTo());
+
+    const first = result.current.goTo;
+    rerender();
+    expect(result.current.goTo).toBe(first);
+  });
+});
