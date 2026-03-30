@@ -9,10 +9,14 @@ const meta = {
     slidesPerView: { control: { type: "number", min: 1, max: 5 } },
     gap: { control: { type: "number", min: 0, max: 32 } },
     autoPlay: { control: { type: "number", min: 0, max: 10000 } },
+    autoplay: { control: "boolean" },
+    interval: { control: { type: "number", min: 1000, max: 10000 } },
     showArrows: { control: "boolean" },
     showDots: { control: "boolean" },
     loop: { control: "boolean" },
+    continuous: { control: "boolean" },
     pauseOnHover: { control: "boolean" },
+    progress: { control: "boolean" },
     align: { control: "select", options: ["start", "center", "end"] },
   },
 } satisfies Meta<typeof Carousel>;
@@ -63,8 +67,35 @@ export const AutoPlay: Story = {
   ),
 };
 
+export const AutoplayBoolean: Story = {
+  args: { autoplay: true, interval: 2000, continuous: true },
+  render: (args) => (
+    <div className="max-w-2xl mx-auto">
+      <Carousel {...args}>{slides}</Carousel>
+    </div>
+  ),
+};
+
 export const WithLoop: Story = {
   args: { loop: true },
+  render: (args) => (
+    <div className="max-w-2xl mx-auto">
+      <Carousel {...args}>{slides}</Carousel>
+    </div>
+  ),
+};
+
+export const Continuous: Story = {
+  args: { continuous: true },
+  render: (args) => (
+    <div className="max-w-2xl mx-auto">
+      <Carousel {...args}>{slides}</Carousel>
+    </div>
+  ),
+};
+
+export const WithProgress: Story = {
+  args: { progress: true, showDots: false },
   render: (args) => (
     <div className="max-w-2xl mx-auto">
       <Carousel {...args}>{slides}</Carousel>
@@ -94,6 +125,15 @@ export const TwoPerView: Story = {
   args: { slidesPerView: 2, gap: 12 },
   render: (args) => (
     <div className="max-w-3xl mx-auto">
+      <Carousel {...args}>{slides}</Carousel>
+    </div>
+  ),
+};
+
+export const FullFeatured: Story = {
+  args: { autoplay: true, interval: 4000, continuous: true, progress: true, showDots: true },
+  render: (args) => (
+    <div className="max-w-2xl mx-auto">
       <Carousel {...args}>{slides}</Carousel>
     </div>
   ),

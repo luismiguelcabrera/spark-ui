@@ -11,6 +11,7 @@ import {
 } from "react";
 import { cn } from "../../lib/utils";
 import { Icon } from "./icon";
+import { usePrefersReducedMotion } from "../../hooks/use-prefers-reduced-motion";
 
 type CarouselProps = HTMLAttributes<HTMLDivElement> & {
   /** Carousel items */
@@ -25,12 +26,20 @@ type CarouselProps = HTMLAttributes<HTMLDivElement> & {
   showDots?: boolean;
   /** Auto-play interval in ms (0 to disable) */
   autoPlay?: number;
+  /** Enable autoplay (alternative boolean API) */
+  autoplay?: boolean;
+  /** Autoplay interval in ms (used with boolean autoplay prop) */
+  interval?: number;
   /** Loop back to start */
   loop?: boolean;
+  /** Alias for loop — continuously cycle slides */
+  continuous?: boolean;
   /** Pause autoplay on hover */
   pauseOnHover?: boolean;
   /** Alignment */
   align?: "start" | "center" | "end";
+  /** Show progress indicator (bar below carousel) */
+  progress?: boolean;
 };
 
 const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
@@ -43,9 +52,13 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
       showArrows = true,
       showDots = true,
       autoPlay = 0,
+      autoplay,
+      interval = 5000,
       loop = false,
+      continuous,
       pauseOnHover = true,
       align = "start",
+      progress = false,
       ...props
     },
     ref
@@ -53,34 +66,72 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const trackRef = useRef<HTMLDivElement>(null);
+    const touchStartRef = useRef<number | null>(null);
+    const touchDeltaRef = useRef<number>(0);
+    const reducedMotion = usePrefersReducedMotion();
 
     const slides = Array.isArray(children) ? children : [children];
     const totalSlides = slides.length;
     const maxIndex = Math.max(0, totalSlides - slidesPerView);
 
+    // Resolve loop: `continuous` prop takes precedence, then `loop`
+    const shouldLoop = continuous ?? loop;
+
+    // Resolve autoplay: `autoplay` boolean prop takes precedence over numeric `autoPlay`
+    const resolvedAutoPlayInterval = autoplay
+      ? interval
+      : autoPlay;
+
     const goTo = useCallback(
       (index: number) => {
-        if (loop) {
+        if (shouldLoop) {
           setCurrentIndex(((index % totalSlides) + totalSlides) % totalSlides);
         } else {
           setCurrentIndex(Math.min(Math.max(0, index), maxIndex));
         }
       },
-      [loop, totalSlides, maxIndex]
+      [shouldLoop, totalSlides, maxIndex]
     );
 
     const goNext = useCallback(() => goTo(currentIndex + 1), [currentIndex, goTo]);
     const goPrev = useCallback(() => goTo(currentIndex - 1), [currentIndex, goTo]);
 
-    // Autoplay
+    // Autoplay — disabled when user prefers reduced motion
     useEffect(() => {
-      if (autoPlay <= 0 || isPaused) return;
-      const timer = setInterval(goNext, autoPlay);
+      if (resolvedAutoPlayInterval <= 0 || isPaused || reducedMotion) return;
+      const timer = setInterval(goNext, resolvedAutoPlayInterval);
       return () => clearInterval(timer);
-    }, [autoPlay, isPaused, goNext]);
+    }, [resolvedAutoPlayInterval, isPaused, goNext, reducedMotion]);
 
-    const canGoPrev = loop || currentIndex > 0;
-    const canGoNext = loop || currentIndex < maxIndex;
+    // Touch support
+    const handleTouchStart = useCallback((e: React.TouchEvent) => {
+      touchStartRef.current = e.touches[0].clientX;
+      touchDeltaRef.current = 0;
+    }, []);
+
+    const handleTouchMove = useCallback((e: React.TouchEvent) => {
+      if (touchStartRef.current === null) return;
+      touchDeltaRef.current = e.touches[0].clientX - touchStartRef.current;
+    }, []);
+
+    const handleTouchEnd = useCallback(() => {
+      const delta = touchDeltaRef.current;
+      const threshold = 50;
+      if (Math.abs(delta) > threshold) {
+        if (delta < 0) {
+          goNext();
+        } else {
+          goPrev();
+        }
+      }
+      touchStartRef.current = null;
+      touchDeltaRef.current = 0;
+    }, [goNext, goPrev]);
+
+    const canGoPrev = shouldLoop || currentIndex > 0;
+    const canGoNext = shouldLoop || currentIndex < maxIndex;
+
+    const progressPercent = totalSlides > 1 ? ((currentIndex + 1) / (maxIndex + 1)) * 100 : 100;
 
     return (
       <div
@@ -88,6 +139,9 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
         className={cn("relative group", className)}
         onMouseEnter={pauseOnHover ? () => setIsPaused(true) : undefined}
         onMouseLeave={pauseOnHover ? () => setIsPaused(false) : undefined}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
         role="region"
         aria-roledescription="carousel"
         aria-label="Carousel"
@@ -97,7 +151,10 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
         <div className="overflow-hidden">
           <div
             ref={trackRef}
-            className="flex transition-transform duration-300 ease-out"
+            className={cn(
+              "flex transition-transform duration-300 ease-out",
+              reducedMotion && "transition-none"
+            )}
             style={{
               gap: `${gap}px`,
               transform: `translateX(-${currentIndex * (100 / slidesPerView + (gap * 100) / (trackRef.current?.clientWidth ?? 1000))}%)`,
@@ -175,6 +232,26 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
                 )}
               />
             ))}
+          </div>
+        )}
+
+        {/* Progress bar */}
+        {progress && totalSlides > slidesPerView && (
+          <div
+            className="mt-4 h-1 w-full rounded-full bg-slate-200 overflow-hidden"
+            role="progressbar"
+            aria-valuenow={Math.round(progressPercent)}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Carousel progress"
+          >
+            <div
+              className={cn(
+                "h-full bg-primary rounded-full transition-all duration-300",
+                reducedMotion && "transition-none"
+              )}
+              style={{ width: `${progressPercent}%` }}
+            />
           </div>
         )}
       </div>

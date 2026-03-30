@@ -29,7 +29,7 @@ export { UserCell } from "./user-cell";
 export type { UserCellProps } from "./user-cell";
 
 export { Skeleton, SkeletonText, SkeletonCircle } from "./skeleton";
-export type { SkeletonProps } from "./skeleton";
+export type { SkeletonProps, SkeletonType } from "./skeleton";
 
 export { EmptyState } from "./empty-state";
 export type { EmptyStateProps } from "./empty-state";
@@ -44,7 +44,7 @@ export { VirtualList } from "./virtual-list";
 export type { VirtualListProps } from "./virtual-list";
 
 export { List, ListItem } from "./list";
-export type { ListProps, ListItemProps } from "./list";
+export type { ListProps, ListItemProps, ListDensity } from "./list";
 
 export { MetadataGrid, MetadataItem } from "./metadata-grid";
 export type { MetadataGridProps, MetadataItemProps } from "./metadata-grid";

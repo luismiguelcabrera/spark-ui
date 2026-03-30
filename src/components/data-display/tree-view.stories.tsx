@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TreeView } from "./tree-view";
 
@@ -8,6 +9,9 @@ const meta = {
   argTypes: {
     size: { control: "select", options: ["sm", "md", "lg"] },
     showLines: { control: "boolean" },
+    selectable: { control: "boolean" },
+    expandAll: { control: "boolean" },
+    searchable: { control: "boolean" },
   },
 } satisfies Meta<typeof TreeView>;
 
@@ -81,6 +85,73 @@ export const AllExpanded: Story = {
     size: "md",
     showLines: true,
     defaultExpandedIds: ["src", "components", "hooks"],
+  },
+};
+
+export const ExpandAll: Story = {
+  args: {
+    nodes: fileTree,
+    size: "md",
+    showLines: true,
+    expandAll: true,
+  },
+};
+
+export const Selectable: Story = {
+  args: {
+    nodes: fileTree,
+    size: "md",
+    selectable: true,
+    expandAll: true,
+  },
+  render: (args) => {
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    return (
+      <div className="max-w-sm">
+        <TreeView
+          {...args}
+          selectedIds={selectedIds}
+          onSelectionChange={setSelectedIds}
+        />
+        <p className="text-sm text-slate-500 mt-4">
+          Selected: {selectedIds.length === 0 ? "none" : selectedIds.join(", ")}
+        </p>
+      </div>
+    );
+  },
+};
+
+export const Searchable: Story = {
+  args: {
+    nodes: fileTree,
+    size: "md",
+    searchable: true,
+    expandAll: true,
+  },
+};
+
+export const SearchableSelectable: Story = {
+  args: {
+    nodes: fileTree,
+    size: "md",
+    searchable: true,
+    selectable: true,
+    expandAll: true,
+  },
+  render: (args) => {
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    return (
+      <div className="max-w-sm">
+        <TreeView
+          {...args}
+          selectedIds={selectedIds}
+          onSelectionChange={setSelectedIds}
+        />
+        <p className="text-sm text-slate-500 mt-4">
+          Selected: {selectedIds.length === 0 ? "none" : selectedIds.join(", ")}
+        </p>
+      </div>
+    );
   },
 };
 
