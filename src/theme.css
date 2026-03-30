@@ -154,6 +154,22 @@
   background-size: 1rem 1rem;
 }
 
+/* ── Ripple effect ── */
+
+@keyframes spark-ripple-effect {
+  from { transform: scale(0); opacity: 0.4; }
+  to { transform: scale(4); opacity: 0; }
+}
+
+.spark-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.3;
+  pointer-events: none;
+  animation: spark-ripple-effect 600ms ease-out forwards;
+}
+
 /* ── Reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {
