@@ -13,6 +13,7 @@ import { Avatar } from "../components/data-display/avatar";
 import { ProgressBar } from "../components/data-display/progress-bar";
 import { Spinner } from "../components/feedback/spinner";
 import { Toast } from "../components/feedback/toast";
+import { Alert } from "../components/feedback/alert";
 import { AlertBanner } from "../components/feedback/alert-banner";
 import { Modal } from "../components/feedback/modal";
 import { Pagination } from "../components/navigation/pagination";
@@ -110,6 +111,33 @@ describe("Accessibility (axe)", () => {
 
   it("Toast", async () => {
     const { container } = render(<Toast title="Done" description="Saved." variant="success" />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Alert (info)", async () => {
+    const { container } = render(<Alert>This is an informational alert.</Alert>);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Alert (with title)", async () => {
+    const { container } = render(<Alert variant="success" title="Done">Saved successfully.</Alert>);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Alert (dismissible)", async () => {
+    const { container } = render(<Alert dismissible onDismiss={() => {}}>Dismissible alert</Alert>);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Alert variants", async () => {
+    const { container } = render(
+      <div>
+        <Alert variant="info">Info</Alert>
+        <Alert variant="success">Success</Alert>
+        <Alert variant="warning">Warning</Alert>
+        <Alert variant="error">Error</Alert>
+      </div>,
+    );
     expect(await axe(container)).toHaveNoViolations();
   });
 

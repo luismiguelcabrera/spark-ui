@@ -1,3 +1,6 @@
+export { Alert, alertVariants } from "./alert";
+export type { AlertProps, AlertVariant } from "./alert";
+
 export { AlertBanner, alertBannerVariants } from "./alert-banner";
 export type { AlertBannerProps } from "./alert-banner";
 
