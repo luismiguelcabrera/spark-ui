@@ -70,6 +70,8 @@ type CalendarProps = {
   eventDays?: number[];
   /** Custom-marked dates with colors, dots, and tooltips */
   markedDates?: MarkedDate[];
+  /** Highlight today's date with a ring indicator (default: true) */
+  showToday?: boolean;
   /** Max number of selectable dates (multiple mode) */
   max?: number;
   className?: string;
@@ -160,6 +162,7 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
       onNextMonth,
       eventDays = [],
       markedDates: markedDatesProp,
+      showToday = true,
       max,
       className,
     },
@@ -343,7 +346,7 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
               className={cn(
                 s.calendarDay,
                 day.muted && s.calendarDayMuted,
-                day.today && !day.selected && !day.inRange && !day.mark?.color && s.calendarDayToday,
+                showToday && day.today && !day.selected && !day.inRange && !day.mark?.color && s.calendarDayToday,
                 day.selected && !day.mark?.color && s.calendarDaySelected,
                 day.hasEvent && !day.today && !day.selected && !day.inRange && !day.mark?.dotColor && s.calendarDayEvent,
                 // Custom mark background color (Tailwind class)
@@ -366,6 +369,10 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
               title={day.mark?.label}
             >
               {day.day}
+              {/* Today dot indicator when selected (since ring is hidden) */}
+              {showToday && day.today && day.selected && (
+                <span className="absolute bottom-1 w-1 h-1 rounded-full bg-white" />
+              )}
               {/* Custom dot from markedDates */}
               {day.mark?.dotColor && !day.selected && (
                 <span

@@ -20,6 +20,7 @@ const meta = {
     year: { control: "number" },
     selected: { control: "number" },
     max: { control: "number" },
+    showToday: { control: "boolean" },
   },
 } satisfies Meta<typeof Calendar>;
 
@@ -132,6 +133,15 @@ export const MarkedWithSelection: Story = {
       { day: 5, dotColor: "bg-orange-400" },
       { day: 18, dotColor: "bg-purple-400" },
     ],
+  },
+};
+
+// ── Today Indicator ──
+
+export const HideToday: Story = {
+  args: {
+    showToday: false,
+    defaultSelected: 15,
   },
 };
 
