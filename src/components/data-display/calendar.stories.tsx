@@ -12,6 +12,7 @@ const meta = {
     showTodayButton: { control: "boolean" },
     showSelectedLabel: { control: "boolean" },
     fixedWeeks: { control: "boolean" },
+    numberOfMonths: { control: "select", options: [1, 2] },
     max: { control: "number" },
   },
 } satisfies Meta<typeof Calendar>;
@@ -94,6 +95,40 @@ export const WithTodayButton: Story = {
 
 export const WithSelectedLabel: Story = {
   args: { showSelectedLabel: true, defaultSelected: 15 },
+};
+
+// ── Dual Calendar (cross-month range) ──
+
+export const DualCalendar: Story = {
+  args: {
+    mode: "range",
+    numberOfMonths: 2,
+    showSelectedLabel: true,
+    showTodayButton: true,
+  },
+};
+
+export const DualCalendarMondayStart: Story = {
+  args: {
+    mode: "range",
+    numberOfMonths: 2,
+    weekStartsOn: 1,
+    showSelectedLabel: true,
+    fixedWeeks: true,
+  },
+};
+
+export const DualCalendarWithEvents: Story = {
+  args: {
+    mode: "range",
+    numberOfMonths: 2,
+    eventDays: [3, 7, 12, 18, 22, 28],
+    showSelectedLabel: true,
+    markedDates: [
+      { day: 1, color: "bg-red-100 text-red-700", label: "Holiday" },
+      { day: 15, dotColor: "bg-green-500" },
+    ],
+  },
 };
 
 export const FullFeatured: Story = {

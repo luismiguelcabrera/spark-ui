@@ -38,7 +38,7 @@ export { MetadataGrid, MetadataItem } from "./metadata-grid";
 export type { MetadataGridProps, MetadataItemProps } from "./metadata-grid";
 
 export { Calendar } from "./calendar";
-export type { CalendarProps, CalendarDay } from "./calendar";
+export type { CalendarProps, CalendarDay, CalendarMode, MarkedDate, CalendarDateRange } from "./calendar";
 
 export { QrCode } from "./qr-code";
 export type { QrCodeProps } from "./qr-code";
