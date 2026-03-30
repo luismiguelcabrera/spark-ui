@@ -30,3 +30,15 @@ export type { LinkProps } from "./link";
 
 export { SkipNavLink, SkipNavContent } from "./skip-nav";
 export type { SkipNavLinkProps, SkipNavContentProps } from "./skip-nav";
+
+export { Footer } from "./footer";
+export type { FooterProps } from "./footer";
+
+export { SystemBar } from "./system-bar";
+export type { SystemBarProps } from "./system-bar";
+
+export { SlideGroup } from "./slide-group";
+export type { SlideGroupProps } from "./slide-group";
+
+export { ItemGroup, ItemGroupItem } from "./item-group";
+export type { ItemGroupProps, ItemGroupItemProps, ItemGroupContextValue } from "./item-group";
