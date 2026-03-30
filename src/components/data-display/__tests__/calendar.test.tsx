@@ -80,9 +80,9 @@ describe("Calendar", () => {
 
   it("renders with custom days prop", () => {
     const days = [
-      { day: 1, selected: true },
-      { day: 2 },
-      { day: 3, hasEvent: true },
+      { day: 1, date: new Date(2025, 0, 1), selected: true },
+      { day: 2, date: new Date(2025, 0, 2) },
+      { day: 3, date: new Date(2025, 0, 3), hasEvent: true },
     ];
     render(<Calendar month="January" year={2025} days={days} />);
     expect(screen.getByText("1")).toBeInTheDocument();
