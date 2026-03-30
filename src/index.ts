@@ -14,6 +14,18 @@ export { cn } from "./lib/utils";
 export { s } from "./lib/styles";
 export { tokensToCssVars } from "./lib/theme-tokens";
 export type { ThemeColors, ThemeTokens } from "./lib/theme-tokens";
+export { createTheme, defaultThemes } from "./lib/theme";
+export type { Theme as ThemeDef, ThemeMap } from "./lib/theme";
+export { DensityProvider, useDensity } from "./lib/density";
+export type { Density, DensityProviderProps } from "./lib/density";
+export {
+  DefaultsProvider as LibDefaultsProvider,
+  useComponentDefaults,
+  createDefaults,
+} from "./lib/defaults-provider";
+export type { DefaultsProviderProps as LibDefaultsProviderProps } from "./lib/defaults-provider";
+export { useLocale } from "./lib/locale";
+export { defaultMessages } from "./lib/default-messages";
 
 // ── Hooks ──
 export { useControllable } from "./hooks/use-controllable";
@@ -36,3 +48,4 @@ export { usePrevious } from "./hooks/use-previous";
 export { useThrottle } from "./hooks/use-throttle";
 export { useWindowSize } from "./hooks/use-window-size";
 export { useHover } from "./hooks/use-hover";
+export { useElevation } from "./hooks/use-elevation";

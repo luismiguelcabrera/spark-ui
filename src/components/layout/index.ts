@@ -64,3 +64,6 @@ export type { DefaultsProviderProps, DefaultsMap } from "./defaults-provider";
 
 export { NoSsr } from "./no-ssr";
 export type { NoSsrProps } from "./no-ssr";
+
+export { LocaleProvider } from "./locale-provider";
+export type { LocaleProviderProps } from "./locale-provider";

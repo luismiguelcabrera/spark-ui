@@ -15,6 +15,7 @@ import {
   type ThemeColors,
   type ThemeTokens,
 } from "../../lib/theme-tokens";
+import type { ThemeMap } from "../../lib/theme";
 
 type Theme = "light" | "dark" | "system";
 
@@ -48,6 +49,8 @@ type ThemeProviderProps = {
   storageKey?: string;
   /** Override theme color tokens at runtime */
   colors?: ThemeColors;
+  /** Named themes — maps theme names to color overrides */
+  themes?: ThemeMap;
   /** Override the base border-radius */
   radius?: string;
   children: ReactNode;
@@ -57,6 +60,7 @@ function ThemeProvider({
   defaultTheme = "system",
   storageKey = "spark-ui-theme",
   colors: colorsProp,
+  themes,
   radius,
   children,
 }: ThemeProviderProps) {
@@ -79,6 +83,12 @@ function ThemeProvider({
   }
 
   const resolvedTheme = theme === "system" ? systemTheme : theme;
+
+  // Resolve colors from named themes map (if provided)
+  const themeColors = useMemo(() => {
+    if (!themes) return {};
+    return themes[resolvedTheme] ?? {};
+  }, [themes, resolvedTheme]);
 
   const setTheme = useCallback(
     (newTheme: Theme) => {
@@ -114,10 +124,16 @@ function ThemeProvider({
     root.classList.add(resolvedTheme);
   }, [resolvedTheme]);
 
+  // Merge: named theme colors < prop colors < runtime colors
+  const effectiveColors = useMemo<ThemeColors>(
+    () => ({ ...themeColors, ...runtimeColors.merged }),
+    [themeColors, runtimeColors.merged],
+  );
+
   // Build CSS variable style object
   const tokens: ThemeTokens = useMemo(
-    () => ({ colors: runtimeColors.merged, radius }),
-    [runtimeColors.merged, radius],
+    () => ({ colors: effectiveColors, radius }),
+    [effectiveColors, radius],
   );
   const cssVars = useMemo(() => tokensToCssVars(tokens), [tokens]);
 
@@ -126,10 +142,10 @@ function ThemeProvider({
       theme,
       resolvedTheme,
       setTheme,
-      colors: runtimeColors.merged,
+      colors: effectiveColors,
       setColors,
     }),
-    [theme, resolvedTheme, setTheme, runtimeColors, setColors],
+    [theme, resolvedTheme, setTheme, effectiveColors, setColors],
   );
 
   const hasVars = Object.keys(cssVars).length > 0;

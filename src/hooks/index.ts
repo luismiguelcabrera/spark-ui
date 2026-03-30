@@ -30,3 +30,4 @@ export { useDisplay } from "./use-display";
 export { useRtl } from "./use-rtl";
 export { useDate } from "./use-date";
 export { useHotkey } from "./use-hotkey";
+export { useElevation } from "./use-elevation";
