@@ -259,7 +259,7 @@ function MonthGrid({
   gridRef, gridId, focusedIndex, onDayClick, onDayHover, onGridKeyDown,
 }: MonthGridProps) {
   return (
-    <div className="flex-1 min-w-0">
+    <div>
       {/* Day labels */}
       <div className={s.calendarGrid} role="row">
         {dayLabels.map((label) => (
@@ -623,35 +623,37 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
         {/* Calendar grid(s) */}
         {!pickerOpen && (
           <>
-            <div className={cn(isDual && "flex gap-4 px-2")}>
+            <div className={cn(isDual && "flex gap-6 px-2")}>
               {/* Month 1 */}
-              {isDual && (
-                <div className="text-center text-xs font-semibold text-slate-500 pb-1">
-                  {MONTH_NAMES[activeMonth]} {activeYear}
-                </div>
-              )}
-              <MonthGrid
-                monthIndex={activeMonth}
-                year={activeYear}
-                days={displayDays}
-                dayLabels={dayLabels as unknown as string[]}
-                showToday={showToday}
-                mode={mode}
-                rangePickingEnd={rangeStep === "end"}
-                slideDir={slideDir}
-                gridRef={gridRef}
-                gridId={gridId}
-                focusedIndex={focusedIndex}
-                onDayClick={handleDayClick}
-                onDayHover={setHoverDate}
-                onGridKeyDown={handleGridKeyDown}
-              />
+              <div className={cn(isDual && "flex-1 min-w-0")}>
+                {isDual && (
+                  <div className="text-center text-xs font-semibold text-slate-500 pb-1">
+                    {MONTH_NAMES[activeMonth]} {activeYear}
+                  </div>
+                )}
+                <MonthGrid
+                  monthIndex={activeMonth}
+                  year={activeYear}
+                  days={displayDays}
+                  dayLabels={dayLabels as unknown as string[]}
+                  showToday={showToday}
+                  mode={mode}
+                  rangePickingEnd={rangeStep === "end"}
+                  slideDir={slideDir}
+                  gridRef={gridRef}
+                  gridId={gridId}
+                  focusedIndex={focusedIndex}
+                  onDayClick={handleDayClick}
+                  onDayHover={setHoverDate}
+                  onGridKeyDown={handleGridKeyDown}
+                />
+              </div>
 
               {/* Month 2 (dual mode) */}
               {isDual && isAutoMode && (
                 <>
                   <div className="w-px bg-slate-200 self-stretch my-2" />
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <div className="text-center text-xs font-semibold text-slate-500 pb-1">
                       {MONTH_NAMES[m2]} {y2}
                     </div>
