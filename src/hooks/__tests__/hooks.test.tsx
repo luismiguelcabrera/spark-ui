@@ -11,6 +11,14 @@ import { useToggle } from "../use-toggle";
 import { useScrollLock } from "../use-scroll-lock";
 import { useBreakpoint } from "../use-breakpoint";
 import { useIsomorphicId } from "../use-isomorphic-id";
+import { useDisplay } from "../use-display";
+import { useRtl } from "../use-rtl";
+import { useDate } from "../use-date";
+import { useHotkey } from "../use-hotkey";
+import { useRipple } from "../use-ripple";
+import { useTouch } from "../use-touch";
+import { useMutationObserver } from "../use-mutation-observer";
+import { useGoTo } from "../use-go-to";
 
 // ---------------------------------------------------------------------------
 // useDebounce
@@ -918,5 +926,605 @@ describe("useOnClickOutside", () => {
 
     expect(handler).toHaveBeenCalledTimes(1);
     document.body.removeChild(ref.current);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useDisplay
+// ---------------------------------------------------------------------------
+describe("useDisplay", () => {
+  let mediaQueryListeners: Map<string, Array<(e: { matches: boolean }) => void>>;
+  let mediaQueryMatches: Map<string, boolean>;
+  let resizeHandlers: Array<() => void>;
+
+  beforeEach(() => {
+    mediaQueryListeners = new Map();
+    mediaQueryMatches = new Map();
+    resizeHandlers = [];
+
+    Object.defineProperty(window, "innerWidth", {
+      value: 1024,
+      writable: true,
+      configurable: true,
+    });
+    Object.defineProperty(window, "innerHeight", {
+      value: 768,
+      writable: true,
+      configurable: true,
+    });
+
+    // Default: md breakpoint (768 matches, 1024 does not)
+    mediaQueryMatches.set("(min-width: 640px)", true);
+    mediaQueryMatches.set("(min-width: 768px)", true);
+    mediaQueryMatches.set("(min-width: 1024px)", true);
+    mediaQueryMatches.set("(min-width: 1280px)", false);
+    mediaQueryMatches.set("(min-width: 1536px)", false);
+
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      configurable: true,
+      value: vi.fn().mockImplementation((query: string) => {
+        if (!mediaQueryListeners.has(query)) {
+          mediaQueryListeners.set(query, []);
+        }
+        return {
+          matches: mediaQueryMatches.get(query) ?? false,
+          media: query,
+          addEventListener: vi.fn((_: string, handler: (e: { matches: boolean }) => void) => {
+            mediaQueryListeners.get(query)!.push(handler);
+          }),
+          removeEventListener: vi.fn(),
+          onchange: null,
+          addListener: vi.fn(),
+          removeListener: vi.fn(),
+          dispatchEvent: vi.fn(),
+        };
+      }),
+    });
+
+    const originalAddEventListener = window.addEventListener.bind(window);
+    vi.spyOn(window, "addEventListener").mockImplementation(
+      (event: string, handler: unknown, ...rest: unknown[]) => {
+        if (event === "resize") {
+          resizeHandlers.push(handler as () => void);
+        }
+        return originalAddEventListener(event, handler as EventListenerOrEventListenerObject, ...(rest as [boolean | AddEventListenerOptions | undefined]));
+      },
+    );
+    vi.spyOn(window, "removeEventListener").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("returns breakpoint, dimensions, and platform info", () => {
+    const { result } = renderHook(() => useDisplay());
+
+    expect(result.current.breakpoint).toBe("lg");
+    expect(result.current.width).toBe(1024);
+    expect(result.current.height).toBe(768);
+    expect(result.current.mobile).toBe(false);
+    expect(result.current.platform).toEqual(
+      expect.objectContaining({
+        touch: expect.any(Boolean),
+        ios: expect.any(Boolean),
+        android: expect.any(Boolean),
+      }),
+    );
+  });
+
+  it("reports mobile=true for xs breakpoint", () => {
+    // All breakpoints below sm
+    mediaQueryMatches.set("(min-width: 640px)", false);
+    mediaQueryMatches.set("(min-width: 768px)", false);
+    mediaQueryMatches.set("(min-width: 1024px)", false);
+    mediaQueryMatches.set("(min-width: 1280px)", false);
+    mediaQueryMatches.set("(min-width: 1536px)", false);
+
+    Object.defineProperty(window, "innerWidth", { value: 320, configurable: true });
+
+    const { result } = renderHook(() => useDisplay());
+    expect(result.current.breakpoint).toBe("xs");
+    expect(result.current.mobile).toBe(true);
+  });
+
+  it("reports mobile=true for sm breakpoint", () => {
+    mediaQueryMatches.set("(min-width: 640px)", true);
+    mediaQueryMatches.set("(min-width: 768px)", false);
+    mediaQueryMatches.set("(min-width: 1024px)", false);
+    mediaQueryMatches.set("(min-width: 1280px)", false);
+    mediaQueryMatches.set("(min-width: 1536px)", false);
+
+    Object.defineProperty(window, "innerWidth", { value: 640, configurable: true });
+
+    const { result } = renderHook(() => useDisplay());
+    expect(result.current.breakpoint).toBe("sm");
+    expect(result.current.mobile).toBe(true);
+  });
+
+  it("reports mobile=false for md and above", () => {
+    const { result } = renderHook(() => useDisplay());
+    expect(result.current.breakpoint).toBe("lg");
+    expect(result.current.mobile).toBe(false);
+  });
+
+  it("detects 2xl breakpoint", () => {
+    mediaQueryMatches.set("(min-width: 640px)", true);
+    mediaQueryMatches.set("(min-width: 768px)", true);
+    mediaQueryMatches.set("(min-width: 1024px)", true);
+    mediaQueryMatches.set("(min-width: 1280px)", true);
+    mediaQueryMatches.set("(min-width: 1536px)", true);
+
+    Object.defineProperty(window, "innerWidth", { value: 1920, configurable: true });
+
+    const { result } = renderHook(() => useDisplay());
+    expect(result.current.breakpoint).toBe("2xl");
+  });
+
+  it("updates dimensions on resize", () => {
+    const { result } = renderHook(() => useDisplay());
+
+    Object.defineProperty(window, "innerWidth", { value: 500, configurable: true });
+    Object.defineProperty(window, "innerHeight", { value: 400, configurable: true });
+
+    mediaQueryMatches.set("(min-width: 640px)", false);
+    mediaQueryMatches.set("(min-width: 768px)", false);
+    mediaQueryMatches.set("(min-width: 1024px)", false);
+
+    act(() => {
+      resizeHandlers.forEach((h) => h());
+    });
+
+    expect(result.current.width).toBe(500);
+    expect(result.current.height).toBe(400);
+  });
+
+  it("returns stable platform reference across re-renders", () => {
+    const { result, rerender } = renderHook(() => useDisplay());
+    const first = result.current.platform;
+    rerender();
+    expect(result.current.platform).toBe(first);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useRtl
+// ---------------------------------------------------------------------------
+describe("useRtl", () => {
+  let originalDir: string;
+
+  beforeEach(() => {
+    originalDir = document.documentElement.dir;
+    document.documentElement.dir = "";
+  });
+
+  afterEach(() => {
+    document.documentElement.dir = originalDir;
+  });
+
+  it("defaults to ltr when document.dir is empty", () => {
+    const { result } = renderHook(() => useRtl());
+    expect(result.current.isRtl).toBe(false);
+    expect(result.current.dir).toBe("ltr");
+  });
+
+  it("reads initial rtl state from document", () => {
+    document.documentElement.dir = "rtl";
+    const { result } = renderHook(() => useRtl());
+    expect(result.current.isRtl).toBe(true);
+    expect(result.current.dir).toBe("rtl");
+  });
+
+  it("toggles from ltr to rtl", () => {
+    const { result } = renderHook(() => useRtl());
+
+    act(() => {
+      result.current.toggle();
+    });
+
+    expect(result.current.isRtl).toBe(true);
+    expect(result.current.dir).toBe("rtl");
+    expect(document.documentElement.dir).toBe("rtl");
+  });
+
+  it("toggles from rtl to ltr", () => {
+    document.documentElement.dir = "rtl";
+    const { result } = renderHook(() => useRtl());
+
+    act(() => {
+      result.current.toggle();
+    });
+
+    expect(result.current.isRtl).toBe(false);
+    expect(result.current.dir).toBe("ltr");
+    expect(document.documentElement.dir).toBe("ltr");
+  });
+
+  it("toggles multiple times", () => {
+    const { result } = renderHook(() => useRtl());
+
+    act(() => {
+      result.current.toggle();
+    });
+    expect(result.current.dir).toBe("rtl");
+
+    act(() => {
+      result.current.toggle();
+    });
+    expect(result.current.dir).toBe("ltr");
+
+    act(() => {
+      result.current.toggle();
+    });
+    expect(result.current.dir).toBe("rtl");
+  });
+
+  it("provides stable toggle reference across re-renders", () => {
+    const { result, rerender } = renderHook(() => useRtl());
+    const firstToggle = result.current.toggle;
+    rerender();
+    expect(result.current.toggle).toBe(firstToggle);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useDate
+// ---------------------------------------------------------------------------
+describe("useDate", () => {
+  it("returns format, relative, isToday, and isSameDay functions", () => {
+    const { result } = renderHook(() => useDate());
+    expect(typeof result.current.format).toBe("function");
+    expect(typeof result.current.relative).toBe("function");
+    expect(typeof result.current.isToday).toBe("function");
+    expect(typeof result.current.isSameDay).toBe("function");
+  });
+
+  describe("format", () => {
+    it("formats YYYY-MM-DD", () => {
+      const { result } = renderHook(() => useDate());
+      const date = new Date(2024, 0, 15); // Jan 15 2024
+      expect(result.current.format(date, "YYYY-MM-DD")).toBe("2024-01-15");
+    });
+
+    it("formats MM/DD/YYYY", () => {
+      const { result } = renderHook(() => useDate());
+      const date = new Date(2024, 11, 25); // Dec 25 2024
+      expect(result.current.format(date, "MM/DD/YYYY")).toBe("12/25/2024");
+    });
+
+    it("formats HH:mm", () => {
+      const { result } = renderHook(() => useDate());
+      const date = new Date(2024, 0, 1, 14, 30);
+      expect(result.current.format(date, "HH:mm")).toBe("14:30");
+    });
+
+    it("formats HH:mm:ss", () => {
+      const { result } = renderHook(() => useDate());
+      const date = new Date(2024, 0, 1, 9, 5, 3);
+      expect(result.current.format(date, "HH:mm:ss")).toBe("09:05:03");
+    });
+
+    it("formats combined date and time", () => {
+      const { result } = renderHook(() => useDate());
+      const date = new Date(2024, 5, 1, 8, 30);
+      expect(result.current.format(date, "YYYY-MM-DD HH:mm")).toBe("2024-06-01 08:30");
+    });
+
+    it("pads single-digit months and days", () => {
+      const { result } = renderHook(() => useDate());
+      const date = new Date(2024, 0, 5); // Jan 5
+      expect(result.current.format(date, "MM-DD")).toBe("01-05");
+    });
+  });
+
+  describe("relative", () => {
+    it("returns 'just now' for recent dates", () => {
+      const { result } = renderHook(() => useDate());
+      const date = new Date(Date.now() - 10 * 1000); // 10 seconds ago
+      expect(result.current.relative(date)).toBe("just now");
+    });
+
+    it("returns minutes ago", () => {
+      const { result } = renderHook(() => useDate());
+      const date = new Date(Date.now() - 5 * 60 * 1000); // 5 minutes ago
+      expect(result.current.relative(date)).toBe("5 min ago");
+    });
+
+    it("returns hours ago (singular)", () => {
+      const { result } = renderHook(() => useDate());
+      const date = new Date(Date.now() - 1 * 60 * 60 * 1000);
+      expect(result.current.relative(date)).toBe("1 hour ago");
+    });
+
+    it("returns hours ago (plural)", () => {
+      const { result } = renderHook(() => useDate());
+      const date = new Date(Date.now() - 3 * 60 * 60 * 1000);
+      expect(result.current.relative(date)).toBe("3 hours ago");
+    });
+
+    it("returns 'yesterday' for 1 day ago", () => {
+      const { result } = renderHook(() => useDate());
+      const date = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      expect(result.current.relative(date)).toBe("yesterday");
+    });
+
+    it("returns days ago for multiple days", () => {
+      const { result } = renderHook(() => useDate());
+      const date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
+      expect(result.current.relative(date)).toBe("5 days ago");
+    });
+
+    it("returns formatted date for 30+ days ago", () => {
+      const { result } = renderHook(() => useDate());
+      const date = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
+      // Should be a YYYY-MM-DD formatted string
+      expect(result.current.relative(date)).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    });
+  });
+
+  describe("isToday", () => {
+    it("returns true for today", () => {
+      const { result } = renderHook(() => useDate());
+      expect(result.current.isToday(new Date())).toBe(true);
+    });
+
+    it("returns false for yesterday", () => {
+      const { result } = renderHook(() => useDate());
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      expect(result.current.isToday(yesterday)).toBe(false);
+    });
+  });
+
+  describe("isSameDay", () => {
+    it("returns true for same day", () => {
+      const { result } = renderHook(() => useDate());
+      const a = new Date(2024, 0, 15, 10, 0);
+      const b = new Date(2024, 0, 15, 22, 30);
+      expect(result.current.isSameDay(a, b)).toBe(true);
+    });
+
+    it("returns false for different days", () => {
+      const { result } = renderHook(() => useDate());
+      const a = new Date(2024, 0, 15);
+      const b = new Date(2024, 0, 16);
+      expect(result.current.isSameDay(a, b)).toBe(false);
+    });
+
+    it("returns false for same day in different months", () => {
+      const { result } = renderHook(() => useDate());
+      const a = new Date(2024, 0, 15);
+      const b = new Date(2024, 1, 15);
+      expect(result.current.isSameDay(a, b)).toBe(false);
+    });
+  });
+
+  it("returns stable references across re-renders", () => {
+    const { result, rerender } = renderHook(() => useDate());
+    const first = result.current;
+    rerender();
+    expect(result.current.format).toBe(first.format);
+    expect(result.current.relative).toBe(first.relative);
+    expect(result.current.isToday).toBe(first.isToday);
+    expect(result.current.isSameDay).toBe(first.isSameDay);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useHotkey
+// ---------------------------------------------------------------------------
+describe("useHotkey", () => {
+  it("calls callback when a simple key is pressed", () => {
+    const handler = vi.fn();
+    renderHook(() => useHotkey("escape", handler));
+
+    act(() => {
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "Escape",
+          bubbles: true,
+        }),
+      );
+    });
+
+    expect(handler).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls callback for ctrl+k combo", () => {
+    const handler = vi.fn();
+    renderHook(() => useHotkey("ctrl+k", handler));
+
+    act(() => {
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "k",
+          ctrlKey: true,
+          bubbles: true,
+        }),
+      );
+    });
+
+    expect(handler).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls callback for ctrl+shift+p combo", () => {
+    const handler = vi.fn();
+    renderHook(() => useHotkey("ctrl+shift+p", handler));
+
+    act(() => {
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "p",
+          ctrlKey: true,
+          shiftKey: true,
+          bubbles: true,
+        }),
+      );
+    });
+
+    expect(handler).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not call callback when modifier is missing", () => {
+    const handler = vi.fn();
+    renderHook(() => useHotkey("ctrl+k", handler));
+
+    act(() => {
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "k",
+          ctrlKey: false,
+          bubbles: true,
+        }),
+      );
+    });
+
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it("does not call callback when extra modifier is present", () => {
+    const handler = vi.fn();
+    renderHook(() => useHotkey("ctrl+k", handler));
+
+    act(() => {
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "k",
+          ctrlKey: true,
+          shiftKey: true,
+          bubbles: true,
+        }),
+      );
+    });
+
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it("does not call callback when enabled is false", () => {
+    const handler = vi.fn();
+    renderHook(() => useHotkey("escape", handler, { enabled: false }));
+
+    act(() => {
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "Escape",
+          bubbles: true,
+        }),
+      );
+    });
+
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it("re-enables when enabled changes to true", () => {
+    const handler = vi.fn();
+    const { rerender } = renderHook(
+      ({ enabled }) => useHotkey("escape", handler, { enabled }),
+      { initialProps: { enabled: false } },
+    );
+
+    act(() => {
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+      );
+    });
+    expect(handler).not.toHaveBeenCalled();
+
+    rerender({ enabled: true });
+
+    act(() => {
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+      );
+    });
+    expect(handler).toHaveBeenCalledTimes(1);
+  });
+
+  it("prevents default on matched combos", () => {
+    const handler = vi.fn();
+    renderHook(() => useHotkey("ctrl+s", handler));
+
+    const event = new KeyboardEvent("keydown", {
+      key: "s",
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    const preventSpy = vi.spyOn(event, "preventDefault");
+
+    act(() => {
+      document.dispatchEvent(event);
+    });
+
+    expect(preventSpy).toHaveBeenCalled();
+  });
+
+  it("supports multiple hotkeys registered independently", () => {
+    const handler1 = vi.fn();
+    const handler2 = vi.fn();
+
+    renderHook(() => {
+      useHotkey("ctrl+k", handler1);
+      useHotkey("ctrl+j", handler2);
+    });
+
+    act(() => {
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "k",
+          ctrlKey: true,
+          bubbles: true,
+        }),
+      );
+    });
+
+    expect(handler1).toHaveBeenCalledTimes(1);
+    expect(handler2).not.toHaveBeenCalled();
+
+    act(() => {
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "j",
+          ctrlKey: true,
+          bubbles: true,
+        }),
+      );
+    });
+
+    expect(handler2).toHaveBeenCalledTimes(1);
+  });
+
+  it("cleans up listener on unmount", () => {
+    const handler = vi.fn();
+    const { unmount } = renderHook(() => useHotkey("escape", handler));
+
+    unmount();
+
+    act(() => {
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+      );
+    });
+
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it("uses latest callback via ref", () => {
+    let count = 0;
+    const { rerender } = renderHook(
+      ({ cb }) => useHotkey("escape", cb),
+      { initialProps: { cb: () => { count = 1; } } },
+    );
+
+    rerender({ cb: () => { count = 2; } });
+
+    act(() => {
+      document.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+      );
+    });
+
+    expect(count).toBe(2);
   });
 });
