@@ -239,6 +239,18 @@ export const MenuIcon = createIcon(
   </>,
 );
 
+export const GripVerticalIcon = createIcon(
+  "GripVerticalIcon",
+  <>
+    <circle cx="9" cy="5" r="1" fill="currentColor" stroke="none" />
+    <circle cx="15" cy="5" r="1" fill="currentColor" stroke="none" />
+    <circle cx="9" cy="12" r="1" fill="currentColor" stroke="none" />
+    <circle cx="15" cy="12" r="1" fill="currentColor" stroke="none" />
+    <circle cx="9" cy="19" r="1" fill="currentColor" stroke="none" />
+    <circle cx="15" cy="19" r="1" fill="currentColor" stroke="none" />
+  </>,
+);
+
 export const CalendarIcon = createIcon(
   "CalendarIcon",
   <>

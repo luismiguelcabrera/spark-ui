@@ -34,6 +34,9 @@ export type { EmptyStateProps } from "./empty-state";
 export { DataTable } from "./data-table";
 export type { DataTableProps, Column, SortState, SortDirection } from "./data-table";
 
+export { SortableList, DragHandle } from "./sortable-list";
+export type { SortableListProps, SortableItem, DragHandleProps } from "./sortable-list";
+
 export { List, ListItem } from "./list";
 export type { ListProps, ListItemProps } from "./list";
 

@@ -11,6 +11,7 @@ import { Toggle } from "../components/forms/toggle";
 import { MultiSelect } from "../components/forms/multi-select";
 import { Badge } from "../components/data-display/badge";
 import { Image } from "../components/data-display/image";
+import { SortableList } from "../components/data-display/sortable-list";
 import { Card } from "../components/data-display/card";
 import { Avatar } from "../components/data-display/avatar";
 import { ProgressBar } from "../components/data-display/progress-bar";
@@ -152,6 +153,26 @@ describe("Accessibility (axe)", () => {
   it("Image (no src — fallback)", async () => {
     const { container } = render(
       <Image alt="Missing image" width={200} height={150} />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("SortableList", async () => {
+    const items = [
+      { id: "1", title: "First" },
+      { id: "2", title: "Second" },
+    ];
+    const { container } = render(
+      <SortableList
+        items={items}
+        onReorder={() => {}}
+        renderItem={(item, handle) => (
+          <div className="flex items-center gap-2 p-2 flex-1">
+            {handle}
+            <span>{item.title}</span>
+          </div>
+        )}
+      />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });

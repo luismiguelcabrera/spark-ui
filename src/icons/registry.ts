@@ -116,6 +116,9 @@ const builtInIcons: Record<string, ComponentType<IconComponentProps>> = {
 
   // ── Layout ──
   "menu": icons.MenuIcon,
+  "grip-vertical": icons.GripVerticalIcon,
+  "grip_vertical": icons.GripVerticalIcon,
+  "drag_indicator": icons.GripVerticalIcon,
   "grid": icons.GridIcon,
   "list": icons.ListIcon,
   "columns": icons.ColumnsIcon,
