@@ -281,7 +281,14 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
     const displayMonth = hasExternalNav ? MONTH_NAMES[activeMonth] : (isAutoMode ? MONTH_NAMES[navMonth] : month);
     const displayYear = hasExternalNav ? activeYear : (isAutoMode ? navYear : year);
 
+    const clearSelection = () => {
+      if (mode === "single") setSelectedDay(-1);
+      else if (mode === "multiple") setMultiDates([]);
+      else if (mode === "range") { setRange(null); setRangeStep("start"); }
+    };
+
     const goToPrevMonth = () => {
+      clearSelection();
       if (navMonth === 0) {
         setNavMonth(11);
         setNavYear(navYear - 1);
@@ -291,6 +298,7 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
     };
 
     const goToNextMonth = () => {
+      clearSelection();
       if (navMonth === 11) {
         setNavMonth(0);
         setNavYear(navYear + 1);
