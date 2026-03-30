@@ -1,6 +1,7 @@
 import { render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, it, expect } from "vitest";
+import { Parallax } from "../components/data-display/parallax";
 
 import { Button } from "../components/forms/button";
 import { Input } from "../components/forms/input";
@@ -606,6 +607,20 @@ describe("Accessibility (axe)", () => {
   it("Banner (dismissible)", async () => {
     const { container } = render(
       <Banner text="Dismissible" color="info" dismissible onDismiss={() => {}} />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Parallax (with alt)", async () => {
+    const { container } = render(
+      <Parallax src="/test.jpg" alt="Mountain" height={400} />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Parallax (decorative)", async () => {
+    const { container } = render(
+      <Parallax src="/bg.jpg" height={300} />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });
