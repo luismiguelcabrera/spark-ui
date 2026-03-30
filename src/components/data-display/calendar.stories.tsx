@@ -6,6 +6,10 @@ const meta = {
   component: Calendar,
   tags: ["autodocs"],
   argTypes: {
+    mode: {
+      control: "select",
+      options: ["single", "multiple", "range"],
+    },
     month: {
       control: "select",
       options: [
@@ -15,11 +19,14 @@ const meta = {
     },
     year: { control: "number" },
     selected: { control: "number" },
+    max: { control: "number" },
   },
 } satisfies Meta<typeof Calendar>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+// ── Single Mode ──
 
 export const Default: Story = {};
 
@@ -44,56 +51,55 @@ export const WithEvents: Story = {
   },
 };
 
+// ── Multiple Mode ──
+
+export const MultipleDates: Story = {
+  args: {
+    mode: "multiple",
+    defaultSelectedDates: [5, 12, 18, 25],
+  },
+};
+
+export const MultipleWithMax: Story = {
+  args: {
+    mode: "multiple",
+    max: 3,
+    defaultSelectedDates: [10, 20],
+  },
+};
+
+export const MultipleWithEvents: Story = {
+  args: {
+    mode: "multiple",
+    eventDays: [1, 8, 15, 22],
+    defaultSelectedDates: [8, 15],
+  },
+};
+
+// ── Range Mode ──
+
+export const DateRange: Story = {
+  args: {
+    mode: "range",
+    defaultSelectedRange: [10, 20],
+  },
+};
+
+export const RangeWithEvents: Story = {
+  args: {
+    mode: "range",
+    eventDays: [5, 12, 18, 25],
+    defaultSelectedRange: [8, 22],
+  },
+};
+
+// ── Other ──
+
 export const January2026: Story = {
   args: {
     month: "January",
     year: 2026,
     defaultSelected: 1,
     eventDays: [1, 15, 20],
-  },
-};
-
-export const CustomDays: Story = {
-  args: {
-    month: "March",
-    year: 2026,
-    days: [
-      { day: 27, muted: true },
-      { day: 28, muted: true },
-      { day: 1 },
-      { day: 2 },
-      { day: 3, hasEvent: true },
-      { day: 4 },
-      { day: 5 },
-      { day: 6 },
-      { day: 7 },
-      { day: 8 },
-      { day: 9, today: true },
-      { day: 10 },
-      { day: 11, selected: true },
-      { day: 12 },
-      { day: 13 },
-      { day: 14 },
-      { day: 15, hasEvent: true },
-      { day: 16 },
-      { day: 17 },
-      { day: 18 },
-      { day: 19 },
-      { day: 20 },
-      { day: 21 },
-      { day: 22 },
-      { day: 23 },
-      { day: 24 },
-      { day: 25 },
-      { day: 26 },
-      { day: 27 },
-      { day: 28 },
-      { day: 29 },
-      { day: 30 },
-      { day: 31 },
-      { day: 1, muted: true },
-      { day: 2, muted: true },
-      { day: 3, muted: true },
-    ],
   },
 };
