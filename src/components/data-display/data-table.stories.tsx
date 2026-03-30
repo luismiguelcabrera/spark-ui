@@ -98,21 +98,21 @@ export const WithRowExpansion: Story = {
       expandable={{
         render: (row) => (
           <div className="flex flex-col gap-2 py-2">
-            <p className="text-sm font-medium text-slate-900">
+            <p className="text-sm font-medium text-navy-text">
               Employee Details
             </p>
             <div className="grid grid-cols-3 gap-4 text-sm">
               <div>
-                <span className="text-slate-500">Email:</span>{" "}
-                <span className="text-slate-700">{row.email}</span>
+                <span className="text-muted-foreground">Email:</span>{" "}
+                <span className="text-navy-text">{row.email}</span>
               </div>
               <div>
-                <span className="text-slate-500">Department:</span>{" "}
-                <span className="text-slate-700">{row.department}</span>
+                <span className="text-muted-foreground">Department:</span>{" "}
+                <span className="text-navy-text">{row.department}</span>
               </div>
               <div>
-                <span className="text-slate-500">Annual Salary:</span>{" "}
-                <span className="text-slate-700 font-semibold">
+                <span className="text-muted-foreground">Annual Salary:</span>{" "}
+                <span className="text-navy-text font-semibold">
                   ${row.salary.toLocaleString()}
                 </span>
               </div>
@@ -147,7 +147,7 @@ export const WithCellEditing: Story = {
 
     return (
       <div className="flex flex-col gap-3">
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-muted-foreground">
           Double-click editable cells (Name, Email, Role) to edit. Enter to
           save, Escape to cancel.
         </p>
@@ -228,7 +228,7 @@ export const AllFeatures: Story = {
 
     return (
       <div className="flex flex-col gap-3">
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-muted-foreground">
           Expandable rows, inline editing (Name, Email), sorting, filtering,
           selection, and resizable columns.
         </p>
@@ -241,7 +241,7 @@ export const AllFeatures: Story = {
           onSortChange={setSort}
           expandable={{
             render: (row) => (
-              <div className="flex flex-col gap-1 text-sm text-slate-600">
+              <div className="flex flex-col gap-1 text-sm text-muted-foreground">
                 <p>
                   <strong>{row.name}</strong> works in the {row.department}{" "}
                   department as a {row.role}.

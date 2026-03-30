@@ -226,9 +226,9 @@ export const s = {
   commandShortcut: "ml-auto text-[11px] font-mono text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded",
 
   // ---- Data Table ----
-  dataTableWrapper: "bg-white border border-slate-100 rounded-2xl overflow-hidden w-full shadow-soft",
-  dataTableHeader: "grid items-center gap-x-4 border-b border-slate-100 bg-slate-50/50 px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-600",
-  dataTableRow: "grid items-center gap-x-4 px-4 py-3 border-b border-slate-50 last:border-b-0 hover:bg-slate-50/80 transition-colors",
+  dataTableWrapper: "bg-surface border border-muted rounded-2xl overflow-hidden w-full shadow-soft",
+  dataTableHeader: "grid items-center gap-x-4 border-b border-muted bg-muted/30 px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground",
+  dataTableRow: "grid items-center gap-x-4 px-4 py-3 border-b border-muted/50 last:border-b-0 hover:bg-muted/30 transition-colors",
 
   // ---- File Upload ----
   uploadZone: "border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center text-center transition-colors hover:border-primary/40 hover:bg-primary/5 cursor-pointer",

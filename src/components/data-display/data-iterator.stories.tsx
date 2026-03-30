@@ -34,7 +34,7 @@ export const Default: Story = {
       {({ items }) => (
         <ul className="space-y-1">
           {items.map((p) => (
-            <li key={p.name} className="text-sm text-slate-700">
+            <li key={p.name} className="text-sm text-navy-text">
               {p.name} ({p.age}) — {p.department}
             </li>
           ))}
@@ -58,7 +58,7 @@ export const WithSorting: Story = {
                 className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
                   sortBy === key
                     ? "bg-primary/10 border-primary/30 text-primary"
-                    : "bg-white border-slate-200 text-slate-600 hover:border-slate-300"
+                    : "bg-surface border-muted text-muted-foreground hover:border-muted"
                 }`}
               >
                 {key} {sortBy === key ? (sortDirection === "asc" ? "\u2191" : "\u2193") : ""}
@@ -67,7 +67,7 @@ export const WithSorting: Story = {
           </div>
           <ul className="space-y-1">
             {items.map((p) => (
-              <li key={p.name} className="text-sm text-slate-700">
+              <li key={p.name} className="text-sm text-navy-text">
                 {p.name} ({p.age}) — {p.department}
               </li>
             ))}
@@ -85,7 +85,7 @@ export const WithPagination: Story = {
         <div className="space-y-3">
           <ul className="space-y-1">
             {items.map((p) => (
-              <li key={p.name} className="text-sm text-slate-700">
+              <li key={p.name} className="text-sm text-navy-text">
                 {p.name} ({p.age}) — {p.department}
               </li>
             ))}
@@ -99,7 +99,7 @@ export const WithPagination: Story = {
             >
               Prev
             </button>
-            <span className="text-slate-500">
+            <span className="text-muted-foreground">
               Page {page} of {pageCount}
             </span>
             <button
@@ -125,12 +125,12 @@ export const WithFilter: Story = {
     >
       {({ items, totalItems }) => (
         <div className="space-y-2">
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-muted-foreground">
             Showing {items.length} of {totalItems} (Engineering only)
           </p>
           <ul className="space-y-1">
             {items.map((p) => (
-              <li key={p.name} className="text-sm text-slate-700">
+              <li key={p.name} className="text-sm text-navy-text">
                 {p.name} ({p.age})
               </li>
             ))}
@@ -163,7 +163,7 @@ export const CombinedExample: Story = {
         setSortBy,
       }) => (
         <div className="space-y-4">
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-muted-foreground">
             {totalItems} results (age &ge; 25), sorted by {sortBy} ({sortDirection})
           </p>
           <div className="flex gap-2">
@@ -175,7 +175,7 @@ export const CombinedExample: Story = {
                 className={`px-3 py-1 text-xs font-medium rounded-lg border ${
                   sortBy === key
                     ? "bg-primary/10 border-primary/30 text-primary"
-                    : "bg-white border-slate-200 text-slate-600"
+                    : "bg-surface border-muted text-muted-foreground"
                 }`}
               >
                 Sort by {key}
@@ -198,7 +198,7 @@ export const CombinedExample: Story = {
             >
               Prev
             </button>
-            <span className="text-slate-500">
+            <span className="text-muted-foreground">
               {page}/{pageCount}
             </span>
             <button

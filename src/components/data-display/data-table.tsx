@@ -47,14 +47,14 @@ function DefaultSkeleton() {
   return (
     <div className="p-6 animate-pulse motion-reduce:animate-none" aria-busy="true" aria-label="Loading table data">
       {[1, 2, 3, 4, 5].map((i) => (
-        <div key={i} className="flex items-center gap-4 py-4 border-b border-slate-50 last:border-0">
-          <div className="h-10 w-10 bg-gray-200 rounded-full" />
+        <div key={i} className="flex items-center gap-4 py-4 border-b border-muted/50 last:border-0">
+          <div className="h-10 w-10 bg-muted rounded-full" />
           <div className="flex-1">
-            <div className="h-4 w-32 bg-gray-200 rounded mb-1" />
-            <div className="h-3 w-48 bg-gray-100 rounded" />
+            <div className="h-4 w-32 bg-muted rounded mb-1" />
+            <div className="h-3 w-48 bg-muted/70 rounded" />
           </div>
-          <div className="h-5 w-16 bg-gray-100 rounded" />
-          <div className="h-4 w-12 bg-gray-100 rounded" />
+          <div className="h-5 w-16 bg-muted/70 rounded" />
+          <div className="h-4 w-12 bg-muted/70 rounded" />
         </div>
       ))}
     </div>
@@ -105,7 +105,7 @@ function DataTable<T>({
     <div className={cn(s.dataTableWrapper, "@container", className)}>
       {/* Header slot */}
       {header && (
-        <div className="p-3 border-b border-slate-100">{header}</div>
+        <div className="p-3 border-b border-muted">{header}</div>
       )}
 
       {/* Loading state */}
@@ -151,7 +151,7 @@ function DataTable<T>({
                     </div>
                   )}
                   {columns.map((col) => (
-                    <div role="cell" key={col.key} className="text-sm text-slate-700">
+                    <div role="cell" key={col.key} className="text-sm text-navy-text">
                       {col.render(row)}
                     </div>
                   ))}
@@ -162,7 +162,7 @@ function DataTable<T>({
 
           {/* Mobile: card list — hidden on desktop */}
           {mobileCard && (
-            <div className="@[600px]:hidden divide-y divide-slate-100">
+            <div className="@[600px]:hidden divide-y divide-muted">
               {data.length === 0 ? (
                 emptyContent
               ) : (
@@ -179,7 +179,7 @@ function DataTable<T>({
 
       {/* Pagination — only shown when there is more than one page */}
       {pagination && pagination.total > pagination.pageSize && (
-        <div className="px-4 py-3 border-t border-slate-100">
+        <div className="px-4 py-3 border-t border-muted">
           <Pagination
             current={pagination.current}
             total={pagination.total}

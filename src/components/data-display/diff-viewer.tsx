@@ -15,9 +15,9 @@ type DiffViewerProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const lineColors: Record<string, string> = {
-  added: "bg-green-50 text-green-800 border-l-2 border-green-400",
-  removed: "bg-red-50 text-red-800 border-l-2 border-red-400",
-  unchanged: "text-slate-600",
+  added: "bg-success/10 text-success border-l-2 border-success",
+  removed: "bg-destructive/10 text-destructive border-l-2 border-destructive",
+  unchanged: "text-muted-foreground",
 };
 
 const lineSymbol: Record<string, string> = {
@@ -30,14 +30,14 @@ const DiffViewer = forwardRef<HTMLDivElement, DiffViewerProps>(
   ({ className, lines, showLineNumbers = true, title, language, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("rounded-xl border border-slate-200 overflow-hidden", className)}
+      className={cn("rounded-xl border border-muted overflow-hidden", className)}
       {...props}
     >
       {title && (
-        <div className="flex items-center justify-between px-4 py-2 bg-slate-50 border-b border-slate-200">
+        <div className="flex items-center justify-between px-4 py-2 bg-muted/50 border-b border-muted">
           <span className="text-sm font-semibold text-secondary">{title}</span>
           {language && (
-            <span className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider">{language}</span>
+            <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{language}</span>
           )}
         </div>
       )}
@@ -49,7 +49,7 @@ const DiffViewer = forwardRef<HTMLDivElement, DiffViewerProps>(
               className={cn("flex px-4 py-0.5 min-w-0", lineColors[line.type])}
             >
               {showLineNumbers && (
-                <span className="w-8 shrink-0 text-right pr-3 text-slate-600 select-none text-xs leading-5">
+                <span className="w-8 shrink-0 text-right pr-3 text-muted-foreground select-none text-xs leading-5">
                   {line.lineNumber ?? i + 1}
                 </span>
               )}

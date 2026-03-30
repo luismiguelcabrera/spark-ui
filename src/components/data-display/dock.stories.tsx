@@ -3,11 +3,11 @@ import { Dock } from "./dock";
 import { Icon } from "./icon";
 
 const defaultItems = [
-  { id: "home", icon: <Icon name="home" size="lg" className="text-slate-600" />, label: "Home" },
-  { id: "search", icon: <Icon name="search" size="lg" className="text-slate-600" />, label: "Search" },
-  { id: "mail", icon: <Icon name="mail" size="lg" className="text-slate-600" />, label: "Mail", badge: 3 },
-  { id: "calendar", icon: <Icon name="calendar" size="lg" className="text-slate-600" />, label: "Calendar" },
-  { id: "settings", icon: <Icon name="settings" size="lg" className="text-slate-600" />, label: "Settings" },
+  { id: "home", icon: <Icon name="home" size="lg" className="text-muted-foreground" />, label: "Home" },
+  { id: "search", icon: <Icon name="search" size="lg" className="text-muted-foreground" />, label: "Search" },
+  { id: "mail", icon: <Icon name="mail" size="lg" className="text-muted-foreground" />, label: "Mail", badge: 3 },
+  { id: "calendar", icon: <Icon name="calendar" size="lg" className="text-muted-foreground" />, label: "Calendar" },
+  { id: "settings", icon: <Icon name="settings" size="lg" className="text-muted-foreground" />, label: "Settings" },
 ];
 
 const meta = {
@@ -42,10 +42,10 @@ export const RightPosition: Story = {
 export const WithActiveItem: Story = {
   args: {
     items: [
-      { id: "home", icon: <Icon name="home" size="lg" className="text-slate-600" />, label: "Home", active: true },
-      { id: "search", icon: <Icon name="search" size="lg" className="text-slate-600" />, label: "Search" },
-      { id: "mail", icon: <Icon name="mail" size="lg" className="text-slate-600" />, label: "Mail" },
-      { id: "settings", icon: <Icon name="settings" size="lg" className="text-slate-600" />, label: "Settings" },
+      { id: "home", icon: <Icon name="home" size="lg" className="text-muted-foreground" />, label: "Home", active: true },
+      { id: "search", icon: <Icon name="search" size="lg" className="text-muted-foreground" />, label: "Search" },
+      { id: "mail", icon: <Icon name="mail" size="lg" className="text-muted-foreground" />, label: "Mail" },
+      { id: "settings", icon: <Icon name="settings" size="lg" className="text-muted-foreground" />, label: "Settings" },
     ],
   },
 };
@@ -53,10 +53,10 @@ export const WithActiveItem: Story = {
 export const WithBadges: Story = {
   args: {
     items: [
-      { id: "home", icon: <Icon name="home" size="lg" className="text-slate-600" />, label: "Home" },
-      { id: "mail", icon: <Icon name="mail" size="lg" className="text-slate-600" />, label: "Mail", badge: 12 },
-      { id: "bell", icon: <Icon name="bell" size="lg" className="text-slate-600" />, label: "Notifications", badge: "99+" },
-      { id: "chat", icon: <Icon name="chat" size="lg" className="text-slate-600" />, label: "Chat", badge: 5 },
+      { id: "home", icon: <Icon name="home" size="lg" className="text-muted-foreground" />, label: "Home" },
+      { id: "mail", icon: <Icon name="mail" size="lg" className="text-muted-foreground" />, label: "Mail", badge: 12 },
+      { id: "bell", icon: <Icon name="bell" size="lg" className="text-muted-foreground" />, label: "Notifications", badge: "99+" },
+      { id: "chat", icon: <Icon name="chat" size="lg" className="text-muted-foreground" />, label: "Chat", badge: 5 },
     ],
   },
 };

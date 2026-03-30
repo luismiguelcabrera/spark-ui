@@ -218,7 +218,7 @@ describe("Dock", () => {
     it("renders active dot for active items", () => {
       const { container } = render(<Dock items={sampleItems} />);
       // Music item is active — should have a dot
-      const dots = container.querySelectorAll(".bg-slate-600");
+      const dots = container.querySelectorAll(".bg-muted-foreground");
       expect(dots.length).toBeGreaterThan(0);
     });
   });

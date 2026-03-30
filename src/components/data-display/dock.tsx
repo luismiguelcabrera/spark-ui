@@ -116,8 +116,8 @@ const Dock = forwardRef<HTMLDivElement, DockProps>(
         aria-orientation={isHorizontal ? "horizontal" : "vertical"}
         className={cn(
           "inline-flex items-end gap-1 rounded-2xl",
-          "bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl",
-          "border border-white/20 dark:border-slate-700/50",
+          "bg-surface/80 backdrop-blur-xl",
+          "border border-muted/30",
           "shadow-lg shadow-black/10",
           containerPositionClasses[position],
           positionClasses[position],
@@ -149,9 +149,9 @@ const Dock = forwardRef<HTMLDivElement, DockProps>(
                 className={cn(
                   "relative flex items-center justify-center",
                   "w-12 h-12 rounded-xl",
-                  "bg-white dark:bg-slate-700",
+                  "bg-surface",
                   "shadow-md hover:shadow-lg",
-                  "border border-slate-200/50 dark:border-slate-600/50",
+                  "border border-muted/50",
                   "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
                   shouldAnimate && "transition-transform duration-200 ease-out",
                   !shouldAnimate && "transition-none"
@@ -164,7 +164,7 @@ const Dock = forwardRef<HTMLDivElement, DockProps>(
                 {/* Icon */}
                 <span className="text-2xl leading-none select-none" aria-hidden="true">
                   {typeof item.icon === "string" ? (
-                    <span className="material-symbols-outlined text-slate-700 dark:text-slate-200">
+                    <span className="material-symbols-outlined text-muted-foreground">
                       {item.icon}
                     </span>
                   ) : (
@@ -178,7 +178,7 @@ const Dock = forwardRef<HTMLDivElement, DockProps>(
                     className={cn(
                       "absolute -top-1 -right-1 min-w-[18px] h-[18px]",
                       "flex items-center justify-center",
-                      "bg-red-600 text-white text-[10px] font-bold",
+                      "bg-destructive text-white text-[10px] font-bold",
                       "rounded-full px-1 leading-none"
                     )}
                     aria-label={`${item.label}: ${item.badge}`}
@@ -191,7 +191,7 @@ const Dock = forwardRef<HTMLDivElement, DockProps>(
               {/* Active indicator */}
               {isActive && (
                 <span
-                  className="w-1 h-1 rounded-full bg-slate-600 dark:bg-slate-300"
+                  className="w-1 h-1 rounded-full bg-muted-foreground"
                   aria-hidden="true"
                 />
               )}

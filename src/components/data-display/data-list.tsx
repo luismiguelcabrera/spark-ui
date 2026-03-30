@@ -54,7 +54,7 @@ const DataListItem = forwardRef<HTMLDivElement, DataListItemProps>(
       )}
       {...props}
     >
-      <dt className="text-xs font-medium text-slate-600 uppercase tracking-wider">{label}</dt>
+      <dt className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{label}</dt>
       <dd className="text-sm font-semibold text-secondary">{value}</dd>
     </div>
   )

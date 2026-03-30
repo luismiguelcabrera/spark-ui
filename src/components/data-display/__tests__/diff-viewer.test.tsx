@@ -77,8 +77,8 @@ describe("DiffViewer", () => {
   it("applies color coding to diff lines", () => {
     const { container } = render(<DiffViewer lines={sampleLines} />);
     const lines = container.querySelectorAll(".flex.px-4");
-    const addedLine = Array.from(lines).find((el) => el.className.includes("bg-green-50"));
-    const removedLine = Array.from(lines).find((el) => el.className.includes("bg-red-50"));
+    const addedLine = Array.from(lines).find((el) => el.className.includes("bg-success"));
+    const removedLine = Array.from(lines).find((el) => el.className.includes("bg-destructive"));
     expect(addedLine).toBeTruthy();
     expect(removedLine).toBeTruthy();
   });
