@@ -2,6 +2,7 @@ import { render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, it, expect } from "vitest";
 import { MegaMenu } from "../components/navigation/mega-menu";
+import { AnimatedNumber } from "../components/data-display/animated-number";
 import { Terminal } from "../components/data-display/terminal";
 import { Dock } from "../components/data-display/dock";
 import { MeterGroup } from "../components/data-display/meter-group";
@@ -1208,6 +1209,23 @@ describe("Accessibility (axe)", () => {
         defaultView="day"
       />
     );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  // --- AnimatedNumber ---
+
+  it("AnimatedNumber (default)", async () => {
+    const { container } = render(<AnimatedNumber value={42} />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("AnimatedNumber (with prefix/suffix)", async () => {
+    const { container } = render(<AnimatedNumber value={100} prefix="$" suffix="%" />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("AnimatedNumber (announce off)", async () => {
+    const { container } = render(<AnimatedNumber value={50} announce="off" />);
     expect(await axe(container)).toHaveNoViolations();
   });
 

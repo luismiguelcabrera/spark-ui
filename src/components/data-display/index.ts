@@ -42,3 +42,6 @@ export type { CalendarProps, CalendarDay, CalendarMode, MarkedDate, CalendarDate
 
 export { QrCode } from "./qr-code";
 export type { QrCodeProps } from "./qr-code";
+
+export { AnimatedNumber, easingFunctions } from "./animated-number";
+export type { AnimatedNumberProps, EasingPreset, EasingFunction, AnimatedNumberTrend } from "./animated-number";
