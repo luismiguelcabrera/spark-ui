@@ -1,6 +1,8 @@
 import { render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, it, expect } from "vitest";
+import { PullToRefresh } from "../components/feedback/pull-to-refresh";
+import { SwipeableDrawer } from "../components/feedback/swipeable-drawer";
 import { Splitter } from "../components/layout/splitter";
 import { Masonry } from "../components/layout/masonry";
 import { Mention } from "../components/forms/mention";
@@ -1131,6 +1133,34 @@ describe("Accessibility (axe)", () => {
 
   it("Masonry (empty)", async () => {
     const { container } = render(<Masonry>{[]}</Masonry>);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("PullToRefresh", async () => {
+    const { container } = render(
+      <PullToRefresh onRefresh={() => Promise.resolve()}><p>Content</p></PullToRefresh>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("SwipeableDrawer (open, left)", async () => {
+    const { container } = render(
+      <SwipeableDrawer open side="left" title="Navigation"><nav>Menu</nav></SwipeableDrawer>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("SwipeableDrawer (open, bottom)", async () => {
+    const { container } = render(
+      <SwipeableDrawer open side="bottom" title="Settings"><p>Content</p></SwipeableDrawer>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("SwipeableDrawer (closed)", async () => {
+    const { container } = render(
+      <SwipeableDrawer open={false} title="Menu"><p>Content</p></SwipeableDrawer>,
+    );
     expect(await axe(container)).toHaveNoViolations();
   });
 });
