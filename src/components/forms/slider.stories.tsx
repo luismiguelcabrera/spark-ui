@@ -11,6 +11,9 @@ const meta = {
     showTooltip: { control: "boolean" },
     showLabels: { control: "boolean" },
     disabled: { control: "boolean" },
+    range: { control: "boolean" },
+    ticks: { control: "boolean" },
+    thumbLabel: { control: "select", options: ["always", "hover", false] },
   },
 } satisfies Meta<typeof Slider>;
 export default meta;
@@ -65,4 +68,81 @@ export const CustomFormat: Story = {
     formatValue: (v: number) => `${v}%`,
     "aria-label": "Percentage",
   },
+};
+
+export const RangeMode: Story = {
+  args: {
+    range: true,
+    defaultValue: [20, 80] as [number, number],
+    "aria-label": "Price range",
+    showLabels: true,
+  },
+};
+
+export const RangeWithTooltip: Story = {
+  args: {
+    range: true,
+    defaultValue: [30, 70] as [number, number],
+    showTooltip: true,
+    "aria-label": "Range with tooltip",
+  },
+};
+
+export const WithTicks: Story = {
+  args: {
+    defaultValue: 50,
+    min: 0,
+    max: 100,
+    step: 25,
+    ticks: true,
+    "aria-label": "Rating",
+  },
+};
+
+export const WithTickLabels: Story = {
+  args: {
+    defaultValue: 50,
+    min: 0,
+    max: 100,
+    step: 25,
+    ticks: true,
+    tickLabels: ["0%", "25%", "50%", "75%", "100%"],
+    "aria-label": "Percentage",
+  },
+};
+
+export const ThumbLabelAlways: Story = {
+  args: {
+    defaultValue: 50,
+    thumbLabel: "always",
+    "aria-label": "Always label",
+  },
+};
+
+export const ThumbLabelHover: Story = {
+  args: {
+    defaultValue: 50,
+    thumbLabel: "hover",
+    "aria-label": "Hover label",
+  },
+};
+
+export const RangeWithTicks: Story = {
+  render: (args) => (
+    <div className="max-w-md">
+      <Slider
+        {...args}
+        range
+        defaultValue={[20, 80] as [number, number]}
+        min={0}
+        max={100}
+        step={10}
+        ticks
+        tickLabels={["0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100"]}
+        thumbLabel="always"
+        showLabels
+        aria-label="Range with ticks"
+      />
+    </div>
+  ),
 };

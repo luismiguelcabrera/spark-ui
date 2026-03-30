@@ -78,4 +78,118 @@ describe("Slider", () => {
     const { container } = render(<Slider aria-label="Volume" />);
     expect(await axe(container)).toHaveNoViolations();
   });
+
+  // ── Range mode tests ──────────────────────────────────────────────────
+
+  describe("range mode", () => {
+    it("renders two thumbs when range is true", () => {
+      render(<Slider range defaultValue={[20, 80]} aria-label="Price" />);
+      const sliders = screen.getAllByRole("slider");
+      expect(sliders).toHaveLength(2);
+    });
+
+    it("sets correct ARIA values on range thumbs", () => {
+      render(<Slider range value={[25, 75]} min={0} max={100} aria-label="Range" />);
+      const sliders = screen.getAllByRole("slider");
+      expect(sliders[0]).toHaveAttribute("aria-valuenow", "25");
+      expect(sliders[0]).toHaveAttribute("aria-label", "Range minimum");
+      expect(sliders[1]).toHaveAttribute("aria-valuenow", "75");
+      expect(sliders[1]).toHaveAttribute("aria-label", "Range maximum");
+    });
+
+    it("moves the low thumb with ArrowRight", () => {
+      const onChange = vi.fn();
+      render(<Slider range defaultValue={[20, 80]} onChange={onChange} aria-label="Range" />);
+      const sliders = screen.getAllByRole("slider");
+      fireEvent.keyDown(sliders[0], { key: "ArrowRight" });
+      expect(onChange).toHaveBeenCalledWith([21, 80]);
+    });
+
+    it("moves the high thumb with ArrowRight", () => {
+      const onChange = vi.fn();
+      render(<Slider range defaultValue={[20, 80]} onChange={onChange} aria-label="Range" />);
+      const sliders = screen.getAllByRole("slider");
+      fireEvent.keyDown(sliders[1], { key: "ArrowRight" });
+      expect(onChange).toHaveBeenCalledWith([20, 81]);
+    });
+
+    it("low thumb cannot exceed high thumb", () => {
+      const onChange = vi.fn();
+      render(<Slider range defaultValue={[80, 80]} onChange={onChange} aria-label="Range" />);
+      const sliders = screen.getAllByRole("slider");
+      fireEvent.keyDown(sliders[0], { key: "ArrowRight" });
+      // Should be clamped to not exceed the high thumb
+      expect(onChange).toHaveBeenCalledWith([80, 80]);
+    });
+
+    it("high thumb cannot go below low thumb", () => {
+      const onChange = vi.fn();
+      render(<Slider range defaultValue={[50, 50]} onChange={onChange} aria-label="Range" />);
+      const sliders = screen.getAllByRole("slider");
+      fireEvent.keyDown(sliders[1], { key: "ArrowLeft" });
+      // Should be clamped to not go below the low thumb
+      expect(onChange).toHaveBeenCalledWith([50, 50]);
+    });
+
+    it("accepts single number as defaultValue in range mode and normalizes to [min, value]", () => {
+      render(<Slider range defaultValue={60} min={10} aria-label="Range" />);
+      const sliders = screen.getAllByRole("slider");
+      expect(sliders[0]).toHaveAttribute("aria-valuenow", "10");
+      expect(sliders[1]).toHaveAttribute("aria-valuenow", "60");
+    });
+
+    it("has no accessibility violations in range mode", async () => {
+      const { container } = render(<Slider range defaultValue={[20, 80]} aria-label="Range" />);
+      expect(await axe(container)).toHaveNoViolations();
+    });
+  });
+
+  // ── Tick tests ────────────────────────────────────────────────────────
+
+  describe("ticks", () => {
+    it("renders tick marks when ticks prop is true", () => {
+      const { container } = render(
+        <Slider min={0} max={10} step={5} ticks aria-label="Volume" />
+      );
+      // Should have tick marks: 0, 5, 10 = 3 ticks
+      const tickMarks = container.querySelectorAll(".w-0\\.5");
+      expect(tickMarks.length).toBe(3);
+    });
+
+    it("renders tick labels when provided", () => {
+      render(
+        <Slider
+          min={0}
+          max={10}
+          step={5}
+          ticks
+          tickLabels={["Low", "Mid", "High"]}
+          aria-label="Volume"
+        />
+      );
+      expect(screen.getByText("Low")).toBeInTheDocument();
+      expect(screen.getByText("Mid")).toBeInTheDocument();
+      expect(screen.getByText("High")).toBeInTheDocument();
+    });
+  });
+
+  // ── Thumb label tests ─────────────────────────────────────────────────
+
+  describe("thumbLabel", () => {
+    it("shows label when thumbLabel is 'always'", () => {
+      render(
+        <Slider defaultValue={50} thumbLabel="always" aria-label="Volume" />
+      );
+      // The label tooltip should be visible
+      expect(screen.getByText("50")).toBeInTheDocument();
+    });
+
+    it("does not show label when thumbLabel is false", () => {
+      render(
+        <Slider defaultValue={50} thumbLabel={false} aria-label="Volume" />
+      );
+      // The tooltip value should not be a visible element (only in aria-valuetext)
+      expect(screen.queryByText("50")).not.toBeInTheDocument();
+    });
+  });
 });

@@ -8,7 +8,7 @@ export { IconButton, iconButtonVariants } from "./icon-button";
 export type { IconButtonProps } from "./icon-button";
 
 export { Input } from "./input";
-export type { InputProps } from "./input";
+export type { InputProps, InputVariant } from "./input";
 
 export {
   InputGroup,
@@ -28,13 +28,13 @@ export { Label } from "./label";
 export type { LabelProps } from "./label";
 
 export { Select } from "./select";
-export type { SelectProps } from "./select";
+export type { SelectProps, SelectVariant } from "./select";
 
 export { Textarea } from "./textarea";
 export type { TextareaProps } from "./textarea";
 
 export { Checkbox } from "./checkbox";
-export type { CheckboxProps } from "./checkbox";
+export type { CheckboxProps, CheckboxColor } from "./checkbox";
 
 export { PasswordInput } from "./password-input";
 export type { PasswordInputProps } from "./password-input";
@@ -85,7 +85,7 @@ export { DatePicker } from "./date-picker";
 export type { DatePickerProps } from "./date-picker";
 
 export { Slider } from "./slider";
-export type { SliderProps } from "./slider";
+export type { SliderProps, SliderValue } from "./slider";
 
 export { NumberInput } from "./number-input";
 export type { NumberInputProps } from "./number-input";

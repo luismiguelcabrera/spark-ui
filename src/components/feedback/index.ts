@@ -1,5 +1,5 @@
 export { Alert, alertVariants } from "./alert";
-export type { AlertProps, AlertVariant } from "./alert";
+export type { AlertProps, AlertVariant, AlertFillVariant, AlertBorderSide } from "./alert";
 
 export { AlertBanner, alertBannerVariants } from "./alert-banner";
 export type { AlertBannerProps } from "./alert-banner";
@@ -62,7 +62,7 @@ export { CircularProgress } from "./circular-progress";
 export type { CircularProgressProps } from "./circular-progress";
 
 export { Snackbar } from "./snackbar";
-export type { SnackbarProps } from "./snackbar";
+export type { SnackbarProps, SnackbarLocation } from "./snackbar";
 
 export { SpeedDial } from "./speed-dial";
 export type { SpeedDialProps, SpeedDialAction } from "./speed-dial";
