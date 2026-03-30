@@ -25,7 +25,7 @@ const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
     {
       value = 0,
       trackColor = "bg-gray-100",
-      barColor = "bg-gradient-to-r from-primary to-orange-400",
+      barColor = "bg-primary",
       size = "sm",
       indeterminate = false,
       striped = false,
