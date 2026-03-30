@@ -301,7 +301,9 @@ function MonthGrid({
                 s.calendarDay,
                 day.muted && s.calendarDayMuted,
                 day.disabled && !day.muted && "opacity-40 cursor-not-allowed",
-                showToday && day.today && !day.selected && !day.inRange && !isColorMark && s.calendarDayToday,
+                showToday && day.today && !day.selected && !day.inRange && !day.inHoverRange && !isColorMark && s.calendarDayToday,
+                // Today inside a range: keep it identifiable with bold + underline
+                showToday && day.today && (day.inRange || day.inHoverRange) && "font-bold underline underline-offset-2",
                 day.selected && !isColorMark && s.calendarDaySelected,
                 day.hasEvent && !day.mark?.dotColor && (
                   day.selected
