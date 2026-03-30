@@ -25,10 +25,21 @@ import { AlertBanner } from "../components/feedback/alert-banner";
 import { Modal } from "../components/feedback/modal";
 import { Dialog } from "../components/feedback/dialog";
 import { Tooltip } from "../components/feedback/tooltip";
+import { Overlay } from "../components/feedback/overlay";
+import { BottomSheet } from "../components/feedback/bottom-sheet";
+import { Banner } from "../components/feedback/banner";
 import { Breadcrumb } from "../components/navigation/breadcrumb";
 import { Pagination } from "../components/navigation/pagination";
 import { Tabs } from "../components/navigation/tabs";
 import { Accordion } from "../components/navigation/accordion";
+import { RangeSlider } from "../components/forms/range-slider";
+import { ConfirmEdit } from "../components/forms/confirm-edit";
+import { MaskInput } from "../components/forms/mask-input";
+import { Fab } from "../components/forms/fab";
+import { Footer } from "../components/navigation/footer";
+import { SystemBar } from "../components/navigation/system-bar";
+import { SlideGroup } from "../components/navigation/slide-group";
+import { ItemGroup, ItemGroupItem } from "../components/navigation/item-group";
 
 expect.extend(toHaveNoViolations);
 
@@ -435,6 +446,166 @@ describe("Accessibility (axe)", () => {
         <Accordion.Item value="a" title="First">Content A</Accordion.Item>
         <Accordion.Item value="b" title="Second">Content B</Accordion.Item>
       </Accordion>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Footer", async () => {
+    const { container } = render(
+      <Footer bordered>
+        <p>Copyright 2024</p>
+      </Footer>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Footer (fixed)", async () => {
+    const { container } = render(
+      <Footer fixed bordered>
+        <p>Fixed footer</p>
+      </Footer>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("SystemBar", async () => {
+    const { container } = render(
+      <SystemBar>9:41 AM</SystemBar>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("SystemBar (window mode)", async () => {
+    const { container } = render(
+      <SystemBar window color="bg-blue-600">My App</SystemBar>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("SlideGroup", async () => {
+    const { container } = render(
+      <SlideGroup>
+        <span>Item 1</span>
+        <span>Item 2</span>
+        <span>Item 3</span>
+      </SlideGroup>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("ItemGroup", async () => {
+    const { container } = render(
+      <ItemGroup>
+        <ItemGroupItem value="a">Alpha</ItemGroupItem>
+        <ItemGroupItem value="b">Beta</ItemGroupItem>
+      </ItemGroup>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("ItemGroup (with selection)", async () => {
+    const { container } = render(
+      <ItemGroup defaultValue="a">
+        <ItemGroupItem value="a">Alpha</ItemGroupItem>
+        <ItemGroupItem value="b">Beta</ItemGroupItem>
+      </ItemGroup>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("RangeSlider", async () => {
+    const { container } = render(
+      <RangeSlider defaultValue={[20, 80]} label="Price range" />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("ConfirmEdit", async () => {
+    const { container } = render(
+      <ConfirmEdit value="Editable text" />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("MaskInput", async () => {
+    const { container } = render(
+      <MaskInput mask="(999) 999-9999" label="Phone" />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Fab", async () => {
+    const { container } = render(
+      <Fab icon="plus" aria-label="Add item" />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Fab (extended)", async () => {
+    const { container } = render(
+      <Fab icon="plus" extended label="Create new" />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Overlay (open)", async () => {
+    const { container } = render(
+      <Overlay open={true} onOpenChange={() => {}}>
+        <div>Overlay content</div>
+      </Overlay>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Overlay (with blur)", async () => {
+    const { container } = render(
+      <Overlay open={true} onOpenChange={() => {}} blur>
+        <div>Blurred overlay</div>
+      </Overlay>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("BottomSheet (open with title)", async () => {
+    const { container } = render(
+      <BottomSheet open={true} onOpenChange={() => {}} title="Actions">
+        <p>Sheet content</p>
+      </BottomSheet>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("BottomSheet (fullscreen)", async () => {
+    const { container } = render(
+      <BottomSheet open={true} onOpenChange={() => {}} title="Full" fullscreen>
+        <p>Fullscreen content</p>
+      </BottomSheet>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Banner (info)", async () => {
+    const { container } = render(
+      <Banner text="System update available." color="info" />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Banner (all colors)", async () => {
+    const { container } = render(
+      <div>
+        <Banner text="Info" color="info" />
+        <Banner text="Warning" color="warning" />
+        <Banner text="Danger" color="danger" />
+        <Banner text="Success" color="success" />
+      </div>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Banner (dismissible)", async () => {
+    const { container } = render(
+      <Banner text="Dismissible" color="info" dismissible onDismiss={() => {}} />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });

@@ -116,3 +116,15 @@ export type { CopyButtonProps } from "./copy-button";
 
 export { PinInput } from "./pin-input";
 export type { PinInputProps } from "./pin-input";
+
+export { RangeSlider } from "./range-slider";
+export type { RangeSliderProps, RangeSliderColor, RangeSliderSize } from "./range-slider";
+
+export { ConfirmEdit } from "./confirm-edit";
+export type { ConfirmEditProps } from "./confirm-edit";
+
+export { MaskInput } from "./mask-input";
+export type { MaskInputProps } from "./mask-input";
+
+export { Fab, fabVariants } from "./fab";
+export type { FabProps, FabColor, FabSize, FabPosition } from "./fab";
