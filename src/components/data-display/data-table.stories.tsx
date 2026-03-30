@@ -122,3 +122,56 @@ export const MixedSortable: Story = {
 export const EmptyWithSort: Story = {
   render: () => <DataTable columns={columns} data={[]} emptyState="No employees found." />,
 };
+
+const filterColumns: Column<Employee>[] = [
+  { key: "name", header: "Name", render: (r) => r.name, sortable: true, filterable: "text" },
+  { key: "role", header: "Role", render: (r) => r.role, filterable: "select" },
+  { key: "department", header: "Department", render: (r) => r.department, filterable: "select" },
+  {
+    key: "salary",
+    header: "Salary",
+    render: (r) => `$${r.salary.toLocaleString()}`,
+    sortable: true,
+    sortFn: (a, b) => a.salary - b.salary,
+  },
+  {
+    key: "status",
+    header: "Status",
+    render: (r) => (
+      <Badge
+        variant={
+          r.status === "active" ? "success" : r.status === "away" ? "warning" : "secondary"
+        }
+      >
+        {r.status}
+      </Badge>
+    ),
+    filterable: "select",
+  },
+];
+
+export const WithFiltering: Story = {
+  render: () => (
+    <DataTable
+      columns={filterColumns}
+      data={employees}
+      emptyState="No matches found."
+    />
+  ),
+};
+
+export const FilterAndSort: Story = {
+  name: "Filtering + Sorting",
+  render: () => {
+    const [sort, setSort] = useState<SortState | null>(null);
+    return (
+      <DataTable
+        columns={filterColumns}
+        data={employees}
+        sort={sort}
+        onSortChange={setSort}
+        emptyState="No matches."
+      />
+    );
+  },
+};

@@ -173,3 +173,133 @@ describe("DataTable (sorting)", () => {
     expect(screen.getByText("Charlie")).toBeInTheDocument();
   });
 });
+
+// ---------------------------------------------------------------------------
+// Filtering
+// ---------------------------------------------------------------------------
+
+const filterColumns: Column<Person>[] = [
+  { key: "name", header: "Name", render: (r) => r.name, filterable: "text" },
+  { key: "city", header: "City", render: (r) => r.city, filterable: "select" },
+  { key: "age", header: "Age", render: (r) => String(r.age) },
+];
+
+describe("DataTable (filtering)", () => {
+  it("renders filter inputs for text-filterable columns", () => {
+    render(<DataTable columns={filterColumns} data={people} />);
+    expect(screen.getByLabelText("Filter by Name")).toBeInTheDocument();
+  });
+
+  it("renders filter selects for select-filterable columns", () => {
+    render(<DataTable columns={filterColumns} data={people} />);
+    expect(screen.getByLabelText("Filter by City")).toBeInTheDocument();
+  });
+
+  it("does not render filter for non-filterable columns", () => {
+    render(<DataTable columns={filterColumns} data={people} />);
+    expect(screen.queryByLabelText("Filter by Age")).not.toBeInTheDocument();
+  });
+
+  it("filters rows by text input", async () => {
+    const user = userEvent.setup();
+    render(<DataTable columns={filterColumns} data={people} />);
+    await user.type(screen.getByLabelText("Filter by Name"), "Ali");
+    expect(screen.getByText("Alice")).toBeInTheDocument();
+    expect(screen.queryByText("Charlie")).not.toBeInTheDocument();
+    expect(screen.queryByText("Bob")).not.toBeInTheDocument();
+  });
+
+  it("filters rows by select dropdown", async () => {
+    const user = userEvent.setup();
+    render(<DataTable columns={filterColumns} data={people} />);
+    await user.selectOptions(screen.getByLabelText("Filter by City"), "NYC");
+    expect(screen.getByText("Charlie")).toBeInTheDocument();
+    expect(screen.queryByText("Alice")).not.toBeInTheDocument();
+  });
+
+  it("select filter shows unique values from data", () => {
+    render(<DataTable columns={filterColumns} data={people} />);
+    const select = screen.getByLabelText("Filter by City") as HTMLSelectElement;
+    const options = Array.from(select.options).map((o) => o.value);
+    expect(options).toContain("");  // "All" option
+    expect(options).toContain("NYC");
+    expect(options).toContain("LA");
+    expect(options).toContain("Chicago");
+  });
+
+  it("calls onFilterChange when typing", async () => {
+    const user = userEvent.setup();
+    const onFilterChange = vi.fn();
+    render(
+      <DataTable
+        columns={filterColumns}
+        data={people}
+        onFilterChange={onFilterChange}
+      />,
+    );
+    await user.type(screen.getByLabelText("Filter by Name"), "B");
+    expect(onFilterChange).toHaveBeenCalledWith({ name: "B" });
+  });
+
+  it("controlled filters work", () => {
+    render(
+      <DataTable
+        columns={filterColumns}
+        data={people}
+        filters={{ name: "Bob" }}
+      />,
+    );
+    expect(screen.getByText("Bob")).toBeInTheDocument();
+    expect(screen.queryByText("Alice")).not.toBeInTheDocument();
+    expect(screen.queryByText("Charlie")).not.toBeInTheDocument();
+  });
+
+  it("shows empty state when filter matches nothing", async () => {
+    const user = userEvent.setup();
+    render(
+      <DataTable
+        columns={filterColumns}
+        data={people}
+        emptyState="No results"
+      />,
+    );
+    await user.type(screen.getByLabelText("Filter by Name"), "zzzzz");
+    expect(screen.getByText("No results")).toBeInTheDocument();
+  });
+
+  it("supports custom filterFn", async () => {
+    const user = userEvent.setup();
+    const customCols: Column<Person>[] = [
+      {
+        key: "age",
+        header: "Age",
+        render: (r) => String(r.age),
+        filterable: "text",
+        filterFn: (row, value) => row.age >= Number(value),
+      },
+      { key: "name", header: "Name", render: (r) => r.name },
+    ];
+    render(<DataTable columns={customCols} data={people} />);
+    await user.type(screen.getByLabelText("Filter by Age"), "30");
+    // Alice (25) should be filtered out
+    expect(screen.queryByText("Alice")).not.toBeInTheDocument();
+    expect(screen.getByText("Charlie")).toBeInTheDocument(); // 30
+    expect(screen.getByText("Bob")).toBeInTheDocument(); // 35
+  });
+
+  it("filter + sort work together", async () => {
+    const user = userEvent.setup();
+    const bothCols: Column<Person>[] = [
+      { key: "name", header: "Name", render: (r) => r.name, sortable: true, filterable: "text" },
+      { key: "age", header: "Age", render: (r) => String(r.age) },
+      { key: "city", header: "City", render: (r) => r.city },
+    ];
+    render(<DataTable columns={bothCols} data={people} />);
+    // Filter to just Charlie and Bob (contain "b" or "c" — use "l" for Alice/Charlie)
+    await user.type(screen.getByLabelText("Filter by Name"), "li");
+    // Only Alice and Charlie match "li"
+    expect(screen.getByText("Alice")).toBeInTheDocument();
+    expect(screen.getByText("Charlie")).toBeInTheDocument();
+    expect(screen.queryByText("Bob")).not.toBeInTheDocument();
+  });
+});
