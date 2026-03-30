@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { cn } from "../../lib/utils";
 import { s } from "../../lib/styles";
 import { cva, type VariantProps } from "class-variance-authority";
+import { Icon } from "./icon";
 
 const avatarVariants = cva(
   "relative inline-flex items-center justify-center rounded-full bg-gray-200 overflow-hidden shrink-0",
@@ -29,20 +30,62 @@ const avatarVariants = cva(
   }
 );
 
+type AvatarDensity = "default" | "comfortable" | "compact";
+
+/** Density adjustment classes per size */
+const densityMap: Record<AvatarDensity, Record<string, string>> = {
+  default: {
+    xs: "",
+    sm: "",
+    md: "",
+    lg: "",
+    xl: "",
+  },
+  comfortable: {
+    xs: "w-7 h-7",
+    sm: "w-9 h-9",
+    md: "w-11 h-11",
+    lg: "w-14 h-14",
+    xl: "w-20 h-20",
+  },
+  compact: {
+    xs: "w-5 h-5",
+    sm: "w-6 h-6",
+    md: "w-8 h-8",
+    lg: "w-10 h-10",
+    xl: "w-12 h-12",
+  },
+};
+
+/** Icon size map per avatar size */
+const iconSizeMap = {
+  xs: "xs" as const,
+  sm: "sm" as const,
+  md: "sm" as const,
+  lg: "md" as const,
+  xl: "lg" as const,
+};
+
 type AvatarProps = {
   src?: string;
   alt?: string;
   initials?: string;
   className?: string;
+  /** Render an Icon component instead of image/initials */
+  icon?: string;
+  /** Adjusts sizing density */
+  density?: AvatarDensity;
 } & VariantProps<typeof avatarVariants>;
 
 function Avatar({
   src,
   alt = "",
   initials,
-  size,
+  size = "md",
   ring,
   className,
+  icon,
+  density = "default",
 }: AvatarProps) {
   const [imgState, setImgState] = useState<{
     src: string | undefined;
@@ -70,16 +113,34 @@ function Avatar({
   const imgError = imgState.status === "error";
 
   const fallbackText = initials ?? (alt ? alt.charAt(0).toUpperCase() : "?");
+  const sizeKey = size ?? "md";
+  const densityClass = densityMap[density]?.[sizeKey] ?? "";
 
   return (
-    <div className={cn(avatarVariants({ size, ring, className }))}>
+    <div
+      className={cn(
+        avatarVariants({ size, ring }),
+        densityClass,
+        className,
+      )}
+      data-testid="avatar-root"
+    >
       {/* Skeleton — shown while image is fetching */}
       {src && !imgLoaded && !imgError && (
         <span className="absolute inset-0 animate-pulse bg-gray-300" />
       )}
 
-      {/* Fallback initials — shown when there is no src or the image errored */}
-      {(!src || imgError) && (
+      {/* Icon mode — shown when icon prop is provided and no src */}
+      {icon && !src && (
+        <Icon
+          name={icon}
+          size={iconSizeMap[sizeKey]}
+          className="text-gray-500"
+        />
+      )}
+
+      {/* Fallback initials — shown when there is no src/icon or the image errored */}
+      {(!src || imgError) && !icon && (
         <span className={cn("font-bold text-gray-500", s.textMuted)}>
           {fallbackText}
         </span>
@@ -104,4 +165,4 @@ function Avatar({
 }
 
 export { Avatar, avatarVariants };
-export type { AvatarProps };
+export type { AvatarProps, AvatarDensity };

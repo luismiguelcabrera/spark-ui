@@ -87,6 +87,16 @@ type ChipProps = HTMLAttributes<HTMLDivElement> &
     dot?: boolean;
     /** Dot color override */
     dotColor?: string;
+    /** Show checkmark icon when selected (filter chip mode) */
+    filter?: boolean;
+    /** Whether the chip is in selected state (used with filter) */
+    selected?: boolean;
+    /** Use squared corners instead of pill shape */
+    label?: boolean;
+    /** Show X close button */
+    closable?: boolean;
+    /** Callback when close button is clicked */
+    onClose?: () => void;
   };
 
 const Chip = forwardRef<HTMLDivElement, ChipProps>(
@@ -103,6 +113,11 @@ const Chip = forwardRef<HTMLDivElement, ChipProps>(
       disabled,
       dot,
       dotColor,
+      filter,
+      selected,
+      label,
+      closable,
+      onClose,
       children,
       ...props
     },
@@ -115,19 +130,28 @@ const Chip = forwardRef<HTMLDivElement, ChipProps>(
         colorMap[color][variant ?? "soft"],
         clickable && !disabled && "cursor-pointer hover:opacity-80",
         disabled && "opacity-50 cursor-not-allowed",
+        label && "!rounded-sm",
+        selected && "ring-2 ring-primary ring-offset-1",
         className
       )}
       role={clickable ? "button" : undefined}
       tabIndex={clickable && !disabled ? 0 : undefined}
+      aria-selected={selected != null ? selected : undefined}
       {...props}
     >
+      {filter && selected && (
+        <span data-testid="chip-filter-check">
+          <Icon name="check" size="sm" />
+        </span>
+      )}
       {dot && (
         <span
           className="w-1.5 h-1.5 rounded-full"
           style={dotColor ? { backgroundColor: dotColor } : undefined}
         />
       )}
-      {icon && <Icon name={icon} size="sm" />}
+      {icon && !filter && <Icon name={icon} size="sm" />}
+      {icon && filter && !selected && <Icon name={icon} size="sm" />}
       {children}
       {dismissible && !disabled && (
         <button
@@ -138,6 +162,20 @@ const Chip = forwardRef<HTMLDivElement, ChipProps>(
           }}
           className="ml-0.5 rounded-full hover:bg-black/10 p-0.5 transition-colors"
           aria-label="Remove"
+        >
+          <Icon name="close" size="sm" />
+        </button>
+      )}
+      {closable && !disabled && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose?.();
+          }}
+          className="ml-0.5 rounded-full hover:bg-black/10 p-0.5 transition-colors"
+          aria-label="Close"
+          data-testid="chip-close-button"
         >
           <Icon name="close" size="sm" />
         </button>

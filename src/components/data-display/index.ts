@@ -11,7 +11,7 @@ export { Badge, badgeVariants } from "./badge";
 export type { BadgeProps } from "./badge";
 
 export { Avatar, avatarVariants } from "./avatar";
-export type { AvatarProps } from "./avatar";
+export type { AvatarProps, AvatarDensity } from "./avatar";
 
 export { ProgressBar } from "./progress-bar";
 export type { ProgressBarProps } from "./progress-bar";

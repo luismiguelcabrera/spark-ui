@@ -13,6 +13,10 @@ const meta = {
     clickable: { control: "boolean" },
     disabled: { control: "boolean" },
     dot: { control: "boolean" },
+    filter: { control: "boolean" },
+    selected: { control: "boolean" },
+    label: { control: "boolean" },
+    closable: { control: "boolean" },
     icon: { control: "text" },
   },
 } satisfies Meta<typeof Chip>;
@@ -56,6 +60,42 @@ export const Disabled: Story = {
   args: { children: "Disabled", disabled: true, color: "primary" },
 };
 
+export const FilterChip: Story = {
+  render: (args) => (
+    <div className="flex flex-wrap gap-2">
+      <Chip {...args} filter selected color="primary">
+        Selected
+      </Chip>
+      <Chip {...args} filter selected={false} color="primary" clickable>
+        Not Selected
+      </Chip>
+      <Chip {...args} filter selected color="success">
+        Active
+      </Chip>
+    </div>
+  ),
+};
+
+export const LabelChip: Story = {
+  render: (args) => (
+    <div className="flex flex-wrap gap-2">
+      <Chip {...args} label color="primary">Label</Chip>
+      <Chip {...args} label color="success" variant="solid">Success</Chip>
+      <Chip {...args} label color="destructive" variant="outline">Error</Chip>
+    </div>
+  ),
+};
+
+export const Closable: Story = {
+  render: (args) => (
+    <div className="flex flex-wrap gap-2">
+      <Chip {...args} closable color="primary">Closable</Chip>
+      <Chip {...args} closable color="success" icon="check">With Icon</Chip>
+      <Chip {...args} closable disabled color="destructive">Disabled</Chip>
+    </div>
+  ),
+};
+
 export const Colors: Story = {
   render: (args) => (
     <div className="flex flex-wrap gap-2">
@@ -97,6 +137,18 @@ export const TagList: Story = {
       <Chip {...args} color="success" icon="code" dismissible>TypeScript</Chip>
       <Chip {...args} color="warning" icon="code" dismissible>Tailwind</Chip>
       <Chip {...args} color="secondary" icon="code" dismissible>Storybook</Chip>
+    </div>
+  ),
+};
+
+export const FilterGroup: Story = {
+  render: (args) => (
+    <div className="flex flex-wrap gap-2">
+      <Chip {...args} filter selected clickable color="primary">React</Chip>
+      <Chip {...args} filter selected clickable color="success">TypeScript</Chip>
+      <Chip {...args} filter clickable color="default">JavaScript</Chip>
+      <Chip {...args} filter clickable color="default">Vue</Chip>
+      <Chip {...args} filter selected clickable closable color="warning">Tailwind</Chip>
     </div>
   ),
 };
