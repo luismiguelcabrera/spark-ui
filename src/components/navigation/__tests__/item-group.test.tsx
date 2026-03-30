@@ -4,10 +4,10 @@ import { createRef } from "react";
 import { ItemGroup, ItemGroupItem } from "../item-group";
 
 describe("ItemGroup", () => {
-  it("renders a group container with role=group", () => {
+  it("renders a group container with role=listbox", () => {
     render(<ItemGroup data-testid="group"><span>Child</span></ItemGroup>);
     const el = screen.getByTestId("group");
-    expect(el).toHaveAttribute("role", "group");
+    expect(el).toHaveAttribute("role", "listbox");
   });
 
   it("renders children", () => {

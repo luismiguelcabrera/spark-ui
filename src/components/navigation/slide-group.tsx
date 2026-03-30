@@ -43,12 +43,16 @@ const SlideGroup = forwardRef<HTMLDivElement, SlideGroupProps>(
       updateArrows();
 
       el.addEventListener("scroll", updateArrows, { passive: true });
-      const ro = new ResizeObserver(updateArrows);
-      ro.observe(el);
+
+      let ro: ResizeObserver | undefined;
+      if (typeof ResizeObserver !== "undefined") {
+        ro = new ResizeObserver(updateArrows);
+        ro.observe(el);
+      }
 
       return () => {
         el.removeEventListener("scroll", updateArrows);
-        ro.disconnect();
+        ro?.disconnect();
       };
     }, [updateArrows]);
 

@@ -9,9 +9,9 @@ describe("Banner", () => {
     expect(screen.getByText("System maintenance scheduled")).toBeInTheDocument();
   });
 
-  it("has banner role", () => {
+  it("has status role", () => {
     render(<Banner text="Notice" />);
-    expect(screen.getByRole("banner")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toBeInTheDocument();
   });
 
   it.each(["info", "warning", "danger", "success"] as const)(
@@ -24,26 +24,26 @@ describe("Banner", () => {
 
   it("defaults to info color", () => {
     render(<Banner text="Default" />);
-    const banner = screen.getByRole("banner");
+    const banner = screen.getByRole("status");
     expect(banner).toHaveClass("bg-blue-600");
   });
 
   it("applies warning color styles", () => {
     render(<Banner text="Warning" color="warning" />);
-    const banner = screen.getByRole("banner");
+    const banner = screen.getByRole("status");
     expect(banner).toHaveClass("bg-amber-500");
     expect(banner).toHaveClass("text-amber-950");
   });
 
   it("applies danger color styles", () => {
     render(<Banner text="Danger" color="danger" />);
-    const banner = screen.getByRole("banner");
+    const banner = screen.getByRole("status");
     expect(banner).toHaveClass("bg-red-600");
   });
 
   it("applies success color styles", () => {
     render(<Banner text="Success" color="success" />);
-    const banner = screen.getByRole("banner");
+    const banner = screen.getByRole("status");
     expect(banner).toHaveClass("bg-green-600");
   });
 
@@ -59,14 +59,14 @@ describe("Banner", () => {
 
   it("applies sticky positioning when sticky is true", () => {
     render(<Banner text="Sticky" sticky />);
-    const banner = screen.getByRole("banner");
+    const banner = screen.getByRole("status");
     expect(banner).toHaveClass("sticky");
     expect(banner).toHaveClass("top-0");
   });
 
   it("does not apply sticky positioning by default", () => {
     render(<Banner text="Not sticky" />);
-    const banner = screen.getByRole("banner");
+    const banner = screen.getByRole("status");
     expect(banner).not.toHaveClass("sticky");
   });
 

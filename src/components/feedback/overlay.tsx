@@ -74,6 +74,7 @@ const Overlay = forwardRef<HTMLDivElement, OverlayProps>(
         className={cn("fixed inset-0 z-50", className)}
         role="dialog"
         aria-modal="true"
+        aria-label="Overlay"
       >
         {/* Scrim / backdrop */}
         {scrim && (

@@ -1,5 +1,4 @@
-import { render, screen, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, act, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useSnackbarQueue } from "../snackbar-queue";
 
@@ -91,18 +90,16 @@ describe("useSnackbarQueue", () => {
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
-  it("shows snackbar when item is enqueued", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  it("shows snackbar when item is enqueued", () => {
     render(<TestHarness />);
-    await user.click(screen.getByTestId("add-default"));
+    fireEvent.click(screen.getByTestId("add-default"));
     expect(screen.getByRole("alert")).toBeInTheDocument();
     expect(screen.getByText("Default message")).toBeInTheDocument();
   });
 
-  it("auto-dismisses after default duration (5000ms)", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  it("auto-dismisses after default duration (5000ms)", () => {
     render(<TestHarness />);
-    await user.click(screen.getByTestId("add-default"));
+    fireEvent.click(screen.getByTestId("add-default"));
     expect(screen.getByText("Default message")).toBeInTheDocument();
 
     act(() => {
@@ -111,10 +108,9 @@ describe("useSnackbarQueue", () => {
     expect(screen.queryByText("Default message")).not.toBeInTheDocument();
   });
 
-  it("does not auto-dismiss when duration is 0", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  it("does not auto-dismiss when duration is 0", () => {
     render(<TestHarness />);
-    await user.click(screen.getByTestId("add-no-auto-dismiss"));
+    fireEvent.click(screen.getByTestId("add-no-auto-dismiss"));
     expect(screen.getByText("No auto dismiss")).toBeInTheDocument();
 
     act(() => {
@@ -123,11 +119,10 @@ describe("useSnackbarQueue", () => {
     expect(screen.getByText("No auto dismiss")).toBeInTheDocument();
   });
 
-  it("shows one at a time — first in, first out", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  it("shows one at a time — first in, first out", () => {
     render(<TestHarness />);
-    await user.click(screen.getByTestId("add-default"));
-    await user.click(screen.getByTestId("add-success"));
+    fireEvent.click(screen.getByTestId("add-default"));
+    fireEvent.click(screen.getByTestId("add-success"));
 
     // Only first message should show
     expect(screen.getByText("Default message")).toBeInTheDocument();
@@ -143,44 +138,39 @@ describe("useSnackbarQueue", () => {
     expect(screen.getByText("Success message")).toBeInTheDocument();
   });
 
-  it("renders dismiss button on each snackbar", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  it("renders dismiss button on each snackbar", () => {
     render(<TestHarness />);
-    await user.click(screen.getByTestId("add-default"));
+    fireEvent.click(screen.getByTestId("add-default"));
     expect(screen.getByLabelText("Dismiss")).toBeInTheDocument();
   });
 
-  it("dismisses when dismiss button is clicked", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  it("dismisses when dismiss button is clicked", () => {
     render(<TestHarness />);
-    await user.click(screen.getByTestId("add-default"));
+    fireEvent.click(screen.getByTestId("add-default"));
     expect(screen.getByText("Default message")).toBeInTheDocument();
 
-    await user.click(screen.getByLabelText("Dismiss"));
+    fireEvent.click(screen.getByLabelText("Dismiss"));
     expect(screen.queryByText("Default message")).not.toBeInTheDocument();
   });
 
-  it("renders action button when provided", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  it("renders action button when provided", () => {
     render(<TestHarness />);
-    await user.click(screen.getByTestId("add-with-action"));
+    fireEvent.click(screen.getByTestId("add-with-action"));
     expect(screen.getByText("Undo")).toBeInTheDocument();
   });
 
-  it("has alert role and aria-live", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  it("has alert role and aria-live", () => {
     render(<TestHarness />);
-    await user.click(screen.getByTestId("add-default"));
+    fireEvent.click(screen.getByTestId("add-default"));
     const alert = screen.getByRole("alert");
     expect(alert).toHaveAttribute("aria-live", "polite");
   });
 
   it.each(["success", "error", "warning"] as const)(
     "renders %s variant",
-    async (variant) => {
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    (variant) => {
       render(<TestHarness />);
-      await user.click(screen.getByTestId(`add-${variant}`));
+      fireEvent.click(screen.getByTestId(`add-${variant}`));
       expect(screen.getByRole("alert")).toBeInTheDocument();
     },
   );

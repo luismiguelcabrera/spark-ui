@@ -77,7 +77,7 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>(
     return (
       <div
         ref={ref}
-        role="banner"
+        role="status"
         className={cn(
           "flex items-center gap-3 px-4 py-3 w-full text-sm font-medium",
           colorStyles[color],
