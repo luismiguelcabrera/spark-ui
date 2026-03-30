@@ -52,3 +52,15 @@ export type { ScrollAreaProps } from "./scroll-area";
 
 export { Resizable } from "./resizable";
 export type { ResizableProps } from "./resizable";
+
+export { Spacer } from "./spacer";
+export type { SpacerProps } from "./spacer";
+
+export { SheetSurface, sheetSurfaceVariants } from "./sheet-surface";
+export type { SheetSurfaceProps } from "./sheet-surface";
+
+export { DefaultsProvider, useDefaults } from "./defaults-provider";
+export type { DefaultsProviderProps, DefaultsMap } from "./defaults-provider";
+
+export { NoSsr } from "./no-ssr";
+export type { NoSsrProps } from "./no-ssr";
