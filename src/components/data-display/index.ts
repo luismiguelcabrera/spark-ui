@@ -42,3 +42,15 @@ export type { CalendarProps, CalendarDay } from "./calendar";
 
 export { QrCode } from "./qr-code";
 export type { QrCodeProps } from "./qr-code";
+
+export { ChipGroup, useChipGroup } from "./chip-group";
+export type { ChipGroupProps, ChipGroupColor } from "./chip-group";
+
+export { DataIterator } from "./data-iterator";
+export type { DataIteratorProps, DataIteratorSlotProps, SortDirection } from "./data-iterator";
+
+export { Parallax } from "./parallax";
+export type { ParallaxProps } from "./parallax";
+
+export { LazyRender } from "./lazy-render";
+export type { LazyRenderProps } from "./lazy-render";
