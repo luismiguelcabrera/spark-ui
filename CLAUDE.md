@@ -20,7 +20,7 @@ pnpm build-storybook # Static build
 ```
 src/
 ├── components/
-│   ├── forms/         # Button, Input, Select, Checkbox, Toggle, Slider, NumberInput, TagInput, Switch, ToggleGroup, ColorPicker, DateRangePicker, TimePicker, PinInput, CopyButton, Toolbar, etc. (33 components)
+│   ├── forms/         # Button, Input, Select, Checkbox, Toggle, Slider, NumberInput, TagInput, Switch, ToggleGroup, ColorPicker, DateRangePicker, TimePicker, PinInput, CopyButton, Toolbar, Form (compound), etc. (45+ components)
 │   ├── feedback/      # Spinner, Modal, Toast, Drawer, AlertDialog, Sheet, ContextMenu, HoverCard, Snackbar, CircularProgress, SpeedDial, etc. (22 components)
 │   ├── data-display/  # Badge, Card, Avatar, Icon, Heading, Text, Code, Kbd, Timeline, TreeView, Carousel, Countdown, Table, Chip, etc. (34 components)
 │   ├── navigation/    # Tabs, Accordion, Pagination, Navbar, BottomNav, Menubar, NavigationMenu, Link, SkipNav, etc. (11 components)
@@ -31,7 +31,7 @@ src/
 │   ├── icon-provider.tsx  # IconProvider context for custom icon sets
 │   ├── create-icon.tsx    # createIcon() factory for new icons
 │   └── index.ts       # Barrel export
-├── hooks/             # 21 hooks: useControllable, useMediaQuery, useDebounce, useClickOutside, useClipboard, useDisclosure, useLocalStorage, useIntersectionObserver, useKeyboardShortcut, usePrefersReducedMotion, useToggle, useFocusTrap, useScrollLock, useBreakpoint, useIsomorphicId, useToast, usePrevious, useThrottle, useWindowSize, useHover
+├── hooks/             # 27 hooks: useControllable, useMediaQuery, useDebounce, useClickOutside, useClipboard, useDisclosure, useLocalStorage, useIntersectionObserver, useKeyboardShortcut, usePrefersReducedMotion, useToggle, useFocusTrap, useScrollLock, useBreakpoint, useIsomorphicId, useToast, usePrevious, useThrottle, useWindowSize, useHover, useForm, useFieldArray, useWatch, useFormGuard, useAutosave, useElevation
 ├── lib/               # cn(), Slot, theme-tokens, styles
 ├── test/              # Test setup, a11y tests
 └── theme.css          # Default CSS variables + keyframes
@@ -192,3 +192,44 @@ When a component uses `<Icon name="...">` internally (Button, Pagination, Modal 
 - Icons: `src/icons/icons.tsx` (all SVGs), `src/icons/registry.ts` (name mappings)
 - Icon stories: `src/icons/icons.stories.tsx`
 - Icon tests: `src/icons/__tests__/icons.test.tsx`
+
+### 16. Compound Form System
+
+The library ships a compound `Form` component with auto-binding, validation, multi-step, and field arrays.
+
+**Compound components** (`Form.*`):
+- `Form.Field` — auto-binds value/onChange/onBlur via cloneElement or render prop. Supports shorthand `rules`, `hideError`, `validateOn`, `deps`, `showCounter`, `showSuccess`, `transform`
+- `Form.FieldArray` — dynamic repeatable rows via `useFieldArray` with item-level error tracking
+- `Form.Submit` — auto-loading submit button with `disableWhenInvalid`
+- `Form.Reset` — reset button with optional `confirm` dialog
+- `Form.Error` — form-level error (plain text default, render prop for custom)
+- `Form.ErrorSummary` — WCAG aria-live error list with anchor links to fields
+- `Form.Message` — field-level error rendered anywhere in the tree
+- `Form.Watch` — render prop for reactive field observation (memoized with shallow equality)
+- `Form.If` — conditional rendering based on field value (`is`, `oneOf`, `when`)
+- `Form.Group` — semantic `<fieldset>` + `<legend>` for related fields
+- `Form.Steps` / `Form.Step` — multi-step wizard with async validation
+- `Form.Debug` — dev-only form state overlay
+
+**Hooks:**
+- `useForm` — form state management with `persist`, `transform`, `resolver`, nested dot-notation paths
+- `useFieldArray` — dynamic arrays with stable IDs, append/remove/move/swap, item-level errors
+- `useWatch` — read specific field values from form
+- `useFormSteps` — multi-step navigation within Form.Steps
+- `useFormGuard` — dirty navigation guard (beforeunload)
+- `useAutosave` — debounced autosave on form changes
+- `useFormField` — context-based field binding (alternative to cloneElement)
+- `useFormContext` / `useFormContextSafe` — access form context (throwing vs null-returning)
+
+**Resolvers** (`src/lib/resolvers.ts`):
+- `zodResolver(schema)` — zero-dependency, duck-types zod's `safeParse`
+- `yupResolver(schema)` — zero-dependency, duck-types yup's `validateSync`
+
+**Architecture notes:**
+- Form component delegates to `form.validateAsync()` for all validation (no duplication)
+- `formError` state lives in useForm, Form component reads it via context (single source of truth)
+- FormFieldContext includes `value`/`onChange`/`onBlur` for context-based binding via `useFormField()`
+- `useFormContextSafe()` returns null instead of throwing (used by FormField for standalone mode)
+- Shorthand `rules` are resolved to full `ValidationRule` using `useLocale().t()` for locale-aware messages
+- Form.* locale keys are in `default-messages.ts` and all 8 locale packs (en, es, fr, de, pt, ar, ja, zh)
+- Nested dot-notation paths (e.g., `address.city`) work in register, setFieldValue, getFieldState via `getByPath`/`setByPath` helpers
