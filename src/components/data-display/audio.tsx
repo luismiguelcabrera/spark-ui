@@ -162,7 +162,7 @@ function formatTime(seconds: number): string {
 
 const progressColorMap: Record<AudioColor, string> = {
   primary: "bg-primary",
-  secondary: "bg-secondary",
+  secondary: "bg-muted-foreground",
   accent: "bg-accent",
   success: "bg-success",
   warning: "bg-warning",
@@ -171,7 +171,7 @@ const progressColorMap: Record<AudioColor, string> = {
 
 const buttonColorMap: Record<AudioColor, string> = {
   primary: "text-primary",
-  secondary: "text-secondary",
+  secondary: "text-muted-foreground",
   accent: "text-accent",
   success: "text-success",
   warning: "text-warning",
@@ -180,7 +180,7 @@ const buttonColorMap: Record<AudioColor, string> = {
 
 const focusColorMap: Record<AudioColor, string> = {
   primary: "focus-visible:ring-primary",
-  secondary: "focus-visible:ring-secondary",
+  secondary: "focus-visible:ring-muted-foreground",
   accent: "focus-visible:ring-accent",
   success: "focus-visible:ring-success",
   warning: "focus-visible:ring-warning",
@@ -189,7 +189,7 @@ const focusColorMap: Record<AudioColor, string> = {
 
 const thumbBorderColorMap: Record<AudioColor, string> = {
   primary: "border-primary",
-  secondary: "border-secondary",
+  secondary: "border-muted-foreground",
   accent: "border-accent",
   success: "border-success",
   warning: "border-warning",

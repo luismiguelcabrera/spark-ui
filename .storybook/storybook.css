@@ -8,6 +8,7 @@
 }
 
 @theme {
+  /* ── Brand ── */
   --color-primary: var(--color-primary);
   --color-primary-dark: var(--color-primary-dark);
   --color-secondary: var(--color-secondary);
@@ -15,14 +16,24 @@
   --color-accent: var(--color-accent);
   --color-mint: var(--color-mint);
 
+  /* ── Semantic ── */
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-destructive: var(--color-destructive);
+
+  /* ── Surfaces ── */
   --color-surface: var(--color-surface);
   --color-light: var(--color-light);
   --color-background-subtle: var(--color-background-subtle);
   --color-background-dark: var(--color-background-dark);
+  --color-muted: var(--color-muted);
+  --color-muted-foreground: var(--color-muted-foreground);
 
+  /* ── Text ── */
   --color-navy-text: var(--color-navy-text);
   --color-text-secondary: var(--color-text-secondary);
 
+  /* ── Shadows ── */
   --shadow-soft: var(--shadow-soft);
   --shadow-float: var(--shadow-float);
   --shadow-glass: var(--shadow-glass);
