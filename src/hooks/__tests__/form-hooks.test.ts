@@ -128,6 +128,61 @@ describe("useFieldArray", () => {
     expect(formResult.current.values.items).toEqual([]);
   });
 
+  it("setFieldError sets item-level errors", () => {
+    const { result: formResult } = renderHook(() =>
+      useForm({ initialValues: { items: [{ name: "" }, { name: "" }] } }),
+    );
+    const { result } = renderHook(() =>
+      useFieldArray(formResult.current, "items"),
+    );
+
+    act(() => {
+      result.current.setFieldError(0, "name", "Item 1 name required");
+      result.current.setFieldError(1, "name", "Item 2 name required");
+    });
+
+    expect(result.current.errors).toEqual({
+      "0.name": "Item 1 name required",
+      "1.name": "Item 2 name required",
+    });
+    expect(result.current.fields[0].getFieldError("name")).toBe(
+      "Item 1 name required",
+    );
+    expect(result.current.fields[1].getFieldError("name")).toBe(
+      "Item 2 name required",
+    );
+  });
+
+  it("getFieldError returns null for fields without errors", () => {
+    const { result: formResult } = renderHook(() =>
+      useForm({ initialValues: { items: [{ name: "valid" }] } }),
+    );
+    const { result } = renderHook(() =>
+      useFieldArray(formResult.current, "items"),
+    );
+
+    expect(result.current.fields[0].getFieldError("name")).toBeNull();
+  });
+
+  it("clear resets item errors", () => {
+    const { result: formResult } = renderHook(() =>
+      useForm({ initialValues: { items: [{ name: "" }] } }),
+    );
+    const { result } = renderHook(() =>
+      useFieldArray(formResult.current, "items"),
+    );
+
+    act(() => {
+      result.current.setFieldError(0, "name", "Required");
+    });
+    expect(result.current.errors["0.name"]).toBe("Required");
+
+    act(() => {
+      result.current.clear();
+    });
+    expect(result.current.errors).toEqual({});
+  });
+
   it("getFieldProps returns correct sub-field value", () => {
     const { result: formResult } = renderHook(() =>
       useForm({ initialValues: { items: [{ name: "John", age: 30 }] } }),

@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { useFormContext } from "./form-context";
 
 /* eslint-disable @typescript-eslint/no-explicit-any -- render prop returns arbitrary field values */
@@ -12,23 +12,50 @@ type FormWatchProps = {
   children: (value: any) => ReactNode;
 };
 
+/**
+ * Compares two values shallowly. For objects, checks top-level keys.
+ * Returns true if they're equivalent — meaning children don't need to re-render.
+ */
+function shallowEqual(a: any, b: any): boolean {
+  if (Object.is(a, b)) return true;
+  if (typeof a !== "object" || typeof b !== "object" || a === null || b === null)
+    return false;
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) return false;
+  for (const key of keysA) {
+    if (!Object.is(a[key], b[key])) return false;
+  }
+  return true;
+}
+
 function FormWatch({ name, children }: FormWatchProps) {
   const { form } = useFormContext();
+  const prevRef = useRef<any>(undefined);
+  const prevResultRef = useRef<ReactNode>(null);
+
+  let watched: any;
 
   if (name === undefined) {
-    return <>{children(form.values)}</>;
+    watched = form.values;
+  } else if (typeof name === "string") {
+    watched = form.values[name];
+  } else {
+    // Array of names — build object with requested values
+    const obj: Record<string, any> = {};
+    for (const key of name) {
+      obj[key] = form.values[key];
+    }
+    watched = obj;
   }
 
-  if (typeof name === "string") {
-    return <>{children(form.values[name])}</>;
+  // Only re-invoke the render prop if the watched value actually changed
+  if (!shallowEqual(watched, prevRef.current)) {
+    prevRef.current = watched;
+    prevResultRef.current = children(watched);
   }
 
-  // Array of names — build object with requested values
-  const watched: Record<string, any> = {};
-  for (const key of name) {
-    watched[key] = form.values[key];
-  }
-  return <>{children(watched)}</>;
+  return <>{prevResultRef.current}</>;
 }
 
 FormWatch.displayName = "FormWatch";

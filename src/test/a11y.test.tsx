@@ -58,6 +58,9 @@ import { Checkbox } from "../components/forms/checkbox";
 import { Toggle } from "../components/forms/toggle";
 import { MultiSelect } from "../components/forms/multi-select";
 import { Badge } from "../components/data-display/badge";
+import { Form } from "../components/forms/form";
+import { useForm } from "../hooks/use-form";
+import { FormGroup } from "../components/forms/form-group";
 import { Image } from "../components/data-display/image";
 import { SortableList } from "../components/data-display/sortable-list";
 import { VirtualList } from "../components/data-display/virtual-list";
@@ -1350,6 +1353,45 @@ describe("Accessibility (axe)", () => {
         <span>Test value</span>
       </PopupEdit>
     );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Form with Fields", async () => {
+    function A11yForm() {
+      const form = useForm({ initialValues: { email: "" } });
+      return (
+        <Form form={form} aria-label="Test form">
+          <Form.Field name="email" label="Email" rules={{ required: true }}>
+            <Input placeholder="you@example.com" />
+          </Form.Field>
+          <Form.Submit>Submit</Form.Submit>
+        </Form>
+      );
+    }
+    const { container } = render(<A11yForm />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Form.Group with legend", async () => {
+    const { container } = render(
+      <FormGroup legend="Address">
+        <label htmlFor="city-a11y">City</label>
+        <input id="city-a11y" />
+      </FormGroup>
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("Form.Reset", async () => {
+    function ResetA11y() {
+      const form = useForm({ initialValues: { x: "" } });
+      return (
+        <Form form={form} aria-label="Reset form">
+          <Form.Reset>Reset</Form.Reset>
+        </Form>
+      );
+    }
+    const { container } = render(<ResetA11y />);
     expect(await axe(container)).toHaveNoViolations();
   });
 });

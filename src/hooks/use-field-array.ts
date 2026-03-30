@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any -- field array hook requires any for arbitrary field values */
 
-import { useRef, useCallback, useMemo } from "react";
+import { useRef, useCallback, useMemo, useState } from "react";
 import type { UseFormReturn } from "./use-form";
 
 // ── Types ──
@@ -20,6 +20,8 @@ export type FieldArrayItem = {
     onBlur: () => void;
     name: string;
   };
+  /** Get the error message for a sub-field of this item, or null */
+  getFieldError: (subField: string) => string | null;
 };
 
 export type UseFieldArrayReturn = {
@@ -41,6 +43,10 @@ export type UseFieldArrayReturn = {
   replace: (index: number, item: any) => void;
   /** Remove all items from the array */
   clear: () => void;
+  /** Set an error on a specific sub-field of an item (e.g. setFieldError(2, "name", "Required")) */
+  setFieldError: (index: number, subField: string, error: string | null) => void;
+  /** All current item-level errors: Record<"index.subField", string> */
+  errors: Record<string, string>;
 };
 
 // ── Helpers ──
@@ -90,6 +96,9 @@ export function useFieldArray<T extends Record<string, any>>(
   const lastArrayRef = useRef<any[]>([]);
 
   const currentArray: any[] = (form.values[name] as any) ?? [];
+
+  // Item-level error tracking: keyed by "index.subField"
+  const [itemErrors, setItemErrors] = useState<Record<string, string>>({});
 
   // Assign stable IDs — generate new ones for items that don't have them
   const getStableId = useCallback((index: number, arr: any[]): string => {
@@ -217,7 +226,26 @@ export function useFieldArray<T extends Record<string, any>>(
 
   const clear = useCallback(() => {
     setArray([], []);
+    setItemErrors({});
   }, [setArray]);
+
+  // ── Item-level error management ──
+
+  const setItemFieldError = useCallback(
+    (index: number, subField: string, error: string | null) => {
+      const key = `${index}.${subField}`;
+      setItemErrors((prev) => {
+        const next = { ...prev };
+        if (error) {
+          next[key] = error;
+        } else {
+          delete next[key];
+        }
+        return next;
+      });
+    },
+    [],
+  );
 
   // ── Build fields with getFieldProps ──
 
@@ -249,9 +277,13 @@ export function useFieldArray<T extends Record<string, any>>(
         };
       };
 
-      return { id, value, index, getFieldProps };
+      const getFieldError = (subField: string): string | null => {
+        return itemErrors[`${index}.${subField}`] ?? null;
+      };
+
+      return { id, value, index, getFieldProps, getFieldError };
     });
-  }, [currentArray, currentIds, name, form]);
+  }, [currentArray, currentIds, name, form, itemErrors]);
 
   return {
     fields,
@@ -263,5 +295,7 @@ export function useFieldArray<T extends Record<string, any>>(
     insert,
     replace,
     clear,
+    setFieldError: setItemFieldError,
+    errors: itemErrors,
   };
 }
