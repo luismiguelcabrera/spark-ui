@@ -5,6 +5,12 @@ const meta = {
   title: "Navigation/Pagination",
   component: Pagination,
   tags: ["autodocs"],
+  argTypes: {
+    variant: { control: "select", options: ["simple", "numbered"] },
+    size: { control: "select", options: ["sm", "md", "lg"] },
+    rounded: { control: "boolean" },
+    showFirstLast: { control: "boolean" },
+  },
 } satisfies Meta<typeof Pagination>;
 
 export default meta;
@@ -20,4 +26,107 @@ export const Numbered: Story = {
 
 export const LastPage: Story = {
   args: { total: 50, pageSize: 10, defaultCurrent: 5 },
+};
+
+export const WithFirstLast: Story = {
+  args: {
+    total: 200,
+    pageSize: 10,
+    defaultCurrent: 5,
+    variant: "numbered",
+    showFirstLast: true,
+  },
+};
+
+export const Rounded: Story = {
+  args: {
+    total: 200,
+    pageSize: 10,
+    defaultCurrent: 5,
+    variant: "numbered",
+    rounded: true,
+  },
+};
+
+export const SmallSize: Story = {
+  args: {
+    total: 200,
+    pageSize: 10,
+    defaultCurrent: 5,
+    variant: "numbered",
+    size: "sm",
+  },
+};
+
+export const LargeSize: Story = {
+  args: {
+    total: 200,
+    pageSize: 10,
+    defaultCurrent: 5,
+    variant: "numbered",
+    size: "lg",
+  },
+};
+
+export const CustomActiveColor: Story = {
+  args: {
+    total: 200,
+    pageSize: 10,
+    defaultCurrent: 5,
+    variant: "numbered",
+    activeColor: "bg-emerald-600",
+  },
+};
+
+export const SimpleWithFirstLast: Story = {
+  args: {
+    total: 100,
+    pageSize: 10,
+    defaultCurrent: 5,
+    showFirstLast: true,
+  },
+};
+
+export const Gallery: Story = {
+  render: (args) => (
+    <div className="flex flex-col gap-8">
+      <div>
+        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Numbered (default)</p>
+        <Pagination total={200} pageSize={10} defaultCurrent={5} variant="numbered" {...args} />
+      </div>
+      <div>
+        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">With First/Last + Rounded</p>
+        <Pagination
+          total={200}
+          pageSize={10}
+          defaultCurrent={5}
+          variant="numbered"
+          showFirstLast
+          rounded
+        />
+      </div>
+      <div>
+        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Small Size</p>
+        <Pagination total={200} pageSize={10} defaultCurrent={5} variant="numbered" size="sm" />
+      </div>
+      <div>
+        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Large Size</p>
+        <Pagination total={200} pageSize={10} defaultCurrent={5} variant="numbered" size="lg" />
+      </div>
+      <div>
+        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Custom Active Color</p>
+        <Pagination
+          total={200}
+          pageSize={10}
+          defaultCurrent={5}
+          variant="numbered"
+          activeColor="bg-violet-600"
+        />
+      </div>
+      <div>
+        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Simple with First/Last</p>
+        <Pagination total={100} pageSize={10} defaultCurrent={5} showFirstLast />
+      </div>
+    </div>
+  ),
 };

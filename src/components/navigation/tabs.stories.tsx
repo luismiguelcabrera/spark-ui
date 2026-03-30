@@ -7,6 +7,9 @@ const meta = {
   tags: ["autodocs"],
   argTypes: {
     orientation: { control: "select", options: ["horizontal", "vertical"] },
+    density: { control: "select", options: ["default", "comfortable", "compact"] },
+    grow: { control: "boolean" },
+    showArrows: { control: "boolean" },
   },
 } satisfies Meta<typeof Tabs>;
 
@@ -95,6 +98,61 @@ export const VerticalCompound: Story = {
   ),
 };
 
+export const GrowTabs: Story = {
+  render: (args) => (
+    <Tabs defaultValue="a" grow {...args}>
+      <Tabs.List>
+        <Tabs.Tab value="a">Tab A</Tabs.Tab>
+        <Tabs.Tab value="b">Tab B</Tabs.Tab>
+        <Tabs.Tab value="c">Tab C</Tabs.Tab>
+      </Tabs.List>
+      <Tabs.Panel value="a"><p className="p-4 text-sm text-slate-600">Each tab stretches equally.</p></Tabs.Panel>
+      <Tabs.Panel value="b"><p className="p-4 text-sm text-slate-600">Panel B content.</p></Tabs.Panel>
+      <Tabs.Panel value="c"><p className="p-4 text-sm text-slate-600">Panel C content.</p></Tabs.Panel>
+    </Tabs>
+  ),
+};
+
+export const DensityVariants: Story = {
+  render: (args) => (
+    <div className="flex flex-col gap-8">
+      {(["compact", "default", "comfortable"] as const).map((density) => (
+        <div key={density}>
+          <p className="text-xs font-semibold text-slate-400 uppercase mb-3">{density}</p>
+          <Tabs defaultValue="a" density={density} {...args}>
+            <Tabs.List>
+              <Tabs.Tab value="a">Tab A</Tabs.Tab>
+              <Tabs.Tab value="b">Tab B</Tabs.Tab>
+              <Tabs.Tab value="c">Tab C</Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="a"><p className="p-4 text-sm text-slate-600">Content for {density} density</p></Tabs.Panel>
+            <Tabs.Panel value="b"><p className="p-4 text-sm text-slate-600">Panel B</p></Tabs.Panel>
+            <Tabs.Panel value="c"><p className="p-4 text-sm text-slate-600">Panel C</p></Tabs.Panel>
+          </Tabs>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const ShowArrowsLegacy: Story = {
+  args: {
+    showArrows: true,
+    tabs: Array.from({ length: 15 }, (_, i) => ({
+      label: `Tab ${i + 1}`,
+      value: `tab-${i + 1}`,
+      active: i === 0,
+    })),
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ maxWidth: 500 }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
 export const Gallery: Story = {
   render: (args) => (
     <div className="flex flex-col gap-10">
@@ -124,6 +182,19 @@ export const Gallery: Story = {
             <Tabs.Panel value="y"><p className="p-4 text-sm text-slate-600">Vertical panel Y</p></Tabs.Panel>
             <Tabs.Panel value="z"><p className="p-4 text-sm text-slate-600">Vertical panel Z</p></Tabs.Panel>
           </div>
+        </Tabs>
+      </div>
+      <div>
+        <p className="text-xs font-semibold text-slate-400 uppercase mb-3">Grow + Compact</p>
+        <Tabs defaultValue="a" grow density="compact">
+          <Tabs.List>
+            <Tabs.Tab value="a">Tab A</Tabs.Tab>
+            <Tabs.Tab value="b">Tab B</Tabs.Tab>
+            <Tabs.Tab value="c">Tab C</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Panel value="a"><p className="p-4 text-sm text-slate-600">Grow + compact panel</p></Tabs.Panel>
+          <Tabs.Panel value="b"><p className="p-4 text-sm text-slate-600">Panel B</p></Tabs.Panel>
+          <Tabs.Panel value="c"><p className="p-4 text-sm text-slate-600">Panel C</p></Tabs.Panel>
         </Tabs>
       </div>
     </div>

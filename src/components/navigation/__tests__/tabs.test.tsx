@@ -134,3 +134,117 @@ describe("Tabs (compound API)", () => {
     expect(activeTab).toHaveClass("border-r-primary");
   });
 });
+
+describe("Tabs — grow prop", () => {
+  it("applies flex-1 to compound tabs when grow is true", () => {
+    render(
+      <Tabs defaultValue="a" grow>
+        <Tabs.List>
+          <Tabs.Tab value="a">Tab A</Tabs.Tab>
+          <Tabs.Tab value="b">Tab B</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="a">Content A</Tabs.Panel>
+      </Tabs>,
+    );
+    const tabButtons = screen.getAllByRole("tab");
+    tabButtons.forEach((tab) => {
+      expect(tab).toHaveClass("flex-1");
+      expect(tab).toHaveClass("text-center");
+    });
+  });
+
+  it("applies flex-1 to legacy tabs when grow is true", () => {
+    const tabs = [
+      { label: "Tab 1", value: "t1" },
+      { label: "Tab 2", value: "t2" },
+    ];
+    render(<Tabs tabs={tabs} grow />);
+    const tabButtons = screen.getAllByRole("tab");
+    tabButtons.forEach((tab) => {
+      expect(tab).toHaveClass("flex-1");
+    });
+  });
+
+  it("does not apply flex-1 when grow is false", () => {
+    render(
+      <Tabs defaultValue="a">
+        <Tabs.List>
+          <Tabs.Tab value="a">Tab A</Tabs.Tab>
+          <Tabs.Tab value="b">Tab B</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="a">Content A</Tabs.Panel>
+      </Tabs>,
+    );
+    const tabButtons = screen.getAllByRole("tab");
+    tabButtons.forEach((tab) => {
+      expect(tab).not.toHaveClass("flex-1");
+    });
+  });
+});
+
+describe("Tabs — density prop", () => {
+  it.each([
+    ["default", "py-2.5"],
+    ["comfortable", "py-3.5"],
+    ["compact", "py-1.5"],
+  ] as const)("applies %s density styles", (density, expectedClass) => {
+    render(
+      <Tabs defaultValue="a" density={density}>
+        <Tabs.List>
+          <Tabs.Tab value="a">Tab A</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="a">Content</Tabs.Panel>
+      </Tabs>,
+    );
+    const tab = screen.getByRole("tab");
+    expect(tab).toHaveClass(expectedClass);
+  });
+
+  it("defaults to 'default' density", () => {
+    render(
+      <Tabs defaultValue="a">
+        <Tabs.List>
+          <Tabs.Tab value="a">Tab A</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="a">Content</Tabs.Panel>
+      </Tabs>,
+    );
+    const tab = screen.getByRole("tab");
+    expect(tab).toHaveClass("py-2.5");
+    expect(tab).toHaveClass("px-4");
+  });
+
+  it("applies compact density to legacy tabs", () => {
+    const tabs = [{ label: "Tab 1", value: "t1" }];
+    render(<Tabs tabs={tabs} density="compact" />);
+    const tab = screen.getByRole("tab");
+    expect(tab).toHaveClass("py-1.5");
+    expect(tab).toHaveClass("text-xs");
+  });
+});
+
+describe("Tabs — showArrows prop (legacy)", () => {
+  it("renders scroll arrow buttons when showArrows is true", () => {
+    const tabs = Array.from({ length: 20 }, (_, i) => ({
+      label: `Tab ${i + 1}`,
+      value: `t${i + 1}`,
+    }));
+    render(<Tabs tabs={tabs} showArrows />);
+    // The tablist should still be rendered
+    expect(screen.getByRole("tablist")).toBeInTheDocument();
+    // All tabs should still be visible
+    expect(screen.getByText("Tab 1")).toBeInTheDocument();
+    expect(screen.getByText("Tab 20")).toBeInTheDocument();
+  });
+
+  it("does not show arrows for vertical orientation", () => {
+    const tabs = Array.from({ length: 20 }, (_, i) => ({
+      label: `Tab ${i + 1}`,
+      value: `t${i + 1}`,
+    }));
+    render(<Tabs tabs={tabs} showArrows orientation="vertical" />);
+    // Should NOT have scroll arrow buttons
+    expect(screen.queryByLabelText("Scroll tabs left")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Scroll tabs right")).not.toBeInTheDocument();
+  });
+});
