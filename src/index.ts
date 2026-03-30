@@ -4,6 +4,7 @@ export * from "./components/forms";
 export * from "./components/data-display";
 export * from "./components/navigation";
 export * from "./components/feedback";
+export * from "./components/transitions";
 
 // ── Icons ──
 export * from "./icons";
